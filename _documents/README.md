@@ -11,9 +11,9 @@ El proyecto utiliza una combinación del patrón **MVC (Model-View-Controller)**
 ### 🗺️ Diagramas Globales
 Consulta estos documentos para entender el panorama completo del juego antes de adentrarte en módulos específicos:
 
-* [🧩 Diagrama de Clases General (MVC + Estados)](./ClassDiagram.md)
-* [🔄 Diagrama de Flujo (Game Loop y Mecánica Dual)](./Flowchart.md)
-* [📊 Modelo Entidad-Relación (Estadísticas Locales de Partida)](./EntityRelationship.md)
+* [🧩 Diagrama de Clases General (MVC + Estados)](./Core/ClassDiagram.md)
+* [🔄 Diagrama de Flujo (Game Loop y Mecánica Dual)](./Core/Flowchart.md)
+* [📊 Modelo Entidad-Relación (Estadísticas Locales de Partida)](./Core/EntityRelationship.md)
 
 ---
 
@@ -23,27 +23,27 @@ La lógica del juego está dividida en 4 sistemas modulares aislados. Cada direc
 
 ### 1. 🪨 Environment & Interaction
 Gestiona el sistema de monolitos, rangos de detección de colisiones optimizadas (OverlapSphere) y el desbloqueo de niveles de hechizos mediante requisitos de tier.
-* [Diagrama de Clases](./Core/Environment%20&%20Interaction/ClassDiagram_HighRes.md)
-* [Diagrama de Secuencia](./Core/Environment%20&%20Interaction/SequenceDiagram.md)
-* [Mapa de Integración en Unity](./Core/Environment%20&%20Interaction/IntegrationMap.md)
+* [Diagrama de Clases](./Core/Environment_and_Interaction/ClassDiagram_HighRes.md)
+* [Diagrama de Secuencia](./Core/Environment_and_Interaction/SequenceDiagram.md)
+* [Mapa de Integración en Unity](./Core/Environment_and_Interaction/IntegrationMap.md)
 
 ### 2. 🔁 Game Loop & State Machine
 Administra el ciclo de vida de la partida, el reloj global y las transiciones limpias entre el modo de movilidad total (Exploración) y el modo estático (Batalla) inyectando el `Update` de Unity hacia estados POCO puros.
-* [Diagrama de Clases](./Core/Game%20Loop%20&%20State%20Machine/ClassDiagram_HighRes.md)
-* [Diagrama de Secuencia](./Core/Game%20Loop%20&%20State%20Machine/SequenceDiagram.md)
-* [Mapa de Integración en Unity](./Core/Game%20Loop%20&%20State%20Machine/IntegrationMap.md)
+* [Diagrama de Clases](./Core/GameLoop_and_StateMachine/ClassDiagram_HighRes.md)
+* [Diagrama de Secuencia](./Core/GameLoop_and_StateMachine/SequenceDiagram.md)
+* [Mapa de Integración en Unity](./Core/GameLoop_and_StateMachine/IntegrationMap.md)
 
 ### 3. 🏃 Player & Movement
 Contiene las matemáticas vectoriales para la física y el movimiento en primera persona, el procesamiento de inputs y la comunicación con el `Animator` del mago, respetando los bloqueos dictados por la máquina de estados.
-* [Diagrama de Clases](./Core/Player%20&%20Movement/ClassDiagram_HighRes.md)
-* [Diagrama de Secuencia](./Core/Player%20&%20Movement/SequenceDiagram.md)
-* [Mapa de Integración en Unity](./Core/Player%20&%20Movement/IntegrationMap.md)
+* [Diagrama de Clases](./Core/Player_and_Movement/ClassDiagram_HighRes.md)
+* [Diagrama de Secuencia](./Core/Player_and_Movement/SequenceDiagram.md)
+* [Mapa de Integración en Unity](./Core/Player_and_Movement/IntegrationMap.md)
 
 ### 4. ⚔️ Typing Combat System
 El motor de validación ortográfica puro. Se encarga de capturar las pulsaciones de teclas (`Event.current.character`), calcular el progreso, las palabras por minuto (WPM), la precisión y el multiplicador de daño sin depender de la carga del motor gráfico.
-* [Diagrama de Clases](./Core/Typing%20Combat%20System/ClassDiagram_HighRes.md)
-* [Diagrama de Secuencia](./Core/Typing%20Combat%20System/SequenceDiagram.md)
-* [Mapa de Integración en Unity](./Core/Typing%20Combat%20System/IntegrationMap.md)
+* [Diagrama de Clases](./Core/TypingCombat_and_System/ClassDiagram_HighRes.md)
+* [Diagrama de Secuencia](./Core/TypingCombat_and_System/SequenceDiagram.md)
+* [Mapa de Integración en Unity](./Core/TypingCombat_and_System/IntegrationMap.md)
 
 ---
 
