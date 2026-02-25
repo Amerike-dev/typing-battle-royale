@@ -12,6 +12,3 @@ graph TD
     H --> I[Conexión con el Host mediante <br/>Netcode for GameObjects]
     I --> J[Esperar a que el Host inicie la partida]
     J --> K([Fin])
-
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#f9f,stroke:#333,stroke-width:2px
