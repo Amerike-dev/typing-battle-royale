@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     A([Inicio]) --> B[Abrir aplicación de Windows]
     B --> C[Ver PIN en la pantalla del Host]
