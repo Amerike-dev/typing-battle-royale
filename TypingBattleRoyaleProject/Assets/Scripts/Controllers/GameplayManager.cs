@@ -2,36 +2,25 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
-    private GameState _currentState;
+    public static GameplayManager Instance;
 
-    private WaitingState _waitingState;
-    private PlayState _playState;
-    private GameOverState _gameOverState;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        InitializeStates();
+    }
 
     private void InitializeStates()
     {
-        _waitingState = new WaitingState(this);
-        _playState = new PlayState(this);
-        _gameOverState = new GameOverState(this);
-    }
-
-    void Update()
-    {
-        if (_currentState != null)
-        {
-            _currentState.Update();
-        }
-    }
-
-    public void SwitchState(GameState newState)
-    {
-        if (_currentState != null)
-        {
-            _currentState.Exit();
-        }
-
-        _currentState = newState;
-
-        _currentState.Enter();
+        
     }
 }

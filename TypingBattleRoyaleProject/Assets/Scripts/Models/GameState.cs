@@ -1,15 +1,21 @@
-using UnityEngine;
-
-public abstract class GameState
+public abstract class GameState : IGameState
 {
-    public GameplayManager manager;
+    protected GameplayManager manager;
 
     public GameState(GameplayManager manager)
     {
         this.manager = manager;
     }
 
-    public abstract void Enter();
-    public abstract void Update();
-    public abstract void Exit();
+    public virtual void Enter()
+    {
+    }
+
+    public virtual void Update()
+    {
+    }
+
+    public virtual void Exit()
+    {
+    }
 }
