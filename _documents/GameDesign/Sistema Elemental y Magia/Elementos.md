@@ -8,12 +8,6 @@ Versión 1.0
 
 El **Sistema Elemental** define la identidad de juego, el estilo estratégico y las relaciones de poder dentro del battle royale.
 
-Cada jugador elige una **afinidad elemental**, la cual determina:
-
-- Enfoque táctico.  
-- Fortalezas y debilidades.  
-- Interacciones dentro del espectro elemental.  
-
 El sistema se compone de:
 
 - Elementos Fundamentales  
@@ -36,6 +30,7 @@ Los elementos fundamentales representan las fuerzas primarias del sistema.
 
 ## Agua
 - Aplicación constante de **Mojar**.  
+- Curación.
 - Control de zonas.  
 - Sinergias masivas con Hielo y Electricidad.  
 
