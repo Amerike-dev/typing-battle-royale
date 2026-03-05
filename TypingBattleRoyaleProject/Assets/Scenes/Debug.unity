@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e81595ab5fb73419d72cdde77ce3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebbugController
+  DebugText: Baki
 --- !u!4 &385336039
 Transform:
   m_ObjectHideFlags: 0
