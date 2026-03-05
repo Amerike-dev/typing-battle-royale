@@ -18,4 +18,9 @@ public abstract class GameState : IGameState
     public virtual void Exit()
     {
     }
+    
+    public virtual void Execute(float tick)
+    {
+
+    }
 }
