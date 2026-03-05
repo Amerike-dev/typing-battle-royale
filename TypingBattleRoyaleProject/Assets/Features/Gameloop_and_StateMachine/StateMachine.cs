@@ -19,11 +19,13 @@ public class StateMachine
 
     public void ChangeState(IGameState newState)
     {
-
+        currentState.Exit();
+        newState.Enter();
+        currentState = newState;
     }
 
-    public void Execute()
+    public void Execute(float newTick)
     {
-        //este se tiene que ejecutar cada tick
+        
     }
 }
