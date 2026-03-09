@@ -27,8 +27,12 @@ public class CastInputController : MonoBehaviour
 
     private void TextInput(char input)
     {
-        if (input == '\n' || input == '\r')
+        bool typed = CombatLogic.ValidateCharacter(input);
+
+        if (input == '\n' || input == '\r') return;
+        if (!typed)
         {
+            Debug.Log("Correct letter: " + CombatLogic.SpellText[CombatLogic.CurrentIndex()] + " Mistypo: " + input);
             return;
         }
 
@@ -38,20 +42,11 @@ public class CastInputController : MonoBehaviour
             return;
         }
 
-        bool typed = CombatLogic.ValidateCharacter(input);
+        Debug.Log("Correct. Letter: " + input);
 
-        if (typed)
+        if (CombatLogic.spellComplete)
         {
-            Debug.Log("Correct. Letter: " + input);
-
-            if (CombatLogic.spellComplete)
-            {
-                Debug.Log("End of Spell");
-            }
-        }
-        else
-        {
-            Debug.Log("Correct letter: " + CombatLogic.SpellText[CombatLogic.CurrentIndex()] + " Mistypo: " + input);
+            Debug.Log("End of Spell");
         }
     }
 }

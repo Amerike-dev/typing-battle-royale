@@ -3,12 +3,10 @@ using UnityEngine;
 
 public static class CombatLogic
 {
-
     public static string SpellText;
-
-    private static int _stringIndex = 0;
-    
     public static bool spellComplete => _stringIndex >= SpellText.Length;
+
+    private static int _stringIndex = 0;    
 
     public static void SetText(string spellText)
     {
@@ -16,10 +14,7 @@ public static class CombatLogic
         _stringIndex = 0;
     }
 
-    public static int CurrentIndex()
-    {
-        return _stringIndex;
-    }
+    public static int CurrentIndex() => _stringIndex;
 
     public static void EraseChar()
     {
