@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class MonolithData
 {
-    private string _ID;
-    private int _level;
+    [SerializeField] private string _ID;
+    [SerializeField] private int _level;
+    [SerializeField] private bool _isExhausted;
     private string _runeChallenge;
 
     public MonolithData(string ID, int level, string runeChallenge)
