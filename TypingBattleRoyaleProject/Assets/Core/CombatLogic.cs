@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public static class CombatLogic
@@ -6,42 +7,36 @@ public static class CombatLogic
     public static string SpellText;
 
     private static int _stringIndex = 0;
-
+    
+    public static bool spellComplete => _stringIndex >= SpellText.Length;
 
     public static void SetText(string spellText)
     {
         SpellText = spellText;
+        _stringIndex = 0;
     }
 
-    public static void ValidateCharacter()
+    public static int CurrentIndex()
     {
-        foreach (char c in Input.inputString)
+        return _stringIndex;
+    }
+
+    public static void EraseChar()
+    {
+        if (_stringIndex > 0)
         {
-            Debug.Log("Index no: " + _stringIndex);
-
-            if (c == "\b"[0])
-            {
-                _stringIndex--;
-                continue;
-            }
-
-            if (c == "\n"[0] || c == "\r"[0])
-            {
-                Debug.Log("Stop typing");
-                break;
-            }
-
-            if (c == SpellText[_stringIndex])
-            {
-                Debug.Log(c);
-            }
-            else if (c != SpellText[_stringIndex])
-            {
-                Debug.Log("Error");
-            }
-
-            _stringIndex++;
-
+            _stringIndex--;
         }
+    }
+
+    public static bool ValidateCharacter(char input)
+    {
+        if (input == SpellText[_stringIndex])
+        {
+            _stringIndex++;
+            return true;
+        }
+
+        return false;
     }
 }

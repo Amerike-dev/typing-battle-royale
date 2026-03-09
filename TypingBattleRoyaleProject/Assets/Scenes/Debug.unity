@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 385336039}
   - component: {fileID: 385336038}
+  - component: {fileID: 385336040}
   m_Layer: 0
   m_Name: Debug
   m_TagString: Untagged
@@ -148,7 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e81595ab5fb73419d72cdde77ce3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebbugController
-  DebugText: Baki
 --- !u!4 &385336039
 Transform:
   m_ObjectHideFlags: 0
@@ -164,6 +164,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &385336040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385336037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 267e0123ea183d740a5f693347d46f39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CastInputController
+  spellText: Ola, soy Homelo Chino
 --- !u!1 &1241989452
 GameObject:
   m_ObjectHideFlags: 0
