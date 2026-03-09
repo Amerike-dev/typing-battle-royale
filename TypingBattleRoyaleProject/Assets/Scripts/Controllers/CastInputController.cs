@@ -39,6 +39,7 @@ public class CastInputController : MonoBehaviour
         if (CombatLogic.spellComplete)
         {
             Debug.Log("Spell Completed");
+            OnDisable();
             return;
         }
 
