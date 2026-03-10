@@ -2,6 +2,7 @@ public class BattleState : IGameState
 {
     private CastInputController _castInput;
     private PlayerController _playerController;
+
     public BattleState(CastInputController castInput, PlayerController playerController)
     {
         this._castInput = castInput;
