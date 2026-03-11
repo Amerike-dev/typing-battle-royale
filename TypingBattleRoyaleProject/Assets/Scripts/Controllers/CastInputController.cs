@@ -8,6 +8,7 @@ public class CastInputController : MonoBehaviour
 
     public int incorrectInput = 0;
     public int lastInInput = 0;
+    public int BInput = 0;
     public string spellText;
 
     private void OnEnable()
@@ -27,7 +28,16 @@ public class CastInputController : MonoBehaviour
         {
             //CombatLogic.EraseChar();
             incorrectInput--;
+            BInput++;
             Debug.Log("Current Index now is: " + CombatLogic.CurrentIndex());
+            if (BInput == 0)
+            {
+                Debug.Log("First Back");
+            }
+            if (BInput >= 1)
+            {
+                CombatLogic.EraseChar();
+            }
         }
     }
 

@@ -1099,7 +1099,8 @@ MonoBehaviour:
   playerUI: {fileID: 1695427134}
   incorrectInput: 0
   lastInInput: 0
-  spellText: "Las ra\xEDzes"
+  BInput: 0
+  spellText: Arandanos verdes, frutos del olvido, conviertan a este perro en amarillo
 --- !u!1 &1462613893
 GameObject:
   m_ObjectHideFlags: 0
