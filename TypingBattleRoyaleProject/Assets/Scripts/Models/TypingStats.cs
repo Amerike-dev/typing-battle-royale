@@ -5,20 +5,20 @@ public class TypingStats
     public int TotalKeystrokes {  get; private set; }
     public float TimeElapsed {  get; private set; }
 
-    public double GetWPM()
+    public float GetWPM()
     {
-        if (TimeElapsed <= 0)
-            return 0;
+        if (TimeElapsed <= 0f)
+            return 0f;
 
-        return (Hits / 5.0) / (TimeElapsed / 60.0);
+        return (Hits / 5f) / (TimeElapsed / 60f);
     }
 
-    public double GetAccuracy()
+    public float GetAccuracy()
     {
         if (TotalKeystrokes <= 0)
-            return 0;
+            return 0f;
 
-        return (Hits / (double)TotalKeystrokes) * 100.0;
+        return (Hits / (float)TotalKeystrokes) * 100f;
     }
 
 }
