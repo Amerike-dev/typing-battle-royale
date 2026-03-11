@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class CastInputController : MonoBehaviour
 {
     public PlayerUI playerUI;
-
     public int incorrectInput = 0;
     public int lastInInput = 0;
     public int BInput = 0;
@@ -26,7 +25,6 @@ public class CastInputController : MonoBehaviour
     {
         if (Keyboard.current.backspaceKey.wasPressedThisFrame)
         {
-            //CombatLogic.EraseChar();
             incorrectInput--;
             BInput++;
             Debug.Log("Current Index now is: " + CombatLogic.CurrentIndex());

@@ -5,7 +5,6 @@ public static class CombatLogic
 {
     public static string SpellText;
     public static bool spellComplete => _stringIndex >= SpellText.Length;
-
     public static int _stringIndex = 0;
 
     public static void SetText(string spellText)

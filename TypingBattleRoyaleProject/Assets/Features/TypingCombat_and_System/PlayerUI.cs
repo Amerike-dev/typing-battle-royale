@@ -4,10 +4,8 @@ using TMPro;
 public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
-
     public GameObject InG_UI;
     public GameObject InS_UI;
-
     public bool G_UI = true;
 
     //Texto que se va a mostrar en el SpellUI.
