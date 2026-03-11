@@ -5,8 +5,7 @@ public static class CombatLogic
 {
     public static string SpellText;
     public static bool spellComplete => _stringIndex >= SpellText.Length;
-
-    private static int _stringIndex = 0;    
+    public static int _stringIndex = 0;
 
     public static void SetText(string spellText)
     {
@@ -29,6 +28,7 @@ public static class CombatLogic
         if (input == SpellText[_stringIndex])
         {
             _stringIndex++;
+
             return true;
         }
 
