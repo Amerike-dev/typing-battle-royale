@@ -1,24 +1,23 @@
 public class TypingStats
 {
-    public int Hits { get; private set; }
-    public int Errors {  get; private set; }
-    public int TotalKeystrokes {  get; private set; }
-    public float TimeElapsed {  get; private set; }
+    public int hits;
+    public int totalKeystrokes;
+    public float timeElapsed;
 
     public float GetWPM()
     {
-        if (TimeElapsed <= 0f)
+        if (timeElapsed <= 0f)
             return 0f;
 
-        return (Hits / 5f) / (TimeElapsed / 60f);
+        return (hits / 5f) / (timeElapsed / 60f);
     }
 
     public float GetAccuracy()
     {
-        if (TotalKeystrokes <= 0)
+        if (totalKeystrokes <= 0)
             return 0f;
 
-        return (Hits / (float)TotalKeystrokes) * 100f;
+        return (hits / (float)totalKeystrokes) * 100f;
     }
 
 }
