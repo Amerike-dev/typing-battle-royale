@@ -5,6 +5,8 @@ public class TypingStats
     public int TotalKeystrokes {  get; private set; }
     public float TimeElapsed {  get; private set; }
 
+    public float damaged = 10;
+
     public float GetWPM()
     {
         if (TimeElapsed <= 0f)
@@ -19,6 +21,14 @@ public class TypingStats
             return 0f;
 
         return (Hits / (float)TotalKeystrokes) * 100f;
+    }
+
+    public float GetBonus()
+    {
+        if (GetAccuracy() == 90f)
+        return (damaged * GetAccuracy());
+
+        return (GetAccuracy());
     }
 
 }
