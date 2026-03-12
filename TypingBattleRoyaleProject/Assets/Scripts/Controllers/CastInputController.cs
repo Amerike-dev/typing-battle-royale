@@ -9,6 +9,9 @@ public class CastInputController : MonoBehaviour
     public int lastInInput = 0;
     public int BInput = 0;
     public string spellText;
+    
+    [Header("ViewFeedback")]
+    public SpellUIController uiController;
 
     private void OnEnable()
     {
@@ -35,6 +38,7 @@ public class CastInputController : MonoBehaviour
             if (BInput >= 1)
             {
                 CombatLogic.EraseChar();
+                uiController.UpdateDisplay(CombatLogic.CurrentIndex(), false);
             }
         }
     }
@@ -42,6 +46,7 @@ public class CastInputController : MonoBehaviour
     private void TextInput(char input)
     {
         bool typed = CombatLogic.ValidateCharacter(input);
+        uiController.UpdateDisplay(CombatLogic.CurrentIndex(), !typed);
 
         if (input == '\n' || input == '\r') return;
         if (!typed)
