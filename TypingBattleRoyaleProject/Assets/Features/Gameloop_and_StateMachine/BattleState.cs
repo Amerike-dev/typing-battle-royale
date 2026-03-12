@@ -1,3 +1,5 @@
+using System.Numerics;
+
 public class BattleState : IGameState
 {
     private CastInputController _castInput;
