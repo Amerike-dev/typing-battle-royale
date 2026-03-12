@@ -15,13 +15,9 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    private void Awake()
     {
-        
+
     }
 }
