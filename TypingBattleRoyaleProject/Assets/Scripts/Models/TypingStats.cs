@@ -23,12 +23,23 @@ public class TypingStats
         return (Hits / (float)TotalKeystrokes) * 100f;
     }
 
-    public float GetBonus()
+    public float GetDamageBonusMultiplier()
     {
-        if (GetAccuracy() == 90f)
-        return (damaged * GetAccuracy());
+        float accuracy = GetAccuracy();
 
-        return (GetAccuracy());
+        if (accuracy > 90f)
+            return 1.1f;
+
+        if (accuracy >= 80f)
+            return 1f;
+
+        if (accuracy >= 50f)
+            return 0.8f;
+
+        if (accuracy >= 30f)
+            return 0.5f;
+
+        return 0f;
     }
 
 }
