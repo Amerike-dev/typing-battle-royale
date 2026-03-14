@@ -27,19 +27,19 @@ public class TypingStats
     {
         float accuracy = GetAccuracy();
 
-        if (accuracy > 90f)
-            return 1.1f;
-
-        if (accuracy >= 80f)
-            return 1f;
-
-        if (accuracy >= 50f)
-            return 0.8f;
-
-        if (accuracy >= 30f)
-            return 0.5f;
-
-        return 0f;
+        switch (accuracy)
+        {
+            case > 90f:
+                return 1.1f;
+            case >= 80f:
+                return 1f;
+            case >= 50f:
+                return 0.8f;
+            case >= 30f:
+                return 0.5f;
+            default:
+                return 0f;
+        }
     }
 
 }
