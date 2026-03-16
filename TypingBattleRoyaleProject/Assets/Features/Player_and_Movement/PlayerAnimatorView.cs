@@ -10,4 +10,14 @@ public class PlayerAnimatorView : MonoBehaviour
         playerAnimator.SetBool("IsMoving", isMoving);
         playerAnimator.SetFloat("Speed", speed);
     }
+
+    public void TriggerCasting()
+    {
+        playerAnimator.SetTrigger("Casting");
+    }
+
+    public void StopCasting()
+    {
+        playerAnimator.ResetTrigger("Casting");
+    }
 }
