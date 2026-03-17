@@ -15,9 +15,25 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
+    private StateMachine stateMachine;
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        instance = this;
+        
+        DontDestroyOnLoad(gameObject);
+
+        //Crear estado inicial/exploracion
+    }
+
+    private void Update()
+    {
+        stateMachine?.Update();
     }
 }
