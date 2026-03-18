@@ -252,8 +252,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 939126920}
-        m_TargetAssemblyTypeName: CamaraController, Assembly-CSharp
+      - m_Target: {fileID: 587757562}
+        m_TargetAssemblyTypeName: UISwitchTest, Assembly-CSharp
         m_MethodName: ExplorOn
         m_Mode: 1
         m_Arguments:
@@ -565,6 +565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 587757561}
+  - component: {fileID: 587757562}
   m_Layer: 0
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -589,6 +590,21 @@ Transform:
   - {fileID: 539322166}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &587757562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587757560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1417718dcf0c45e46b76e4592c6a65aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UISwitchTest
+  CamaraController: {fileID: 939126920}
+  Spell: {fileID: 360818310}
+  Explor: {fileID: 539322165}
 --- !u!1 &629211099
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,8 +972,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 939126920}
-        m_TargetAssemblyTypeName: CamaraController, Assembly-CSharp
+      - m_Target: {fileID: 587757562}
+        m_TargetAssemblyTypeName: UISwitchTest, Assembly-CSharp
         m_MethodName: SpellOn
         m_Mode: 1
         m_Arguments:
@@ -1084,8 +1100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CamaraController
   playerBody: {fileID: 1504471848}
   OnCamaraMove: 1
-  Spell: {fileID: 360818310}
-  Explor: {fileID: 539322165}
 --- !u!1 &956698117
 GameObject:
   m_ObjectHideFlags: 0

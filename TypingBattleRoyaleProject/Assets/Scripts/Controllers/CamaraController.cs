@@ -43,24 +43,4 @@ public class CamaraController : MonoBehaviour
         xRotation = transform.localEulerAngles.x;
         if (xRotation > 180f) xRotation -= 360f;
     }
-    public GameObject Spell;
-    public GameObject Explor;
-    public void SpellOn()
-    {
-        if (OnCamaraMove)
-        {
-            Explor.SetActive(false);
-            OnCamaraMove = false;
-            Spell.SetActive(true);
-        }
-    }
-    public void ExplorOn()
-    {
-        if(!OnCamaraMove)
-        {
-            Spell.SetActive(false);
-            OnCamaraMove = true;
-            Explor.SetActive(true);
-        }
-    }
 }
