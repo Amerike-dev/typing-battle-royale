@@ -1,16 +1,30 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class CastInputController : MonoBehaviour
 {
+    
     public PlayerUI playerUI;
     public int incorrectInput = 0;
     public int lastInInput = 0;
-    public int BInput = 0;
     public string spellText;
+    
 
+    [Header("Typing Stats")]
+    [SerializeField] private InputActionReference _cast;
+    private bool _casting;
+    private TypingStats _typingStats;
+    private float _timeElapsed;
+    private int _totalKeysPressed;
+    public float wordsPerMinute;
+    public float accuracy;
+    
+
+    //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
 
@@ -24,13 +38,20 @@ public class CastInputController : MonoBehaviour
 
     private void OnEnable()
     {
+        _casting = true;
+        _typingStats = new TypingStats();
         CombatLogic.SetText(spellText);
         _errorCount = 0;
         Keyboard.current.onTextInput += TextInput;
+        _cast.action.started += EvaluateAccuracy;
+        wordsPerMinute = 0;
+        accuracy = 0;
+        StartCoroutine(CountTimeElapsed());
     }
 
     private void OnDisable()
     {
+        StopCoroutine(CountTimeElapsed());
         Keyboard.current.onTextInput -= TextInput;
     }
 
@@ -44,6 +65,9 @@ public class CastInputController : MonoBehaviour
 
         if (backspaceKey.wasPressedThisFrame)
         {
+            _totalKeysPressed++;
+            incorrectInput--;
+            CombatLogic.EraseChar();
             _backSpaceTimer = _backSpaceDelay;
             BackspaceBehaviour();
         }
@@ -75,9 +99,10 @@ public class CastInputController : MonoBehaviour
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), false);
         }
     }
-
+   
     private void TextInput(char input)
     {
+        _totalKeysPressed++;
         if (input == '\n' || input == '\r') return;
 
         bool typed = CombatLogic.ValidateCharacter(input);
@@ -103,5 +128,28 @@ public class CastInputController : MonoBehaviour
 
         Debug.Log("Correct. Letter: " + input);
     }
+    private void EvaluateAccuracy(InputAction.CallbackContext obj)
+    {
+        _typingStats.timeElapsed = _timeElapsed;
+        _typingStats.hits = spellText.Length - incorrectInput;
+        _typingStats.totalKeystrokes = _totalKeysPressed;
+        wordsPerMinute = _typingStats.GetWPM();
+        accuracy = _typingStats.GetAccuracy();
+        _casting = false;
+
+        //Se reinicia el script en el onDisable, aqui antes de eso iria la funcion que castea el hechizo y ense�ar el wpm y el accuracy en un display
+
+        gameObject.SetActive(false);
+    }
+
+    public IEnumerator CountTimeElapsed()
+    {
+        while(_casting)
+        {
+            _timeElapsed ++;
+            yield return new WaitForSeconds(1f);
+        }
+    }
+        
 
 }
