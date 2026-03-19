@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
 
+    public float maxHealth;
+    public float currentHealth;
+
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
