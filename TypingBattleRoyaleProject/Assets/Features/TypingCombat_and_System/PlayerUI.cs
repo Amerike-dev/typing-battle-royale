@@ -1,9 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
+
+    [SerializeField] private Slider LocalHPSlider;
+
+    [SerializeField] private Slider EnemyHPSlider;
+
+    public PlayerStats localStats;
+
+    public PlayerStats enemyStats;
+
     public GameObject InG_UI;
     public GameObject InS_UI;
     public bool G_UI = true;
