@@ -1,4 +1,4 @@
-## Roadmap de Programación: Wizards of the Keyboard
+## Roadmap de Programación: Keyboard Battle Royale
 
 ### Mes 1: Cimientos y Máquina de Estados (Semanas 1-4)
 
