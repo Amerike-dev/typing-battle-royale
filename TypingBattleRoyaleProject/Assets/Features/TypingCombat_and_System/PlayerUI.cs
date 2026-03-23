@@ -6,17 +6,17 @@ public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
 
-    [SerializeField] private Slider LocalHPSlider;
-
-    [SerializeField] private Slider EnemyHPSlider;
-
-    public PlayerStats localStats;
-
-    public PlayerStats enemyStats;
 
     public GameObject InG_UI;
     public GameObject InS_UI;
     public bool G_UI = true;
+    [SerializeField] private Slider LocalHPSlider;
+
+    [SerializeField] private Slider EnemyHPSlider;
+
+    private PlayerStats localStats;
+
+    private PlayerStats enemyStats;
 
     //Texto que se va a mostrar en el SpellUI.
     public TextMeshProUGUI SpellText;
@@ -32,6 +32,26 @@ public class PlayerUI : MonoBehaviour
     {
         CurrentText();
         SpellCompleted();
+        UpdateHPSliders();
+    }
+
+    public void SetPlayerStats(PlayerStats localStats, PlayerStats enemyStats)
+    {
+        this.localStats = localStats;
+        this.enemyStats = enemyStats;
+    }
+
+    private void UpdateHPSliders()
+    {
+        /*if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
+        {
+            LocalHPSlider.value = localStats.CurrentHP / localStats.MaxHP;
+        }
+
+        if (enemyStats != null && EnemyHPSlider != null && enemyStats.MaxHP > 0)
+        {
+            EnemyHPSlider.value = enemyStats.CurrentHP / enemyStats.MaxHP;
+        }*/
     }
     public void CurrentText()
     {
