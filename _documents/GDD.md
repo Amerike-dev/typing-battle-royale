@@ -1,7 +1,7 @@
-# 🧙‍♂️ Wizards of the Keyboard (MVP)
+# 🧙‍♂️ Keyboard Battle Royale (MVP)
 # Visión General 
 
-Wizards of the Keyboard es un videojuego desarrollado en Unity 3D de género Battle Royale. WotK busca fusionar la exploración en primera persona con una mecánica de combate única basada en la escritura mecánica (typing-combat). El proyecto se concibe como un Producto Mínimo Viable (MVP) con el objetivo de brindar una nueva jugabilidad e innovar en el mercado actual. El fin del proyecto es ser presentado ante distribuidoras de la industria, empezando por el Demo Day en Amerike CDMX. 
+Keyboard Battle Royale es un videojuego desarrollado en Unity 3D de género Battle Royale. WotK busca fusionar la exploración en primera persona con una mecánica de combate única basada en la escritura mecánica (typing-combat). El proyecto se concibe como un Producto Mínimo Viable (MVP) con el objetivo de brindar una nueva jugabilidad e innovar en el mercado actual. El fin del proyecto es ser presentado ante distribuidoras de la industria, empezando por el Demo Day en Amerike CDMX. 
 
 Esta documentación está diseñada para alinear al equipo multidisciplinario (Desarrolladores y Artistas) durante los Sprints de producción, asegurando una arquitectura escalable, optimizada para multijugador LAN y un flujo de trabajo sin cuellos de botella.
 

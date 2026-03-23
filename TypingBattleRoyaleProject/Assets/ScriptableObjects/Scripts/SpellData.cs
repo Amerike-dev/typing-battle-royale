@@ -7,5 +7,5 @@ public class SpellData : ScriptableObject
     public float baseDamage;
     public GameObject particlePrefab;
     public string runeString;
+    public ParticleSystem particleVFX;
 }
-
