@@ -1236,8 +1236,10 @@ MonoBehaviour:
   playerUI: {fileID: 1695427134}
   incorrectInput: 0
   lastInInput: 0
-  BInput: 0
   spellText: Arandanos verdes, frutos del olvido, conviertan a este perro en amarillo
+  _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  wordsPerMinute: 0
+  accuracy: 0
   uiController: {fileID: 1532856982}
 --- !u!1 &1462613893
 GameObject:
