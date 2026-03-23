@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rb;
     private bool _isGrounded;
 
+    public PlayerStats stats;
+    public PlayerInventory inventory;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
