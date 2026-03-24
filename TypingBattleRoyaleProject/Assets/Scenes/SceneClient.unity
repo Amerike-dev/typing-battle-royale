@@ -11637,6 +11637,7 @@ GameObject:
   - component: {fileID: 1504471851}
   - component: {fileID: 1504471850}
   - component: {fileID: 1504471849}
+  - component: {fileID: 1504471852}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -11740,6 +11741,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1504471847}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1504471852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504471847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 5
+  jumpForce: 5
+  maxHealth: 0
+  currentHealth: 0
+  cameraController: {fileID: 939126920}
+  castInputController: {fileID: 0}
+  playerAnimatorView: {fileID: 0}
+  explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
 --- !u!1 &1544604241
 GameObject:
   m_ObjectHideFlags: 0
