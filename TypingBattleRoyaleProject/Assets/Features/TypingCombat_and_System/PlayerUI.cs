@@ -6,16 +6,16 @@ public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
 
-
     public GameObject InG_UI;
     public GameObject InS_UI;
     public bool G_UI = true;
-    [SerializeField] private Slider LocalHPSlider;
 
+    [Header("Sliders de vida Jugador y Enemigo")]
+    [SerializeField] private Slider LocalHPSlider;
     [SerializeField] private Slider EnemyHPSlider;
 
+    [Header("PlayerStats")]
     private PlayerStats localStats;
-
     private PlayerStats enemyStats;
 
     //Texto que se va a mostrar en el SpellUI.
@@ -24,6 +24,7 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
+        CreatePlayerCanvas();
         InG_UI.SetActive(true);
         InS_UI.SetActive(false);
     }
@@ -43,7 +44,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateHPSliders()
     {
-        /*if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
+        if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
         {
             LocalHPSlider.value = localStats.CurrentHP / localStats.MaxHP;
         }
@@ -51,7 +52,7 @@ public class PlayerUI : MonoBehaviour
         if (enemyStats != null && EnemyHPSlider != null && enemyStats.MaxHP > 0)
         {
             EnemyHPSlider.value = enemyStats.CurrentHP / enemyStats.MaxHP;
-        }*/
+        }
     }
     public void CurrentText()
     {
@@ -90,5 +91,18 @@ public class PlayerUI : MonoBehaviour
         {
             SpellTypingOFF();
         }
+    }
+
+    private void CreatePlayerCanvas()
+    {
+        GameObject canvasGO = new GameObject("Canvas");
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        GameObject sliderGO = new GameObject("Slider");
+        sliderGO.transform.parent = canvasGO.transform;
+        Slider slidercomponent = sliderGO.AddComponent<Slider>();
     }
 }
