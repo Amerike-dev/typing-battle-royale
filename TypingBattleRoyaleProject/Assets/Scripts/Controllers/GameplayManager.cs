@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class GameplayManager : MonoBehaviour
     public BattleState battleState;
     public WaitingState waitingState;
     public PlayerController playerController;
+    
+    
+    public PlayState playState;
+    [SerializeField] private TextMeshProUGUI _countdownText;
+    public TextMeshProUGUI CountdownText => _countdownText;
 
     [SerializeField] private Transform[] _spawnPoints;
     private void Awake()
@@ -27,7 +33,7 @@ public class GameplayManager : MonoBehaviour
     {   
         InitializeStates();
         stateMachine = new StateMachine(explorationState, 0);
-
+        waitingState.Enter();
 
     }
 
@@ -53,5 +59,13 @@ public class GameplayManager : MonoBehaviour
         explorationState = new ExplorationState(playerController.camaraController, this);
         battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
         waitingState = new WaitingState(this);
+        
+        playState = new PlayState(this); 
+        waitingState = new WaitingState(this);
+    }
+    
+    private void Update()
+    {
+        stateMachine?.Update();
     }
 }
