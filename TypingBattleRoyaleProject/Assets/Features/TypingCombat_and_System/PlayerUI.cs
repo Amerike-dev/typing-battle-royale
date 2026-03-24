@@ -44,7 +44,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateHPSliders()
     {
-        if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
+        /*if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
         {
             LocalHPSlider.value = localStats.CurrentHP / localStats.MaxHP;
         }
@@ -52,7 +52,7 @@ public class PlayerUI : MonoBehaviour
         if (enemyStats != null && EnemyHPSlider != null && enemyStats.MaxHP > 0)
         {
             EnemyHPSlider.value = enemyStats.CurrentHP / enemyStats.MaxHP;
-        }
+        }*/
     }
     public void CurrentText()
     {
