@@ -733,18 +733,13 @@ El arte de bajo polígono es tanto estético como funcional: permite una lectura
 
 ### 9.2 Los Biomas del Mapa
 
-El mundo de WotK incluye 8 zonas bioma, cada una con sus propias estructuras y puntos de interés:
+El mundo de WotK incluye 3 zonas bioma, cada una con sus propias estructuras y puntos de interés:
 
 | Zona | Descripción | Tipo de Obstáculos | Monolitos Típicos |
 |---|---|---|---|
-| **Ejército Helado** | Meseta glaciar con ruinas de fortalezas de hielo | Paredes de hielo, torres derrumbadas | Hielo, Tierra |
-| **Cañón Aullante** | Cañón con vientos que distorsionan el sonido | Paredes de roca, salientes | Aire, Electricidad |
-| **Bosque Bananil** | Selva surrealista con árboles de gran escala | Troncos masivos, raíces | Naturaleza, Agua |
-| **Realidad Crasheada** | Zona glitchada con geometría fragmentada | Plataformas flotantes, huecos | Luz, Oscuridad |
-| **Desierto Desaparecido** | Desierto con ruinas semi-enterradas | Dunas, columnas | Fuego, Tierra |
-| **Tormenta Astral** | Centro del mapa, zona de alta energía | Cristales de energía, arcos | Todos los Definitivos |
-| **Bahía de Mlimbri** | Costa con estructuras sobre el agua | Puentes, pilares | Agua, Hielo |
-| **Colinas del Eco** | Zona central elevada con visibilidad total | Poca cobertura, riesgo alto | Lava, Electricidad |
+| **Cañón Aullante** | Cañón desertico con vientos fuertes repletos de polvo de mteorito | Paredes de roca, materia oscura, restos de dios| Aire, Electricidad|
+| **Bosque Bananil** | Selva surrealista con árboles de gran escala con un pueblo estilo americano | Troncos masivos, raíces | Naturaleza, Tierra|
+| **Bahía de Mlimbri** | Costa con estructuras estilo lovecraft sobre el agua | Puentes, pilares | Agua, Lava |
 
 ### 9.3 Lógica de Spawn y Distribución
 
