@@ -9,6 +9,7 @@ public class NetworkManagerMock : MonoBehaviour
     public int playerAmount = 2;
     [SerializeField] private GameObject _playerPrefab;
     public List<PlayerStats> Players;
+    public List<PlayerController> Controllers;
 
     private void Awake()
     {
@@ -27,16 +28,23 @@ public class NetworkManagerMock : MonoBehaviour
 
     void Start()
     {
+        
+
+    }
+
+    public void GameInitialize()
+    {
         Players = new List<PlayerStats>();
+        Controllers = new List<PlayerController>();
 
         for (int i = 0; i < playerAmount; i++)
         {
             GameObject tempPlayer = Instantiate(_playerPrefab, transform.position, Quaternion.identity);
             string id = PlayerIDGenerator.GenerateID();
             PlayerStats generatedStats = new PlayerStats(id, 100);
+            PlayerInventory generatedInventory = new PlayerInventory();
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
             playerController.stats = generatedStats;
-            PlayerInventory generatedInventory = new PlayerInventory();
             playerController.inventory = generatedInventory;
 
             if (i != 0)
@@ -45,7 +53,7 @@ public class NetworkManagerMock : MonoBehaviour
             }
 
             Players.Add(generatedStats);
+            Controllers.Add(playerController);
         }
-
     }
 }
