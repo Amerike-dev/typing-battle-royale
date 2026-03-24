@@ -5,7 +5,7 @@ using System.Collections;
 namespace TMPro.Examples
 {
     
-    public class CameraController : MonoBehaviour
+    public class camaraController : MonoBehaviour
     {
         public enum CameraModes { Follow, Isometric, Free }
 

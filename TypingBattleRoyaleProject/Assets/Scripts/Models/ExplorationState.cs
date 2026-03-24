@@ -3,18 +3,19 @@ using UnityEngine;
 
 public class ExplorationState : IGameState
 {
-    private CamaraController _CameraController;
+    public CamaraController camaraController;
+    private GameplayManager _gameplayManager;
    
-    public ExplorationState(CameraController cameraController, GameplayManager manager)
+    public ExplorationState(CamaraController _camaraController, GameplayManager _manager)
     {
-
+        _camaraController = camaraController;
+        _gameplayManager = _manager;
     }
     public void Enter()
-    {
-        if (!_CameraController.OnCamaraMove)
-        {
-            _CameraController.OnCamaraMove = true;
-        }
+    { 
+        camaraController.OnCamaraMove = true; 
+        _gameplayManager.playerController.onExplorationState = true;
+        
     }
 
     public void Execute(float tick)
@@ -29,9 +30,8 @@ public class ExplorationState : IGameState
 
     public void Exit()
     {
-        if (_CameraController.OnCamaraMove)
-        {
-            _CameraController.OnCamaraMove = false;
-        }
+        camaraController.OnCamaraMove = false; 
+        _gameplayManager.playerController.onExplorationState = false;
+        
     }
 }
