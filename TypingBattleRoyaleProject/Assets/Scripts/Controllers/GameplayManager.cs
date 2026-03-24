@@ -3,6 +3,11 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager Instance;
+    public StateMachine stateMachine;
+    public ExplorationState explorationState;
+    public BattleState battleState;
+    public WaitingState waitingState;
+    public PlayerController playerController;
 
     [SerializeField] private Transform[] _spawnPoints;
     private void Awake()
@@ -21,6 +26,9 @@ public class GameplayManager : MonoBehaviour
     private void Start()
     {   
         InitializeStates();
+        stateMachine = new StateMachine(explorationState, 0);
+
+
     }
 
     private void InitializeStates()
@@ -41,6 +49,9 @@ public class GameplayManager : MonoBehaviour
             Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
             controller.transform.position = spawnPoint;
         }
-
+        
+        explorationState = new ExplorationState(playerController.camaraController, this);
+        battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
+        waitingState = new WaitingState(this);
     }
 }
