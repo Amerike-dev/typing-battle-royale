@@ -738,8 +738,8 @@ El mundo de WotK incluye 3 zonas bioma, cada una con sus propias estructuras y p
 | Zona | Descripción | Tipo de Obstáculos | Monolitos Típicos |
 |---|---|---|---|
 | **Cañón Aullante** | Cañón desertico con vientos fuertes repletos de polvo de mteorito | Paredes de roca, materia oscura, restos de dios| Aire, Electricidad|
-| **Bosque Bananil** | Selva surrealista con árboles de gran escala | Troncos masivos, raíces | Naturaleza, Tierra|
-| **Bahía de Mlimbri** | Costa con estructuras sobre el agua | Puentes, pilares | Agua, Lava |
+| **Bosque Bananil** | Selva surrealista con árboles de gran escala con un pueblo estilo americano | Troncos masivos, raíces | Naturaleza, Tierra|
+| **Bahía de Mlimbri** | Costa con estructuras estilo lovecraft sobre el agua | Puentes, pilares | Agua, Lava |
 
 ### 9.3 Lógica de Spawn y Distribución
 
