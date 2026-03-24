@@ -26,12 +26,6 @@ public class NetworkManagerMock : MonoBehaviour
         PlayerIDGenerator.ResetIDs();
     }
 
-    void Start()
-    {
-        
-
-    }
-
     public void GameInitialize()
     {
         Players = new List<PlayerStats>();
