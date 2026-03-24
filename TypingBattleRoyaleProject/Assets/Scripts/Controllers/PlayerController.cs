@@ -1,3 +1,4 @@
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,15 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
+    public CamaraController camaraController;
+    public CastInputController castInputController;
+    public PlayerAnimatorView playerAnimatorView;
+    public InputActionReference explorationState;
+
+    public bool onExplorationState;
+
+    public PlayerStats stats;
+    public PlayerInventory inventory;
 
     void Start()
     {
@@ -25,6 +35,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void OnEnable()
+    {
+        explorationState.action.started += ExplorationState;
+        explorationState.action.Enable();
+    }
+    void OnDisable()
+    {
+        explorationState.action.started -= ExplorationState;
+        explorationState.action.Disable();
+    }
+    void Awake()
+    {
+        onExplorationState = true;
+    }
     void Update()
     {
         MoveCharacter();
@@ -49,5 +73,13 @@ public class PlayerController : MonoBehaviour
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    public void ExplorationState(InputAction.CallbackContext context)
+    {
+        if(onExplorationState)
+            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
+        else
+            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);  
     }
 }
