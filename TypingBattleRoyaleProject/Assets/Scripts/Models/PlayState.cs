@@ -2,15 +2,29 @@ using UnityEngine;
 
 public class PlayState : GameState
 {
+    public PlayerUI playerUI;
+
     public PlayState(GameplayManager manager) : base(manager) { }
 
     public void DebugMessage()
     {
         Debug.Log("Representa el bucle principal de 10 minutos de combate y monolitos.");
     }
-    public override void Enter() { }
+    public override void Enter()
+    {
+        manager.playerController.enabled = true;
+        playerUI.SpellTypingOFF();
+        Debug.Log("[PlayState] Enter");
+    }
 
-    public override void Update() { }
+    public override void Update()
+    {
+        
+    }
 
-    public override void Exit() { }
+    public override void Exit()
+    {
+        manager.playerController.enabled = false;
+        Debug.Log("[PlayState] Exit");
+    }
 }
