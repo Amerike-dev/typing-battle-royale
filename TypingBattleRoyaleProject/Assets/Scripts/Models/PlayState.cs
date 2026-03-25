@@ -14,6 +14,11 @@ public class PlayState : GameState
     {
         manager.playerController.enabled = true;
         playerUI.SpellTypingOFF();
+        
+        Debug.Log("ENTRÓ A PLAYSTATE");
+        manager.StartMatch();
+        playerUI.SetMatchTimer(manager.GetMatchTimer());
+
         Debug.Log("[PlayState] Enter");
     }
 

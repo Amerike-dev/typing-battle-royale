@@ -12,6 +12,10 @@ public class PlayerUI : MonoBehaviour
     public TextMeshProUGUI SpellText;
     public TMP_InputField InputSpellText;
 
+    [Header("Mostrar Timer")]
+    [SerializeField] private TMPro.TextMeshProUGUI TimerText;
+    private MatchTimer matchTimer;
+
     void Start()
     {
         InG_UI.SetActive(true);
@@ -22,6 +26,7 @@ public class PlayerUI : MonoBehaviour
     {
         CurrentText();
         SpellCompleted();
+        UpdateTimerUI();
     }
     public void CurrentText()
     {
@@ -60,5 +65,22 @@ public class PlayerUI : MonoBehaviour
         {
             SpellTypingOFF();
         }
+    }
+
+    private void UpdateTimerUI()
+    {
+        if (matchTimer == null || !matchTimer.IsRunning) return;
+
+        float time = matchTimer.TimeRemaining;
+
+        int minutes = (int)(time / 60);
+        int seconds = (int)(time % 60);
+
+        TimerText.text = $"{minutes:00}:{seconds:00}";
+    }
+
+    public void SetMatchTimer(MatchTimer timer)
+    {
+        matchTimer = timer;
     }
 }
