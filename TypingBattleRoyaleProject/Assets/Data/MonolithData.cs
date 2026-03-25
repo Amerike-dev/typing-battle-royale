@@ -6,6 +6,7 @@ public class MonolithData
     [SerializeField] private int _level;
     [SerializeField] private bool _isExhausted;
     private string _runeChallenge;
+    public SpellData spellData;
 
     public MonolithData(string ID, int level, string runeChallenge)
     {
