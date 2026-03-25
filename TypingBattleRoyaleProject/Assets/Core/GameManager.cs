@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         }
     }
     private StateMachine stateMachine;
+    private ExplorationState explorationState;
 
     private void Awake()
     {
@@ -29,11 +30,17 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(gameObject);
 
-        //Crear estado inicial/exploracion
+        stateMachine = new StateMachine();
+        
+        explorationState = new ExplorationState();
+        stateMachine.ChangeState(explorationState);
     }
 
     private void Update()
     {
-        stateMachine?.Update();
+        if (stateMachine != null)
+        {
+            stateMachine.Update();
+        }
     }
 }
