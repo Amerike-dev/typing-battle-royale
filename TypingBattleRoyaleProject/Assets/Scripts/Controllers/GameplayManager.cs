@@ -13,7 +13,14 @@ public class GameplayManager : MonoBehaviour
     
     public PlayState playState;
     [SerializeField] private TextMeshProUGUI _countdownText;
-    public TextMeshProUGUI CountdownText => _countdownText;
+
+    public TextMeshProUGUI CountdownText
+    {
+        get
+        {
+            return _countdownText;
+        }
+    }
 
     [SerializeField] private Transform[] _spawnPoints;
     private void Awake()
@@ -59,9 +66,7 @@ public class GameplayManager : MonoBehaviour
         explorationState = new ExplorationState(playerController.camaraController, this);
         battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
         waitingState = new WaitingState(this);
-        
         playState = new PlayState(this); 
-        waitingState = new WaitingState(this);
     }
     
     private void Update()
