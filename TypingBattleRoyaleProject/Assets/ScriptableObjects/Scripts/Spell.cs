@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum Elements { None, Fire, Water, Earth, Wind, Arcane, Thunder, Dark, Light}
+public enum Elements { None = 0, Fire = 1, Water = 2, Earth = 3, Wind = 4, Arcane = 5, Thunder = 6, Dark, Light}
 [CreateAssetMenu(fileName = "Spell", menuName = "Wizard Stuff/Spell")]
 
 public class Spell : ScriptableObject
