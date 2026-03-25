@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -8,6 +9,18 @@ public class GameplayManager : MonoBehaviour
     public BattleState battleState;
     public WaitingState waitingState;
     public PlayerController playerController;
+    
+    
+    public PlayState playState;
+    [SerializeField] private TextMeshProUGUI _countdownText;
+
+    public TextMeshProUGUI CountdownText
+    {
+        get
+        {
+            return _countdownText;
+        }
+    }
 
     [Header("Timer")]
     [SerializeField] private float matchDuration = 600f;
@@ -35,6 +48,7 @@ public class GameplayManager : MonoBehaviour
 
         StartMatch();
 
+        waitingState.Enter();
     }
 
     private void Update()
@@ -64,6 +78,12 @@ public class GameplayManager : MonoBehaviour
         explorationState = new ExplorationState(playerController.camaraController, this);
         battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
         waitingState = new WaitingState(this);
+        playState = new PlayState(this); 
+    }
+    
+    private void Update()
+    {
+        stateMachine?.Update();
     }
 
     public void StartMatch()
