@@ -1,8 +1,12 @@
-# 🧙‍♂️ Wizards of the Keyboard (MVP) - Documentación Técnica
+# 🧙‍♂️ Typping Battle Royale (MVP) - Documentación Funcional y Técnica
 
 Esta documentación está diseñada para alinear al equipo multidisciplinario (Desarrolladores y Artistas) durante los Sprints de producción, asegurando una arquitectura escalable, optimizada para multijugador LAN y un flujo de trabajo sin cuellos de botella.
 
 ---
+## 📄 Definicion Funcional
+Revise la siguiente documentacion para tener un contexto completo del juego.
+
+* [Documentacion funcional](./Planning/FunctionalDoc.md)
 
 ## 🏛️ Arquitectura General
 

@@ -15,6 +15,11 @@ public static class CombatLogic
 
     public static int CurrentIndex() => _stringIndex;
 
+    public static void SetIndex(int index)
+    {
+        _stringIndex = Mathf.Clamp(index, 0, SpellText.Length);
+    }
+
     public static void EraseChar()
     {
         if (_stringIndex > 0)
@@ -34,4 +39,5 @@ public static class CombatLogic
 
         return false;
     }
+
 }
