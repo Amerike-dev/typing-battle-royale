@@ -13,12 +13,30 @@ public class GameplayManager : MonoBehaviour
     
     public PlayState playState;
     [SerializeField] private TextMeshProUGUI _countdownText;
+    [SerializeField] private TextMeshProUGUI _winnerText;
+    [SerializeField] private Canvas _endGameCanvas;
 
     public TextMeshProUGUI CountdownText
     {
         get
         {
             return _countdownText;
+        }
+    }
+    
+    public TextMeshProUGUI WinnerText
+    {
+        get
+        {
+            return _winnerText;
+        }
+    }
+    
+    public Canvas EndGameCanvas
+    {
+        get
+        {
+            return _endGameCanvas;
         }
     }
 
