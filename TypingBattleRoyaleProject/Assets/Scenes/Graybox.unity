@@ -10778,7 +10778,8 @@ GameObject:
   - component: {fileID: 754688017}
   - component: {fileID: 754688016}
   - component: {fileID: 754688015}
-  m_Layer: 0
+  - component: {fileID: 754688018}
+  m_Layer: 3
   m_Name: Cylinder (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10881,6 +10882,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754688013}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &754688018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754688013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d109571d9d5be4886c6e52e36173f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithView
+  unlockVFX: {fileID: 138197457}
+  monolithRenderer: {fileID: 754688016}
 --- !u!1 &839688555
 GameObject:
   m_ObjectHideFlags: 0
@@ -21015,7 +21030,8 @@ GameObject:
   - component: {fileID: 1046245456}
   - component: {fileID: 1046245455}
   - component: {fileID: 1046245454}
-  m_Layer: 0
+  - component: {fileID: 1046245457}
+  m_Layer: 3
   m_Name: Cylinder (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21118,6 +21134,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046245452}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1046245457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046245452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d109571d9d5be4886c6e52e36173f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithView
+  unlockVFX: {fileID: 850728651}
+  monolithRenderer: {fileID: 1046245455}
 --- !u!1 &1056085774
 GameObject:
   m_ObjectHideFlags: 0
@@ -22187,7 +22217,8 @@ GameObject:
   - component: {fileID: 1801533584}
   - component: {fileID: 1801533583}
   - component: {fileID: 1801533582}
-  m_Layer: 0
+  - component: {fileID: 1801533585}
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22290,6 +22321,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801533580}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1801533585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801533580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d109571d9d5be4886c6e52e36173f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithView
+  unlockVFX: {fileID: 920838159}
+  monolithRenderer: {fileID: 1801533583}
 --- !u!1 &1804566178
 GameObject:
   m_ObjectHideFlags: 0
@@ -22976,7 +23021,8 @@ GameObject:
   - component: {fileID: 2012491249}
   - component: {fileID: 2012491248}
   - component: {fileID: 2012491247}
-  m_Layer: 0
+  - component: {fileID: 2012491250}
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23079,6 +23125,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2012491245}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2012491250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012491245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d109571d9d5be4886c6e52e36173f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithView
+  unlockVFX: {fileID: 108928746}
+  monolithRenderer: {fileID: 2012491248}
 --- !u!1 &2014693765
 GameObject:
   m_ObjectHideFlags: 0
@@ -23325,6 +23385,11 @@ MonoBehaviour:
   jumpForce: 5
   maxHealth: 0
   currentHealth: 0
+  camaraController: {fileID: 0}
+  castInputController: {fileID: 0}
+  playerAnimatorView: {fileID: 0}
+  explorationState: {fileID: 0}
+  onExplorationState: 0
 --- !u!54 &2090840374
 Rigidbody:
   m_ObjectHideFlags: 0
