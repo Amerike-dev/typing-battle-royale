@@ -17,3 +17,4 @@ MonoBehaviour:
   particlePrefab: {fileID: 0}
   runeString: ember
   particleVFX: {fileID: 0}
+  elementType: 1

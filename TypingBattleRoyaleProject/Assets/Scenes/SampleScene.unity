@@ -441,6 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642859843}
+  - component: {fileID: 1642859844}
   m_Layer: 0
   m_Name: Monolith
   m_TagString: Untagged
@@ -463,6 +464,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1642859844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642859842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99b90c969c7ac26489517c5eaa84e409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithController
+  id: 
+  level: 0
+  runeChallenge: 
+  idPlayers: []
+  spells:
+  - {fileID: 11400000, guid: e4925dbe30e448347b495f2cb617ba9c, type: 2}
+  - {fileID: 11400000, guid: db834090701479d43be0209609b626fb, type: 2}
+  - {fileID: 11400000, guid: 9c778f54e6d39974f9d6ab5e3cc7e3c6, type: 2}
+  - {fileID: 11400000, guid: bb574781b79503c41af5d03b42a0c348, type: 2}
+  - {fileID: 11400000, guid: e971aa4585b080641a11daa4e804e345, type: 2}
+  - {fileID: 11400000, guid: 7b249c1a822fcc443b9f811dfa26c5a6, type: 2}
+  allSpells:
+  - {fileID: 11400000, guid: e4925dbe30e448347b495f2cb617ba9c, type: 2}
+  - {fileID: 11400000, guid: db834090701479d43be0209609b626fb, type: 2}
+  - {fileID: 11400000, guid: 9c778f54e6d39974f9d6ab5e3cc7e3c6, type: 2}
+  - {fileID: 11400000, guid: bb574781b79503c41af5d03b42a0c348, type: 2}
+  - {fileID: 11400000, guid: e971aa4585b080641a11daa4e804e345, type: 2}
+  - {fileID: 11400000, guid: 7b249c1a822fcc443b9f811dfa26c5a6, type: 2}
+  allSpellData:
+  - {fileID: 11400000, guid: 55eeb730de52ae2489f7e29066722f63, type: 2}
+  - {fileID: 11400000, guid: 4948334856473a24bbcf1347aca257ce, type: 2}
+  - {fileID: 11400000, guid: 5d85ba08aa90b484aa38e4c85a9c2609, type: 2}
+  - {fileID: 11400000, guid: e10000641ccd07640a658c449105dc30, type: 2}
+  - {fileID: 11400000, guid: d888006c651b4f64b9631632633b6ba5, type: 2}
+  - {fileID: 11400000, guid: 584a63bf8f3809c42aab80b78d8abdbc, type: 2}
+  - {fileID: 11400000, guid: c9f89091ead14e44f87d8572d0463a81, type: 2}
+  - {fileID: 11400000, guid: d2e074f8f03d1774aa36bebac894f584, type: 2}
+  - {fileID: 11400000, guid: 0d2536bbef68205408380bf192137261, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
