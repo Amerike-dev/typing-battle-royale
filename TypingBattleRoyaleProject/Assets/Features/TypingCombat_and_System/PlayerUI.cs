@@ -1,19 +1,34 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using System.Net.NetworkInformation;
 
 public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
+
     public GameObject InG_UI;
     public GameObject InS_UI;
     public bool G_UI = true;
 
-    //Texto que se va a mostrar en el SpellUI.
+    [Header("Sliders de vida Jugador y Enemigo")]
+    [SerializeField] private Slider LocalHPSlider;
+    [SerializeField] private Slider EnemyHPSlider;
+
+    [Header("Referencia al Slider")]
+    [SerializeField] private GameObject sliderPrefab;
+
+    [Header("PlayerStats")]
+    private PlayerStats localStats;
+    private PlayerStats enemyStats;
+
+    [Header("Texto para SpellUI")]
     public TextMeshProUGUI SpellText;
     public TMP_InputField InputSpellText;
 
     void Start()
     {
+        CreatePlayerCanvas();
         InG_UI.SetActive(true);
         InS_UI.SetActive(false);
     }
@@ -22,6 +37,26 @@ public class PlayerUI : MonoBehaviour
     {
         CurrentText();
         SpellCompleted();
+        UpdateHPSliders();
+    }
+
+    public void SetPlayerStats(PlayerStats localStats, PlayerStats enemyStats)
+    {
+        this.localStats = localStats;
+        this.enemyStats = enemyStats;
+    }
+
+    private void UpdateHPSliders()
+    {
+        if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
+        {
+            LocalHPSlider.value = localStats.CurrentHP / localStats.MaxHP;
+        }
+
+        if (enemyStats != null && EnemyHPSlider != null && enemyStats.MaxHP > 0)
+        {
+            EnemyHPSlider.value = enemyStats.CurrentHP / enemyStats.MaxHP;
+        }
     }
     public void CurrentText()
     {
@@ -60,5 +95,18 @@ public class PlayerUI : MonoBehaviour
         {
             SpellTypingOFF();
         }
+    }
+
+    private void CreatePlayerCanvas()
+    {
+        GameObject canvasGO = new GameObject("Canvas");
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        GameObject sliderInstance = Instantiate(sliderPrefab, canvasGO.transform);
+        Slider slider = sliderInstance.GetComponent<Slider>();
+        LocalHPSlider = slider;
     }
 }
