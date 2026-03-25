@@ -52,24 +52,25 @@ public class MonolithController : MonoBehaviour
     }
     Elements GetMappedElement(Elements original)
     {
-        if (original == Elements.Wind)
+
+        switch (original)
         {
-            return Elements.Thunder;
-        }
-        else if (original == Elements.Water)
-        {
-            return Elements.Water;
-        }
-        else if (original == Elements.Earth)
-        {
-            return Elements.Fire;
-        }
-        else if (original == Elements.Arcane)
-        {
-            return Elements.Thunder;
+            case Elements.Wind:
+                return Elements.Thunder;
+
+            case Elements.Water:
+                return Elements.Water;
+
+            case Elements.Earth:
+                return Elements.Fire;
+
+            case Elements.Arcane:
+                return Elements.Thunder;
+
+            default:
+                return original;
         }
 
-        return original;
     }
 
     public void PopulateSpells()
