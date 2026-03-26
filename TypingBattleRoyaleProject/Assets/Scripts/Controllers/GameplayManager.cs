@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class GameplayManager : MonoBehaviour
     public BattleState battleState;
     public WaitingState waitingState;
     public PlayerController playerController;
+    public List<GameObject> Monolith = new List<GameObject>();
     
     
     public PlayState playState;
