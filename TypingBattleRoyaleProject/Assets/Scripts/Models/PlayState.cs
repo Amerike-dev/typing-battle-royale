@@ -12,7 +12,7 @@ public class PlayState : GameState
     }
     public override void Enter()
     {
-        manager.playerController.enabled = true;
+        manager.PlayerController.enabled = true;
         playerUI.SpellTypingOFF();
         Debug.Log("[PlayState] Enter");
     }
@@ -24,7 +24,7 @@ public class PlayState : GameState
 
     public override void Exit()
     {
-        manager.playerController.enabled = false;
+        manager.PlayerController.enabled = false;
         Debug.Log("[PlayState] Exit");
     }
 }

@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     }
     private StateMachine stateMachine;
     private ExplorationState explorationState;
+    
+    public CamaraController camaraController;
+    public GameplayManager gameplayManager;
 
     private void Awake()
     {
@@ -30,9 +33,9 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(gameObject);
 
-        stateMachine = new StateMachine();
+        stateMachine = new StateMachine(explorationState, 1.0f);
         
-        explorationState = new ExplorationState();
+        explorationState = new ExplorationState(camaraController, gameplayManager);
         stateMachine.ChangeState(explorationState);
     }
 
