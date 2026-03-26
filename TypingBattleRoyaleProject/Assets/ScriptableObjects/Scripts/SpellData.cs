@@ -8,4 +8,5 @@ public class SpellData : ScriptableObject
     public GameObject particlePrefab;
     public string runeString;
     public ParticleSystem particleVFX;
+    public Elements elementType;
 }

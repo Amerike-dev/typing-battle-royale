@@ -4,22 +4,37 @@ using TMPro;
 public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager Instance;
+    
+    [Header("Player references")]
+    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private CastInputController _castInputController;
+    [SerializeField] private PlayerAnimatorView _playerAnimatorView;
+    [SerializeField] private PlayerUI _playerUI;
+    
+    [Header("UI references")]
+    [SerializeField] private TextMeshProUGUI _countdownText;
+    [SerializeField] private TextMeshProUGUI _winnerText;
+    [SerializeField] private Canvas _endGameCanvas;
+    
+    [Header("Propiedades")]
+    public PlayerController PlayerController => _playerController;
+    public CastInputController CastInputController => _castInputController;
+    public PlayerUI PlayerUI => _playerUI;
+    public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
+    public TextMeshProUGUI CountdownText => _countdownText;
+    public TextMeshProUGUI WinnerText => _winnerText;
+    public Canvas EndGameCanvas => _endGameCanvas;
+    
+    [Header("Estados")]
     public StateMachine stateMachine;
     public ExplorationState explorationState;
     public BattleState battleState;
     public WaitingState waitingState;
+
     public PlayerController playerController;
     
     public PlayState playState;
-    [SerializeField] private TextMeshProUGUI _countdownText;
-
-    public TextMeshProUGUI CountdownText
-    {
-        get
-        {
-            return _countdownText;
-        }
-    }
+    public GameOverState gameOverState;
 
     [Header("Timer")]
     [SerializeField] private float matchDuration = 600f;
@@ -27,6 +42,7 @@ public class GameplayManager : MonoBehaviour
     public MatchTimer GetMatchTimer() => matchTimer;
 
     [SerializeField] private Transform[] _spawnPoints;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -38,6 +54,7 @@ public class GameplayManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
     }
 
     private void Start()
@@ -54,9 +71,30 @@ public class GameplayManager : MonoBehaviour
     {
         stateMachine?.Update();
         matchTimer?.Tick(Time.deltaTime);
+
+        InitializeStates();
+        stateMachine.ChangeState(waitingState);
+
     }
 
     private void InitializeStates()
+    {
+        waitingState = new WaitingState(this);
+        playState = new PlayState(this);
+        gameOverState = new GameOverState(this, "");
+        stateMachine = new StateMachine(waitingState, 0f);
+        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+        if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+        
+        SetupSpawns();
+    }
+    
+    private void HandleOnSpellCast()
+    {
+        Debug.Log("GameplayManager escucho el evento OnSpellCast");
+    }
+
+    private void SetupSpawns()
     {
         Vector3[] position = new Vector3[_spawnPoints.Length];
 
@@ -74,11 +112,6 @@ public class GameplayManager : MonoBehaviour
             Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
             controller.transform.position = spawnPoint;
         }
-        
-        explorationState = new ExplorationState(playerController.camaraController, this);
-        battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
-        waitingState = new WaitingState(this);
-        playState = new PlayState(this); 
     }
 
     public void StartMatch()
@@ -97,5 +130,13 @@ public class GameplayManager : MonoBehaviour
     private void HandleTimerEnd()
     {
         Debug.Log("Tiempo terminado");
+    }
+    
+    private void OnDestroy()
+    {
+        if (_castInputController != null)
+        {
+            _castInputController.OnSpellCast -= HandleOnSpellCast;
+        }
     }
 }

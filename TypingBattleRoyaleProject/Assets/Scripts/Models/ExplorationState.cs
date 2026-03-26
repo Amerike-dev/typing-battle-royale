@@ -14,7 +14,7 @@ public class ExplorationState : IGameState
     public void Enter()
     { 
         camaraController.OnCamaraMove = true; 
-        _gameplayManager.playerController.onExplorationState = true;
+        _gameplayManager.PlayerController.onExplorationState = true;
         
     }
 
@@ -31,7 +31,7 @@ public class ExplorationState : IGameState
     public void Exit()
     {
         camaraController.OnCamaraMove = false; 
-        _gameplayManager.playerController.onExplorationState = false;
+        _gameplayManager.PlayerController.onExplorationState = false;
         
     }
 }
