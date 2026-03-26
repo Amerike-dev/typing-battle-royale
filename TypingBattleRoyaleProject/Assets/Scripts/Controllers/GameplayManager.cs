@@ -10,7 +10,6 @@ public class GameplayManager : MonoBehaviour
     public WaitingState waitingState;
     public PlayerController playerController;
     
-    
     public PlayState playState;
     [SerializeField] private TextMeshProUGUI _countdownText;
 
@@ -43,16 +42,17 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {   
+        StartMatch();
         InitializeStates();
         stateMachine = new StateMachine(explorationState, 0);
 
-        StartMatch();
 
         waitingState.Enter();
     }
 
     private void Update()
     {
+        stateMachine?.Update();
         matchTimer?.Tick(Time.deltaTime);
     }
 
@@ -80,26 +80,22 @@ public class GameplayManager : MonoBehaviour
         waitingState = new WaitingState(this);
         playState = new PlayState(this); 
     }
-    
-    private void Update()
-    {
-        stateMachine?.Update();
-    }
 
     public void StartMatch()
     {
-        Debug.Log("TIMER INICIADO: " + matchDuration);
         matchTimer = new MatchTimer();
-
         matchTimer.OnTimerEnd += HandleTimerEnd;
-
         matchTimer.Start(matchDuration);
+
+        var ui = GameObject.FindObjectOfType<PlayerUI>();
+        if (ui != null)
+        {
+            ui.SetMatchTimer(matchTimer);
+        }
     }
 
     private void HandleTimerEnd()
     {
         Debug.Log("Tiempo terminado");
-
-        // 🔥 MVP_10 lógica de victoria por tiempo aquí
     }
 }

@@ -10,12 +10,12 @@ public class PlayState : GameState
     {
         Debug.Log("Representa el bucle principal de 10 minutos de combate y monolitos.");
     }
+
     public override void Enter()
     {
         manager.playerController.enabled = true;
         playerUI.SpellTypingOFF();
         
-        Debug.Log("ENTRÓ A PLAYSTATE");
         manager.StartMatch();
         playerUI.SetMatchTimer(manager.GetMatchTimer());
 

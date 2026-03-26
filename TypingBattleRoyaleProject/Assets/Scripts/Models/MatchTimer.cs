@@ -15,7 +15,6 @@ public class MatchTimer
 
     public void Tick(float deltaTime)
     {
-        UnityEngine.Debug.Log("Tiempo restante: " + TimeRemaining);
         if (!IsRunning) return;
 
         TimeRemaining -= deltaTime;

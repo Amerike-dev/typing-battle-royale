@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Net.NetworkInformation;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -15,8 +14,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Slider LocalHPSlider;
     [SerializeField] private Slider EnemyHPSlider;
 
-    [Header("Referencia al Slider")]
+    [Header("Prefaps UI")]
     [SerializeField] private GameObject sliderPrefab;
+    [SerializeField] private GameObject timerTextPrefab;
 
     [Header("PlayerStats")]
     private PlayerStats localStats;
@@ -26,8 +26,8 @@ public class PlayerUI : MonoBehaviour
     public TextMeshProUGUI SpellText;
     public TMP_InputField InputSpellText;
 
-    [Header("Mostrar Timer")]
-    [SerializeField] private TMPro.TextMeshProUGUI TimerText;
+    [Header("Timer")]
+    private TextMeshProUGUI TimerText;
     private MatchTimer matchTimer;
 
     void Start()
@@ -39,10 +39,10 @@ public class PlayerUI : MonoBehaviour
 
     void Update()
     {
+        UpdateTimerUI();
         CurrentText();
         SpellCompleted();
         UpdateHPSliders();
-        UpdateTimerUI();
     }
 
     public void SetPlayerStats(PlayerStats localStats, PlayerStats enemyStats)
@@ -102,24 +102,9 @@ public class PlayerUI : MonoBehaviour
             SpellTypingOFF();
         }
     }
-    private void CreatePlayerCanvas()
-    {
-        GameObject canvasGO = new GameObject("Canvas");
-        Canvas canvas = canvasGO.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvasGO.AddComponent<CanvasScaler>();
-        canvasGO.AddComponent<GraphicRaycaster>();
-
-        GameObject sliderInstance = Instantiate(sliderPrefab, canvasGO.transform);
-        Slider slider = sliderInstance.GetComponent<Slider>();
-        LocalHPSlider = slider;
-
-    }
 
     private void UpdateTimerUI()
     {
-        if (matchTimer == null || !matchTimer.IsRunning) return;
-
         float time = matchTimer.TimeRemaining;
 
         int minutes = (int)(time / 60);
@@ -132,4 +117,22 @@ public class PlayerUI : MonoBehaviour
     {
         matchTimer = timer;
     }
+    
+    private void CreatePlayerCanvas()
+    {
+        GameObject canvasGO = new GameObject("Canvas");
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        GameObject sliderInstance = Instantiate(sliderPrefab, canvasGO.transform);
+        Slider slider = sliderInstance.GetComponent<Slider>();
+        LocalHPSlider = slider;
+
+        GameObject timerInstance = Instantiate(timerTextPrefab, canvasGO.transform);
+        TimerText = timerInstance.GetComponent<TextMeshProUGUI>();
+
+    }
+
 }
