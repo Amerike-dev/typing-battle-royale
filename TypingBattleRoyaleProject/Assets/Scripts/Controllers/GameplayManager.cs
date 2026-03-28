@@ -13,37 +13,36 @@ public class GameplayManager : MonoBehaviour
     public PlayerController playerController;
     public List<GameObject> Monolith = new List<GameObject>();
     
+    [Header("Player references")]
+    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private CastInputController _castInputController;
+    [SerializeField] private PlayerAnimatorView _playerAnimatorView;
+    [SerializeField] private PlayerUI _playerUI;
     
-    public PlayState playState;
+    [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private Canvas _endGameCanvas;
-
-    public TextMeshProUGUI CountdownText
-    {
-        get
-        {
-            return _countdownText;
-        }
-    }
     
-    public TextMeshProUGUI WinnerText
-    {
-        get
-        {
-            return _winnerText;
-        }
-    }
+    [Header("Propiedades")]
+    public PlayerController PlayerController => _playerController;
+    public CastInputController CastInputController => _castInputController;
+    public PlayerUI PlayerUI => _playerUI;
+    public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
+    public TextMeshProUGUI CountdownText => _countdownText;
+    public TextMeshProUGUI WinnerText => _winnerText;
+    public Canvas EndGameCanvas => _endGameCanvas;
     
-    public Canvas EndGameCanvas
-    {
-        get
-        {
-            return _endGameCanvas;
-        }
-    }
+    [Header("Estados")]
+    public StateMachine stateMachine;
+    public ExplorationState explorationState;
+    public BattleState battleState;
+    public WaitingState waitingState;
+    public PlayState playState;
+    public GameOverState gameOverState;
 
     [SerializeField] private Transform[] _spawnPoints;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -55,17 +54,28 @@ public class GameplayManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void Start()
-    {   
         InitializeStates();
-        stateMachine = new StateMachine(explorationState, 0);
-        waitingState.Enter();
-
+        stateMachine.ChangeState(waitingState);
     }
 
     private void InitializeStates()
+    {
+        waitingState = new WaitingState(this);
+        playState = new PlayState(this);
+        gameOverState = new GameOverState(this, "");
+        stateMachine = new StateMachine(waitingState, 0f);
+        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+        if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+        
+        SetupSpawns();
+    }
+    
+    private void HandleOnSpellCast()
+    {
+        Debug.Log("GameplayManager escucho el evento OnSpellCast");
+    }
+
+    private void SetupSpawns()
     {
         Vector3[] position = new Vector3[_spawnPoints.Length];
 
@@ -83,15 +93,18 @@ public class GameplayManager : MonoBehaviour
             Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
             controller.transform.position = spawnPoint;
         }
-        
-        explorationState = new ExplorationState(playerController.camaraController, this);
-        battleState = new BattleState(playerController.castInputController, playerController, playerController.playerAnimatorView);
-        waitingState = new WaitingState(this);
-        playState = new PlayState(this); 
     }
     
     private void Update()
     {
         stateMachine?.Update();
+    }
+    
+    private void OnDestroy()
+    {
+        if (_castInputController != null)
+        {
+            _castInputController.OnSpellCast -= HandleOnSpellCast;
+        }
     }
 }

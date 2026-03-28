@@ -337,7 +337,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63048609929c55e49b60bc62052cd375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameplayManager
-  playerController: {fileID: 1644576771}
+  _playerController: {fileID: 1644576771}
+  _castInputController: {fileID: 1644576770}
+  _playerAnimatorView: {fileID: 1644576774}
+  _playerUI: {fileID: 1054458754}
   _countdownText: {fileID: 1951700203}
   _winnerText: {fileID: 384223408}
   _endGameCanvas: {fileID: 558213941}
@@ -1608,6 +1611,9 @@ MonoBehaviour:
   InG_UI: {fileID: 1458288870}
   InS_UI: {fileID: 1471493525}
   G_UI: 1
+  LocalHPSlider: {fileID: 0}
+  EnemyHPSlider: {fileID: 0}
+  sliderPrefab: {fileID: 0}
   SpellText: {fileID: 1577256835}
   InputSpellText: {fileID: 298589996}
 --- !u!4 &1054458755
@@ -2602,51 +2608,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1618552687
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1618552689}
-  - component: {fileID: 1618552688}
-  m_Layer: 0
-  m_Name: SceneLoader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1618552688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618552687}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c882e05ad6b03d7478f17940fa17fe3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
-  _sceneName: GameplayScene
---- !u!4 &1618552689
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618552687}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1644576769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2746,6 +2707,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+--- !u!114 &1644576774 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2689246101718839236, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
+  m_PrefabInstance: {fileID: 1644576769}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8034ed214bb0b664586d432c7effb07b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorView
 --- !u!1 &1818075213
 GameObject:
   m_ObjectHideFlags: 0
@@ -3127,9 +3099,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1618552688}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: Reload
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3184,7 +3156,6 @@ SceneRoots:
   - {fileID: 931269394}
   - {fileID: 1085142478}
   - {fileID: 219588222}
-  - {fileID: 1618552689}
   - {fileID: 1644576769}
   - {fileID: 1054458755}
   - {fileID: 2088007046}
