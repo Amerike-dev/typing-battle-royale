@@ -37,11 +37,19 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
+        if (explorationState == null)
+        {
+            return;
+        }
         explorationState.action.started += ExplorationState;
         explorationState.action.Enable();
     }
     void OnDisable()
     {
+        if (explorationState == null)
+        {
+            return;
+        }
         explorationState.action.started -= ExplorationState;
         explorationState.action.Disable();
     }
@@ -77,9 +85,9 @@ public class PlayerController : MonoBehaviour
 
     public void ExplorationState(InputAction.CallbackContext context)
     {
-        if(onExplorationState)
+        if (onExplorationState)
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
         else
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);  
+            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
     }
 }

@@ -7,7 +7,13 @@ public class NetworkManagerMock : MonoBehaviour
     public static NetworkManagerMock Instance;
 
     public int playerAmount = 2;
+
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private PlayerUI _playerUi;
+
+    private Color _localPlayerColor = Color.blue;
+    private Color _dummyPlayerColor = Color.orange;
+
     public List<PlayerStats> Players;
     public List<PlayerController> Controllers;
 
@@ -33,21 +39,43 @@ public class NetworkManagerMock : MonoBehaviour
 
         for (int i = 0; i < playerAmount; i++)
         {
+            bool local = (i == 0);
+
             GameObject tempPlayer = Instantiate(_playerPrefab, transform.position, Quaternion.identity);
+
+            if (tempPlayer.TryGetComponent(out MeshRenderer mesh))
+            {
+                mesh.material = new Material(mesh.material);
+
+                if (local)
+                {
+                    mesh.material.color = _localPlayerColor;
+                }
+                else
+                {
+                    mesh.material.color = _dummyPlayerColor;
+                }
+            }
+
             string id = PlayerIDGenerator.GenerateID();
             PlayerStats generatedStats = new PlayerStats(id, 100);
             PlayerInventory generatedInventory = new PlayerInventory();
+
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
             playerController.stats = generatedStats;
             playerController.inventory = generatedInventory;
+            playerController.enabled = false;
 
-            if (i != 0)
+            if (!local)
             {
-                playerController.enabled = false;
+                EnemyLabel label = tempPlayer.GetComponent<EnemyLabel>();
+                label.SetLabel(id);
             }
 
             Players.Add(generatedStats);
             Controllers.Add(playerController);
         }
+
+        _playerUi.SetPlayerStats(Players[0], Players[1]);
     }
 }
