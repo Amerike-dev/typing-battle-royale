@@ -5,6 +5,7 @@ public class ExplorationState : IGameState
 {
     public CamaraController camaraController;
     private GameplayManager _gameplayManager;
+    public GameObject nearestMonolith = null;
    
     public ExplorationState(CamaraController _camaraController, GameplayManager _manager)
     {
@@ -25,7 +26,20 @@ public class ExplorationState : IGameState
 
     public void Update()
     {
-        
+
+        float distance=Mathf.Infinity;
+        foreach(GameObject Monolith in _gameplayManager.Monolith)
+        {
+            if( Monolith != null)
+            {
+                float MonolithDistance = Vector3.Magnitude(_gameplayManager.playerController.transform.position - Monolith.transform.position);
+                if (MonolithDistance > distance)
+                {
+                    distance = MonolithDistance;
+                    nearestMonolith = Monolith;
+                }
+            } 
+        }
     }
 
     public void Exit()

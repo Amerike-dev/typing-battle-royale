@@ -1,9 +1,17 @@
 using UnityEngine;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager Instance;
+    public StateMachine stateMachine;
+    public ExplorationState explorationState;
+    public BattleState battleState;
+    public WaitingState waitingState;
+    public PlayerController playerController;
+    public List<GameObject> Monolith = new List<GameObject>();
     
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
