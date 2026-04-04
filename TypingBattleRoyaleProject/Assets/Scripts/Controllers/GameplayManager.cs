@@ -100,11 +100,6 @@ public class GameplayManager : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-    {
-        Debug.Log("Se presionó G");
-        TriggerGameOver("Player1");
-    }
         stateMachine?.Update();
     }
     
