@@ -6,7 +6,10 @@ public class PlayerStats
     private string _id;
     private int _health;
     private float _currentHP;
-    private float _maxHP;
+    private float _maxHP; 
+
+    private int _killCount;
+    private float _wpm;
 
     public PlayerStats(string id, int health)
     {
@@ -21,5 +24,6 @@ public class PlayerStats
     public float CurrentHP => _currentHP;
     public float MaxHP => _maxHP;
 
-
+    public int KillCount => _killCount;
+    public float WPM => _wpm;
 }

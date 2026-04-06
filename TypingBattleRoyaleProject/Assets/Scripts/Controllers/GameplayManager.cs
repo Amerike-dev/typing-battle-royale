@@ -23,6 +23,7 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private Canvas _endGameCanvas;
+    [SerializeField] private EndGameUI _endGameUI;
     
     [Header("Propiedades")]
     public PlayerController PlayerController => _playerController;
@@ -32,6 +33,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
     public Canvas EndGameCanvas => _endGameCanvas;
+    public EndGameUI EndGameUI => _endGameUI;
     
     [Header("Estados")]
     public StateMachine stateMachine;
@@ -92,6 +94,15 @@ public class GameplayManager : MonoBehaviour
         {
             Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
             controller.transform.position = spawnPoint;
+        }
+    }
+
+    public void TriggerGameOver(string winnerID)
+    {
+        if (gameOverState != null)
+        {
+            gameOverState.SetWinnerID(winnerID);
+            stateMachine.ChangeState(gameOverState);
         }
     }
     
