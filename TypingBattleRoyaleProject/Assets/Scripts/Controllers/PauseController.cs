@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class PauseController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject pauseMenuCanvas;
-    [SerializeField] private GameplayManager gameplayManager;
+    [SerializeField] private GameObject _menuContent;
+    [SerializeField] private GameplayManager _gameplayManager;
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
@@ -36,8 +36,8 @@ public class PauseController : MonoBehaviour
 
     private void Start()
     {
-        if (pauseMenuCanvas != null)
-            pauseMenuCanvas.SetActive(false);
+        if (_menuContent != null)
+            _menuContent.SetActive(false);
 
         Time.timeScale = 1f;
     }
@@ -46,10 +46,8 @@ public class PauseController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log("Escape detectado");
 
-            if (gameplayManager != null && gameplayManager.stateMachine != null)
-                Debug.Log("Estado actual: " + gameplayManager.stateMachine.currentState?.GetType().Name);
+            if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
         }
@@ -70,8 +68,8 @@ public class PauseController : MonoBehaviour
     {
         isPaused = true;
 
-        if (pauseMenuCanvas != null)
-            pauseMenuCanvas.SetActive(true);
+        if (_menuContent != null)
+            _menuContent.SetActive(true);
 
         Time.timeScale = 0f;
     }
@@ -80,18 +78,18 @@ public class PauseController : MonoBehaviour
     {
         isPaused = false;
 
-        if (pauseMenuCanvas != null)
-            pauseMenuCanvas.SetActive(false);
+        if (_menuContent != null)
+            _menuContent.SetActive(false);
 
         Time.timeScale = 1f;
     }
 
     private bool IsGameOverActive()
     {
-        if (gameplayManager == null || gameplayManager.stateMachine == null)
+        if (_gameplayManager == null || _gameplayManager.stateMachine == null)
             return false;
 
-        return gameplayManager.stateMachine.currentState is GameOverState;
+        return _gameplayManager.stateMachine.currentState is GameOverState;
     }
 
     private void OnDestroy()
