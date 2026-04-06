@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Net.NetworkInformation;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -10,6 +9,15 @@ public class PlayerUI : MonoBehaviour
     public GameObject InG_UI;
     public GameObject InS_UI;
     public bool G_UI = true;
+
+    [Header("Monolith Interaction")]
+    [SerializeField] private GameObject _monolithPromptPanel;
+    [SerializeField] private TextMeshProUGUI _monolithPromptText;
+    public PlayerInteractorView playerInteractorView;
+
+    private MonolithView _lastMonolith;
+    private string _cachedText;
+    private const string PROMPT_BASE = "Presiona E para interactuar - Nivel ";
 
     [Header("Sliders de vida Jugador y Enemigo")]
     [SerializeField] private Slider LocalHPSlider;
@@ -28,6 +36,9 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
+        if (_monolithPromptPanel != null) 
+        _monolithPromptPanel.SetActive(false);
+
         CreatePlayerCanvas();
         InG_UI.SetActive(true);
         InS_UI.SetActive(false);
@@ -38,6 +49,7 @@ public class PlayerUI : MonoBehaviour
         CurrentText();
         SpellCompleted();
         UpdateHPSliders();
+        HandleMonolithPrompt();
     }
 
     public void SetPlayerStats(PlayerStats localStats, PlayerStats enemyStats)
@@ -69,6 +81,7 @@ public class PlayerUI : MonoBehaviour
         {
             InG_UI.SetActive(false);
             InS_UI.SetActive(true);
+            HidePrompt();
             CIController.incorrectInput = 0;
             CombatLogic._stringIndex = 0;
             InputSpellText.Select();
@@ -95,6 +108,42 @@ public class PlayerUI : MonoBehaviour
         {
             SpellTypingOFF();
         }
+    }
+
+    private void HandleMonolithPrompt()
+    {
+        if (!G_UI || playerInteractorView == null)
+        {
+            HidePrompt();
+            return;
+        }
+        
+        var monolith = playerInteractorView.NearestMonolith;
+
+        if (monolith == null)
+        {
+            HidePrompt();
+            return;
+        }
+
+        if (!_monolithPromptPanel.activeSelf)
+        _monolithPromptPanel.SetActive(true);
+
+        if (monolith != _lastMonolith)
+        {
+            _lastMonolith = monolith;
+
+            _cachedText = PROMPT_BASE + monolith.Level;
+            _monolithPromptText.text = _cachedText;
+        }
+    }
+
+    private void HidePrompt()
+    {
+        if (_monolithPromptPanel != null && _monolithPromptPanel.activeSelf)
+        _monolithPromptPanel.SetActive(false);
+
+        _lastMonolith = null;
     }
 
     private void CreatePlayerCanvas()
