@@ -1,9 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GameOverState : GameState
 {
     private string _winnerID;
     public GameOverState(GameplayManager manager, string winnerID) : base(manager) { }
+
+    public void SetWinnerID(string winnerID)
+    {
+        _winnerID = winnerID;
+    }
 
     public void DebugMessage()
     {
@@ -15,6 +21,14 @@ public class GameOverState : GameState
         foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
         {
             if (controller != null) controller.enabled = false;
+        }
+
+        List<PlayerStats> players = new List<PlayerStats>();
+
+        foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
+        {
+            if (controller != null && controller.stats != null)
+                players.Add(controller.stats);
         }
         
         if(manager.EndGameCanvas != null) manager.EndGameCanvas.enabled = true;
@@ -33,6 +47,7 @@ public class GameOverState : GameState
                 manager.WinnerText.color = Color.red;
             }
         }
+        manager.EndGameUI?.Populate(_winnerID, players);
         Time.timeScale = 0f;
     }
 
