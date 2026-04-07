@@ -18,7 +18,7 @@ public class GameplayManager : MonoBehaviour
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
-    [SerializeField] private Canvas _endGameCanvas;
+    [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
 
     [Header("Propiedades")]
@@ -28,7 +28,7 @@ public class GameplayManager : MonoBehaviour
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
-    public Canvas EndGameCanvas => _endGameCanvas;
+    public CanvasGroup EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
 
     [Header("Estados")]
