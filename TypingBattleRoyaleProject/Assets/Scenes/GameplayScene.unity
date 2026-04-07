@@ -2005,16 +2005,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398b8dded468b254f995559a9f02cf25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
-  CIController: {fileID: 0}
-  GameUI: {fileID: 0}
-  SpellUI: {fileID: 0}
+  CIController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
+  GameUI: {fileID: 1476320150}
+  SpellUI: {fileID: 1566385583}
   G_UI: 1
   _monolithPromptPanel: {fileID: 0}
   _monolithPromptText: {fileID: 0}
   playerInteractorView: {fileID: 0}
   LocalHPSlider: {fileID: 0}
   EnemyHPSlider: {fileID: 0}
-  sliderPrefab: {fileID: 0}
+  sliderPrefab: {fileID: 6025732026901377866, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   SpellText: {fileID: 1577256835}
   InputSpellText: {fileID: 298589996}
 --- !u!4 &1054458755
@@ -2879,9 +2879,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1476320150}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &1485354377
 GameObject:
@@ -3370,9 +3370,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566385583}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &1577256832
 GameObject:
@@ -3892,9 +3892,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1942957262}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1942957265
 MonoBehaviour:
@@ -3944,10 +3944,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1692022444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 597.438, y: 122.26141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1951700203
 MonoBehaviour:
@@ -3996,15 +3996,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
