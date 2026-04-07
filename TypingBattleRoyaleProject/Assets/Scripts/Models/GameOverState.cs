@@ -31,7 +31,7 @@ public class GameOverState : GameState
                 players.Add(controller.stats);
         }
         
-        if(manager.EndGameCanvas != null) manager.EndGameCanvas.enabled = true;
+        if(manager.EndGameCanvas != null) manager.EndGameCanvas.alpha = 1f;
 
         if (manager.WinnerText != null)
         {
@@ -55,7 +55,7 @@ public class GameOverState : GameState
 
     public override void Exit()
     {
-        if(manager.EndGameCanvas != null) manager.EndGameCanvas.enabled = false;
+        if(manager.EndGameCanvas != null) manager.EndGameCanvas.alpha = 0f;
         
         Time.timeScale = 1f;
     }

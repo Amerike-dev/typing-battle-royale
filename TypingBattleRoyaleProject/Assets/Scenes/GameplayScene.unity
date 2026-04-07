@@ -2005,7 +2005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398b8dded468b254f995559a9f02cf25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
-  CIController: {fileID: 1644576770}
+  CIController: {fileID: 0}
   GameUI: {fileID: 0}
   SpellUI: {fileID: 0}
   G_UI: 1
@@ -3511,106 +3511,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1001 &1644576769
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -2689246101718839236, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 62207359364900991, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: _cast
-      value: 
-      objectReference: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
-    - target: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: playerUI
-      value: 
-      objectReference: {fileID: 1054458754}
-    - target: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: spellText
-      value: Arriba las chivas
-      objectReference: {fileID: 0}
-    - target: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: uiController
-      value: 
-      objectReference: {fileID: 1054458753}
-    - target: {fileID: 4338295346503485190, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 195753448
-      objectReference: {fileID: 0}
-    - target: {fileID: 6025732026901377866, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6520395108367877061, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8524643825518991717, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
---- !u!114 &1644576770 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  m_PrefabInstance: {fileID: 1644576769}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267e0123ea183d740a5f693347d46f39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CastInputController
 --- !u!1 &1672546991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3903,10 +3803,10 @@ MonoBehaviour:
   _castInputController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _playerAnimatorView: {fileID: 0}
   _playerUI: {fileID: 1054458754}
-  _countdownText: {fileID: 0}
-  _winnerText: {fileID: 0}
-  _endGameCanvas: {fileID: 0}
-  _endGameUI: {fileID: 0}
+  _countdownText: {fileID: 1951700203}
+  _winnerText: {fileID: 384223408}
+  _endGameCanvas: {fileID: 1942957264}
+  _endGameUI: {fileID: 1942957265}
   _spawnPoints:
   - {fileID: 150492205}
   - {fileID: 1333959156}
@@ -3953,6 +3853,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1942957263}
   - component: {fileID: 1942957264}
+  - component: {fileID: 1942957265}
   m_Layer: 5
   m_Name: EndGameUI
   m_TagString: Untagged
@@ -3995,6 +3896,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1942957265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942957262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b3ddb7f9aea5a479664f4f24117a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EndGameUI
+  _winnerText: {fileID: 384223408}
+  _statsText: {fileID: 2059454375}
+  _playAgainButton: {fileID: 2124240026}
+  _mainMenuButton: {fileID: 1101363179}
 --- !u!1 &1951700201
 GameObject:
   m_ObjectHideFlags: 0
@@ -4411,7 +4328,7 @@ Transform:
   m_GameObject: {fileID: 2088007042}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4545,7 +4462,6 @@ SceneRoots:
   - {fileID: 931269394}
   - {fileID: 1085142478}
   - {fileID: 219588222}
-  - {fileID: 1644576769}
   - {fileID: 2088007046}
   - {fileID: 41085744}
   - {fileID: 2046282071}
