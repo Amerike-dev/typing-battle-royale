@@ -8,19 +8,19 @@ public class GameplayManager : MonoBehaviour
     public static GameplayManager Instance;
     public PlayerController playerController;
     public List<GameObject> Monolith = new List<GameObject>();
-    
+
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
     [SerializeField] private PlayerUI _playerUI;
-    
+
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private Canvas _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
-    
+
     [Header("Propiedades")]
     public PlayerController PlayerController => _playerController;
     public CastInputController CastInputController => _castInputController;
@@ -30,7 +30,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI WinnerText => _winnerText;
     public Canvas EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
-    
+
     [Header("Estados")]
     public StateMachine stateMachine;
     public ExplorationState explorationState;
@@ -40,7 +40,7 @@ public class GameplayManager : MonoBehaviour
     public GameOverState gameOverState;
 
     [SerializeField] private Transform[] _spawnPoints;
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -52,6 +52,10 @@ public class GameplayManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void Start()
+    {
         InitializeStates();
         stateMachine.ChangeState(waitingState);
     }
@@ -64,10 +68,10 @@ public class GameplayManager : MonoBehaviour
         stateMachine = new StateMachine(waitingState, 0f);
         battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
         if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
-        
+
         SetupSpawns();
     }
-    
+
     private void HandleOnSpellCast()
     {
         Debug.Log("GameplayManager escucho el evento OnSpellCast");
@@ -101,12 +105,12 @@ public class GameplayManager : MonoBehaviour
             stateMachine.ChangeState(gameOverState);
         }
     }
-    
+
     private void Update()
     {
         stateMachine?.Update();
     }
-    
+
     private void OnDestroy()
     {
         if (_castInputController != null)

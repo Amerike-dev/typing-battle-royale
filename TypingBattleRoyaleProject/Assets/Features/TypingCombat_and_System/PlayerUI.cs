@@ -6,8 +6,8 @@ public class PlayerUI : MonoBehaviour
 {
     public CastInputController CIController;
 
-    public GameObject InG_UI;
-    public GameObject InS_UI;
+    public GameObject GameUI;
+    public GameObject SpellUI;
     public bool G_UI = true;
 
     [Header("Monolith Interaction")]
@@ -40,8 +40,8 @@ public class PlayerUI : MonoBehaviour
         _monolithPromptPanel.SetActive(false);
 
         CreatePlayerCanvas();
-        InG_UI.SetActive(true);
-        InS_UI.SetActive(false);
+        GameUI.SetActive(true);
+        SpellUI.SetActive(false);
     }
 
     void Update()
@@ -79,8 +79,8 @@ public class PlayerUI : MonoBehaviour
     {
         if (G_UI == true)
         {
-            InG_UI.SetActive(false);
-            InS_UI.SetActive(true);
+            GameUI.SetActive(false);
+            SpellUI.SetActive(true);
             HidePrompt();
             CIController.incorrectInput = 0;
             CombatLogic._stringIndex = 0;
@@ -97,8 +97,8 @@ public class PlayerUI : MonoBehaviour
             CIController.incorrectInput = 0;
             InputSpellText.text=string.Empty;
             InputSpellText.DeactivateInputField();
-            InS_UI.SetActive(false);
-            InG_UI.SetActive(true);
+            SpellUI.SetActive(false);
+            GameUI.SetActive(true);
             G_UI=true;
         }
     }
