@@ -47,7 +47,6 @@ public class PlayerUI : MonoBehaviour
     void Update()
     {
         CurrentText();
-        SpellCompleted();
         UpdateHPSliders();
         HandleMonolithPrompt();
     }
