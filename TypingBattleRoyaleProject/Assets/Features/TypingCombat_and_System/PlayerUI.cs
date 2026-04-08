@@ -36,8 +36,7 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
-        if (_monolithPromptPanel != null) 
-        _monolithPromptPanel.SetActive(false);
+        if (_monolithPromptPanel != null) _monolithPromptPanel.SetActive(false);
 
         CreatePlayerCanvas();
         GameUI.SetActive(true);
@@ -125,8 +124,7 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        if (!_monolithPromptPanel.activeSelf)
-        _monolithPromptPanel.SetActive(true);
+        if (!_monolithPromptPanel.activeSelf) _monolithPromptPanel.SetActive(true);
 
         if (monolith != _lastMonolith)
         {
@@ -139,8 +137,7 @@ public class PlayerUI : MonoBehaviour
 
     private void HidePrompt()
     {
-        if (_monolithPromptPanel != null && _monolithPromptPanel.activeSelf)
-        _monolithPromptPanel.SetActive(false);
+        if (_monolithPromptPanel != null && _monolithPromptPanel.activeSelf) _monolithPromptPanel.SetActive(false);
 
         _lastMonolith = null;
     }

@@ -71,6 +71,10 @@ public class NetworkManagerMock : MonoBehaviour
                 EnemyLabel label = tempPlayer.GetComponent<EnemyLabel>();
                 label.SetLabel(id);
             }
+            else
+            {
+                playerController.enabled = true;
+            }
 
             Players.Add(generatedStats);
             Controllers.Add(playerController);
