@@ -6,7 +6,8 @@ public class PlayerInteractorView : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        MonolithView monolith = other.GetComponent<MonolithView>();
+        Debug.Log("Entraste al Monolito");
+        MonolithView monolith = other.GetComponentInParent<MonolithView>();
         if (monolith != null)
         {
             NearestMonolith = monolith;
@@ -15,7 +16,8 @@ public class PlayerInteractorView : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        MonolithView monolith = other.GetComponent<MonolithView>();
+        Debug.Log("Saliste del Monolito");
+        MonolithView monolith = other.GetComponentInParent<MonolithView>();
         if (monolith != null && NearestMonolith == monolith)
         {
             NearestMonolith = null;
