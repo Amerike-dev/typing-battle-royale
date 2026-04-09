@@ -41,11 +41,11 @@ public class CharacterSelectController : MonoBehaviour
         PlayerPrefs.SetInt("SelectedCharacter", selectedIndex);
         PlayerPrefs.Save();
 
-        SceneManager.LoadScene("GameplayScene");
+        SceneLoader.LoadScene("GameplayScene");
     }
 
     public void GoBack()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneLoader.LoadScene("MainMenu");
     }
 }

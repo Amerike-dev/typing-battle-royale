@@ -4,7 +4,10 @@ public class PlayState : GameState
 {
     public PlayerUI playerUI;
 
-    public PlayState(GameplayManager manager) : base(manager) { }
+    public PlayState(GameplayManager manager) : base(manager)
+    {
+        playerUI = manager.PlayerUI;
+    }
 
     public void DebugMessage()
     {
@@ -14,6 +17,7 @@ public class PlayState : GameState
     {
         manager.PlayerController.enabled = true;
         playerUI.SpellTypingOFF();
+        manager.PlayerController.MoveSpeed();
         Debug.Log("[PlayState] Enter");
     }
 
