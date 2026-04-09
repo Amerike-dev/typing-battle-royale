@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody>();
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        continuousSpeed = moveSpeed;
 
     }
 
@@ -99,7 +98,7 @@ public class PlayerController : MonoBehaviour
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
     }
 
-    public void NullSpeed()
+    public void NullMoveSpeed()
     {
         moveSpeed = 0;
     }
