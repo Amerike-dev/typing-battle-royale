@@ -66,14 +66,22 @@ public class NetworkManagerMock : MonoBehaviour
             playerController.inventory = generatedInventory;
             playerController.enabled = false;
 
+            Camera playerCamera = tempPlayer.GetComponentInChildren<Camera>();
+            AudioListener audioListener = tempPlayer.GetComponentInChildren<AudioListener>();
+
+
             if (!local)
             {
                 EnemyLabel label = tempPlayer.GetComponent<EnemyLabel>();
                 label.SetLabel(id);
+                playerCamera.enabled = false;
+                audioListener.enabled = false;
             }
             else
             {
                 playerController.enabled = true;
+                playerCamera.enabled = true;
+                audioListener.enabled = true;
             }
 
             Players.Add(generatedStats);
