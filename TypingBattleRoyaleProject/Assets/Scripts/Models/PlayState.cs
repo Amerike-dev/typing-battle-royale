@@ -17,7 +17,6 @@ public class PlayState : GameState
     {
         manager.PlayerController.enabled = true;
         playerUI.SpellTypingOFF();
-        manager.PlayerController.MoveSpeed();
         Debug.Log("[PlayState] Enter");
     }
 
