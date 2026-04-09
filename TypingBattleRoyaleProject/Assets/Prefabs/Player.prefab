@@ -2008,7 +2008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
+  moveSpeed: 0
   jumpForce: 5
   maxHealth: 0
   currentHealth: 0
