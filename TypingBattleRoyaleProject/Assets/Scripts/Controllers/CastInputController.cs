@@ -22,8 +22,9 @@ public class CastInputController : MonoBehaviour
     private int _totalKeysPressed;
     public float wordsPerMinute;
     public float accuracy;
-    
 
+    //Evita el error de retsoseso con el Backspace
+    private int _backSpacePress = 0;
     //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
@@ -38,6 +39,7 @@ public class CastInputController : MonoBehaviour
 
     private void OnEnable()
     {
+        _backSpacePress = 0;
         _casting = true;
         _typingStats = new TypingStats();
         CombatLogic.SetText(spellText);
@@ -65,11 +67,27 @@ public class CastInputController : MonoBehaviour
 
         if (backspaceKey.wasPressedThisFrame)
         {
-            _totalKeysPressed++;
-            incorrectInput--;
-            CombatLogic.EraseChar();
-            _backSpaceTimer = _backSpaceDelay;
-            BackspaceBehaviour();
+            if (_backSpacePress == 0)
+            {
+                _backSpacePress += 1;
+                if (CombatLogic._stringIndex == 1)
+                {
+                    CombatLogic._stringIndex--;
+                }
+            }
+            if (_backSpacePress >=1)
+            {
+                _totalKeysPressed++;
+                incorrectInput--;
+                _backSpaceTimer = _backSpaceDelay;
+                BackspaceBehaviour();
+                _backSpacePress++;
+                if(CombatLogic._stringIndex >= 1)
+                {
+                    CombatLogic._stringIndex--;
+                }
+            }
+            
         }
         else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
         {
