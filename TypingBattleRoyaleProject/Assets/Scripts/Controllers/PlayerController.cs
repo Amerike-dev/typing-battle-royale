@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    private float continuousSpeed;
     public float jumpForce = 5f;
 
     public float maxHealth;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody>();
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        continuousSpeed = moveSpeed;
 
     }
 
@@ -90,4 +92,15 @@ public class PlayerController : MonoBehaviour
         else
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
     }
+
+    public void NullSpeed()
+    {
+        moveSpeed = 0;
+    }
+
+    public void MoveSpeed()
+    {
+        moveSpeed = continuousSpeed;
+    }
+
 }

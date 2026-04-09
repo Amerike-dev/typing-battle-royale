@@ -13,6 +13,7 @@ public class WaitingState : GameState
     public override void Enter()
     {
         if(manager.PlayerController != null) manager.PlayerController.enabled = false;
+        manager.playerController.NullSpeed();
         manager.StartCoroutine(CountdownRoutine());
     }
 
