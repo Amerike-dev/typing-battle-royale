@@ -3,16 +3,28 @@ using UnityEngine;
 
 public class LaunchPad : MonoBehaviour
 {
-    
+    [Header("Movimiento")]
     public Transform target;
-
-    
     public float duration = 1.5f;
     public float height = 3f;
+    [Header("SFX")]
+    public GameObject playerTravelParticle;
+    public GameObject stompParticle;
+    public float stompParticleDuration;
+    
 
     private void OnTriggerEnter(Collider other)
     {
         PlayerController player = other.GetComponent<PlayerController>();
+
+        //puede causar problemas si el player o el target tiene mas de un gO con un particleSystem
+        stompParticle = target.gameObject.GetComponentInChildren<ParticleSystem>(true).gameObject;
+        playerTravelParticle = player.GetComponentInChildren<ParticleSystem>(true).gameObject;
+
+        if (playerTravelParticle != null)
+        {
+            playerTravelParticle.SetActive(true);
+        }
         if (player != null)
         {
             //falta meter al player a un estado en el que no se pueda mover en el aire pero pueda voltear a ver 
@@ -46,5 +58,13 @@ public class LaunchPad : MonoBehaviour
 
         
         player.position = target.position;
+        playerTravelParticle.SetActive(false);
+        if (stompParticle != null)
+            stompParticle.SetActive(true);
+
+        yield return new WaitForSeconds(stompParticleDuration);
+
+        if (stompParticle != null)
+            stompParticle.SetActive(false);
     }
 }
