@@ -36,8 +36,8 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
-        if (_monolithPromptPanel != null) 
-        _monolithPromptPanel.SetActive(false);
+        if (_monolithPromptPanel != null)
+            _monolithPromptPanel.SetActive(false);
 
         CreatePlayerCanvas();
         GameUI.SetActive(true);
@@ -73,40 +73,31 @@ public class PlayerUI : MonoBehaviour
     {
         SpellText.text = CIController.spellText;
     }
-    
+
     public void SpellTypingON()
     {
-        if (G_UI == true)
-        {
-            GameUI.SetActive(false);
-            SpellUI.SetActive(true);
-            HidePrompt();
-            CIController.incorrectInput = 0;
-            CombatLogic._stringIndex = 0;
-            InputSpellText.Select();
-            InputSpellText.ActivateInputField();
-            G_UI = false;
-        }
+        GameUI.SetActive(false);
+        SpellUI.SetActive(true);
+        HidePrompt();
+        CIController.incorrectInput = 0;
+        CombatLogic._stringIndex = 0;
+        InputSpellText.Select();
+        InputSpellText.ActivateInputField();
     }
+
     public void SpellTypingOFF()
     {
-        if (G_UI == false)
-        {
-            CIController.lastInInput = CIController.incorrectInput;
-            CIController.incorrectInput = 0;
-            InputSpellText.text=string.Empty;
-            InputSpellText.DeactivateInputField();
-            SpellUI.SetActive(false);
-            GameUI.SetActive(true);
-            G_UI=true;
-        }
+        CIController.lastInInput = CIController.incorrectInput;
+        CIController.incorrectInput = 0;
+        InputSpellText.text = string.Empty;
+        InputSpellText.DeactivateInputField();
+        SpellUI.SetActive(false);
+        GameUI.SetActive(true);
     }
+
     public void SpellCompleted()
     {
-        if (CombatLogic.spellComplete)
-        {
-            SpellTypingOFF();
-        }
+        SpellTypingOFF();
     }
 
     private void HandleMonolithPrompt()
@@ -116,7 +107,7 @@ public class PlayerUI : MonoBehaviour
             HidePrompt();
             return;
         }
-        
+
         var monolith = playerInteractorView.NearestMonolith;
 
         if (monolith == null)
@@ -126,7 +117,7 @@ public class PlayerUI : MonoBehaviour
         }
 
         if (!_monolithPromptPanel.activeSelf)
-        _monolithPromptPanel.SetActive(true);
+            _monolithPromptPanel.SetActive(true);
 
         if (monolith != _lastMonolith)
         {
@@ -140,7 +131,7 @@ public class PlayerUI : MonoBehaviour
     private void HidePrompt()
     {
         if (_monolithPromptPanel != null && _monolithPromptPanel.activeSelf)
-        _monolithPromptPanel.SetActive(false);
+            _monolithPromptPanel.SetActive(false);
 
         _lastMonolith = null;
     }

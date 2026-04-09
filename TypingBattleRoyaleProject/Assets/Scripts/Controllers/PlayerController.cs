@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    private float continuousSpeed;
     public float jumpForce = 5f;
 
     public float maxHealth;
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
-    public CamaraController camaraController;
+    public CamaraController1 camaraController;
     public CastInputController castInputController;
     public PlayerAnimatorView playerAnimatorView;
     public InputActionReference explorationState;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody>();
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        continuousSpeed = moveSpeed;
 
     }
 
@@ -57,16 +59,22 @@ public class PlayerController : MonoBehaviour
     {
         onExplorationState = true;
     }
-    void Update()
+
+    void FixedUpdate()
     {
         MoveCharacter();
     }
 
     void MoveCharacter()
     {
-        Vector3 movement = new Vector3(_moveInput.x, 0, _moveInput.y);
-        transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
-
+        Vector3 moveDirection = (transform.forward * _moveInput.y) + (transform.right * _moveInput.x);
+        
+        if (moveDirection.magnitude > 1) moveDirection.Normalize();
+        
+        Vector3 targetVelocity = moveDirection * moveSpeed;
+        
+        _rb.linearVelocity = new Vector3(targetVelocity.x, _rb.linearVelocity.y, targetVelocity.z);
+        
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }
 
@@ -90,4 +98,15 @@ public class PlayerController : MonoBehaviour
         else
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
     }
+
+    public void NullSpeed()
+    {
+        moveSpeed = 0;
+    }
+
+    public void MoveSpeed()
+    {
+        moveSpeed = continuousSpeed;
+    }
+
 }
