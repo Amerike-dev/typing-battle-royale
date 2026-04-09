@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Stats Player")]
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
 

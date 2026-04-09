@@ -112,8 +112,6 @@ public class PlayerUI : MonoBehaviour
 
     private void HandleMonolithPrompt()
     {
-        Debug.Log("G_UI: " + G_UI);
-
 
         if (!G_UI || playerInteractorView == null)
         {
@@ -122,15 +120,12 @@ public class PlayerUI : MonoBehaviour
         }
         
         var monolith = playerInteractorView.NearestMonolith;
-        Debug.Log("Monolith: " + monolith);
 
         if (monolith == null)
         {
             HidePrompt();
             return;
         }
-
-        Debug.Log("ACTIVANDO PANEL");
 
         if (!_monolithPromptPanel.activeSelf)
         _monolithPromptPanel.SetActive(true);
