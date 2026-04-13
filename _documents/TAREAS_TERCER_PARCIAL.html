@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Typing Battle Royale — Listado de Tareas</title>
+  <style>
+    :root {
+      --bg:          #0f1117;
+      --surface:     #1a1d27;
+      --surface2:    #22263a;
+      --border:      #2e3350;
+      --text:        #e2e8f0;
+      --muted:       #8892a4;
+      --accent:      #6c8fff;
+
+      --bug:         #ff5f5f;
+      --bug-bg:      #2a1420;
+      --clean:       #f0a500;
+      --clean-bg:    #26200d;
+      --refactor:    #34d39a;
+      --refactor-bg: #0e2520;
+      --feature:     #a78bfa;
+      --feature-bg:  #1e1830;
+      --scene:       #38bdf8;
+      --scene-bg:    #0e2030;
+      --lan:         #fb7185;
+      --lan-bg:      #2a1020;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    header h1 { font-size: 1.8rem; color: var(--accent); letter-spacing: .5px; }
+    header p  { color: var(--muted); margin-top: .4rem; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 2rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .card .num  { font-size: 2rem; font-weight: 700; }
+    .card .lbl  { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+    .card.bug       .num { color: var(--bug); }
+    .card.clean     .num { color: var(--clean); }
+    .card.refactor  .num { color: var(--refactor); }
+    .card.feature   .num { color: var(--feature); }
+    .card.scene     .num { color: var(--scene); }
+    .card.lan       .num { color: var(--lan); }
+    .card.total     .num { color: var(--accent); font-size: 2.4rem; }
+
+    /* ── SECTION HEADERS ── */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .section-title.bug      { background: var(--bug-bg);      color: var(--bug); }
+    .section-title.clean    { background: var(--clean-bg);    color: var(--clean); }
+    .section-title.refactor { background: var(--refactor-bg); color: var(--refactor); }
+    .section-title.feature  { background: var(--feature-bg);  color: var(--feature); }
+    .section-title.scene    { background: var(--scene-bg);    color: var(--scene); }
+    .section-title.lan      { background: var(--lan-bg);      color: var(--lan); }
+
+    /* ── TASK CARD ── */
+    .task {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .task:hover { border-color: var(--accent); }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: .9rem 1.2rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .task-id {
+      font-size: .7rem;
+      font-weight: 700;
+      font-family: monospace;
+      padding: .2rem .5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .bug .task-id       { background: var(--bug-bg);      color: var(--bug); }
+    .clean .task-id     { background: var(--clean-bg);    color: var(--clean); }
+    .refactor .task-id  { background: var(--refactor-bg); color: var(--refactor); }
+    .feature .task-id   { background: var(--feature-bg);  color: var(--feature); }
+    .scene .task-id     { background: var(--scene-bg);    color: var(--scene); }
+    .lan .task-id       { background: var(--lan-bg);      color: var(--lan); }
+
+    .task-title {
+      flex: 1;
+      font-weight: 600;
+      font-size: .95rem;
+    }
+    .task-meta {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .badge {
+      font-size: .7rem;
+      padding: .2rem .55rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .badge.time        { background: #1e2a3a; color: #60a5fa; }
+    .badge.easy        { background: #0e2520; color: var(--refactor); }
+    .badge.medium      { background: #26200d; color: var(--clean); }
+    .badge.hard        { background: #2a1420; color: var(--bug); }
+    .badge.iso         { background: #1a1d27; color: var(--muted); border: 1px solid var(--border); }
+
+    /* assignee badge in header */
+    .badge.assignee {
+      background: #1e2535;
+      color: #94a3b8;
+      border: 1px dashed #3e4a60;
+      font-weight: 500;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .badge.assignee.assigned {
+      background: #1a2e20;
+      color: #6ee7b7;
+      border-color: #2d5040;
+    }
+
+    /* ── TASK BODY (collapsible) ── */
+    .task-body {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.2rem 1.2rem;
+    }
+    .task.open .task-body { display: block; }
+
+    .task-body p  { color: #b0bac8; margin-bottom: .6rem; }
+    .task-body ul { padding-left: 1.4rem; color: #b0bac8; }
+    .task-body ul li { margin-bottom: .3rem; }
+
+    .files {
+      margin-top: .8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .file-tag {
+      font-family: monospace;
+      font-size: .75rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: .15rem .5rem;
+      border-radius: 4px;
+    }
+
+    .note {
+      margin-top: .8rem;
+      padding: .6rem .8rem;
+      background: var(--surface2);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    .note.warn { border-color: var(--clean); }
+
+    /* ── ASSIGNEE INPUT ROW ── */
+    .assignee-row {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin-top: 1rem;
+      padding: .65rem .9rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .assignee-row label {
+      font-size: .78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .assignee-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: .85rem;
+      font-family: inherit;
+      caret-color: var(--accent);
+    }
+    .assignee-input::placeholder { color: #4a5568; }
+    .assignee-input:focus { color: #6ee7b7; }
+    .save-indicator {
+      font-size: .7rem;
+      color: #34d39a;
+      opacity: 0;
+      transition: opacity .3s;
+      white-space: nowrap;
+    }
+    .save-indicator.show { opacity: 1; }
+
+    /* ── TOGGLE ICON ── */
+    .toggle-icon {
+      font-size: .85rem;
+      color: var(--muted);
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
+    .task.open .toggle-icon { transform: rotate(90deg); }
+
+    /* ── LAN STEPS ── */
+    .steps {
+      counter-reset: step-counter;
+      list-style: none;
+      padding-left: 0;
+      margin-top: .5rem;
+    }
+    .steps li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: .8rem;
+      margin-bottom: .6rem;
+      color: #b0bac8;
+    }
+    .steps li::before {
+      content: counter(step-counter);
+      background: var(--lan-bg);
+      color: var(--lan);
+      border: 1px solid var(--lan);
+      border-radius: 50%;
+      min-width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .8rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⚔️ Typing Battle Royale — Listado de Tareas</h1>
+  <p>Revisión del cliente Unity · Mock LAN Multiplayer · Nivel licenciatura · Las asignaciones se guardan automáticamente en el navegador.</p>
+</header>
+
+<!-- LEYENDA -->
+<div class="legend">
+  <div class="legend-item"><span class="dot" style="background:var(--bug)"></span>Bug / Error de lógica</div>
+  <div class="legend-item"><span class="dot" style="background:var(--clean)"></span>Limpieza de código</div>
+  <div class="legend-item"><span class="dot" style="background:var(--refactor)"></span>Refactorización / Mejora</div>
+  <div class="legend-item"><span class="dot" style="background:var(--feature)"></span>Feature nueva</div>
+  <div class="legend-item"><span class="dot" style="background:var(--scene)"></span>Escena nueva</div>
+  <div class="legend-item"><span class="dot" style="background:var(--lan)"></span>Multiplayer LAN</div>
+</div>
+
+<!-- RESUMEN -->
+<div class="summary">
+  <div class="card bug">    <div class="num">5</div>  <div class="lbl">Bugs</div></div>
+  <div class="card clean">  <div class="num">5</div>  <div class="lbl">Limpieza</div></div>
+  <div class="card refactor"><div class="num">6</div>  <div class="lbl">Refact.</div></div>
+  <div class="card feature"> <div class="num">8</div>  <div class="lbl">Features</div></div>
+  <div class="card scene">   <div class="num">4</div>  <div class="lbl">Escenas</div></div>
+  <div class="card lan">     <div class="num">5</div>  <div class="lbl">LAN</div></div>
+  <div class="card total">   <div class="num">33</div> <div class="lbl">Total de tareas</div></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 1 · BUGS
+══════════════════════════════════════════════════ -->
+<div class="section-title bug">🐛 Bugs &amp; Errores de Lógica</div>
+
+<div class="task bug" id="BUG-01">
+  <div class="task-header" onclick="toggle('BUG-01')">
+    <span class="task-id">BUG-01</span>
+    <span class="task-title">ExplorationState: lógica invertida al buscar el monolito más cercano</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-BUG-01">Sin Asignar</span>
+      <span class="badge time">⏱ 30 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>En <code>ExplorationState.Update()</code> se compara <code>MonolithDistance &gt; distance</code> para encontrar el monolito más cercano. La condición está invertida; debería ser <code>&lt;</code>. Esto hace que siempre se elija el monolito <strong>más lejano</strong>.</p>
+    <ul>
+      <li>Cambiar el operador <code>&gt;</code> por <code>&lt;</code> en la comparación de distancias.</li>
+      <li>Verificar que <code>MonolithDistance</code> se inicialice con <code>float.MaxValue</code> antes del loop.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">ExplorationState.cs</span>
+    </div>
+    <div class="note">Tarea completamente aislada, no afecta ningún otro sistema.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="BUG-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-BUG-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task bug" id="BUG-02">
+  <div class="task-header" onclick="toggle('BUG-02')">
+    <span class="task-id">BUG-02</span>
+    <span class="task-title">Timer: el evento OnTimerEnd se dispara cada frame tras llegar a 0</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-BUG-02">Sin Asignar</span>
+      <span class="badge time">⏱ 20 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Una vez que el <code>timer</code> llega a 0, el <code>Update()</code> sigue ejecutándose y dispara <code>OnTimerEnd</code> cada frame. Esto puede causar comportamientos inesperados en cualquier sistema que escuche ese evento.</p>
+    <ul>
+      <li>Agregar un <code>bool _finished</code> que evite que el evento se dispare más de una vez.</li>
+      <li>Alternativamente, deshabilitar el componente (<code>enabled = false</code>) una vez que el tiempo expire.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">Timer.cs</span>
+    </div>
+    <div class="note">Tarea aislada. No requiere conocer ningún otro sistema.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="BUG-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-BUG-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task bug" id="BUG-03">
+  <div class="task-header" onclick="toggle('BUG-03')">
+    <span class="task-id">BUG-03</span>
+    <span class="task-title">DamageCalculator: aplica daño al jugador local en lugar del enemigo objetivo</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-BUG-03">Sin Asignar</span>
+      <span class="badge time">⏱ 45 min</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de FEAT-02</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El método <code>CalculateDamage(SpellData)</code> descuenta HP del propio jugador. Debe obtener la referencia del enemigo seleccionado en el <code>TargetSystem</code> y aplicar el daño a ese objetivo.</p>
+    <ul>
+      <li>Recibir una referencia a <code>PlayerStats</code> del target por parámetro o inyección.</li>
+      <li>Reemplazar la referencia interna por la del enemigo objetivo.</li>
+      <li>Retornar el HP resultante del enemigo para que la UI pueda actualizarlo.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">DamageCalculator.cs</span>
+      <span class="file-tag">TargetSystem.cs</span>
+      <span class="file-tag">PlayerStats.cs</span>
+    </div>
+    <div class="note warn">Esperar a que FEAT-02 (TargetSystem) tenga al menos una referencia de target disponible.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="BUG-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-BUG-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task bug" id="BUG-04">
+  <div class="task-header" onclick="toggle('BUG-04')">
+    <span class="task-id">BUG-04</span>
+    <span class="task-title">CombatLogic: referencia a UnityEditor en código de producción</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-BUG-04">Sin Asignar</span>
+      <span class="badge time">⏱ 15 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El archivo incluye <code>using UnityEditor</code>, un namespace que <strong>no existe en builds de producción</strong>. Causaría un error de compilación al generar el ejecutable final.</p>
+    <ul>
+      <li>Eliminar el <code>using UnityEditor;</code> del archivo.</li>
+      <li>Verificar que ningún método use APIs exclusivas del editor.</li>
+      <li>Si se necesita algo solo para editor, encerrar en <code>#if UNITY_EDITOR ... #endif</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">CombatLogic.cs</span>
+    </div>
+    <div class="note">Tarea aislada de 15 minutos. Ideal para familiarizarse con el proyecto.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="BUG-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-BUG-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task bug" id="BUG-05">
+  <div class="task-header" onclick="toggle('BUG-05')">
+    <span class="task-id">BUG-05</span>
+    <span class="task-title">GameplayManager: la lista de Monolitos nunca se puebla desde la escena</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-BUG-05">Sin Asignar</span>
+      <span class="badge time">⏱ 40 min</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>La lista <code>Monolith</code> en <code>GameplayManager</code> se declara vacía y nunca se puebla con los monolitos de la escena. Ningún sistema que dependa de esa lista funciona correctamente.</p>
+    <ul>
+      <li>En <code>Awake()</code>, usar <code>FindObjectsByType&lt;MonolithController&gt;</code> para obtener todos los monolitos de la escena.</li>
+      <li>Alternativamente, hacer la lista serializable en el Inspector para asignación manual.</li>
+      <li>Agregar un <code>Debug.LogWarning()</code> si la lista queda vacía tras la inicialización.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">MonolithController.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="BUG-05" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-BUG-05">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 2 · LIMPIEZA
+══════════════════════════════════════════════════ -->
+<div class="section-title clean">🧹 Limpieza de Código</div>
+
+<div class="task clean" id="CLEAN-01">
+  <div class="task-header" onclick="toggle('CLEAN-01')">
+    <span class="task-id">CLEAN-01</span>
+    <span class="task-title">Decidir y eliminar el CamaraController duplicado</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-CLEAN-01">Sin Asignar</span>
+      <span class="badge time">⏱ 1 hora</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Existen dos controladores de cámara con propósitos idénticos: <code>CamaraController.cs</code> usa el sistema legacy de Input, mientras que <code>CamaraController1.cs</code> usa el nuevo Input Action System. Solo debe existir uno.</p>
+    <ul>
+      <li>Comparar ambos y decidir cuál conservar (recomendado: <code>CamaraController1.cs</code>, Input Action System).</li>
+      <li>Renombrar el ganador a <code>CameraController.cs</code> (corrigiendo el typo "Camara" → "Camera").</li>
+      <li>Actualizar todas las referencias en otros scripts (<code>GameplayManager</code>, <code>ExplorationState</code>, <code>PlayerController</code>, <code>UISwitchTest</code>).</li>
+      <li>Eliminar el archivo descartado.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">CamaraController.cs</span>
+      <span class="file-tag">CamaraController1.cs</span>
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">ExplorationState.cs</span>
+      <span class="file-tag">UISwitchTest.cs</span>
+    </div>
+    <div class="note warn">Hacer este cambio antes que cualquier otra tarea que toque la cámara.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="CLEAN-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-CLEAN-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task clean" id="CLEAN-02">
+  <div class="task-header" onclick="toggle('CLEAN-02')">
+    <span class="task-id">CLEAN-02</span>
+    <span class="task-title">Eliminar UISwitchTest.cs — utilitario de pruebas en producción</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-CLEAN-02">Sin Asignar</span>
+      <span class="badge time">⏱ 30 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>UISwitchTest.cs</code> es un script de prueba que manipula directamente el estado de la UI y la cámara. Esta funcionalidad ya existe en <code>PlayerUI.cs</code> y en los estados del juego.</p>
+    <ul>
+      <li>Verificar que ningún GameObject en la escena tenga este componente asignado.</li>
+      <li>Eliminar el archivo del proyecto.</li>
+      <li>Si la funcionalidad de debug es necesaria, moverla a un bloque <code>#if UNITY_EDITOR</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">UISwitchTest.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="CLEAN-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-CLEAN-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task clean" id="CLEAN-03">
+  <div class="task-header" onclick="toggle('CLEAN-03')">
+    <span class="task-id">CLEAN-03</span>
+    <span class="task-title">Renombrar DebbugController.cs y evaluar si es necesario</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-CLEAN-03">Sin Asignar</span>
+      <span class="badge time">⏱ 20 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El archivo tiene un typo en el nombre (<code>Debbug</code>) y su única función es testear con datos falsos. No aporta nada al juego en producción.</p>
+    <ul>
+      <li>Renombrar la clase y el archivo a <code>DebugController</code>.</li>
+      <li>Mover toda la lógica dentro de <code>#if UNITY_EDITOR</code> o eliminar si ya no es útil.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">DebbugController.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="CLEAN-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-CLEAN-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task clean" id="CLEAN-04">
+  <div class="task-header" onclick="toggle('CLEAN-04')">
+    <span class="task-id">CLEAN-04</span>
+    <span class="task-title">Documentar los stubs vacíos SpellCaster y TargetSystem</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-CLEAN-04">Sin Asignar</span>
+      <span class="badge time">⏱ 20 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>SpellCaster.cs</code> y <code>TargetSystem.cs</code> existen pero no tienen implementación ni documentación. Sin contexto, cualquier alumno que los encuentre no sabe qué debe hacer con ellos.</p>
+    <ul>
+      <li>Agregar un comentario de encabezado en cada archivo explicando su propósito.</li>
+      <li>Agregar las firmas de los métodos esperados (sin lógica) como guía para quien los implemente.</li>
+      <li>Estos archivos se implementarán en FEAT-02 y FEAT-03, <em>no eliminar</em>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">SpellCaster.cs</span>
+      <span class="file-tag">TargetSystem.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="CLEAN-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-CLEAN-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task clean" id="CLEAN-05">
+  <div class="task-header" onclick="toggle('CLEAN-05')">
+    <span class="task-id">CLEAN-05</span>
+    <span class="task-title">SpawnCalculator: advertencia cuando se agoten los spawn points</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-CLEAN-05">Sin Asignar</span>
+      <span class="badge time">⏱ 15 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Cuando no quedan spawn points, <code>GetSpawnPoint()</code> devuelve <code>Vector3.zero</code> silenciosamente, haciendo que los jugadores aparezcan en el origen del mundo sin ningún mensaje de error.</p>
+    <ul>
+      <li>Agregar <code>Debug.LogWarning()</code> cuando se regrese <code>Vector3.zero</code>.</li>
+      <li>Considerar reiniciar el shuffle si los puntos se agotan para evitar jugadores superpuestos.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">SpawnCalculator.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="CLEAN-05" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-CLEAN-05">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 3 · REFACTORIZACIONES
+══════════════════════════════════════════════════ -->
+<div class="section-title refactor">♻️ Refactorizaciones &amp; Mejoras de Diseño</div>
+
+<div class="task refactor" id="REF-01">
+  <div class="task-header" onclick="toggle('REF-01')">
+    <span class="task-id">REF-01</span>
+    <span class="task-title">TypingStats: reemplazar cadena de ifs del multiplicador de daño con tabla de datos</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-01">Sin Asignar</span>
+      <span class="badge time">⏱ 45 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El método <code>GetDamageBonusMultiplier()</code> tiene 5 bloques <code>if-else</code> para rangos de accuracy. Difícil de mantener y extender.</p>
+    <ul>
+      <li>Crear un arreglo de structs/tuplas con el par <code>(umbralMínimo, multiplicador)</code>, ordenado de mayor a menor.</li>
+      <li>Recorrer el arreglo en un solo loop para encontrar el multiplicador correspondiente.</li>
+      <li>Esto permite cambiar los valores sin tocar la lógica del código.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">TypingStats.cs</span>
+    </div>
+    <div class="note">Tarea aislada. Introduce el concepto de "data-driven design".</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task refactor" id="REF-02">
+  <div class="task-header" onclick="toggle('REF-02')">
+    <span class="task-id">REF-02</span>
+    <span class="task-title">MonolithController: reemplazar mapeo de elementos con un Dictionary</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-02">Sin Asignar</span>
+      <span class="badge time">⏱ 30 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El método <code>GetMappedElement(Elements)</code> usa un switch/ifs para mapear un elemento a otro. Es una tabla de lookup disfrazada de código.</p>
+    <ul>
+      <li>Crear un <code>Dictionary&lt;Elements, Elements&gt;</code> privado que se inicialice una sola vez.</li>
+      <li>Reemplazar el switch por: <code>_elementMap.TryGetValue(element, out var mapped)</code>.</li>
+      <li>Manejar el caso en que el elemento no tenga mapeo definido.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">MonolithController.cs</span>
+    </div>
+    <div class="note">Introduce el uso de Dictionary como patrón de mapeo.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task refactor" id="REF-03">
+  <div class="task-header" onclick="toggle('REF-03')">
+    <span class="task-id">REF-03</span>
+    <span class="task-title">ExplorationState: mover detección de monolito de Update() a eventos de trigger</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-03">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>ExplorationState.Update()</code> recorre todos los monolitos cada frame. <code>PlayerInteractorView</code> ya tiene <code>OnTriggerEnter/Exit</code> que detecta colisiones. Debe usarse eso en su lugar.</p>
+    <ul>
+      <li>Agregar eventos <code>OnMonolithEnter(MonolithView)</code> y <code>OnMonolithExit(MonolithView)</code> en <code>PlayerInteractorView</code>.</li>
+      <li>Suscribirse a esos eventos en <code>ExplorationState</code> para actualizar <code>nearestMonolith</code> solo cuando cambia.</li>
+      <li>Eliminar el loop de distancias del <code>Update()</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">ExplorationState.cs</span>
+      <span class="file-tag">PlayerInteractorView.cs</span>
+    </div>
+    <div class="note warn">Resolver BUG-01 antes de esta tarea.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task refactor" id="REF-04">
+  <div class="task-header" onclick="toggle('REF-04')">
+    <span class="task-id">REF-04</span>
+    <span class="task-title">GameplayManager: conectar el evento OnSpellCast al pipeline de daño</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-04">Sin Asignar</span>
+      <span class="badge time">⏱ 1 hora</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de BUG-03 y FEAT-02</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>HandleOnSpellCast()</code> solo imprime un log. Debe conectarse al sistema completo: obtener target, calcular daño y actualizar UI.</p>
+    <ul>
+      <li>Obtener referencia al <code>TargetSystem</code> desde el <code>GameplayManager</code>.</li>
+      <li>Al dispararse <code>OnSpellCast</code>, llamar a <code>DamageCalculator.CalculateDamage(spellData, targetStats)</code>.</li>
+      <li>Disparar evento o llamada directa para que <code>PlayerUI</code> actualice los sliders de HP.</li>
+      <li>Verificar si el target llegó a 0 HP y notificar al sistema de vidas (FEAT-05).</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">DamageCalculator.cs</span>
+      <span class="file-tag">TargetSystem.cs</span>
+      <span class="file-tag">PlayerUI.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task refactor" id="REF-05">
+  <div class="task-header" onclick="toggle('REF-05')">
+    <span class="task-id">REF-05</span>
+    <span class="task-title">PlayerStats: agregar sistema de vidas separado del HP</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-05">Sin Asignar</span>
+      <span class="badge time">⏱ 1 hora</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Actualmente <code>PlayerStats</code> solo tiene HP continuo. El juego requiere vidas separadas: al llegar a 0 HP se pierde una vida, se restaura el HP y el jugador reaparece. Si no quedan vidas, pasa a modo espectador.</p>
+    <ul>
+      <li>Agregar campos <code>_maxLives</code> y <code>_currentLives</code> con sus propiedades públicas.</li>
+      <li>Agregar método <code>LoseLife()</code>: resta una vida y restaura HP al máximo.</li>
+      <li>Agregar propiedad <code>IsAlive</code>: <code>true</code> si <code>_currentLives &gt; 0</code>.</li>
+      <li>Agregar eventos <code>OnLifeLost</code> y <code>OnAllLivesLost</code> (usando <code>Action</code>) para que otros sistemas reaccionen sin polling.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">PlayerStats.cs</span>
+    </div>
+    <div class="note">Prerequisito para FEAT-05 y FEAT-06. Hacerla primero.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-05" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-05">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task refactor" id="REF-06">
+  <div class="task-header" onclick="toggle('REF-06')">
+    <span class="task-id">REF-06</span>
+    <span class="task-title">MonolithController: corregir RemoveSpellData() con loop ineficiente</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-REF-06">Sin Asignar</span>
+      <span class="badge time">⏱ 30 min</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El método <code>RemoveSpellData(Spell)</code> itera la lista con lógica de remoción que puede modificarla mientras se itera, causando <code>InvalidOperationException</code> o eliminando elementos incorrectos.</p>
+    <ul>
+      <li>Reemplazar el loop por <code>spells.RemoveAll(s =&gt; s == spell)</code> si se quieren quitar todos los duplicados.</li>
+      <li>O <code>spells.Remove(spell)</code> si solo se quita la primera ocurrencia.</li>
+      <li>Confirmar cuál es el comportamiento esperado y documentarlo con un comentario.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">MonolithController.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="REF-06" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-REF-06">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 4 · FEATURES NUEVAS
+══════════════════════════════════════════════════ -->
+<div class="section-title feature">✨ Features Nuevas</div>
+
+<div class="task feature" id="FEAT-01">
+  <div class="task-header" onclick="toggle('FEAT-01')">
+    <span class="task-id">FEAT-01</span>
+    <span class="task-title">HUD de Gameplay: vidas, timer de partida y conteo de kills</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-01">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El HUD durante la partida debe mostrar vidas restantes del jugador local, el timer de la partida y el kill count. Actualmente <code>PlayerUI</code> solo tiene sliders de HP.</p>
+    <ul>
+      <li>Crear un canvas de HUD con los tres elementos: panel de vidas (íconos o texto), timer y contador de kills.</li>
+      <li>Crear <code>HUDController.cs</code> que se suscriba al evento <code>OnLifeLost</code> de <code>PlayerStats</code>.</li>
+      <li>Conectar el <code>Timer.cs</code> existente al texto del timer en el HUD.</li>
+      <li>Exponer un método <code>UpdateKills(int)</code> llamado cuando se incremente <code>KillCount</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">HUDController.cs (nuevo)</span>
+      <span class="file-tag">PlayerStats.cs</span>
+      <span class="file-tag">Timer.cs</span>
+      <span class="file-tag">PlayerUI.cs</span>
+    </div>
+    <div class="note warn">Prerequisito: REF-05 (sistema de vidas en PlayerStats).</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-02">
+  <div class="task-header" onclick="toggle('FEAT-02')">
+    <span class="task-id">FEAT-02</span>
+    <span class="task-title">TargetSystem: lock-on automático al enemigo más cercano en BattleState</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-02">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Al entrar en <code>BattleState</code>, el jugador no puede moverse. La cámara debe girar automáticamente al enemigo más cercano. <code>TargetSystem.cs</code> existe pero está vacío.</p>
+    <ul>
+      <li>Implementar <code>FindTarget()</code>: busca al jugador enemigo más cercano con <code>Physics.OverlapSphere</code> o iterando la lista de jugadores.</li>
+      <li>Implementar <code>LockOn(Transform target)</code>: rota la cámara suavemente (<code>Slerp</code>) hacia el objetivo.</li>
+      <li>Exponer propiedad <code>CurrentTarget</code> con el <code>PlayerStats</code> del enemigo seleccionado.</li>
+      <li>Llamar a <code>LockOn()</code> desde <code>BattleState.Enter()</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">TargetSystem.cs</span>
+      <span class="file-tag">BattleState.cs</span>
+      <span class="file-tag">CameraController.cs</span>
+    </div>
+    <div class="note warn">Prerequisito: CLEAN-01 (unificar CameraController).</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-03">
+  <div class="task-header" onclick="toggle('FEAT-03')">
+    <span class="task-id">FEAT-03</span>
+    <span class="task-title">SpellCaster: instanciar efecto visual del hechizo al completar el typing</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-03">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Al completar el typing, debe instanciarse un efecto visual que viaje del jugador al target. <code>SpellCaster.cs</code> está vacío. Los datos del efecto están en <code>SpellData</code> y <code>Spell</code>.</p>
+    <ul>
+      <li>Implementar <code>Cast(SpellData spell, Transform origin, Transform target)</code>.</li>
+      <li>Instanciar el prefab de partículas de <code>SpellData</code> en la posición de origen.</li>
+      <li>Mover el efecto hacia el target con una coroutine e interpolación lineal.</li>
+      <li>Al llegar al target, destruir el efecto usando <code>PoolManager</code> en lugar de <code>Destroy</code> directo.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">SpellCaster.cs</span>
+      <span class="file-tag">SpellData.cs</span>
+      <span class="file-tag">Spell.cs</span>
+      <span class="file-tag">PoolManager.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-04">
+  <div class="task-header" onclick="toggle('FEAT-04')">
+    <span class="task-id">FEAT-04</span>
+    <span class="task-title">Pausa (cliente): panel de volumen y opción de abandonar partida</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-04">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>En multiplayer LAN el cliente no puede pausar el tiempo del servidor. La pausa local solo debe afectar el audio. El <code>PauseController.cs</code> actual congela el tiempo con <code>timeScale = 0</code>, lo cual no aplica.</p>
+    <ul>
+      <li>Modificar <code>PauseController.cs</code>: eliminar <code>Time.timeScale = 0</code>, reemplazar por <code>AudioListener.pause = true</code>.</li>
+      <li>Agregar Slider de volumen maestro que controle <code>AudioListener.volume</code>.</li>
+      <li>Agregar botón "Abandonar partida" que regrese al menú principal.</li>
+      <li>El juego sigue corriendo en el servidor aunque el cliente tenga el menú abierto.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">PauseController.cs</span>
+    </div>
+    <div class="note">Tarea aislada. No depende de otros sistemas.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-05">
+  <div class="task-header" onclick="toggle('FEAT-05')">
+    <span class="task-id">FEAT-05</span>
+    <span class="task-title">Sistema de Respawn: perder vida, congelar jugador y reaparecer tras timer</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-05">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de REF-05</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Cuando el HP llega a 0 y aún hay vidas, el jugador debe: morir, esperar un timer y reaparecer en un spawn con HP completo.</p>
+    <ul>
+      <li>Crear <code>OnPlayerDeath()</code> en <code>GameplayManager</code> suscrito al evento <code>OnLifeLost</code> de <code>PlayerStats</code>.</li>
+      <li>Al morir: deshabilitar controles, reproducir animación de muerte, cambiar a <code>SpectatingState</code> temporalmente.</li>
+      <li>Usar el <code>Timer.cs</code> existente para el countdown de respawn.</li>
+      <li>Al expirar: reposicionar en spawn point, restaurar HP y devolver control al jugador.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">PlayerStats.cs</span>
+      <span class="file-tag">SpawnCalculator.cs</span>
+      <span class="file-tag">Timer.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-05" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-05">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-06">
+  <div class="task-header" onclick="toggle('FEAT-06')">
+    <span class="task-id">FEAT-06</span>
+    <span class="task-title">SpectatingState: cámara que sigue jugadores activos con teclas izq/der</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-06">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de REF-05</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Cuando el jugador pierde todas sus vidas (o espera respawn), entra a modo espectador. La cámara sigue a otros jugadores. Si no hay nadie, se queda viendo al frente.</p>
+    <ul>
+      <li>Crear <code>SpectatingState.cs</code> que herede de <code>GameState</code>.</li>
+      <li>En <code>Enter()</code>: deshabilitar <code>PlayerController</code>, habilitar modo espectador.</li>
+      <li>Mantener lista de jugadores activos (con vidas). Al entrar, buscar al más cercano como target inicial.</li>
+      <li>Con flechas izquierda/derecha ciclar entre jugadores activos.</li>
+      <li>Si la lista está vacía, la cámara no se mueve.</li>
+      <li>Registrar el estado en <code>GameplayManager</code> y conectarlo al evento <code>OnAllLivesLost</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">SpectatingState.cs (nuevo)</span>
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">PlayerStats.cs</span>
+      <span class="file-tag">CameraController.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-06" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-06">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-07">
+  <div class="task-header" onclick="toggle('FEAT-07')">
+    <span class="task-id">FEAT-07</span>
+    <span class="task-title">GameOver (cliente): pantalla de resultados con stats finales</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-07">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>GameOverState.cs</code> y <code>EndGameUI.cs</code> existen, pero <code>GameOverState</code> congela el tiempo (<code>timeScale = 0</code>) lo cual no aplica en multiplayer, y no está conectado al flujo de vidas.</p>
+    <ul>
+      <li>Corregir <code>GameOverState</code>: eliminar freeze de tiempo, solo deshabilitar controles del jugador.</li>
+      <li>Conectar <code>TriggerGameOver()</code> para que se llame cuando el <code>Timer</code> de partida expire o quede un solo jugador con vidas.</li>
+      <li>Verificar que <code>EndGameUI.Populate()</code> recibe correctamente la lista de <code>PlayerStats</code> con kills y WPM.</li>
+      <li>Asegurar que los botones "Jugar de nuevo" y "Menú principal" funcionan con <code>SceneLoader</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameOverState.cs</span>
+      <span class="file-tag">EndGameUI.cs</span>
+      <span class="file-tag">GameplayManager.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-07" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-07">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task feature" id="FEAT-08">
+  <div class="task-header" onclick="toggle('FEAT-08')">
+    <span class="task-id">FEAT-08</span>
+    <span class="task-title">Pausa forzada por servidor: recibir señal y bloquear controles del cliente</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-FEAT-08">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge medium">Medio</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El servidor debe poder enviar una señal de pausa a todos los clientes. El cliente debe reaccionar bloqueando controles y mostrando un mensaje, sin congelar el tiempo localmente.</p>
+    <ul>
+      <li>Crear método <code>OnServerPause(string reason)</code> en <code>GameplayManager</code>.</li>
+      <li>Al recibir señal: deshabilitar <code>PlayerController</code> y <code>CastInputController</code>, silenciar audio.</li>
+      <li>Mostrar panel de UI con mensaje ("Partida pausada por el servidor") y texto de espera.</li>
+      <li>Crear <code>OnServerResume()</code> para reactivar todo.</li>
+      <li>Simular el trigger con tecla de debug <code>F9</code> ya que el servidor no existe aún.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">PauseController.cs</span>
+      <span class="file-tag">PlayerController.cs</span>
+    </div>
+    <div class="note">La integración real con el servidor LAN se hará en iteración posterior.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="FEAT-08" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-FEAT-08">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 5 · ESCENAS
+══════════════════════════════════════════════════ -->
+<div class="section-title scene">🎬 Escenas Nuevas</div>
+
+<div class="task scene" id="SCENE-01">
+  <div class="task-header" onclick="toggle('SCENE-01')">
+    <span class="task-id">SCENE-01</span>
+    <span class="task-title">Escena: Menú Principal</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-SCENE-01">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El script <code>MainMenuController.cs</code> ya existe con la lógica. Solo falta construir la escena y la UI en Unity.</p>
+    <ul>
+      <li>Crear la escena <code>MainMenu</code> y agregarla al Build Settings.</li>
+      <li>Crear Canvas con: título del juego, botón "Jugar" y botón "Salir".</li>
+      <li>Asignar <code>MainMenuController.cs</code> al Canvas o a un GameObject vacío.</li>
+      <li>Asignar botones a los métodos <code>PlayGame()</code> y <code>QuitGame()</code>.</li>
+      <li>Verificar que la transición al <code>CharacterSelect</code> funcione con fade del <code>SceneLoader</code>.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">MainMenuController.cs</span>
+      <span class="file-tag">SceneLoader.cs</span>
+      <span class="file-tag">ScreenFader.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="SCENE-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-SCENE-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task scene" id="SCENE-02">
+  <div class="task-header" onclick="toggle('SCENE-02')">
+    <span class="task-id">SCENE-02</span>
+    <span class="task-title">Escena: Selección de Personaje</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-SCENE-02">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>CharacterSelectController.cs</code> ya maneja la lógica (slots, highlight, PlayerPrefs). Solo falta construir la escena.</p>
+    <ul>
+      <li>Crear la escena <code>CharacterSelect</code> y agregarla al Build Settings.</li>
+      <li>Crear Canvas con: grid de slots de personajes, botón "Confirmar" (deshabilitado hasta seleccionar) y botón "Atrás".</li>
+      <li>Asignar el array de slots al campo serializado en <code>CharacterSelectController</code>.</li>
+      <li>Verificar que al confirmar guarda en PlayerPrefs y carga la escena de gameplay.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">CharacterSelectController.cs</span>
+      <span class="file-tag">SceneLoader.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="SCENE-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-SCENE-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task scene" id="SCENE-03">
+  <div class="task-header" onclick="toggle('SCENE-03')">
+    <span class="task-id">SCENE-03</span>
+    <span class="task-title">Escena: Gameplay — configurar y verificar el flujo completo de estados</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-SCENE-03">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge hard">Avanzado</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>La escena de gameplay debe tener correctamente configurados todos los GameObjects, referencias y el flujo: <code>WaitingState → ExplorationState ↔ BattleState → GameOverState</code>.</p>
+    <ul>
+      <li>Crear/limpiar la escena <code>GameplayScene</code> y agregarla al Build Settings.</li>
+      <li>Verificar que <code>GameplayManager</code> (singleton) tiene todas sus referencias en el Inspector.</li>
+      <li>Colocar spawn points y asignarlos al <code>SpawnCalculator</code>.</li>
+      <li>Colocar monolitos y verificar que <code>GameplayManager</code> los detecta (BUG-05).</li>
+      <li>Probar flujo completo: inicio → exploración → batalla (Tab) → regreso a exploración.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">NetworkManagerMock.cs</span>
+      <span class="file-tag">SpawnCalculator.cs</span>
+    </div>
+    <div class="note warn">Depende de CLEAN-01, BUG-05 y REF-05. Hacer al final.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="SCENE-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-SCENE-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task scene" id="SCENE-04">
+  <div class="task-header" onclick="toggle('SCENE-04')">
+    <span class="task-id">SCENE-04</span>
+    <span class="task-title">Escena: Loading Screen con barra de progreso</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-SCENE-04">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Las transiciones entre escenas usan solo un fade a negro. Se necesita una pantalla de carga intermedia, especialmente cuando el cliente espera conectarse al servidor.</p>
+    <ul>
+      <li>Crear la escena <code>LoadingScreen</code> y agregarla al Build Settings.</li>
+      <li>Crear Canvas con: barra de progreso (<code>Slider</code>), texto de estado ("Conectando...", "Cargando mundo...") y logo del juego.</li>
+      <li>Crear <code>LoadingScreenController.cs</code> que use <code>AsyncOperation</code> para cargar la escena destino en background.</li>
+      <li>Modificar <code>SceneLoader.cs</code> para que opcionalmente pase por esta escena.</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">LoadingScreenController.cs (nuevo)</span>
+      <span class="file-tag">SceneLoader.cs</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="SCENE-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-SCENE-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 6 · MULTIPLAYER LAN
+══════════════════════════════════════════════════ -->
+<div class="section-title lan">🌐 Multiplayer LAN — Unity Netcode for GameObjects</div>
+
+<div class="task lan" id="LAN-01">
+  <div class="task-header" onclick="toggle('LAN-01')">
+    <span class="task-id">LAN-01</span>
+    <span class="task-title">Instalar Netcode for GameObjects y configurar el NetworkManager</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-LAN-01">Sin Asignar</span>
+      <span class="badge time">⏱ 1.5 horas</span>
+      <span class="badge easy">Fácil</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Antes de cualquier tarea de red, hay que agregar el package de Unity Netcode for GameObjects (NGO) al proyecto y configurar el <code>NetworkManager</code> como punto central de todas las conexiones LAN.</p>
+    <ol class="steps">
+      <li>Abrir <strong>Window → Package Manager</strong> y buscar <em>"Netcode for GameObjects"</em>. Instalarlo.</li>
+      <li>En la escena Gameplay, crear un GameObject vacío llamado <code>NetworkManager</code>.</li>
+      <li>Agregarle el componente <code>NetworkManager</code> y como transport seleccionar <code>UnityTransport</code>.</li>
+      <li>En el componente <code>UnityTransport</code>, verificar que el protocolo sea <strong>UDP</strong> y el puerto <strong>7777</strong>.</li>
+      <li>Agregar el prefab del jugador al campo <strong>Player Prefab</strong> del <code>NetworkManager</code>.</li>
+      <li>Hacer una prueba: con dos instancias del editor (ParrelSync o builds), verificar que una puede hacer Host y la otra conectarse como Client.</li>
+    </ol>
+    <div class="files">
+      <span class="file-tag">GameplayScene (Unity)</span>
+      <span class="file-tag">NetworkManagerMock.cs (referencia)</span>
+    </div>
+    <div class="note">Esta tarea es prerequisito de todas las demás tareas LAN. Hacerla primero en el grupo.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="LAN-01" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-LAN-01">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task lan" id="LAN-02">
+  <div class="task-header" onclick="toggle('LAN-02')">
+    <span class="task-id">LAN-02</span>
+    <span class="task-title">Escena de Lobby LAN: Host, Join por IP y lista de jugadores conectados</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-LAN-02">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de LAN-01</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Antes de entrar al juego, el cliente necesita una pantalla de lobby donde puede crear una partida (host) o unirse a una existente con la IP del servidor.</p>
+    <ol class="steps">
+      <li>Crear la escena <code>LobbyScene</code> y agregarla al Build Settings.</li>
+      <li>Crear Canvas con: campo de texto para IP, botón <strong>"Crear partida (Host)"</strong> y botón <strong>"Unirse (Join)"</strong>.</li>
+      <li>Crear <code>LobbyController.cs</code>. El botón Host llama a <code>NetworkManager.Singleton.StartHost()</code>. El botón Join llama a <code>NetworkManager.Singleton.StartClient()</code> con la IP ingresada.</li>
+      <li>Mostrar una lista simple (texto) de los jugadores conectados usando <code>NetworkManager.Singleton.ConnectedClients</code>.</li>
+      <li>Agregar botón <strong>"Iniciar partida"</strong> (solo visible para el Host) que cargue la escena de Gameplay con <code>NetworkManager.SceneManager.LoadScene()</code>.</li>
+    </ol>
+    <div class="files">
+      <span class="file-tag">LobbyController.cs (nuevo)</span>
+      <span class="file-tag">LobbyScene (Unity)</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="LAN-02" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-LAN-02">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task lan" id="LAN-03">
+  <div class="task-header" onclick="toggle('LAN-03')">
+    <span class="task-id">LAN-03</span>
+    <span class="task-title">NetworkObject en el jugador: sincronizar posición y animaciones en red</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-LAN-03">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de LAN-01</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>Cada jugador en red debe verse moverse en las pantallas de los demás clientes. Para eso, el prefab del jugador necesita componentes de red y la lógica de movimiento debe ser solo para el dueño (<code>IsOwner</code>).</p>
+    <ol class="steps">
+      <li>Agregar el componente <code>NetworkObject</code> al prefab del jugador.</li>
+      <li>Agregar el componente <code>NetworkTransform</code> al prefab del jugador para sincronizar posición y rotación automáticamente.</li>
+      <li>En <code>PlayerController.cs</code>, envolver el código de movimiento e input en un <code>if (!IsOwner) return;</code> al inicio del <code>Update()</code>.</li>
+      <li>En <code>PlayerAnimatorView.cs</code>, hacer lo mismo: solo el dueño puede triggerear sus propias animaciones; las demás se sincronizan vía <code>NetworkAnimator</code>.</li>
+      <li>Agregar componente <code>NetworkAnimator</code> al prefab y asignar el <code>Animator</code>.</li>
+      <li>Probar con dos instancias: el movimiento de un jugador debe verse en la pantalla del otro.</li>
+    </ol>
+    <div class="files">
+      <span class="file-tag">PlayerController.cs</span>
+      <span class="file-tag">PlayerAnimatorView.cs</span>
+      <span class="file-tag">Player Prefab (Unity)</span>
+    </div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="LAN-03" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-LAN-03">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task lan" id="LAN-04">
+  <div class="task-header" onclick="toggle('LAN-04')">
+    <span class="task-id">LAN-04</span>
+    <span class="task-title">Sincronizar HP y daño: NetworkVariable + ServerRpc</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-LAN-04">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de LAN-01 y BUG-03</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p>El HP de cada jugador debe ser autoritativo en el servidor y visible para todos los clientes. No se puede dejar que el cliente decida cuánto daño hace: eso lo valida el servidor.</p>
+    <ol class="steps">
+      <li>Agregar componente <code>NetworkBehaviour</code> (o hacer que <code>PlayerStats</code> herede de él).</li>
+      <li>Cambiar <code>_currentHP</code> a <code>NetworkVariable&lt;int&gt; CurrentHP</code> con permiso de escritura solo para el servidor (<code>NetworkVariableWritePermission.Server</code>).</li>
+      <li>Crear un <code>[ServerRpc]</code> llamado <code>TakeDamageServerRpc(int damage)</code>: el cliente lo llama, el servidor lo ejecuta y actualiza el <code>NetworkVariable</code>.</li>
+      <li>Suscribirse al evento <code>CurrentHP.OnValueChanged</code> en el cliente para actualizar la UI de HP automáticamente.</li>
+      <li>Probar: lanzar un hechizo contra el enemigo y verificar que el HP baja en ambas pantallas.</li>
+    </ol>
+    <div class="files">
+      <span class="file-tag">PlayerStats.cs</span>
+      <span class="file-tag">DamageCalculator.cs</span>
+      <span class="file-tag">PlayerUI.cs</span>
+    </div>
+    <div class="note warn">Si aún no está resuelto BUG-03, resolver primero para no duplicar trabajo.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="LAN-04" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-LAN-04">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+<div class="task lan" id="LAN-05">
+  <div class="task-header" onclick="toggle('LAN-05')">
+    <span class="task-id">LAN-05</span>
+    <span class="task-title">Reemplazar NetworkManagerMock con el NetworkManager real de NGO</span>
+    <div class="task-meta">
+      <span class="badge assignee" id="badge-LAN-05">Sin Asignar</span>
+      <span class="badge time">⏱ 2 horas</span>
+      <span class="badge medium">Medio</span>
+      <span class="badge iso">⚠ depende de LAN-01, LAN-03 y LAN-04</span>
+    </div>
+    <span class="toggle-icon">▶</span>
+  </div>
+  <div class="task-body">
+    <p><code>NetworkManagerMock.cs</code> instancia jugadores localmente de forma fake. Con NGO ya instalado y funcionando, debe reemplazarse por el sistema real de spawn en red.</p>
+    <ol class="steps">
+      <li>Eliminar las llamadas a <code>NetworkManagerMock.GameInitialize()</code> del <code>GameplayManager</code>.</li>
+      <li>En el <code>NetworkManager</code> de NGO, asignar el prefab del jugador al campo <strong>Player Prefab</strong>. NGO lo instancia automáticamente al conectarse un cliente.</li>
+      <li>En <code>GameplayManager</code>, obtener la lista de jugadores conectados con <code>NetworkManager.Singleton.ConnectedClientsList</code> en lugar de la lista local.</li>
+      <li>Conservar la asignación de ID, color y stats del jugador local usando <code>IsOwner</code> para identificarlo.</li>
+      <li>Mantener <code>NetworkManagerMock.cs</code> en el proyecto pero comentado, como referencia hasta que la implementación real funcione correctamente.</li>
+    </ol>
+    <div class="files">
+      <span class="file-tag">NetworkManagerMock.cs</span>
+      <span class="file-tag">GameplayManager.cs</span>
+      <span class="file-tag">PlayerStats.cs</span>
+      <span class="file-tag">PlayerIDGenerator.cs</span>
+    </div>
+    <div class="note">Esta es la tarea de integración final del módulo LAN. Hacerla después de LAN-03 y LAN-04.</div>
+    <div class="assignee-row">
+      <label>👤 Asignado a:</label>
+      <input class="assignee-input" type="text" data-task="LAN-05" placeholder="Sin Asignar" autocomplete="off" />
+      <span class="save-indicator" id="saved-LAN-05">✓ Guardado</span>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  Typing Battle Royale · Revisión de código · 2026 · 33 tareas identificadas
+</footer>
+
+<script>
+  /* ── STORAGE ─────────────────────────────── */
+  const STORAGE_KEY = 'tbr-task-assignments';
+
+  function loadAll() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e) { return {}; }
+  }
+
+  function saveAll(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  /* ── BADGE UPDATE ────────────────────────── */
+  function updateBadge(taskId, value) {
+    const badge = document.getElementById('badge-' + taskId);
+    if (!badge) return;
+    const name = value.trim();
+    badge.textContent = name || 'Sin Asignar';
+    if (name) {
+      badge.classList.add('assigned');
+    } else {
+      badge.classList.remove('assigned');
+    }
+  }
+
+  /* ── SAVE INDICATOR ──────────────────────── */
+  let saveTimers = {};
+  function flashSaved(taskId) {
+    const el = document.getElementById('saved-' + taskId);
+    if (!el) return;
+    el.classList.add('show');
+    clearTimeout(saveTimers[taskId]);
+    saveTimers[taskId] = setTimeout(() => el.classList.remove('show'), 1500);
+  }
+
+  /* ── INIT INPUTS ─────────────────────────── */
+  function initAssignees() {
+    const data = loadAll();
+    document.querySelectorAll('.assignee-input').forEach(input => {
+      const taskId = input.dataset.task;
+      const saved  = data[taskId] || '';
+      input.value  = saved;
+      updateBadge(taskId, saved);
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const current = loadAll();
+        current[taskId] = val;
+        saveAll(current);
+        updateBadge(taskId, val);
+        flashSaved(taskId);
+      });
+
+      // prevent toggle when clicking inside input
+      input.addEventListener('click', e => e.stopPropagation());
+    });
+  }
+
+  /* ── TOGGLE ──────────────────────────────── */
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  /* ── BOOT ────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', initAssignees);
+</script>
+
+</body>
+</html>

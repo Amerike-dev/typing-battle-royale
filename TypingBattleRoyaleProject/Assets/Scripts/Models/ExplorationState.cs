@@ -27,13 +27,13 @@ public class ExplorationState : IGameState
     public void Update()
     {
 
-        float distance=Mathf.Infinity;
+        float distance=float.MaxValue;
         foreach(GameObject Monolith in _gameplayManager.Monolith)
         {
             if( Monolith != null)
             {
                 float MonolithDistance = Vector3.Magnitude(_gameplayManager.playerController.transform.position - Monolith.transform.position);
-                if (MonolithDistance > distance)
+                if (MonolithDistance < distance)
                 {
                     distance = MonolithDistance;
                     nearestMonolith = Monolith;
