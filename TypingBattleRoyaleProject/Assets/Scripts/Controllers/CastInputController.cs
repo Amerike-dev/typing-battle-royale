@@ -25,6 +25,7 @@ public class CastInputController : MonoBehaviour
 
     //Evita el error de retsoseso con el Backspace
     private int _backSpacePress = 0;
+    private int _incorrectLetter = 0;
     //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
@@ -63,6 +64,23 @@ public class CastInputController : MonoBehaviour
     }
     private void BackspaceLogic()
     {
+        /*var backspaceKey = Keyboard.current.backspaceKey;
+
+        if (backspaceKey.wasPressedThisFrame)
+        {
+            _backSpaceTimer = _backSpaceDelay;
+            PressBackSpace();
+        }
+        else if (backspaceKey.isPressed)
+        {
+            _backSpaceTimer -= Time.deltaTime;
+
+            if (_backSpaceTimer <= 0)
+            {
+                _backSpaceTimer = _backSpaceCooldown;
+                PressBackSpace();
+            }
+        }*/
         var backspaceKey = Keyboard.current.backspaceKey;
 
         if (backspaceKey.wasPressedThisFrame)
@@ -77,14 +95,21 @@ public class CastInputController : MonoBehaviour
             }
             if (_backSpacePress >=1)
             {
-                _totalKeysPressed++;
-                incorrectInput--;
-                _backSpaceTimer = _backSpaceDelay;
-                BackspaceBehaviour();
-                _backSpacePress++;
-                if(CombatLogic._stringIndex >= 1)
+                if (_incorrectLetter <= 0)
                 {
-                    CombatLogic._stringIndex--;
+                    _totalKeysPressed++;
+                    incorrectInput--;
+                    _backSpaceTimer = _backSpaceDelay;
+                    BackspaceBehaviour();
+                    _backSpacePress++;
+                    if (CombatLogic._stringIndex >= 1)
+                    {
+                        CombatLogic._stringIndex--;
+                    }
+                }
+                if(_incorrectLetter > 0)
+                {
+                    _incorrectLetter--;
                 }
             }
             
@@ -129,6 +154,7 @@ public class CastInputController : MonoBehaviour
         {
             _errorCount++;
             incorrectInput++;
+            _incorrectLetter++;
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), true);
             Debug.Log("Correct letter: " + CombatLogic.SpellText[CombatLogic.CurrentIndex()] + " Mistypo: " + input);
             return;
@@ -170,5 +196,47 @@ public class CastInputController : MonoBehaviour
         }
     }
         
+    public void PressBackSpace()
+    {
+        if (_incorrectLetter<0)
+        {
+            if (CombatLogic._stringIndex <= 0) return;
 
+            CombatLogic._stringIndex--;
+
+            if (_errorCount > 0)
+            {
+                _errorCount--;
+                _incorrectLetter = Mathf.Max(0, _incorrectLetter - 1);
+            }
+            else
+            {
+                incorrectInput = Mathf.Max(0, incorrectInput - 1);
+                CombatLogic.EraseChar();
+            }
+
+            uiController.UpdateDisplay(CombatLogic.CurrentIndex(), _errorCount > 0);
+        }
+        if(_incorrectLetter > 0)
+        {
+            _incorrectLetter--;
+        }
+
+        /*if (CombatLogic._stringIndex <= 0) return;
+
+        CombatLogic._stringIndex--;
+
+        if (_errorCount > 0)
+        {
+            _errorCount--;
+            _incorrectLetter = Mathf.Max(0, _incorrectLetter - 1);
+        }
+        else
+        {
+            incorrectInput = Mathf.Max(0, incorrectInput - 1);
+            CombatLogic.EraseChar();
+        }
+
+        uiController.UpdateDisplay(CombatLogic.CurrentIndex(), _errorCount > 0);*/
+    }
 }
