@@ -46,9 +46,9 @@ public class PlayerUI : MonoBehaviour
 
     void Update()
     {
+        HandleMonolithPrompt();
         CurrentText();
         UpdateHPSliders();
-        HandleMonolithPrompt();
     }
 
     public void SetPlayerStats(PlayerStats localStats, PlayerStats enemyStats)
@@ -102,6 +102,7 @@ public class PlayerUI : MonoBehaviour
 
     private void HandleMonolithPrompt()
     {
+
         if (!G_UI || playerInteractorView == null)
         {
             HidePrompt();

@@ -22,6 +22,8 @@ public class MonolithController : MonoBehaviour
     {
         data = new MonolithData(id, level, runeChallenge);
         PopulateSpells();
+
+        GetComponent<MonolithView>().SetData(data);
     }
 
     public void AddIdPlayer(string id)

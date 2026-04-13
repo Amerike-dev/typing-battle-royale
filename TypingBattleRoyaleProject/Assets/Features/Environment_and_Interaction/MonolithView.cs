@@ -28,4 +28,9 @@ public class MonolithView : MonoBehaviour
         }
 
     }
+
+    public void SetData(MonolithData data)
+    {
+        monolithData = data;
+    }
 }
