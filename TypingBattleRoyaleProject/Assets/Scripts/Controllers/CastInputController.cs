@@ -24,8 +24,8 @@ public class CastInputController : MonoBehaviour
     public float accuracy;
 
     //Evita el error de retsoseso con el Backspace
-    private int _backSpacePress = 0;
-    private int _incorrectLetter = 0;
+    public bool _backSpacePress = false;
+    public int _incorrectLetter = 0;
     //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
@@ -40,7 +40,7 @@ public class CastInputController : MonoBehaviour
 
     private void OnEnable()
     {
-        _backSpacePress = 0;
+        _backSpacePress = false;
         _casting = true;
         _typingStats = new TypingStats();
         CombatLogic.SetText(spellText);
@@ -85,29 +85,28 @@ public class CastInputController : MonoBehaviour
 
         if (backspaceKey.wasPressedThisFrame)
         {
-            if (_backSpacePress == 0)
+            if (_backSpacePress == false)
             {
-                _backSpacePress += 1;
-                if (CombatLogic._stringIndex == 1)
+                _backSpacePress = true;
+                if(CombatLogic._stringIndex == 1)
                 {
                     CombatLogic._stringIndex--;
                 }
             }
-            if (_backSpacePress >=1)
+            else if (_backSpacePress == true)
             {
                 if (_incorrectLetter <= 0)
                 {
-                    _totalKeysPressed++;
-                    incorrectInput--;
+                    //_totalKeysPressed++;
+                    //incorrectInput--;
                     _backSpaceTimer = _backSpaceDelay;
                     BackspaceBehaviour();
-                    _backSpacePress++;
                     if (CombatLogic._stringIndex >= 1)
                     {
                         CombatLogic._stringIndex--;
                     }
                 }
-                if(_incorrectLetter > 0)
+                else if(_incorrectLetter > 1)
                 {
                     _incorrectLetter--;
                 }
@@ -198,7 +197,7 @@ public class CastInputController : MonoBehaviour
         
     public void PressBackSpace()
     {
-        if (_incorrectLetter<0)
+        if (_incorrectLetter<=0)
         {
             if (CombatLogic._stringIndex <= 0) return;
 
@@ -217,7 +216,7 @@ public class CastInputController : MonoBehaviour
 
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), _errorCount > 0);
         }
-        if(_incorrectLetter > 0)
+        else if(_incorrectLetter >= 1)
         {
             _incorrectLetter--;
         }
