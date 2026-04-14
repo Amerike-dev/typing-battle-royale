@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class ExplorationState : IGameState
 {
-    public CamaraController camaraController;
+    public CameraController cameraController;
     private GameplayManager _gameplayManager;
     public GameObject nearestMonolith = null;
    
-    public ExplorationState(CamaraController _camaraController, GameplayManager _manager)
+    public ExplorationState(CameraController _cameraController, GameplayManager _manager)
     {
-        _camaraController = camaraController;
+        _cameraController = cameraController;
         _gameplayManager = _manager;
     }
     public void Enter()
     { 
-        camaraController.OnCamaraMove = true; 
+        cameraController.OnCamaraMove = true; 
         _gameplayManager.PlayerController.onExplorationState = true;
         
     }
@@ -27,13 +27,13 @@ public class ExplorationState : IGameState
     public void Update()
     {
 
-        float distance=Mathf.Infinity;
+        float distance=float.MaxValue;
         foreach(GameObject Monolith in _gameplayManager.Monolith)
         {
             if( Monolith != null)
             {
                 float MonolithDistance = Vector3.Magnitude(_gameplayManager.playerController.transform.position - Monolith.transform.position);
-                if (MonolithDistance > distance)
+                if (MonolithDistance < distance)
                 {
                     distance = MonolithDistance;
                     nearestMonolith = Monolith;
@@ -44,7 +44,7 @@ public class ExplorationState : IGameState
 
     public void Exit()
     {
-        camaraController.OnCamaraMove = false; 
+        cameraController.OnCamaraMove = false; 
         _gameplayManager.PlayerController.onExplorationState = false;
         
     }
