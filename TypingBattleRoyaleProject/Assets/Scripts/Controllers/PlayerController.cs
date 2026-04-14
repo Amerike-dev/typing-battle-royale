@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
-    public CamaraController1 camaraController;
+    public CameraController cameraController;
     public CastInputController castInputController;
     public PlayerAnimatorView playerAnimatorView;
     public InputActionReference explorationState;
