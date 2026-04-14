@@ -940,11 +940,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 10b8efec-557b-415a-b00c-dc36ae21d2b0
+  cloudProjectId: 9d43c12f-6629-487d-a50b-7eb92f2f493e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: TypingBattleRoyaleProject
-  organizationId: cdmx2781
+  organizationId: chskurtzdev
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
