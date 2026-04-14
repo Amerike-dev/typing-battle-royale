@@ -1,23 +1,37 @@
+using System;
 using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
     public float moveSpeed = 5f;
     private float continuousSpeed;
     public float jumpForce = 5f;
-
-    public float maxHealth;
-    public float currentHealth;
-
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
-    public CamaraController1 camaraController;
+
+    
+    
+        
+    
+    public Action OnLifeLost;
+    public Action OnAllLifeLost;
+
+    [Header("Input")]
     public CastInputController castInputController;
-    public PlayerAnimatorView playerAnimatorView;
     public InputActionReference explorationState;
+
+    [Header("Other")]
+    public CamaraController1 camaraController;
+    public PlayerAnimatorView playerAnimatorView;
+
+    
+
+
+
 
     public bool onExplorationState;
 
@@ -33,6 +47,7 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody>();
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        isAlive = true;
 
     }
 
@@ -108,4 +123,16 @@ public class PlayerController : MonoBehaviour
         moveSpeed = continuousSpeed;
     }
 
+
+    public void LoseLife()
+    {
+        currentHealth = maxHealth;
+        currentLives--;
+        isAlive = currentLives > 0;
+        OnLifeLost?.Invoke();
+        if (!isAlive)
+            OnAllLifeLost?.Invoke();
+        else
+            return;
+    }
 }
