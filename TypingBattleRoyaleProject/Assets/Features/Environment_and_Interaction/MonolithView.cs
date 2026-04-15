@@ -6,7 +6,6 @@ public class MonolithView : MonoBehaviour
     [SerializeField] private ParticleSystem unlockVFX;
     [SerializeField] private Renderer monolithRenderer;
     public bool IsExausted {  get; private set; }
-
     public System.Action<SpellData> OnMonolithUnlocked;
 
     public int Level => monolithData != null ? monolithData.Level : 0;
