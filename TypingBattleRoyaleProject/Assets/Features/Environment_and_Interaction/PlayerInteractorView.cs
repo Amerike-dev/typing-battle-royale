@@ -12,9 +12,6 @@ public class PlayerInteractorView : MonoBehaviour
         }
 
     }
-
-
-
     private void OnTriggerExit(Collider other)
     {
         MonolithView monolith = other.GetComponent<MonolithView>();
