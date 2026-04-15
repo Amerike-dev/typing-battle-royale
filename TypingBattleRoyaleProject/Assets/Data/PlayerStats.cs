@@ -13,21 +13,25 @@ public class PlayerStats
 
     private int _currentLives;
     private int _killCount;
+    private bool _isAlive;
     private float _wpm;
-    public bool _isAlive;
-
-
+    
     public Action OnLifeLost;
     public Action OnAllLifeLost;
 
-    public string iD  => _id;
+    public string ID  => _id;
     public float currentHP => _currentHP;
     public float maxHP => _maxHP;
     public int maxLives => _maxLives;
-   
+    public bool isAlive => _isAlive;
     public int killCount => _killCount;
     public float wPM => _wpm;
-    
+
+    public PlayerStats(string id)
+    {
+        _id = id;
+    }
+
     public void TakeDamage(float damage)
     {
         _currentHP -= damage;
@@ -35,8 +39,16 @@ public class PlayerStats
             LoseLife();
             
     }
-    public void LoseLife() 
+    public void LoseLife()
     {
-        
+        _currentHP = _maxHP;
+        _currentLives--;
+        _isAlive = _currentLives > 0;
+        OnLifeLost?.Invoke();
+        if (!isAlive)
+            OnAllLifeLost?.Invoke();
+        else
+            return;
     }
+
 }

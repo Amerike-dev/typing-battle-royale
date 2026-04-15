@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody>();
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        isAlive = true;
+        
 
     }
 
@@ -124,15 +124,5 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void LoseLife()
-    {
-        currentHealth = maxHealth;
-        currentLives--;
-        isAlive = currentLives > 0;
-        OnLifeLost?.Invoke();
-        if (!isAlive)
-            OnAllLifeLost?.Invoke();
-        else
-            return;
-    }
+    
 }
