@@ -12,15 +12,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody _rb;
     private bool _isGrounded;
-
-    
-    
-        
-    
-    public Action OnLifeLost;
-    public Action OnAllLifeLost;
-
-    [Header("Input")]
+    public CameraController cameraController;
     public CastInputController castInputController;
     public InputActionReference explorationState;
 
