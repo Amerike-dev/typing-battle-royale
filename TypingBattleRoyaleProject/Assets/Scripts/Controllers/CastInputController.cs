@@ -64,23 +64,6 @@ public class CastInputController : MonoBehaviour
     }
     private void BackspaceLogic()
     {
-        /*var backspaceKey = Keyboard.current.backspaceKey;
-
-        if (backspaceKey.wasPressedThisFrame)
-        {
-            _backSpaceTimer = _backSpaceDelay;
-            PressBackSpace();
-        }
-        else if (backspaceKey.isPressed)
-        {
-            _backSpaceTimer -= Time.deltaTime;
-
-            if (_backSpaceTimer <= 0)
-            {
-                _backSpaceTimer = _backSpaceCooldown;
-                PressBackSpace();
-            }
-        }*/
         var backspaceKey = Keyboard.current.backspaceKey;
 
         if (backspaceKey.wasPressedThisFrame)
