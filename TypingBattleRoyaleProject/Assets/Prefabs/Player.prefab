@@ -1836,6 +1836,8 @@ GameObject:
   - component: {fileID: 3104773256663949943}
   - component: {fileID: 5137736192988664721}
   - component: {fileID: 5493427378232170685}
+  - component: {fileID: 5436502623114698702}
+  - component: {fileID: 4631980267213377421}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2012,13 +2014,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 5
-  maxHealth: 0
-  currentHealth: 0
   cameraController: {fileID: 0}
   castInputController: {fileID: 2907905682181783749}
-  playerAnimatorView: {fileID: -2689246101718839236}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
+  stats:
+    _id: 
+    _maxHP: 0
+    _maxLives: 0
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2064,7 +2068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3131603669
+  GlobalObjectIdHash: 1955824480
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2158,6 +2162,47 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!143 &5436502623114698702
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4631980267213377421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4250d20c7ba18994d8880b1290b5b1a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 5
+  rotationSpeed: 10
+  jumpForce: 8
 --- !u!1 &6038580914273336821
 GameObject:
   m_ObjectHideFlags: 0
