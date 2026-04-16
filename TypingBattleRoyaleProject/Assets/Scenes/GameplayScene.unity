@@ -17132,7 +17132,7 @@ Transform:
   m_GameObject: {fileID: 733723726}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.609, y: 0, z: 18.95}
+  m_LocalPosition: {x: -27.609, y: 1.5260001, z: 18.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19488,7 +19488,7 @@ Transform:
   m_GameObject: {fileID: 1271760602}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.37, y: 0, z: -27.75}
+  m_LocalPosition: {x: -7.37, y: 1.5260001, z: -27.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20610,6 +20610,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
+<<<<<<< HEAD
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
   m_ProtocolType: 0
   m_UseWebSockets: 0
@@ -20672,6 +20673,14 @@ MonoBehaviour:
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
+=======
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkManagerMock
+  playerAmount: 4
+  _playerPrefab: {fileID: 6025732026901377866, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
+  _playerUi: {fileID: 1054458754}
+  Players: []
+  Controllers: []
+>>>>>>> main
 --- !u!1 &1519874957
 GameObject:
   m_ObjectHideFlags: 0
@@ -27022,7 +27031,7 @@ Transform:
   m_GameObject: {fileID: 1889250363}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 32.76, y: 1.374, z: 2.18}
+  m_LocalPosition: {x: 32.76, y: 2.9, z: 2.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -27295,7 +27304,7 @@ Transform:
   m_GameObject: {fileID: 1966497374}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

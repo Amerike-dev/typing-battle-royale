@@ -11,6 +11,6 @@ public class DamageCalculator
 
     public void CalculateDamage(SpellData castedSpell)
     {
-        _playerController.currentHealth -= castedSpell.baseDamage;
+        _playerController.stats.TakeDamage( castedSpell.baseDamage);
     }
 }

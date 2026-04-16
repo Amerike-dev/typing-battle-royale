@@ -865,6 +865,7 @@ MonoBehaviour:
   sensitivity: 0.1
   playerBody: {fileID: 8524643825518991717}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  OnCamaraMove: 1
 --- !u!1 &2274206159653536663
 GameObject:
   m_ObjectHideFlags: 0
@@ -2011,13 +2012,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 5
-  maxHealth: 0
-  currentHealth: 0
-  camaraController: {fileID: 9158168436735624119}
+  cameraController: {fileID: 0}
   castInputController: {fileID: 2907905682181783749}
-  playerAnimatorView: {fileID: -2689246101718839236}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  camaraController: {fileID: 0}
+  playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
+  stats:
+    _id: 
+    _maxHP: 0
+    _maxLives: 0
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0

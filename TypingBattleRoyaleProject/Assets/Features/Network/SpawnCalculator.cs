@@ -39,7 +39,10 @@ public class SpawnCalculator
         if (_nextIndex >= _shuffle.Length)
         {
             Debug.LogWarning("No quedan Spawnpoints disponibles");
-            return Vector3.zero;
+            Debug.Log("Reiniciando SpawnIndex...");
+
+            Shuffle();
+            _nextIndex = 0;
         }
 
         Vector3 result = _shuffle[_nextIndex];
