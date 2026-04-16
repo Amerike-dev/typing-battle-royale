@@ -20,25 +20,6 @@ public class InGameTimer
     public bool IsRunning => _isRunning;
 
     public Action OnSecondElapsed;
-    
-
-    private Coroutine _runningCoroutine;
-
-    
-    
-
-    public void Stop(MonoBehaviour runner)
-    {
-        if (!_isRunning) return;
-
-        if (_runningCoroutine != null)
-        {
-            runner.StopCoroutine(_runningCoroutine);
-            _runningCoroutine = null;
-        }
-
-        _isRunning = false;
-    }
 
     private IEnumerator CountTime()
     {
