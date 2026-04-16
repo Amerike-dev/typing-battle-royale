@@ -1,16 +1,19 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PauseController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject _menuContent;
-    [SerializeField] private GameplayManager _gameplayManager;
+    [SerializeField] private Slider _sliderVolume;
+    //[SerializeField] private GameplayManager _gameplayManager;
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _mainMenuButton;
+    [SerializeField] private InputActionReference _aPause;
 
     private bool isPaused = false;
 
@@ -44,34 +47,39 @@ public class PauseController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        /*if (Input.GetKeyDown(KeyCode.Escape))
         {
 
             if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
-        }
+        }*/
     }
 
     public void TogglePause()
     {
-        if (IsGameOverActive())
-            return;
+        //if (IsGameOverActive())
+          //  return;
 
         if (isPaused)
             ResumeGame();
-        else
-            PauseGame();
+            
     }
 
-    private void PauseGame()
+    private void PauseGame(InputAction.CallbackContext actionData)
     {
+        //if (_gameplayManager != null && _gameplayManager.stateMachine != null)
+
+          //  TogglePause();
+
         isPaused = true;
 
         if (_menuContent != null)
             _menuContent.SetActive(true);
 
-        Time.timeScale = 0f;
+        
+        Debug.Log("Juego en pausa");
+        //Time.timeScale = 0f;
     }
 
     public void ResumeGame()
@@ -84,13 +92,13 @@ public class PauseController : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    private bool IsGameOverActive()
+    /*private bool IsGameOverActive()
     {
         if (_gameplayManager == null || _gameplayManager.stateMachine == null)
             return false;
 
         return _gameplayManager.stateMachine.currentState is GameOverState;
-    }
+    }*/
 
     private void OnDestroy()
     {
@@ -99,4 +107,15 @@ public class PauseController : MonoBehaviour
 
         Time.timeScale = 1f;
     }
+
+    private void OnEnable()
+    {
+        _aPause.action.started += PauseGame;
+    }
+    private void OnDisable()
+    {
+        _aPause.action.started -= PauseGame;
+    }
+
+    
 }
