@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public InputActionReference explorationState;
 
     [Header("Other")]
-    public CamaraController1 camaraController;
+    public CameraController camaraController;
     public PlayerAnimatorView playerAnimatorView;
 
     
