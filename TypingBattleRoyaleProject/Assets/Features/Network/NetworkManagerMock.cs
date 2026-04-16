@@ -58,7 +58,7 @@ public class NetworkManagerMock : MonoBehaviour
             }
 
             string id = PlayerIDGenerator.GenerateID();
-            PlayerStats generatedStats = new PlayerStats(id, 100);
+            PlayerStats generatedStats = new PlayerStats(id);
             PlayerInventory generatedInventory = new PlayerInventory();
 
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();

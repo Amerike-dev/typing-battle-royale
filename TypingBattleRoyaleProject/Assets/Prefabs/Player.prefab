@@ -2012,13 +2012,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 5
-  maxHealth: 0
-  currentHealth: 0
   cameraController: {fileID: 0}
   castInputController: {fileID: 2907905682181783749}
-  playerAnimatorView: {fileID: -2689246101718839236}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
+  stats:
+    _id: 
+    _maxHP: 0
+    _maxLives: 0
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0
