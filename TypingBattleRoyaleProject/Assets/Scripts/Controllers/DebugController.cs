@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class DebbugController : MonoBehaviour
+public class DebugController : MonoBehaviour
 {
+#if UNITY_EDITOR
     public Vector3[] spawnPoints;
 
     void Start()
@@ -24,5 +25,5 @@ public class DebbugController : MonoBehaviour
             print(points[i]);
         }
     }
-
+#endif
 }
