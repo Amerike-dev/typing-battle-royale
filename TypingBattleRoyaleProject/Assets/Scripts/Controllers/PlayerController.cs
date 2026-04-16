@@ -17,11 +17,7 @@ public class PlayerController : MonoBehaviour
     public InputActionReference explorationState;
 
     [Header("Other")]
-<<<<<<< HEAD
     public PlayerAnimatorView playerAnimatorView;
-=======
-    public CameraController camaraController;
->>>>>>> 2f0d8fdcc8f609bf51d636356784e5dde32d9a28
 
     public bool onExplorationState;
     public PlayerStats stats;
