@@ -1457,11 +1457,13 @@ MonoBehaviour:
   lastInInput: 0
   spellText: Arandanos verdes, frutos del olvido, conviertan a este perro en amarillo
   _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  _totalKeysPressed: 0
   wordsPerMinute: 0
   accuracy: 0
   _backSpacePress: 0
   _incorrectLetter: 0
   uiController: {fileID: 1532856982}
+  _errorCount: 0
 --- !u!1 &1462613893
 GameObject:
   m_ObjectHideFlags: 0

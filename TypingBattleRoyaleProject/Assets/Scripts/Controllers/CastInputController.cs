@@ -19,7 +19,7 @@ public class CastInputController : MonoBehaviour
     private bool _casting;
     private TypingStats _typingStats;
     private float _timeElapsed;
-    private int _totalKeysPressed;
+    public int _totalKeysPressed; //esta era priivada
     public float wordsPerMinute;
     public float accuracy;
 
@@ -36,7 +36,7 @@ public class CastInputController : MonoBehaviour
     private float _backSpaceTimer = 0f;
 
     //Checker para que solo se borre el color en el UI sin romper el index
-    private int _errorCount = 0;
+    public int _errorCount = 0; //esta era priivada
 
     private void OnEnable()
     {
@@ -68,7 +68,10 @@ public class CastInputController : MonoBehaviour
 
         if (backspaceKey.wasPressedThisFrame)
         {
-            if (_backSpacePress == false)
+            _backSpaceTimer = _backSpaceDelay;
+            BackspaceBehaviour();
+            CombatLogic._stringIndex--;
+            /*if (_backSpacePress == false)
             {
                 _backSpacePress = true;
                 if(CombatLogic._stringIndex == 1)
@@ -76,24 +79,14 @@ public class CastInputController : MonoBehaviour
                     CombatLogic._stringIndex--;
                 }
             }
-            else if (_backSpacePress == true)
+            if (_backSpacePress == true)
             {
-                if (_incorrectLetter <= 0)
+                BackspaceBehaviour();
+                if (CombatLogic._stringIndex >= 1)
                 {
-                    //_totalKeysPressed++;
-                    //incorrectInput--;
-                    _backSpaceTimer = _backSpaceDelay;
-                    BackspaceBehaviour();
-                    if (CombatLogic._stringIndex >= 1)
-                    {
-                        CombatLogic._stringIndex--;
-                    }
+                    CombatLogic._stringIndex--;
                 }
-                else if(_incorrectLetter > 1)
-                {
-                    _incorrectLetter--;
-                }
-            }
+            }*/
             
         }
         else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
@@ -136,7 +129,6 @@ public class CastInputController : MonoBehaviour
         {
             _errorCount++;
             incorrectInput++;
-            _incorrectLetter++;
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), true);
             Debug.Log("Correct letter: " + CombatLogic.SpellText[CombatLogic.CurrentIndex()] + " Mistypo: " + input);
             return;
@@ -176,49 +168,5 @@ public class CastInputController : MonoBehaviour
             _timeElapsed ++;
             yield return new WaitForSeconds(1f);
         }
-    }
-        
-    public void PressBackSpace()
-    {
-        if (_incorrectLetter<=0)
-        {
-            if (CombatLogic._stringIndex <= 0) return;
-
-            CombatLogic._stringIndex--;
-
-            if (_errorCount > 0)
-            {
-                _errorCount--;
-                _incorrectLetter = Mathf.Max(0, _incorrectLetter - 1);
-            }
-            else
-            {
-                incorrectInput = Mathf.Max(0, incorrectInput - 1);
-                CombatLogic.EraseChar();
-            }
-
-            uiController.UpdateDisplay(CombatLogic.CurrentIndex(), _errorCount > 0);
-        }
-        else if(_incorrectLetter >= 1)
-        {
-            _incorrectLetter--;
-        }
-
-        /*if (CombatLogic._stringIndex <= 0) return;
-
-        CombatLogic._stringIndex--;
-
-        if (_errorCount > 0)
-        {
-            _errorCount--;
-            _incorrectLetter = Mathf.Max(0, _incorrectLetter - 1);
-        }
-        else
-        {
-            incorrectInput = Mathf.Max(0, incorrectInput - 1);
-            CombatLogic.EraseChar();
-        }
-
-        uiController.UpdateDisplay(CombatLogic.CurrentIndex(), _errorCount > 0);*/
     }
 }
