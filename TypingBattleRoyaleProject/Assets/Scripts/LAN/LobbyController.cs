@@ -17,7 +17,7 @@ public class LobbyController : MonoBehaviour
 
     private void Start()
     {
-        if (hostButton != null) hostButton.onClick.AddListener(OnJoinButtonClicked);
+        if (hostButton != null) hostButton.onClick.AddListener(OnHostButtonClicked);
 
         if (joinButton != null) joinButton.onClick.AddListener(OnJoinButtonClicked);
 
