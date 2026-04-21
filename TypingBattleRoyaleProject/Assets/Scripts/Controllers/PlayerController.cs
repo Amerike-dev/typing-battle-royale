@@ -19,13 +19,7 @@ public class PlayerController : MonoBehaviour
     [Header("Other")]
     public PlayerAnimatorView playerAnimatorView;
 
-    
-
-
-
-
     public bool onExplorationState;
-
     public PlayerStats stats;
     public PlayerInventory inventory;
 
