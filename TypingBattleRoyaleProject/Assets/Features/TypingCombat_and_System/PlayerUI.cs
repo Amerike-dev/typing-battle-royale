@@ -80,7 +80,7 @@ public class PlayerUI : MonoBehaviour
         SpellUI.SetActive(true);
         HidePrompt();
         CIController.incorrectInput = 0;
-        CombatLogic._stringIndex = 0;
+        //CombatLogic._stringIndex = 0;
         InputSpellText.Select();
         InputSpellText.ActivateInputField();
     }

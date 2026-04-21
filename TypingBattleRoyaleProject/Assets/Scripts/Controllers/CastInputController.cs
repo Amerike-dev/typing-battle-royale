@@ -62,12 +62,18 @@ public class CastInputController : MonoBehaviour
     private void Update()
     {
         BackspaceLogic();
-
-        currentIndex = CombatLogic._stringIndex;
+        HandleBackspace();
+        //currentIndex = CombatLogic._stringIndex;
     }
+
+    private void HandleBackspace()
+    {
+        CombatLogic.RemoveChar();
+    }
+
     private void BackspaceLogic()
     {
-        var backspaceKey = Keyboard.current.backspaceKey;
+        /*var backspaceKey = Keyboard.current.backspaceKey;
 
         if (backspaceKey.wasPressedThisFrame)
         {
@@ -86,8 +92,12 @@ public class CastInputController : MonoBehaviour
                     //CombatLogic._stringIndex--;
                 }
             }
+            else
+            {
+                _errorCount--;
+            }
         }
-        /*else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
+        else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
         {
             _backSpaceTimer -= Time.deltaTime;
 
@@ -106,7 +116,7 @@ public class CastInputController : MonoBehaviour
         }*/
     }
 
-    private void BackspaceBehaviour()
+    /*private void BackspaceBehaviour()
     {
         if (_errorCount > 0)
         {
@@ -120,9 +130,9 @@ public class CastInputController : MonoBehaviour
             CombatLogic.EraseChar();
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), false);
         }
-    }
+    }*/
    
-    private void TextInput(char input)
+    /*private void TextInput(char input)
     {
         _totalKeysPressed++;
         if (input == '\n' || input == '\r') return;
@@ -149,7 +159,31 @@ public class CastInputController : MonoBehaviour
         }
 
         Debug.Log("Correct. Letter: " + input);
+    }*/
+
+    private void TextInput(char input)
+    {
+        _totalKeysPressed++;
+        if (input == '\n' || input == '\r') return;
+
+        int index = CombatLogic.AddChar(input);
+
+        if (index < 0) return;
+
+        bool correct = CombatLogic.IsCorrectAt(index);
+
+        if (!correct) incorrectInput++;
+
+        uiController.UpdateDisplay(index, !correct);
+
+        if (CombatLogic.IsComplete())
+        {
+            Debug.Log("Spell Complete");
+        }
+        Debug.Log("Target: " + CombatLogic.SpellText);
+        Debug.Log("Input: " + CombatLogic.UserInput);
     }
+
     private void EvaluateAccuracy(InputAction.CallbackContext obj)
     {
         _typingStats.timeElapsed = _timeElapsed;
