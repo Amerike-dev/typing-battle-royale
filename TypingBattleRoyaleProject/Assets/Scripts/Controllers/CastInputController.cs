@@ -12,7 +12,8 @@ public class CastInputController : MonoBehaviour
     public int incorrectInput = 0;
     public int lastInInput = 0;
     public string spellText;
-    
+
+    public int currentIndex = 0;
 
     [Header("Typing Stats")]
     [SerializeField] private InputActionReference _cast;
@@ -32,7 +33,7 @@ public class CastInputController : MonoBehaviour
 
     //Timer para usar el BackSpace y evitar errores con el index del string
     private const float _backSpaceDelay = 0.4f;
-    private const float _backSpaceCooldown = 0.05f;
+    private const float _backSpaceCooldown = 0.5f;
     private float _backSpaceTimer = 0f;
 
     //Checker para que solo se borre el color en el UI sin romper el index
@@ -61,6 +62,8 @@ public class CastInputController : MonoBehaviour
     private void Update()
     {
         BackspaceLogic();
+
+        currentIndex = CombatLogic._stringIndex;
     }
     private void BackspaceLogic()
     {
@@ -68,38 +71,39 @@ public class CastInputController : MonoBehaviour
 
         if (backspaceKey.wasPressedThisFrame)
         {
-            _backSpaceTimer = _backSpaceDelay;
-            BackspaceBehaviour();
-            CombatLogic._stringIndex--;
-            /*if (_backSpacePress == false)
+            if (_errorCount <= 0)
             {
-                _backSpacePress = true;
-                if(CombatLogic._stringIndex == 1)
+                _errorCount = 0;
+                //BackspaceBehaviour();
+                if (CombatLogic._stringIndex <= 0)
                 {
-                    CombatLogic._stringIndex--;
+                    CombatLogic._stringIndex = 0;
+                }
+                if (CombatLogic._stringIndex > 0)
+                {
+                    _backSpaceTimer = _backSpaceDelay;
+                    BackspaceBehaviour();
+                    //CombatLogic._stringIndex--;
                 }
             }
-            if (_backSpacePress == true)
-            {
-                BackspaceBehaviour();
-                if (CombatLogic._stringIndex >= 1)
-                {
-                    CombatLogic._stringIndex--;
-                }
-            }*/
-            
         }
-        else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
+        /*else if (backspaceKey.isPressed) //Esto es para que la UI no implosione. Es un contador que se vale de Update por si se deja presionado
         {
             _backSpaceTimer -= Time.deltaTime;
 
             if (_backSpaceTimer <= 0)
             {
+                _errorCount--;
                 _backSpaceTimer = _backSpaceCooldown;
-                BackspaceBehaviour();
+                if(_errorCount <= 0)
+                {
+                    _errorCount = 0;
+                    BackspaceBehaviour();
+                }
+                //BackspaceBehaviour();
             }
 
-        }
+        }*/
     }
 
     private void BackspaceBehaviour()
