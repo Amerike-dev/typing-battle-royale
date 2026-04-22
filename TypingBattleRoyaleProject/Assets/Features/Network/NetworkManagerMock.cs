@@ -17,6 +17,8 @@ public class NetworkManagerMock : MonoBehaviour
     public List<PlayerStats> Players;
     public List<PlayerController> Controllers;
 
+    public MonolithSpawn monolithSpawn;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,6 +38,8 @@ public class NetworkManagerMock : MonoBehaviour
     {
         Players = new List<PlayerStats>();
         Controllers = new List<PlayerController>();
+
+        monolithSpawn.SpawnMonolith();
 
         for (int i = 0; i < playerAmount; i++)
         {
