@@ -6,6 +6,15 @@ public class TypingStats
 
     public float damaged = 10;
 
+    private static readonly (float minAccuracy, float multiplier)[] DamageBonusTable =
+    {
+        (90f, 1.1f),
+        (80f, 1.0f),
+        (50f, 0.8f),
+        (30f, 0.5f),
+        (0f,  0f)
+    };
+
     public float GetWPM()
     {
         if (timeElapsed <= 0f)
@@ -26,19 +35,13 @@ public class TypingStats
     {
         float accuracy = GetAccuracy();
 
-        switch (accuracy)
+        foreach (var rule in DamageBonusTable)
         {
-            case > 90f:
-                return 1.1f;
-            case >= 80f:
-                return 1f;
-            case >= 50f:
-                return 0.8f;
-            case >= 30f:
-                return 0.5f;
-            default:
-                return 0f;
+            if (accuracy >= rule.minAccuracy)
+                return rule.multiplier;
         }
+
+        return 0f;
     }
 
 }
