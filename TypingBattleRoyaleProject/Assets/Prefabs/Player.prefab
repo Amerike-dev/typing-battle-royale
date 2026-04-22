@@ -2007,7 +2007,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
   m_Name: 
@@ -2017,6 +2017,7 @@ MonoBehaviour:
   cameraController: {fileID: 0}
   castInputController: {fileID: 2907905682181783749}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  camaraController: {fileID: 0}
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
   stats:

@@ -21912,7 +21912,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1592735157}
   - component: {fileID: 1592735159}
-  - component: {fileID: 1592735160}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -21966,20 +21965,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 482208818}
---- !u!114 &1592735160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592735156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3834ddab935b7ce4f832906df536d9bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CamaraController
-  playerBody: {fileID: 2090840372}
-  OnCamaraMove: 1
 --- !u!1 &1636305849
 GameObject:
   m_ObjectHideFlags: 0
