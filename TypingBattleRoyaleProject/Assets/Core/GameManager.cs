@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public CameraController camaraController;
     public GameplayManager gameplayManager;
 
+    
+
     private void Awake()
     {
         if (instance != null && instance != this)
