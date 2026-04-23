@@ -53,7 +53,11 @@ public class GameplayManager : MonoBehaviour
             return;
         }
 
-        Monolith = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        foreach(var mc in monolithControllers)
+        {
+            Monolith.Add(mc.gameObject);
+        }
     }
 
     private void Start()
