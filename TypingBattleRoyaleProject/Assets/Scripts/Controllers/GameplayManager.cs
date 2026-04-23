@@ -53,7 +53,7 @@ public class GameplayManager : MonoBehaviour
             return;
         }
 
-        Monolith = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        //Monolith = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
     }
 
     private void Start()

@@ -5,10 +5,16 @@ public class IDController : NetworkBehaviour
 {
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) return;
+        if (SelectController.Instance != null)
+        {
+            SelectController.Instance.SyncPlayer(OwnerClientId);
+        }
 
-        Debug.Log($"<color=cyan>Player {OwnerClientId} spawnado. IsOwner: {IsOwner}</color>");
-        IPHolder.Instance?.SetPlayerId(OwnerClientId);
+        if (IsOwner)
+        {
+            Debug.Log($"<color=cyan>Player {OwnerClientId} spawnado. IsOwner: {IsOwner}</color>");
+            IPHolder.Instance?.SetPlayerId(OwnerClientId);
+        }
     }
 
     [ClientRpc]
