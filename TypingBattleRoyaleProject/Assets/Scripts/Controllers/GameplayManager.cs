@@ -53,15 +53,11 @@ public class GameplayManager : MonoBehaviour
             return;
         }
 
-<<<<<<< HEAD
-        //Monolith = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
-=======
         var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
         foreach(var mc in monolithControllers)
         {
             Monolith.Add(mc.gameObject);
         }
->>>>>>> origin/Feat-01-HUD
     }
 
     private void Start()

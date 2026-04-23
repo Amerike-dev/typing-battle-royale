@@ -23,7 +23,6 @@ public class IPHolder : MonoBehaviour
     public void SetPlayerId(ulong ID)
     {
         PlayerID = ID;
-        print(PlayerID);
     }
 
 }

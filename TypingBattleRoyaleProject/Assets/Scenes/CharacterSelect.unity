@@ -1372,11 +1372,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectController
   wizardDisplayGO:
-  - {fileID: 346288821}
-  - {fileID: 331385699}
-  - {fileID: 21623647}
-  - {fileID: 1221975844}
-  container: {fileID: 694303464}
+  - {fileID: 346288823}
+  - {fileID: 331385701}
+  - {fileID: 21623649}
+  - {fileID: 1221975846}
 --- !u!4 &1809680163
 Transform:
   m_ObjectHideFlags: 0
