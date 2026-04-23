@@ -3,18 +3,29 @@ using UnityEngine.UI;
 
 public class SelectController : MonoBehaviour
 {
-    [SerializeField] private Image[] wizardDisplayGO = new Image[4];
-    public GameObject container;
+    public static SelectController Instance;
 
-    void Start()
+    [SerializeField] private Image[] wizardDisplayGO;
+
+    private void Awake()
     {
-        wizardDisplayGO = container.GetComponentsInChildren<Image>();
-
-        SetColor(IPHolder.Instance.PlayerID);
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+        }
+        Instance = this;
     }
 
-    void SetColor(ulong ID)
+    public void SyncPlayer(ulong ID)
     {
+        if (ID > (ulong)wizardDisplayGO.Length || wizardDisplayGO == null) return;
+
+        if (wizardDisplayGO[ID] == null)
+        {
+            Debug.LogError("No image set");
+            return;
+        }
+
         switch (ID)
         {
             case 0:
