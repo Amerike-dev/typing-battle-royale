@@ -6,7 +6,6 @@ public class PauseController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject _menuContent;
-    [SerializeField] private Slider _sliderVolume;
     //[SerializeField] private GameplayManager _gameplayManager;
 
     [Header("Buttons")]
@@ -15,7 +14,7 @@ public class PauseController : MonoBehaviour
     [SerializeField] private Button _mainMenuButton;
     [SerializeField] private InputActionReference _aPause;
 
-    private bool isPaused = false;
+    [SerializeField]private bool isPaused = false;
 
     private void Awake()
     {
@@ -70,8 +69,8 @@ public class PauseController : MonoBehaviour
     {
         //if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
-          //  TogglePause();
-
+        //  TogglePause();
+        Debug.Log("Juego en pausa");
         isPaused = true;
 
         if (_menuContent != null)
@@ -79,6 +78,7 @@ public class PauseController : MonoBehaviour
 
         
         Debug.Log("Juego en pausa");
+        //AudioListener.pause = true;
         //Time.timeScale = 0f;
     }
 
