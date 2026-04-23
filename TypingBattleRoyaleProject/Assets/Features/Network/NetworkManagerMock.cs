@@ -9,7 +9,7 @@ public class NetworkManagerMock : MonoBehaviour
     public int playerAmount = 2;
 
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private PlayerUI _playerUi;
+    
 
     private Color _localPlayerColor = Color.blue;
     private Color _dummyPlayerColor = Color.orange;
@@ -92,6 +92,6 @@ public class NetworkManagerMock : MonoBehaviour
             Controllers.Add(playerController);
         }
 
-        _playerUi.SetPlayerStats(Players[0], Players[1]);
+       
     }
 }
