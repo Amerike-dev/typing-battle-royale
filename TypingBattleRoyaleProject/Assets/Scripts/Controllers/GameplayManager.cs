@@ -7,7 +7,7 @@ public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager Instance;
     public PlayerController playerController;
-    public List<GameObject> Monolith = new List<GameObject>();
+    [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
@@ -51,6 +51,12 @@ public class GameplayManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+
+        var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        foreach(var mc in monolithControllers)
+        {
+            Monolith.Add(mc.gameObject);
         }
     }
 

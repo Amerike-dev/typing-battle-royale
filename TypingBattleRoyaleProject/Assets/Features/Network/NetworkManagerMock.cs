@@ -17,6 +17,8 @@ public class NetworkManagerMock : MonoBehaviour
     public List<PlayerStats> Players;
     public List<PlayerController> Controllers;
 
+    public MonolithSpawn monolithSpawn;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,6 +38,8 @@ public class NetworkManagerMock : MonoBehaviour
     {
         Players = new List<PlayerStats>();
         Controllers = new List<PlayerController>();
+
+        monolithSpawn.SpawnMonolith();
 
         for (int i = 0; i < playerAmount; i++)
         {
@@ -58,7 +62,7 @@ public class NetworkManagerMock : MonoBehaviour
             }
 
             string id = PlayerIDGenerator.GenerateID();
-            PlayerStats generatedStats = new PlayerStats(id, 100);
+            PlayerStats generatedStats = new PlayerStats(id);
             PlayerInventory generatedInventory = new PlayerInventory();
 
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
@@ -68,7 +72,6 @@ public class NetworkManagerMock : MonoBehaviour
 
             Camera playerCamera = tempPlayer.GetComponentInChildren<Camera>();
             AudioListener audioListener = tempPlayer.GetComponentInChildren<AudioListener>();
-
 
             if (!local)
             {
@@ -82,6 +85,7 @@ public class NetworkManagerMock : MonoBehaviour
                 playerController.enabled = true;
                 playerCamera.enabled = true;
                 audioListener.enabled = true;
+
             }
 
             Players.Add(generatedStats);

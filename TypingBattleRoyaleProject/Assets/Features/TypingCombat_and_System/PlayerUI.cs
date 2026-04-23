@@ -59,14 +59,14 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdateHPSliders()
     {
-        if (localStats != null && LocalHPSlider != null && localStats.MaxHP > 0)
+        if (localStats != null && LocalHPSlider != null && localStats.maxHP > 0)
         {
-            LocalHPSlider.value = localStats.CurrentHP / localStats.MaxHP;
+            LocalHPSlider.value = localStats.currentHP / localStats.maxHP;
         }
 
-        if (enemyStats != null && EnemyHPSlider != null && enemyStats.MaxHP > 0)
+        if (enemyStats != null && EnemyHPSlider != null && enemyStats.maxHP > 0)
         {
-            EnemyHPSlider.value = enemyStats.CurrentHP / enemyStats.MaxHP;
+            EnemyHPSlider.value = enemyStats.currentHP / enemyStats.maxHP;
         }
     }
     public void CurrentText()
