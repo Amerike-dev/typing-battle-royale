@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class CombatLogic
 {
-    /*public static string SpellText;
+    public static string SpellText;
     public static bool spellComplete => _stringIndex >= SpellText.Length;
     public static int _stringIndex = 0;
 
@@ -39,9 +39,9 @@ public static class CombatLogic
         }
 
         return false;
-    }*/
+    }
 
-    public static string SpellText;
+    /*public static string SpellText;
     public static string UserInput = "";
 
     public static void SetText(string text)
@@ -84,5 +84,5 @@ public static class CombatLogic
     {
         if (index >= UserInput.Length) return true;
         return UserInput[index] == SpellText[index];
-    }
+    }*/
 }

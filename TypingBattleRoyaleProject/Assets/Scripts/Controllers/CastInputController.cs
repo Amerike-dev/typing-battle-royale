@@ -13,6 +13,10 @@ public class CastInputController : MonoBehaviour
     public int lastInInput = 0;
     public string spellText;
 
+
+    public TMP_InputField castSpell;
+    //public string CastSpell = "";
+
     public int currentIndex = 0;
 
     [Header("Typing Stats")]
@@ -51,29 +55,28 @@ public class CastInputController : MonoBehaviour
         wordsPerMinute = 0;
         accuracy = 0;
         StartCoroutine(CountTimeElapsed());
+
+        castSpell.onValueChanged.AddListener(CastText);
     }
 
     private void OnDisable()
     {
         StopCoroutine(CountTimeElapsed());
         Keyboard.current.onTextInput -= TextInput;
+        castSpell.onValueChanged.RemoveListener(CastText);
     }
 
     private void Update()
     {
-        BackspaceLogic();
-        HandleBackspace();
+        //BackspaceLogic();
+        //HandleBackspace();
         //currentIndex = CombatLogic._stringIndex;
     }
 
-    private void HandleBackspace()
-    {
-        CombatLogic.RemoveChar();
-    }
 
     private void BackspaceLogic()
     {
-        /*var backspaceKey = Keyboard.current.backspaceKey;
+        var backspaceKey = Keyboard.current.backspaceKey;
 
         if (backspaceKey.wasPressedThisFrame)
         {
@@ -113,10 +116,10 @@ public class CastInputController : MonoBehaviour
                 //BackspaceBehaviour();
             }
 
-        }*/
+        }
     }
 
-    /*private void BackspaceBehaviour()
+    private void BackspaceBehaviour()
     {
         if (_errorCount > 0)
         {
@@ -130,9 +133,9 @@ public class CastInputController : MonoBehaviour
             CombatLogic.EraseChar();
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), false);
         }
-    }*/
+    }
    
-    /*private void TextInput(char input)
+    private void TextInput(char input)
     {
         _totalKeysPressed++;
         if (input == '\n' || input == '\r') return;
@@ -159,9 +162,9 @@ public class CastInputController : MonoBehaviour
         }
 
         Debug.Log("Correct. Letter: " + input);
-    }*/
+    }
 
-    private void TextInput(char input)
+    /*private void TextInput(char input)
     {
         _totalKeysPressed++;
         if (input == '\n' || input == '\r') return;
@@ -182,7 +185,8 @@ public class CastInputController : MonoBehaviour
         }
         Debug.Log("Target: " + CombatLogic.SpellText);
         Debug.Log("Input: " + CombatLogic.UserInput);
-    }
+    }*/
+
 
     private void EvaluateAccuracy(InputAction.CallbackContext obj)
     {
@@ -205,6 +209,15 @@ public class CastInputController : MonoBehaviour
         {
             _timeElapsed ++;
             yield return new WaitForSeconds(1f);
+        }
+    }
+
+    public void CastText(string cast)
+    {
+        Debug.Log("Current Text: "+ cast);
+        if (cast.Length == spellText.Length)
+        {
+            Debug.Log("Spell Complete");
         }
     }
 }
