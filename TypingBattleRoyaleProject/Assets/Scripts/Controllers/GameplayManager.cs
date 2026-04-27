@@ -13,7 +13,6 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
-    [SerializeField] private PlayerUI _playerUI;
 
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
@@ -24,7 +23,6 @@ public class GameplayManager : MonoBehaviour
     [Header("Propiedades")]
     public PlayerController PlayerController => _playerController;
     public CastInputController CastInputController => _castInputController;
-    public PlayerUI PlayerUI => _playerUI;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
