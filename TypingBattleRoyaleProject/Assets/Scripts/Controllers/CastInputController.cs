@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 public class CastInputController : MonoBehaviour
 {
     public event Action OnSpellCast;
-    
-    public PlayerUI playerUI;
     public int incorrectInput = 0;
     public int lastInInput = 0;
     public string spellText;

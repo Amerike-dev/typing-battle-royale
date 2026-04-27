@@ -18,6 +18,8 @@ public class PlayerStats
     
     public Action OnLifeLost;
     public Action OnAllLifeLost;
+    public Action OnDamageTaken;
+    public Action OnEnemyKilled;
 
     public string ID  => _id;
     public float currentHP => _currentHP;
@@ -32,9 +34,15 @@ public class PlayerStats
         _id = id;
     }
 
+    public void EnemyKilled()
+    {
+        OnEnemyKilled?.Invoke();
+    }
+
     public void TakeDamage(float damage)
     {
         _currentHP -= damage;
+        OnDamageTaken?.Invoke();
         if (_currentHP <= 0)
             LoseLife();
             

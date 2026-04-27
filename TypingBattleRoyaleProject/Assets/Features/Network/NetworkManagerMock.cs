@@ -9,13 +9,15 @@ public class NetworkManagerMock : MonoBehaviour
     public int playerAmount = 2;
 
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private PlayerUI _playerUi;
+    
 
     private Color _localPlayerColor = Color.blue;
     private Color _dummyPlayerColor = Color.orange;
 
     public List<PlayerStats> Players;
     public List<PlayerController> Controllers;
+
+    public MonolithSpawn monolithSpawn;
 
     private void Awake()
     {
@@ -36,6 +38,8 @@ public class NetworkManagerMock : MonoBehaviour
     {
         Players = new List<PlayerStats>();
         Controllers = new List<PlayerController>();
+
+        monolithSpawn.SpawnMonolith();
 
         for (int i = 0; i < playerAmount; i++)
         {
@@ -88,6 +92,6 @@ public class NetworkManagerMock : MonoBehaviour
             Controllers.Add(playerController);
         }
 
-        _playerUi.SetPlayerStats(Players[0], Players[1]);
+       
     }
 }
