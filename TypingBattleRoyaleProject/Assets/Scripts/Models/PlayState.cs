@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlayState : GameState
 {
-    public PlayerUI playerUI;
+
 
     public PlayState(GameplayManager manager) : base(manager)
     {
-        playerUI = manager.PlayerUI;
+
     }
 
     public void DebugMessage()
@@ -16,8 +16,6 @@ public class PlayState : GameState
     public override void Enter()
     {
         manager.PlayerController.enabled = true;
-        playerUI.SpellTypingOFF();
-        manager.PlayerController.MoveSpeed();
         Debug.Log("[PlayState] Enter");
     }
 

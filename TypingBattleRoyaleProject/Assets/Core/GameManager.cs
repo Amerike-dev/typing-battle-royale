@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
     private StateMachine stateMachine;
     private ExplorationState explorationState;
     
-    public CamaraController camaraController;
+    public CameraController camaraController;
     public GameplayManager gameplayManager;
+
+    
 
     private void Awake()
     {
