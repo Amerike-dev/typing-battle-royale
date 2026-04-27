@@ -167,7 +167,7 @@ MonoBehaviour:
   _resumeButton: {fileID: 1460555603}
   _restartButton: {fileID: 2019166199}
   _mainMenuButton: {fileID: 1868429424}
-  _aPause: {fileID: -1227812865022018689, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _aPause: {fileID: 0}
   isPaused: 0
 --- !u!1 &252585235
 GameObject:
@@ -532,53 +532,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446669376}
   m_CullTransparentMesh: 1
---- !u!1 &482851407
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 482851409}
-  - component: {fileID: 482851408}
-  m_Layer: 0
-  m_Name: AudioManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &482851408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482851407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d279533d7cdf0c439024b3a286183e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  _db: {fileID: 0}
-  _musicSource: {fileID: 0}
-  sfxPool: []
---- !u!4 &482851409
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 482851407}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 686.0859, y: 175.65753, z: -893.1887}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &514550609
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,6 +1912,5 @@ SceneRoots:
   - {fileID: 1615889775}
   - {fileID: 684025770}
   - {fileID: 97863198}
-  - {fileID: 482851409}
   - {fileID: 1270770686}
   - {fileID: 628755693}
