@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.Windows;
 
 public class PauseController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PauseController : MonoBehaviour
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _mainMenuButton;
     [SerializeField] private InputActionReference _aPause;
+    
 
     [SerializeField]private bool isPaused = false;
 
@@ -53,6 +55,7 @@ public class PauseController : MonoBehaviour
 
             TogglePause();
         }*/
+        
     }
 
     public void TogglePause()
@@ -64,8 +67,7 @@ public class PauseController : MonoBehaviour
             ResumeGame();
             
     }
-
-    private void PauseGame(InputAction.CallbackContext actionData)
+    public void OnPausa()
     {
         //if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
@@ -76,11 +78,13 @@ public class PauseController : MonoBehaviour
         if (_menuContent != null)
             _menuContent.SetActive(true);
 
-        
+
         Debug.Log("Juego en pausa");
         //AudioListener.pause = true;
         //Time.timeScale = 0f;
     }
+
+   
 
     public void ResumeGame()
     {
@@ -110,11 +114,13 @@ public class PauseController : MonoBehaviour
 
     private void OnEnable()
     {
-        _aPause.action.started += PauseGame;
+        _aPause.action.started += ctx => OnPausa();
+        _aPause.action.Enable();
     }
     private void OnDisable()
     {
-        _aPause.action.started -= PauseGame;
+        _aPause.action.started -= ctx => OnPausa();
+        _aPause.action.Disable();
     }
 
     
