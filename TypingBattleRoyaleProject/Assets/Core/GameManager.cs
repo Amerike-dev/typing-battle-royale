@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     
     public CameraController camaraController;
     public GameplayManager gameplayManager;
-
     public InGameTimer gameTimer;
 
     
