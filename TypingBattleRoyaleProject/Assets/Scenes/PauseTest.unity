@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseController
   _menuContent: {fileID: 1742911264}
+  _gameplayManager: {fileID: 0}
   sceneMenu: LobbyScene
   _resumeButton: {fileID: 1460555603}
   _restartButton: {fileID: 2019166199}
