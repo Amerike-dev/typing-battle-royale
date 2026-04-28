@@ -127,7 +127,7 @@ public class GameplayManager : MonoBehaviour
             if (controller.stats == null)
                 continue;
 
-            if (controller.stats.currentLives <= 0)
+            if (controller.stats.currentLifes <= 0)
                 continue;
 
             activePlayers.Add(controller);

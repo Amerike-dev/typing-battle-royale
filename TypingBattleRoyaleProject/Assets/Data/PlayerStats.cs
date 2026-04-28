@@ -11,7 +11,6 @@ public class PlayerStats
     private float _currentHP;
     [SerializeField]private int _maxLives;
 
-    private int _currentLives;
     private int _currentLifes;
 
     private int _killCount;
@@ -28,15 +27,27 @@ public class PlayerStats
     public float currentHP => _currentHP;
     public float maxHP => _maxHP;
     public int maxLives => _maxLives;
-    public int currentLives => _currentLives;
+
+    public float currentLifes => _currentLifes;
+
     public bool isAlive => _isAlive;
     public int killCount => _killCount;
     public float wPM => _wpm;
-    public float currentLifes => _currentLifes;
 
     public PlayerStats(string id)
     {
         _id = id;
+    }
+
+    public void Initialize(float maxHP, int maxLives)
+    {
+        _maxHP = maxHP;
+        _currentHP = maxHP;
+
+        _maxLives = maxLives;
+        _currentLifes = maxLives;
+
+        _isAlive = true;
     }
     public void EnemyKilled()
     {
@@ -56,10 +67,6 @@ public class PlayerStats
     public void LoseLife()
     {
         _currentHP = _maxHP;
-
-        _currentLives--;
-        _isAlive = _currentLives > 0;
-
         _currentLifes--;
         _isAlive = _currentLifes > 0;
 
@@ -69,13 +76,5 @@ public class PlayerStats
         else
             return;
     }
-
-    public void Initialize()
-{
-    _currentHP = _maxHP;
-    _currentLives = _maxLives;
-    _isAlive = true;
-}
-
 
 }

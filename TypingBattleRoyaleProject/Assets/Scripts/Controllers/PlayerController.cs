@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour
 
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-        if (stats != null) stats.Initialize();
     }
 
     void OnEnable()
