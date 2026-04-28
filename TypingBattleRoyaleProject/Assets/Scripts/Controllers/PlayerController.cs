@@ -93,9 +93,15 @@ public class PlayerController : MonoBehaviour
     public void ExplorationState(InputAction.CallbackContext context)
     {
         if (onExplorationState)
+        {
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
+            onExplorationState = false;
+        }
         else
+        {
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
+            onExplorationState = true;
+        }
     }
 
     public void NullMoveSpeed()
