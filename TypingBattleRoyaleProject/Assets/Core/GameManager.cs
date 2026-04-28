@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public CameraController camaraController;
     public GameplayManager gameplayManager;
 
+    public InGameTimer gameTimer;
+
     
 
     private void Awake()
@@ -41,6 +43,11 @@ public class GameManager : MonoBehaviour
         stateMachine.ChangeState(explorationState);
     }
 
+    private void Start()
+    {
+        //ahorita esta en el Start pero esto deberia ser cuando inicie la partida
+        StartCoroutine(gameTimer.CountTime());
+    }
     private void Update()
     {
         if (stateMachine != null)
