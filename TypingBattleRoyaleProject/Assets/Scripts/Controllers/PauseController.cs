@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Windows;
+using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject _menuContent;
-    //[SerializeField] private GameplayManager _gameplayManager;
+    [SerializeField] private GameplayManager _gameplayManager;
+    public string sceneMenu;
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
@@ -26,42 +28,38 @@ public class PauseController : MonoBehaviour
         if (_restartButton != null)
             _restartButton.onClick.AddListener(() =>
             {
-                Time.timeScale = 1f;
                 SceneLoader.Reload();
             });
 
         if (_mainMenuButton != null)
             _mainMenuButton.onClick.AddListener(() =>
             {
-                Time.timeScale = 1f;
                 SceneLoader.LoadScene("MainMenu");
             });
     }
 
     private void Start()
     {
+        isPaused = false;
         if (_menuContent != null)
-            _menuContent.SetActive(false);
+            _menuContent.SetActive(isPaused);
 
-        Time.timeScale = 1f;
     }
 
     private void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.Escape))
-        {
+
 
             if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
-        }*/
         
     }
 
     public void TogglePause()
     {
-        //if (IsGameOverActive())
-          //  return;
+        if (IsGameOverActive())
+           return;
 
         if (isPaused)
             ResumeGame();
@@ -69,19 +67,21 @@ public class PauseController : MonoBehaviour
     }
     public void OnPausa()
     {
-        //if (_gameplayManager != null && _gameplayManager.stateMachine != null)
+        if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
-        //  TogglePause();
+        TogglePause();
         Debug.Log("Juego en pausa");
         isPaused = true;
+        Debug.Log(isPaused);
 
-        if (_menuContent != null)
-            _menuContent.SetActive(true);
+        if (_menuContent != null && isPaused)
+            _menuContent.SetActive(isPaused);
 
 
         Debug.Log("Juego en pausa");
-        //AudioListener.pause = true;
-        //Time.timeScale = 0f;
+        AudioListener.pause = true;
+
+
     }
 
    
@@ -89,27 +89,26 @@ public class PauseController : MonoBehaviour
     public void ResumeGame()
     {
         isPaused = false;
+        
 
-        if (_menuContent != null)
-            _menuContent.SetActive(false);
+        if (_menuContent != null && !isPaused)
+            _menuContent.SetActive(isPaused);
 
-        Time.timeScale = 1f;
     }
 
-    /*private bool IsGameOverActive()
+    private bool IsGameOverActive()
     {
         if (_gameplayManager == null || _gameplayManager.stateMachine == null)
             return false;
 
         return _gameplayManager.stateMachine.currentState is GameOverState;
-    }*/
+    }
 
     private void OnDestroy()
     {
         if (_resumeButton != null)
             _resumeButton.onClick.RemoveListener(ResumeGame);
 
-        Time.timeScale = 1f;
     }
 
     private void OnEnable()
@@ -121,6 +120,11 @@ public class PauseController : MonoBehaviour
     {
         _aPause.action.started -= ctx => OnPausa();
         _aPause.action.Disable();
+    }
+
+    public void SceneMenu()
+    {
+        SceneManager.LoadScene(sceneMenu);
     }
 
     
