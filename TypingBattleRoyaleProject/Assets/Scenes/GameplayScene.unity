@@ -10475,6 +10475,7 @@ Transform:
   - {fileID: 1753686370}
   - {fileID: 1496799346}
   - {fileID: 1387936492}
+  - {fileID: 782865000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &298589995
@@ -17726,18 +17727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398b8dded468b254f995559a9f02cf25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
-  CIController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  GameUI: {fileID: 1476320150}
-  SpellUI: {fileID: 1566385583}
-  G_UI: 1
-  _monolithPromptPanel: {fileID: 0}
-  _monolithPromptText: {fileID: 0}
-  playerInteractorView: {fileID: 0}
-  LocalHPSlider: {fileID: 0}
-  EnemyHPSlider: {fileID: 0}
-  sliderPrefab: {fileID: 6025732026901377866, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  SpellText: {fileID: 1577256835}
-  InputSpellText: {fileID: 298589996}
 --- !u!4 &1054458755
 Transform:
   m_ObjectHideFlags: 0
