@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
-using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -38,6 +38,7 @@ public class GameplayManager : MonoBehaviour
     public WaitingState waitingState;
     public PlayState playState;
     public GameOverState gameOverState;
+    public SpectatingState spectatingState;
 
     [SerializeField] private Transform[] _spawnPoints;
 
@@ -65,9 +66,14 @@ public class GameplayManager : MonoBehaviour
         waitingState = new WaitingState(this);
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");
+        spectatingState = new SpectatingState(this);
+        
         stateMachine = new StateMachine(waitingState, 0f);
+        
         battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
         if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+
+        if (_playerController != null && _playerController.stats != null) _playerController.stats.OnAllLifeLost += HandleOnAllLifeLost;
 
         SetupSpawns();
     }
@@ -75,6 +81,11 @@ public class GameplayManager : MonoBehaviour
     private void HandleOnSpellCast()
     {
         Debug.Log("GameplayManager escucho el evento OnSpellCast");
+    }
+
+    private void HandleOnAllLifeLost()
+    {
+        stateMachine.ChangeState(spectatingState);
     }
 
     private void SetupSpawns()
@@ -97,6 +108,30 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public List<PlayerController> GetActivePlayers()
+    {
+        List<PlayerController> activePlayers = new List<PlayerController>();
+
+        foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
+        {
+            if (controller == null)
+                continue;
+
+            if (controller == _playerController)
+                continue;
+
+            if (controller.stats == null)
+                continue;
+
+            if (controller.stats.currentLives <= 0)
+                continue;
+
+            activePlayers.Add(controller);
+        }
+
+        return activePlayers;
+    }
+
     public void TriggerGameOver(string winnerID)
     {
         if (gameOverState != null)
@@ -109,13 +144,18 @@ public class GameplayManager : MonoBehaviour
     private void Update()
     {
         stateMachine?.Update();
+
+        if (Keyboard.current.kKey.wasPressedThisFrame)
+        {
+            stateMachine.ChangeState(spectatingState);
+        }
     }
 
     private void OnDestroy()
     {
-        if (_castInputController != null)
-        {
-            _castInputController.OnSpellCast -= HandleOnSpellCast;
-        }
+        if (_castInputController != null) _castInputController.OnSpellCast -= HandleOnSpellCast;
+
+        if (_playerController != null && _playerController.stats != null) _playerController.stats.OnAllLifeLost -= HandleOnAllLifeLost;
+
     }
 }

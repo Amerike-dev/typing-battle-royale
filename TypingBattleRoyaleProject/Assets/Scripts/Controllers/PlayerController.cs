@@ -31,9 +31,10 @@ public class PlayerController : MonoBehaviour
         {
             _rb = gameObject.AddComponent<Rigidbody>();
         }
-        _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        
 
+        _rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        if (stats != null) stats.Initialize();
     }
 
     void OnEnable()
@@ -108,6 +109,12 @@ public class PlayerController : MonoBehaviour
         moveSpeed = continuousSpeed;
     }
 
+    public void SetCameraActive(bool active)
+    {
+        if (cameraController == null)
+            return;
 
+        cameraController.gameObject.SetActive(active);
+    }
     
 }

@@ -23,6 +23,7 @@ public class PlayerStats
     public float currentHP => _currentHP;
     public float maxHP => _maxHP;
     public int maxLives => _maxLives;
+    public int currentLives => _currentLives;
     public bool isAlive => _isAlive;
     public int killCount => _killCount;
     public float wPM => _wpm;
@@ -50,5 +51,12 @@ public class PlayerStats
         else
             return;
     }
+
+    public void Initialize()
+{
+    _currentHP = _maxHP;
+    _currentLives = _maxLives;
+    _isAlive = true;
+}
 
 }
