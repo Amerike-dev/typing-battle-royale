@@ -7,13 +7,12 @@ public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager Instance;
     public PlayerController playerController;
-    public List<GameObject> Monolith = new List<GameObject>();
+    [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
-    [SerializeField] private PlayerUI _playerUI;
 
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
@@ -24,7 +23,6 @@ public class GameplayManager : MonoBehaviour
     [Header("Propiedades")]
     public PlayerController PlayerController => _playerController;
     public CastInputController CastInputController => _castInputController;
-    public PlayerUI PlayerUI => _playerUI;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
@@ -52,6 +50,12 @@ public class GameplayManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+
+        var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        foreach(var mc in monolithControllers)
+        {
+            Monolith.Add(mc.gameObject);
         }
     }
 

@@ -12,12 +12,17 @@ public class PlayerStats
     [SerializeField]private int _maxLives;
 
     private int _currentLives;
+    private int _currentLifes;
+
     private int _killCount;
     private bool _isAlive;
     private float _wpm;
     
     public Action OnLifeLost;
     public Action OnAllLifeLost;
+    public Action OnDamageTaken;
+    public Action OnEnemyKilled;
+
 
     public string ID  => _id;
     public float currentHP => _currentHP;
@@ -27,15 +32,23 @@ public class PlayerStats
     public bool isAlive => _isAlive;
     public int killCount => _killCount;
     public float wPM => _wpm;
+    public float currentLifes => _currentLifes;
 
     public PlayerStats(string id)
     {
         _id = id;
     }
+    public void EnemyKilled()
+    {
+        OnEnemyKilled?.Invoke();
+        _killCount++;
+    }
 
     public void TakeDamage(float damage)
     {
         _currentHP -= damage;
+        OnDamageTaken?.Invoke();
+
         if (_currentHP <= 0)
             LoseLife();
             
@@ -43,8 +56,13 @@ public class PlayerStats
     public void LoseLife()
     {
         _currentHP = _maxHP;
+
         _currentLives--;
         _isAlive = _currentLives > 0;
+
+        _currentLifes--;
+        _isAlive = _currentLifes > 0;
+
         OnLifeLost?.Invoke();
         if (!isAlive)
             OnAllLifeLost?.Invoke();
@@ -58,5 +76,6 @@ public class PlayerStats
     _currentLives = _maxLives;
     _isAlive = true;
 }
+
 
 }
