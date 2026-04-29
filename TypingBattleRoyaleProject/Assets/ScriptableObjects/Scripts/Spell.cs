@@ -5,9 +5,11 @@ public enum Elements { None = 0, Fire = 1, Water = 2, Earth = 3, Wind = 4, Arcan
 
 public class Spell : ScriptableObject
 {
+    [Header("Dependencias")]
+    [Header("Información")]
+    [Header("Estadisticas")]
     public string spellName;
     public Elements elementType;
-
     public float duration;
     public bool loop = true;
     public float startSpeed=2f;
