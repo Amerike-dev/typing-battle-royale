@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Character3
   m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
   skinName: Zetirisina
-  skinsPrefab:
+  models:
   - {fileID: 187581233241150078, guid: 8675039eb4b3b3744887acf9dcd5651b, type: 3}
-  variationColor: 0
+  - {fileID: 187581233241150078, guid: fe4f88414e2419e47a05b9a6fbe8423a, type: 3}
+  - {fileID: 187581233241150078, guid: 20416ed6fa8118b4fbc08ba433692d90, type: 3}

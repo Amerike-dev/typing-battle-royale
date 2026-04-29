@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Character5
   m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
   skinName: Juan
-  skinsPrefab:
-  - {fileID: 2676667982181866762, guid: 71932d6e05763ea408becedc4525e42e, type: 3}
-  variationColor: 0
+  models:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

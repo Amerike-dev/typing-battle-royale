@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Character4
   m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
   skinName: Melaton
-  skinsPrefab:
+  models:
   - {fileID: 6405105131187791291, guid: ba47d7511ddfbc64fbb6979631c2cb4e, type: 3}
-  variationColor: 0
+  - {fileID: 6405105131187791291, guid: b7580b76def653342b14bbd16f4d9e67, type: 3}
+  - {fileID: 6405105131187791291, guid: fec5fb1b873edb4439f0db57ab7c929d, type: 3}
