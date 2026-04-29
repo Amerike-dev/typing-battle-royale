@@ -6,9 +6,9 @@ public class IDController : NetworkBehaviour
     [Header("3D Models configuration")]
     [SerializeField] private SkinInfo[] arraySkins;
     
-    public NetworkVariable<int> skinIndex = new NetworkVariable<int>(0);
-    public NetworkVariable<int> colorIndex = new NetworkVariable<int>(0);
-    public NetworkVariable<bool> already = new NetworkVariable<bool>(false);
+    public NetworkVariable<int> skinIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> colorIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> already = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private GameObject visualModel;
     
