@@ -16,7 +16,7 @@ public class HUDController : MonoBehaviour
         player.stats.OnLifeLost += UpdateLives;
         player.stats.OnDamageTaken += UpdateHealth;
         player.stats.OnEnemyKilled += UpdateKillCount;
-        //player.stats.
+        
     }
     private void OnDisable()
     {
