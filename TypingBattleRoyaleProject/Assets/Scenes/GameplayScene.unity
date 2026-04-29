@@ -10475,7 +10475,6 @@ Transform:
   - {fileID: 1753686370}
   - {fileID: 1496799346}
   - {fileID: 1387936492}
-  - {fileID: 782865000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &298589995
@@ -17133,7 +17132,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1054458754}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerUI, Assembly-CSharp
         m_MethodName: SpellTypingOFF
         m_Mode: 1
@@ -17690,7 +17689,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1054458755}
-  - component: {fileID: 1054458754}
   - component: {fileID: 1054458753}
   m_Layer: 0
   m_Name: UIManager
@@ -17715,18 +17713,6 @@ MonoBehaviour:
   correctColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectColor: {r: 1, g: 0, b: 0, a: 1}
   pendingColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &1054458754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054458752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 398b8dded468b254f995559a9f02cf25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
 --- !u!4 &1054458755
 Transform:
   m_ObjectHideFlags: 0
@@ -19348,7 +19334,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1054458754}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerUI, Assembly-CSharp
         m_MethodName: SpellTypingON
         m_Mode: 1
