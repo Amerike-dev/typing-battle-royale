@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Character1
   m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
   skinName: Acetamino
-  skinsPrefab:
+  models:
   - {fileID: 5831692925840354386, guid: 3f8d0cde07500c64f90e86f403cec9c8, type: 3}
-  variationColor: 0
+  - {fileID: 5831692925840354386, guid: 278d0854c62e35a45b604048d8c9f83c, type: 3}
+  - {fileID: 5831692925840354386, guid: 41191ae5ae27f1a4c9ae603ab8bfdea9, type: 3}

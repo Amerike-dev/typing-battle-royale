@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1110291502
+  GlobalObjectIdHash: 2387263770
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -177,3 +177,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IDController
   ShowTopMostFoldoutHeaderGroup: 1
+  arraySkins:
+  - {fileID: 11400000, guid: fb9fc1c07f8c0c54187c5547a0dca92e, type: 2}
+  - {fileID: 11400000, guid: afaca3788eb4e1e4e8218a55ab76d942, type: 2}
+  - {fileID: 11400000, guid: 9789dbaf4227e5d46821ae492ad8d6f9, type: 2}
+  - {fileID: 11400000, guid: bdfacfb9ec5b3b242b10aaa0aa135e57, type: 2}
+  skinIndex:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  colorIndex:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  already:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0

@@ -1,11 +1,15 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectController : MonoBehaviour
 {
     public static SelectController Instance;
-
-    [SerializeField] private Image[] wizardDisplayGO;
+    public Image[] wizardDisplayGO;
+    private IDController localPlayerScript;
+    
+    [Header("UI Unica")]
+    [SerializeField] private GameObject arrowsPanel;
 
     private void Awake()
     {
@@ -14,6 +18,58 @@ public class SelectController : MonoBehaviour
             Destroy(gameObject);
         }
         Instance = this;
+    }
+
+    private void Start()
+    {
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            {
+                SyncPlayer(client.ClientId);
+            }
+            
+            IDController[] allPlayers = Object.FindObjectsByType<IDController>(FindObjectsSortMode.None);
+            foreach (IDController jugador in allPlayers)
+            {
+                if (jugador.IsOwner) 
+                {
+                    RegisterLocalPlayer(jugador);
+                }
+                
+                jugador.Update3DModel(); 
+            }
+        }
+    }
+    
+    public void RegisterLocalPlayer(IDController script)
+    {
+        localPlayerScript = script;
+    
+        if(arrowsPanel != null && wizardDisplayGO[script.OwnerClientId] != null)
+        {
+            arrowsPanel.transform.SetParent(wizardDisplayGO[script.OwnerClientId].transform, false);
+            RectTransform rt = arrowsPanel.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = Vector2.zero; 
+                rt.localScale = Vector3.one; 
+            }
+        
+            arrowsPanel.SetActive(true);
+        }
+    }
+    
+    public void UpArrow() => localPlayerScript?.ChangeSelection(1, 0);
+    public void DownArrow() => localPlayerScript?.ChangeSelection(-1, 0);
+    public void RightArrow() => localPlayerScript?.ChangeSelection(0, 1);
+    public void LeftArrow() => localPlayerScript?.ChangeSelection(0, -1);
+    
+    public void OKClick() {
+        if(localPlayerScript != null) localPlayerScript.already.Value = true;
     }
 
     public void SyncPlayer(ulong ID)
@@ -49,5 +105,4 @@ public class SelectController : MonoBehaviour
                 break;
         }
     }
-
 }
