@@ -707,9 +707,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'CONFIRM
-
-'
+  m_text: Oui oui Mbappe
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -736,10 +734,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -2342,7 +2340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1747578196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2452,10 +2450,10 @@ RectTransform:
   - {fileID: 527528519}
   m_Father: {fileID: 1183951224}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -103, y: 72}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0.2807083, y: 0.020555556}
+  m_AnchorMax: {x: 0.71300006, y: 0.13374072}
+  m_AnchoredPosition: {x: -0.08999634, y: -0.5}
+  m_SizeDelta: {x: -2.2999878, y: -4.0599976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1809680161
 GameObject:
@@ -2491,6 +2489,7 @@ MonoBehaviour:
   - {fileID: 331385701}
   - {fileID: 21623649}
   - {fileID: 1221975846}
+  startButton: {fileID: 1747578195}
   arrowsPanel: {fileID: 261149925}
 --- !u!4 &1809680163
 Transform:
