@@ -1,12 +1,13 @@
 using UnityEngine;
 using TMPro;
 using NUnit.Framework;
+using Unity.Netcode;
 using System.Collections.Generic;
+using System.Collections;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : NetworkBehaviour
 {
     public static GameplayManager Instance;
-    public PlayerController playerController;
     [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
@@ -39,6 +40,8 @@ public class GameplayManager : MonoBehaviour
 
     [SerializeField] private Transform[] _spawnPoints;
 
+    public List<Vector3> spawnsPoints = new List<Vector3>();
+
     private void Awake()
     {
         if (Instance == null)
@@ -51,18 +54,25 @@ public class GameplayManager : MonoBehaviour
             return;
         }
 
-        var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        /*var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
         foreach(var mc in monolithControllers)
         {
             Monolith.Add(mc.gameObject);
-        }
+        }*/
     }
 
     private void Start()
     {
-        InitializeStates();
-        stateMachine.ChangeState(waitingState);
+        /*InitializeStates();
+        stateMachine.ChangeState(waitingState);*/
+        
+        SpawnPlayers();
     }
+
+    /*private void Update()
+    {
+        stateMachine?.Update();
+    }*/
 
     private void InitializeStates()
     {
@@ -81,6 +91,24 @@ public class GameplayManager : MonoBehaviour
         Debug.Log("GameplayManager escucho el evento OnSpellCast");
     }
 
+    private void SpawnPlayers()
+    {
+        StartCoroutine(PopulateSpawnPoint());
+        
+    }
+
+    private IEnumerator PopulateSpawnPoint()
+    {
+        //Identificar si eres host o no
+        //Si eres host popula spawnPoints sino espera a que este lista
+        if (OwnerClientId == 0)
+        {
+            spawnsPoints.Add(new Vector3(0,0,0));
+        }
+        yield return new WaitForSeconds(5f);
+        
+    }
+
     private void SetupSpawns()
     {
         Vector3[] position = new Vector3[_spawnPoints.Length];
@@ -91,8 +119,6 @@ public class GameplayManager : MonoBehaviour
         }
 
         SpawnCalculator spawnCalculator = new SpawnCalculator(position);
-
-        NetworkManagerMock.Instance.GameInitialize();
 
         foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
         {
@@ -110,10 +136,6 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        stateMachine?.Update();
-    }
 
     private void OnDestroy()
     {
