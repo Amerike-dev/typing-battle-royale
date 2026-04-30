@@ -25,6 +25,8 @@ public class SelectController : MonoBehaviour
     {
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
+            startButton.SetActive(NetworkManager.Singleton.IsServer);
+
             foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
             {
                 SyncPlayer(client.ClientId);
@@ -38,15 +40,6 @@ public class SelectController : MonoBehaviour
                     RegisterLocalPlayer(jugador);;
                 }
                 jugador.Update3DModel();
-
-                if (jugador.OwnerClientId <= 0)
-                {
-                    startButton.SetActive(true);
-                }
-                else
-                {
-                    startButton.SetActive(false);
-                }
             }
         }
     }
