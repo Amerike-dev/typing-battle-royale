@@ -5,5 +5,8 @@ using UnityEngine;
 public class SkinInfo : ScriptableObject
 {
     public string skinName;
+
     public GameObject[] models;
+
+    public GameObject[] gameplayPrefabs;
 }
