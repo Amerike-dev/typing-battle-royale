@@ -37,7 +37,7 @@ public class SelectController : MonoBehaviour
             {
                 if (jugador.IsOwner)
                 {
-                    RegisterLocalPlayer(jugador);;
+                    RegisterLocalPlayer(jugador);
                 }
                 jugador.Update3DModel();
             }
