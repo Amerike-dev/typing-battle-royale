@@ -215,30 +215,45 @@ public class CastInputController : MonoBehaviour
 
     public void CastText(string cast)
     {
+        _totalKeysPressed++;
+
         Debug.Log("Current Text: "+ cast);
 
         if (cast.Length == 0) return;
 
         stringIndex = cast.Length - 1;
-        stringIndex = Mathf.Clamp(cast.Length - 1, 0, 500);
+        stringIndex = Mathf.Max(0, cast.Length - 1);
 
         if (cast[stringIndex] == spellText[stringIndex])
         {
-            uiController.UpdateDisplay(stringIndex, true);
-            Debug.Log(spellText[stringIndex]);
-            //Debug.Log("true");
+            if (stringIndex <= lastInInput+1)
+            {
+                lastInInput = stringIndex;
+                uiController.UpdateDisplay(lastInInput, true);
+            }
+            if (stringIndex > lastInInput+1)
+            {
+                uiController.UpdateDisplay(lastInInput, false);
+            }
+                Debug.Log("La letra era " + spellText[lastInInput] + ", escribiste " + cast[stringIndex]);
         }
-        else
+
+        if (cast[stringIndex] != spellText[stringIndex])
         {
-            uiController.UpdateDisplay(stringIndex, false);
-            //Debug.Log("false");
+            incorrectInput++;
+            if (stringIndex >= lastInInput)
+            {
+                uiController.UpdateDisplay(lastInInput, false);
+                Debug.Log("La letra era " + spellText[lastInInput] + " no " + cast[stringIndex]);
+            }
         }
-        
+        if (cast.Length > spellText.Length) incorrectInput++;
 
 
         if (cast.Length == spellText.Length)
         {
             Debug.Log("Spell Complete Crash");
+            OnDisable();
         }
     }
 }
