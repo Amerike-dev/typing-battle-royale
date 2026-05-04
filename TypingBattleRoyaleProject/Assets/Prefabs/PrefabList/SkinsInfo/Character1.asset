@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75624399eb846d47966ec4bf6b1fec4, type: 3}
+  m_Name: Character1
+  m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
+  skinName: Acetamino
+  models:
+  - {fileID: 5831692925840354386, guid: 3f8d0cde07500c64f90e86f403cec9c8, type: 3}
+  - {fileID: 5831692925840354386, guid: 278d0854c62e35a45b604048d8c9f83c, type: 3}
+  - {fileID: 5831692925840354386, guid: 41191ae5ae27f1a4c9ae603ab8bfdea9, type: 3}
+  gameplayPrefabs:
+  - {fileID: 6025732026901377866, guid: 58d6d067228a1f9faba2a00b9c7ed622, type: 3}
+  - {fileID: 6025732026901377866, guid: 0f15efd055483300fa8b8f7b66894ba3, type: 3}
+  - {fileID: 6025732026901377866, guid: 379c10d6e748a35839a392a3c8e59bfb, type: 3}
