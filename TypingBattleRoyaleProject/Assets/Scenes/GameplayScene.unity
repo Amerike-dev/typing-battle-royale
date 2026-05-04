@@ -10473,7 +10473,6 @@ Transform:
   m_Children:
   - {fileID: 1054458755}
   - {fileID: 1753686370}
-  - {fileID: 1496799346}
   - {fileID: 1387936492}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19202,55 +19201,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485354377}
   m_CullTransparentMesh: 1
---- !u!1 &1496799345
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1496799346}
-  - component: {fileID: 1496799347}
-  m_Layer: 0
-  m_Name: NetworkManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1496799346
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496799345}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 219588222}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1496799347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496799345}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b629d9c014b25fd43b1ee3a374551cfc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkManagerMock
-  playerAmount: 4
-  _playerPrefab: {fileID: 6025732026901377866, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  Players: []
-  Controllers: []
-  monolithSpawn: {fileID: 0}
 --- !u!1 &1519874957
 GameObject:
   m_ObjectHideFlags: 0
@@ -20077,6 +20027,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1753686370}
+  - component: {fileID: 1753686372}
   - component: {fileID: 1753686371}
   m_Layer: 0
   m_Name: GameplayManager
@@ -20112,7 +20063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63048609929c55e49b60bc62052cd375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameplayManager
-  playerController: {fileID: 70666034920921235, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
+  ShowTopMostFoldoutHeaderGroup: 1
   Monolith: []
   _playerController: {fileID: 70666034920921235, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _castInputController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
@@ -20126,6 +20077,37 @@ MonoBehaviour:
   - {fileID: 1333959156}
   - {fileID: 1782668943}
   - {fileID: 526248401}
+  arraySkins:
+  - {fileID: 11400000, guid: fb9fc1c07f8c0c54187c5547a0dca92e, type: 2}
+  - {fileID: 11400000, guid: afaca3788eb4e1e4e8218a55ab76d942, type: 2}
+  - {fileID: 11400000, guid: 9789dbaf4227e5d46821ae492ad8d6f9, type: 2}
+  - {fileID: 11400000, guid: bdfacfb9ec5b3b242b10aaa0aa135e57, type: 2}
+  spawnsPoints: []
+--- !u!114 &1753686372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753686369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 278411829
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1761095710
 GameObject:
   m_ObjectHideFlags: 0

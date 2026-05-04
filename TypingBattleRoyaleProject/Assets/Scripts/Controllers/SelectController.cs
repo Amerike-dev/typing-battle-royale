@@ -62,6 +62,22 @@ public class SelectController : MonoBehaviour
             arrowsPanel.SetActive(true);
         }
     }
+
+    //Nevo metodo
+    public void SaveAllSelections()
+    {
+        IDController.savedSelections.Clear();
+
+        IDController[] allPlayers = Object.FindObjectsByType<IDController>(FindObjectsSortMode.None);
+
+        foreach (IDController player in allPlayers)
+        {
+            IDController.savedSelections[player.OwnerClientId] =
+                new IDController.PlayerSelection(player.skinIndex.Value, player.colorIndex.Value);
+
+            Debug.Log($"Guardado Player {player.OwnerClientId} | Skin {player.skinIndex.Value} | Color {player.colorIndex.Value}");
+        }
+    }
     
     public void UpArrow() => localPlayerScript?.ChangeSelection(1, 0);
     public void DownArrow() => localPlayerScript?.ChangeSelection(-1, 0);

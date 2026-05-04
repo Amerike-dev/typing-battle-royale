@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
 
 public class IDController : NetworkBehaviour
 {
@@ -11,6 +12,22 @@ public class IDController : NetworkBehaviour
     public NetworkVariable<bool> already = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private GameObject visualModel;
+
+    //Mis cambios para crear una memoria que guarde la seleccion
+    public struct PlayerSelection
+    {
+        public int skinIndex;
+        public int colorIndex;
+
+        public PlayerSelection(int skinIndex, int colorIndex)
+        {
+            this.skinIndex = skinIndex;
+            this.colorIndex = colorIndex;
+        }
+    }
+
+    public static Dictionary<ulong, PlayerSelection> savedSelections = new Dictionary<ulong, PlayerSelection>();
+    //aqui terminamos
     
     public override void OnNetworkSpawn()
     {
