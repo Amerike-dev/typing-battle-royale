@@ -6,8 +6,9 @@ public class SelectController : MonoBehaviour
 {
     public static SelectController Instance;
     public Image[] wizardDisplayGO;
+    public GameObject startButton;
     private IDController localPlayerScript;
-    
+
     [Header("UI Unica")]
     [SerializeField] private GameObject arrowsPanel;
 
@@ -24,29 +25,30 @@ public class SelectController : MonoBehaviour
     {
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
+            startButton.SetActive(NetworkManager.Singleton.IsServer);
+
             foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
             {
                 SyncPlayer(client.ClientId);
             }
-            
+
             IDController[] allPlayers = Object.FindObjectsByType<IDController>(FindObjectsSortMode.None);
             foreach (IDController jugador in allPlayers)
             {
-                if (jugador.IsOwner) 
+                if (jugador.IsOwner)
                 {
                     RegisterLocalPlayer(jugador);
                 }
-                
-                jugador.Update3DModel(); 
+                jugador.Update3DModel();
             }
         }
     }
-    
+
     public void RegisterLocalPlayer(IDController script)
     {
         localPlayerScript = script;
-    
-        if(arrowsPanel != null && wizardDisplayGO[script.OwnerClientId] != null)
+
+        if (arrowsPanel != null && wizardDisplayGO[script.OwnerClientId] != null)
         {
             arrowsPanel.transform.SetParent(wizardDisplayGO[script.OwnerClientId].transform, false);
             RectTransform rt = arrowsPanel.GetComponent<RectTransform>();
@@ -55,15 +57,13 @@ public class SelectController : MonoBehaviour
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = Vector2.zero; 
-                rt.localScale = Vector3.one; 
+                rt.anchoredPosition = Vector2.zero;
+                rt.localScale = Vector3.one;
             }
-        
+
             arrowsPanel.SetActive(true);
         }
     }
-
-    //Nevo metodo
     public void SaveAllSelections()
     {
         IDController.savedSelections.Clear();
@@ -83,9 +83,10 @@ public class SelectController : MonoBehaviour
     public void DownArrow() => localPlayerScript?.ChangeSelection(-1, 0);
     public void RightArrow() => localPlayerScript?.ChangeSelection(0, 1);
     public void LeftArrow() => localPlayerScript?.ChangeSelection(0, -1);
-    
-    public void OKClick() {
-        if(localPlayerScript != null) localPlayerScript.already.Value = true;
+
+    public void OKClick()
+    {
+        if (localPlayerScript != null) localPlayerScript.already.Value = true;
     }
 
     public void SyncPlayer(ulong ID)
