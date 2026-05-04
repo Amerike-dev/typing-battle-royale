@@ -64,10 +64,6 @@ public class SelectController : MonoBehaviour
             arrowsPanel.SetActive(true);
         }
     }
-
-<<<<<<< HEAD
-=======
-    //Nevo metodo
     public void SaveAllSelections()
     {
         IDController.savedSelections.Clear();
@@ -83,7 +79,6 @@ public class SelectController : MonoBehaviour
         }
     }
     
->>>>>>> main
     public void UpArrow() => localPlayerScript?.ChangeSelection(1, 0);
     public void DownArrow() => localPlayerScript?.ChangeSelection(-1, 0);
     public void RightArrow() => localPlayerScript?.ChangeSelection(0, 1);
