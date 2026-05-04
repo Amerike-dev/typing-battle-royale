@@ -3,6 +3,7 @@ using TMPro;
 
 public class SpellUIController : MonoBehaviour
 {
+    public CastInputController inputController;
     [Header("References")]
     [SerializeField] private TextMeshProUGUI displayText;
 
@@ -15,7 +16,7 @@ public class SpellUIController : MonoBehaviour
 
     public void UpdateDisplay(int currentIndex, bool hasError)
     {
-        string originalText = CombatLogic.SpellText;
+        string originalText = inputController.spellText;
         if (string.IsNullOrEmpty(originalText)) return;
 
         string formattedText = "";

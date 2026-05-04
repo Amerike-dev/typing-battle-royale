@@ -13,6 +13,8 @@ public class CastInputController : MonoBehaviour
 
 
     public TMP_InputField castSpell;
+    public TextMeshProUGUI spell;
+    public int stringIndex = 0;
     //public string CastSpell = "";
 
     public int currentIndex = 0;
@@ -46,21 +48,22 @@ public class CastInputController : MonoBehaviour
         _backSpacePress = false;
         _casting = true;
         _typingStats = new TypingStats();
-        CombatLogic.SetText(spellText);
+        //CombatLogic.SetText(spellText);
         _errorCount = 0;
-        Keyboard.current.onTextInput += TextInput;
+        //Keyboard.current.onTextInput += TextInput;
         _cast.action.started += EvaluateAccuracy;
         wordsPerMinute = 0;
         accuracy = 0;
         StartCoroutine(CountTimeElapsed());
 
         castSpell.onValueChanged.AddListener(CastText);
+        spell.text = spellText;
     }
 
     private void OnDisable()
     {
         StopCoroutine(CountTimeElapsed());
-        Keyboard.current.onTextInput -= TextInput;
+        //Keyboard.current.onTextInput -= TextInput;
         castSpell.onValueChanged.RemoveListener(CastText);
     }
 
@@ -133,7 +136,7 @@ public class CastInputController : MonoBehaviour
         }
     }
    
-    private void TextInput(char input)
+    /*private void TextInput(char input)
     {
         _totalKeysPressed++;
         if (input == '\n' || input == '\r') return;
@@ -160,7 +163,7 @@ public class CastInputController : MonoBehaviour
         }
 
         Debug.Log("Correct. Letter: " + input);
-    }
+    }*/
 
     /*private void TextInput(char input)
     {
@@ -213,9 +216,29 @@ public class CastInputController : MonoBehaviour
     public void CastText(string cast)
     {
         Debug.Log("Current Text: "+ cast);
+
+        if (cast.Length == 0) return;
+
+        stringIndex = cast.Length - 1;
+        stringIndex = Mathf.Clamp(cast.Length - 1, 0, 500);
+
+        if (cast[stringIndex] == spellText[stringIndex])
+        {
+            uiController.UpdateDisplay(stringIndex, true);
+            Debug.Log(spellText[stringIndex]);
+            //Debug.Log("true");
+        }
+        else
+        {
+            uiController.UpdateDisplay(stringIndex, false);
+            //Debug.Log("false");
+        }
+        
+
+
         if (cast.Length == spellText.Length)
         {
-            Debug.Log("Spell Complete");
+            Debug.Log("Spell Complete Crash");
         }
     }
 }
