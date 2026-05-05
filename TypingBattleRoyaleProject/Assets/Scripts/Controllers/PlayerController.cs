@@ -106,7 +106,4 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed = continuousSpeed;
     }
-
-
-    
 }
