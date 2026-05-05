@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Windows;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 public class PauseController : MonoBehaviour
 {
@@ -13,9 +14,9 @@ public class PauseController : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
-    [SerializeField] private Button _restartButton;
-    [SerializeField] private Button _mainMenuButton;
+
     [SerializeField] private InputActionReference _aPause;
+    [SerializeField] private GameObject _buttonHost;
     
 
     [SerializeField]private bool isPaused = false;
@@ -25,17 +26,7 @@ public class PauseController : MonoBehaviour
         if (_resumeButton != null)
             _resumeButton.onClick.AddListener(ResumeGame);
 
-        if (_restartButton != null)
-            _restartButton.onClick.AddListener(() =>
-            {
-                SceneLoader.Reload();
-            });
 
-        if (_mainMenuButton != null)
-            _mainMenuButton.onClick.AddListener(() =>
-            {
-                SceneLoader.LoadScene("MainMenu");
-            });
     }
 
     private void Start()
@@ -115,6 +106,8 @@ public class PauseController : MonoBehaviour
     {
         _aPause.action.started += ctx => OnPausa();
         _aPause.action.Enable();
+
+        _buttonHost.SetActive(NetworkManager.Singleton.IsServer);
     }
     private void OnDisable()
     {
