@@ -2,24 +2,16 @@ using UnityEngine;
 
 public class RespawnController : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private Vector3[] spawnPoints;
     private int selectedIndex;
-    private Transform spawnTarget;
 
-    private void SelectSpawn()
+    public void OnTriggerEnter(Collider other)
     {
-        selectedIndex = Random.Range(0, spawnPoints.Length);
-        spawnTarget = spawnPoints[selectedIndex];
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        IDController player = GetComponent<IDController>();
+        PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {
-            Debug.Log("Si entre");
-            SelectSpawn();
-            player.transform.position = spawnTarget.position;
+            selectedIndex = Random.Range(0, spawnPoints.Length);
+            player.transform.position = spawnPoints[selectedIndex];
         }
     }
 }
