@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
   skinName: Ketoroloca
   models:
-  - {fileID: 7302442932413617, guid: 9ad1577bb2b97d2488bf76f04c7ce145, type: 3}
-  - {fileID: 7302442932413617, guid: bb8285657d01b9340b4aab23c9b0540b, type: 3}
-  - {fileID: 7302442932413617, guid: cc2591579011f7d4882f55baeeb70312, type: 3}
+  - {fileID: 7302442932413617, guid: e9b4a8c698a1d2f45bbe0a48b3cf339a, type: 3}
+  - {fileID: 7302442932413617, guid: 8552e5684ac16804f9ec4fa3afbc146b, type: 3}
+  - {fileID: 7302442932413617, guid: 49b7f4e2c8a010047b0e9309922e09c7, type: 3}
+  gameplayPrefabs: []

@@ -38,18 +38,10 @@ public class NetworkPlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
         
-        HandleInput();
         MovePlayer();
     }
     
-    private void HandleInput()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        moveInput = new Vector2(horizontal, vertical);
-        
-        if (Input.GetKeyDown(KeyCode.Space)) jumpInput = true;
-    }
+
     
     private void MovePlayer()
     {
