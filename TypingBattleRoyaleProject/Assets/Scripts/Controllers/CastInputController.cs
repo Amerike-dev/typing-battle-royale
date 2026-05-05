@@ -28,9 +28,6 @@ public class CastInputController : MonoBehaviour
     public float wordsPerMinute;
     public float accuracy;
 
-    //Evita el error de retsoseso con el Backspace
-    public bool _backSpacePress = false;
-    public int _incorrectLetter = 0;
     //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
@@ -45,7 +42,6 @@ public class CastInputController : MonoBehaviour
 
     private void OnEnable()
     {
-        _backSpacePress = false;
         _casting = true;
         _typingStats = new TypingStats();
         //CombatLogic.SetText(spellText);
@@ -56,7 +52,9 @@ public class CastInputController : MonoBehaviour
         accuracy = 0;
         StartCoroutine(CountTimeElapsed());
 
-        castSpell.onValueChanged.AddListener(CastText);
+        stringIndex = 0;
+        lastInInput = 0;
+        castSpell.onEndEdit.AddListener(CastText);
         spell.text = spellText;
     }
 
@@ -64,7 +62,7 @@ public class CastInputController : MonoBehaviour
     {
         StopCoroutine(CountTimeElapsed());
         //Keyboard.current.onTextInput -= TextInput;
-        castSpell.onValueChanged.RemoveListener(CastText);
+        castSpell.onEndEdit.RemoveListener(CastText);
     }
 
     private void Update()
@@ -75,7 +73,7 @@ public class CastInputController : MonoBehaviour
     }
 
 
-    private void BackspaceLogic()
+    /*private void BackspaceLogic()
     {
         var backspaceKey = Keyboard.current.backspaceKey;
 
@@ -134,7 +132,7 @@ public class CastInputController : MonoBehaviour
             CombatLogic.EraseChar();
             uiController.UpdateDisplay(CombatLogic.CurrentIndex(), false);
         }
-    }
+    }*/
    
     /*private void TextInput(char input)
     {
@@ -165,28 +163,6 @@ public class CastInputController : MonoBehaviour
         Debug.Log("Correct. Letter: " + input);
     }*/
 
-    /*private void TextInput(char input)
-    {
-        _totalKeysPressed++;
-        if (input == '\n' || input == '\r') return;
-
-        int index = CombatLogic.AddChar(input);
-
-        if (index < 0) return;
-
-        bool correct = CombatLogic.IsCorrectAt(index);
-
-        if (!correct) incorrectInput++;
-
-        uiController.UpdateDisplay(index, !correct);
-
-        if (CombatLogic.IsComplete())
-        {
-            Debug.Log("Spell Complete");
-        }
-        Debug.Log("Target: " + CombatLogic.SpellText);
-        Debug.Log("Input: " + CombatLogic.UserInput);
-    }*/
 
 
     private void EvaluateAccuracy(InputAction.CallbackContext obj)
@@ -215,40 +191,28 @@ public class CastInputController : MonoBehaviour
 
     public void CastText(string cast)
     {
+        stringIndex = Mathf.Min(cast.Length-1,spellText.Length-1);
+        stringIndex = Mathf.Max(0, stringIndex);
         _totalKeysPressed++;
-
         Debug.Log("Current Text: "+ cast);
 
         if (cast.Length == 0) return;
 
-        stringIndex = cast.Length - 1;
-        stringIndex = Mathf.Max(0, cast.Length - 1);
-
         if (cast[stringIndex] == spellText[stringIndex])
         {
-            if (stringIndex <= lastInInput+1)
+            if (stringIndex <= lastInInput + 1)
             {
                 lastInInput = stringIndex;
-                uiController.UpdateDisplay(lastInInput, true);
+                uiController.UpdateDisplay(lastInInput+1, false);
             }
-            if (stringIndex > lastInInput+1)
-            {
-                uiController.UpdateDisplay(lastInInput, false);
-            }
-                Debug.Log("La letra era " + spellText[lastInInput] + ", escribiste " + cast[stringIndex]);
         }
-
+        
         if (cast[stringIndex] != spellText[stringIndex])
         {
             incorrectInput++;
-            if (stringIndex >= lastInInput)
-            {
-                uiController.UpdateDisplay(lastInInput, false);
-                Debug.Log("La letra era " + spellText[lastInInput] + " no " + cast[stringIndex]);
-            }
+            Debug.Log("Tsijni");
+            uiController.UpdateDisplay(lastInInput+1, true);
         }
-        if (cast.Length > spellText.Length) incorrectInput++;
-
 
         if (cast.Length == spellText.Length)
         {
