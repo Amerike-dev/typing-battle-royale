@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Huracan
+  m_Name: Reino de las sombras
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: "Hurac\xE1n"
-  elementType: 0
-  description: "invoca un hurac\xE1n enorme que hace da\xF1o en los bordes pero no
-    en el centro"
-  spellTypes: 0600000002000000
-  damage: 10
-  debuff: 0
-  range: 60
-  speed: 0
+  spellName: Reino de las sombras
+  elementType: 7
+  description: "En una gran delante del personaje, extiende tu sombra para hacerle
+    una instancia de da\xF1o a todos los enemigos y realentizarlos"
+  spellTypes: 0600000004000000
+  damage: 100
+  debuff: 1
+  range: 80
+  speed: 40
   uses: 0
   duration: 0
   particleLifeDuration: 0
