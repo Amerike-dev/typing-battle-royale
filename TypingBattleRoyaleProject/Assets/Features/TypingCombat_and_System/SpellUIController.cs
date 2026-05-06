@@ -17,9 +17,11 @@ public class SpellUIController : MonoBehaviour
     public void UpdateDisplay(int currentIndex, bool hasError)
     {
         string originalText = inputController.spellText;
+
         if (string.IsNullOrEmpty(originalText)) return;
 
         string formattedText = "";
+
         formattedText += $"<color={GetHex(correctColor)}>";
         for (int i = 0; i < currentIndex; i++)
         {
@@ -32,17 +34,16 @@ public class SpellUIController : MonoBehaviour
             if (hasError)
                 formattedText += $"<color={GetHex(incorrectColor)}>{originalText[currentIndex]}</color>";
             else
-                formattedText += originalText[currentIndex];
-            
-            if (currentIndex + 1 < originalText.Length)
+                formattedText += originalText[currentIndex]; 
+        }
+        if (currentIndex < originalText.Length)
+        {
+            formattedText += $"<color={GetHex(pendingColor)}>";
+            for (int i = currentIndex + 1; i < originalText.Length; i++)
             {
-                formattedText += $"<color={GetHex(pendingColor)}>";
-                for (int i = currentIndex + 1; i < originalText.Length; i++)
-                {
-                    formattedText += originalText[i];
-                }
-                formattedText += "</color>";
+                formattedText += originalText[i];
             }
+            formattedText += "</color>";
         }
         displayText.text = formattedText;
     }
