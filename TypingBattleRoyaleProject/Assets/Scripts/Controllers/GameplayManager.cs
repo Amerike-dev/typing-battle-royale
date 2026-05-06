@@ -109,10 +109,10 @@ public class GameplayManager : NetworkBehaviour
 
             spawnsPoints.Clear();
 
-            spawnsPoints.Add(new Vector3(-3.98f, 0.5f, 3.67f));
-            spawnsPoints.Add(new Vector3(3.56f, 0.5f, 3.18f));
-            spawnsPoints.Add(new Vector3(-3.91f, 0.5f, -3.75f));
-            spawnsPoints.Add(new Vector3(3.82f, 0.5f, -4.08f));
+            spawnsPoints.Add(new Vector3(-2.9f, 5.5f, 1.77f));
+            spawnsPoints.Add(new Vector3(0.702f, 5.5f, 1.745f));
+            spawnsPoints.Add(new Vector3(-2.93f, 5.5f, -1.675f));
+            spawnsPoints.Add(new Vector3(0.714f, 5.5f, -1.75f));
 
             RandomizeSpawnPoints();
 
