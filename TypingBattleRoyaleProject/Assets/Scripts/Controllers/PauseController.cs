@@ -1,18 +1,24 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.Windows;
+using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject _menuContent;
     [SerializeField] private GameplayManager _gameplayManager;
+    public string sceneMenu;
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _mainMenuButton;
+    [SerializeField] private InputActionReference _aPause;
+    
 
-    private bool isPaused = false;
+    [SerializeField]private bool isPaused = false;
 
     private void Awake()
     {
@@ -22,66 +28,72 @@ public class PauseController : MonoBehaviour
         if (_restartButton != null)
             _restartButton.onClick.AddListener(() =>
             {
-                Time.timeScale = 1f;
                 SceneLoader.Reload();
             });
 
         if (_mainMenuButton != null)
             _mainMenuButton.onClick.AddListener(() =>
             {
-                Time.timeScale = 1f;
                 SceneLoader.LoadScene("MainMenu");
             });
     }
 
     private void Start()
     {
+        isPaused = false;
         if (_menuContent != null)
-            _menuContent.SetActive(false);
+            _menuContent.SetActive(isPaused);
 
-        Time.timeScale = 1f;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
+
 
             if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
-        }
+        
     }
 
     public void TogglePause()
     {
         if (IsGameOverActive())
-            return;
+           return;
 
         if (isPaused)
             ResumeGame();
-        else
-            PauseGame();
+            
     }
-
-    private void PauseGame()
+    public void OnPausa()
     {
+        if (_gameplayManager != null && _gameplayManager.stateMachine != null)
+
+        TogglePause();
+        Debug.Log("Juego en pausa");
         isPaused = true;
+        Debug.Log(isPaused);
 
-        if (_menuContent != null)
-            _menuContent.SetActive(true);
+        if (_menuContent != null && isPaused)
+            _menuContent.SetActive(isPaused);
 
-        Time.timeScale = 0f;
+
+        Debug.Log("Juego en pausa");
+        AudioListener.pause = true;
+
+
     }
+
+   
 
     public void ResumeGame()
     {
         isPaused = false;
+        
 
-        if (_menuContent != null)
-            _menuContent.SetActive(false);
+        if (_menuContent != null && !isPaused)
+            _menuContent.SetActive(isPaused);
 
-        Time.timeScale = 1f;
     }
 
     private bool IsGameOverActive()
@@ -97,6 +109,23 @@ public class PauseController : MonoBehaviour
         if (_resumeButton != null)
             _resumeButton.onClick.RemoveListener(ResumeGame);
 
-        Time.timeScale = 1f;
     }
+
+    private void OnEnable()
+    {
+        _aPause.action.started += ctx => OnPausa();
+        _aPause.action.Enable();
+    }
+    private void OnDisable()
+    {
+        _aPause.action.started -= ctx => OnPausa();
+        _aPause.action.Disable();
+    }
+
+    public void SceneMenu()
+    {
+        SceneManager.LoadScene(sceneMenu);
+    }
+
+    
 }

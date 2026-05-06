@@ -21,7 +21,7 @@ public class InGameTimer
 
     public Action OnSecondElapsed;
 
-    private IEnumerator CountTime()
+    public IEnumerator CountTime()
     {
         _isRunning = true;
 

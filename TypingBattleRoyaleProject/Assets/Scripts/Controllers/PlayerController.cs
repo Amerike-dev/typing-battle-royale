@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
         }
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         
-
     }
 
     void OnEnable()
@@ -107,7 +106,4 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed = continuousSpeed;
     }
-
-
-    
 }
