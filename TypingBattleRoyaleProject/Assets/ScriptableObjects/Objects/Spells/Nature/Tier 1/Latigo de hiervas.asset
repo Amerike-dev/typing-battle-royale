@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Latigo de hiervas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Latigo de hiervas
-  elementType: 0
+  elementType: 5
   description: "Equipa un latigo de 3 usos que hace bajo da\xF1o en un rango peque\xF1o."
   spellTypes: 0700000006000000
-  damage: 5
+  damage: 10
   debuff: 0
   range: 7
   speed: 0

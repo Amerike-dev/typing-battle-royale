@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Tsunami
+  m_Name: Martillo de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tsunami
-  elementType: 2
-  description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
-  spellTypes: 0000000004000000
-  damage: 80
-  debuff: 1
-  range: 0
+  spellName: Martillo de lava
+  elementType: 10
+  description: "Equipa un Martillo de 2 usos, hace da\xF1o medio en un area grande
+    a corta distancia "
+  spellTypes: 0700000006000000
+  damage: 50
+  debuff: 0
+  range: 4
   speed: 0
   uses: 0
-  duration: 10
+  duration: 0
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

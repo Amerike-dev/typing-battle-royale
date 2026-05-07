@@ -21,7 +21,7 @@ MonoBehaviour:
   range: 0
   speed: 0
   uses: 0
-  duration: 0
+  duration: 120
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

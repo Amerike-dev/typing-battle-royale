@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Arco de Hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
-  elementType: 0
-  description: 
-  spellTypes: 
-  damage: 0
-  debuff: 0
+  spellName: Arco de hielo
+  elementType: 9
+  description: Equipa un arco de hielo de un solo uso que dispara un proyectil de
+    alta velocidad que al impactar congela a un enemigo
+  spellTypes: 0000000004000000
+  damage: 20
+  debuff: 2
   range: 0
-  speed: 0
-  uses: 0
-  duration: 0
+  speed: 150
+  uses: 1
+  duration: 5
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

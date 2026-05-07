@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Tsunami
+  m_Name: Neblina
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tsunami
-  elementType: 2
-  description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
-  spellTypes: 0000000004000000
-  damage: 80
-  debuff: 1
-  range: 0
-  speed: 0
+  spellName: Neblina
+  elementType: 4
+  description: "Lanza un c\xFAmulo de neblina que al impactar en un terreno genera
+    una neblina en un area, el caster puede ver a lon enemigos dento de ella"
+  spellTypes: 0000000002000000
+  damage: 0
+  debuff: 0
+  range: 20
+  speed: 20
   uses: 0
   duration: 10
   particleLifeDuration: 0

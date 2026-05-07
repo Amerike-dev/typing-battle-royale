@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Prision
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
-  elementType: 0
-  description: 
-  spellTypes: 
+  spellName: Prision
+  elementType: 9
+  description: "Congela al enemigo seleccionado el doble de la duraci\xF3n normal"
+  spellTypes: 04000000
   damage: 0
-  debuff: 0
+  debuff: 2
   range: 0
   speed: 0
   uses: 0
-  duration: 0
+  duration: 10
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Tsunami
+  m_Name: Pilar de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tsunami
-  elementType: 2
-  description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
-  spellTypes: 0000000004000000
-  damage: 80
-  debuff: 1
+  spellName: Pilar de llamas
+  elementType: 1
+  description: "Lanza un proyectil que al impactar crea un pilar de fuego que hace
+    da\xF1o alto"
+  spellTypes: 
+  damage: 100
+  debuff: 0
   range: 0
-  speed: 0
+  speed: 30
   uses: 0
-  duration: 10
+  duration: 0
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

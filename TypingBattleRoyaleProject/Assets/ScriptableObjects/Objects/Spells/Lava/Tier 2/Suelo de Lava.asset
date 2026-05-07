@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Suelo de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
-  elementType: 0
-  description: 
+  spellName: Suelo de Lava
+  elementType: 10
+  description: "En un \xE1rea alrededor del caster invoca lava a nivel del suelo
+    que hace da\xF1o medio por segundo a los jugadores que lo esten pisando, menos
+    al caster"
   spellTypes: 
-  damage: 0
+  damage: 25
   debuff: 0
-  range: 0
+  range: 15
   speed: 0
   uses: 0
-  duration: 0
+  duration: 10
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Fenix
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
-  elementType: 0
-  description: 
-  spellTypes: 
-  damage: 0
+  spellName: Fenix
+  elementType: 1
+  description: "Invoca un ave fenix que viaja hacia delante y hace da\xF1o alto a
+    todos los enemigos en el area"
+  spellTypes: 0000000006000000
+  damage: 100
   debuff: 0
-  range: 0
-  speed: 0
+  range: 50
+  speed: 20
   uses: 0
   duration: 0
   particleLifeDuration: 0

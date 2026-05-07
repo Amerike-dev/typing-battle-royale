@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Tsunami
+  m_Name: Escalera de hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tsunami
-  elementType: 2
-  description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
-  spellTypes: 0000000004000000
-  damage: 80
-  debuff: 1
+  spellName: Escalera de hielo
+  elementType: 9
+  description: "Invoca una escalera de hielo, el caster tiene m\xE1s velocidad de
+    movimiento sobre la estructura"
+  spellTypes: 0200000001000000
+  damage: 0
+  debuff: 0
   range: 0
   speed: 0
   uses: 0
-  duration: 10
+  duration: 30
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

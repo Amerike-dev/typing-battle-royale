@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Tsunami
+  m_Name: Shurikens de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tsunami
-  elementType: 2
-  description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
-  spellTypes: 0000000004000000
-  damage: 80
-  debuff: 1
+  spellName: Shurikens de viento
+  elementType: 4
+  description: "Equipa 5 shurikens de viento que hacen 50 de da\xF1o cada una, en
+    un impacto directo en invocan \"neblina\" en el punto de impacto"
+  spellTypes: 070000000000000002000000
+  damage: 50
+  debuff: 0
   range: 0
-  speed: 0
-  uses: 0
-  duration: 10
+  speed: 50
+  uses: 5
+  duration: 0
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

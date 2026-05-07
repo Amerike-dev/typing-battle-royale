@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Prision de agua
+  m_Name: Para rayos
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
+  spellName: Para rayos
   elementType: 0
-  description: 
-  spellTypes: 
-  damage: 0
+  description: "lanza un proyectil, despues de un tiempo, en el punto de impacto
+    cae un rayo gigantesco que hace da\xF1o alto"
+  spellTypes: 0000000006000000
+  damage: 150
   debuff: 0
-  range: 0
-  speed: 0
+  range: 30
+  speed: 100
   uses: 0
-  duration: 0
+  duration: 5
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2
