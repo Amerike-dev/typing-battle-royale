@@ -1716,16 +1716,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
+  moveSpeed: 0
   jumpForce: 2
   cameraController: {fileID: 9158168436735624119}
   castInputController: {fileID: 2907905682181783749}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  jumpAction:
+    m_Name: Jump
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4adc0bf0-14ee-42e5-9fd9-94f11bf28fe0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
   stats:
@@ -1739,15 +1748,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 267e0123ea183d740a5f693347d46f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CastInputController
-  incorrectInput: 0
-  lastInInput: 0
+  castSpell: {fileID: 0}
+  spell: {fileID: 0}
   spellText: Banyo salvanos plis
+  stringIndex: 0
+  lastInInput: 0
+  incorrectInput: 0
   _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  _totalKeysPressed: 0
   wordsPerMinute: 0
   accuracy: 0
   uiController: {fileID: 4326235195450624020}
@@ -1776,7 +1789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3131603669
+  GlobalObjectIdHash: 1955824480
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -2045,6 +2058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d140a5817b88fb4469e745f9b11d9856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellUIController
+  inputController: {fileID: 0}
   displayText: {fileID: 2782660490193147381}
   correctColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectColor: {r: 1, g: 0, b: 0, a: 1}

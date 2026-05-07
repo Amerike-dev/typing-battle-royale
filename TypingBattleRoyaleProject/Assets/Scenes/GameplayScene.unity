@@ -17808,6 +17808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d140a5817b88fb4469e745f9b11d9856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellUIController
+  inputController: {fileID: 0}
   displayText: {fileID: 805632013}
   correctColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectColor: {r: 1, g: 0, b: 0, a: 1}
@@ -20348,7 +20349,7 @@ MonoBehaviour:
   Monolith: []
   _playerController: {fileID: 70666034920921235, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _castInputController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  _playerAnimatorView: {fileID: 0}
+  _playerAnimatorView: {fileID: -2689246101718839236, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _countdownText: {fileID: 1951700203}
   _winnerText: {fileID: 384223408}
   _endGameCanvas: {fileID: 1942957264}

@@ -9,7 +9,7 @@ public class ExplorationState : IGameState
 
     public ExplorationState(CameraController _cameraController, GameplayManager _manager)
     {
-        _cameraController = cameraController;
+        cameraController = _cameraController;
         _gameplayManager = _manager;
     }
 
