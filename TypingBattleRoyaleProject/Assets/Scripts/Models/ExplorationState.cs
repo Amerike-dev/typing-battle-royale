@@ -9,7 +9,7 @@ public class ExplorationState : IGameState
 
     public ExplorationState(CameraController _cameraController, GameplayManager _manager)
     {
-        _cameraController = cameraController;
+        cameraController = _cameraController;
         _gameplayManager = _manager;
     }
 
@@ -17,7 +17,7 @@ public class ExplorationState : IGameState
     { 
         cameraController.OnCamaraMove = true; 
         _gameplayManager.PlayerController.onExplorationState = true;
-        
+        _gameplayManager.PlayerController.onExplorationState = false;
     }
 
     public void Execute(float tick)
@@ -27,7 +27,7 @@ public class ExplorationState : IGameState
 
     public void Update()
     {
-
+        
     }
 
     public void Exit()

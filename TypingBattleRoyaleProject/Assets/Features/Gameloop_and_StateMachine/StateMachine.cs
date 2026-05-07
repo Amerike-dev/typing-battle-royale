@@ -19,7 +19,10 @@ public class StateMachine
 
     public void ChangeState(IGameState newState)
     {
-        currentState.Exit();
+        if(currentState != null)
+        {
+            currentState.Exit();
+        }
         newState.Enter();
         currentState = newState;
     }
