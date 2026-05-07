@@ -66,7 +66,10 @@ public class PauseController : MonoBehaviour
         Debug.Log(isPaused);
 
         if (_menuContent != null && isPaused)
+        {
             _menuContent.SetActive(isPaused);
+            Debug.Log("Me activo Menu");
+        }
 
 
         Debug.Log("Juego en pausa");
