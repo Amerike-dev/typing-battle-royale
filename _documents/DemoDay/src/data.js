@@ -199,7 +199,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: Flan, status: 'done',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
@@ -452,7 +452,7 @@ const TICKETS = [
         id: 'TBR-021',
         title: 'Integrar AudioManager en todos los eventos del juego',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: Flan, status: 'donelllll',
         summary:
             'Una vez que AudioManager esté implementado (TBR-013), conectar PlaySFX/ChangeMusic a todos los eventos: cast de hechizo, hit de daño, pérdida de vida, jump, footsteps, monolith unlock, countdown, transiciones de escena, hover/click de UI. Música distinta por escena con crossfade.',
         acceptance: [
