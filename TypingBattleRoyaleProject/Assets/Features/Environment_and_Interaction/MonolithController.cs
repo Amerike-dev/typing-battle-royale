@@ -64,7 +64,7 @@ public class MonolithController : MonoBehaviour
             case Elements.Earth:
                 return Elements.Fire;
 
-            case Elements.Arcane:
+            case Elements.Nature:
                 return Elements.Thunder;
 
             default:
