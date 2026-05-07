@@ -10,16 +10,17 @@ public class PauseController : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject _menuContent;
     [SerializeField] private GameplayManager _gameplayManager;
-    public string sceneMenu;
+    public string sceneCharacterSelect;
+    public string sceneGameplay;
 
     [Header("Buttons")]
     [SerializeField] private Button _resumeButton;
 
     [SerializeField] private InputActionReference _aPause;
     [SerializeField] private GameObject _buttonHost;
-    
 
-    [SerializeField]private bool isPaused = false;
+
+    [SerializeField] private bool isPaused = false;
 
     private void Awake()
     {
@@ -41,26 +42,26 @@ public class PauseController : MonoBehaviour
     {
 
 
-            if (_gameplayManager != null && _gameplayManager.stateMachine != null)
+        if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
-        
+
     }
 
     public void TogglePause()
     {
         if (IsGameOverActive())
-           return;
+            return;
 
         if (isPaused)
             ResumeGame();
-            
+
     }
     public void OnPausa()
     {
         if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
-        TogglePause();
+            TogglePause();
         Debug.Log("Juego en pausa");
         isPaused = true;
         Debug.Log(isPaused);
@@ -78,12 +79,12 @@ public class PauseController : MonoBehaviour
 
     }
 
-   
+
 
     public void ResumeGame()
     {
         isPaused = false;
-        
+
 
         if (_menuContent != null && !isPaused)
             _menuContent.SetActive(isPaused);
@@ -120,8 +121,13 @@ public class PauseController : MonoBehaviour
 
     public void SceneMenu()
     {
-        SceneManager.LoadScene(sceneMenu);
+        SceneManager.LoadScene(sceneCharacterSelect);
     }
 
-    
+    public void SceneResetGameplay()
+    {
+        SceneManager.LoadScene(sceneGameplay);
+    }
+
+
 }
