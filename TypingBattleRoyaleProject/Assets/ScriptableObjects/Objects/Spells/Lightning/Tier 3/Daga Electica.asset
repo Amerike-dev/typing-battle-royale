@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
+  m_Name: Daga Electica
+  m_EditorClassIdentifier: Assembly-CSharp::Spell
+  spellName: Daga electrica
+  elementType: 6
+  description: "Equipa una daga de 3 usos que al usarla haras un dash de distancia
+    media y si colisionas con un enemigo le haras da\xF1o alto"
+  spellTypes: 0700000001000000
+  damage: 80
+  debuff: 0
+  range: 40
+  speed: 100
+  uses: 3
+  duration: 0
+  particleLifeDuration: 0
+  loop: 1
+  startSpeed: 2
+  startSize: 1
+  emissionRate: 50
+  shapeRadius: 2
+  materialVFX: {fileID: 0}
