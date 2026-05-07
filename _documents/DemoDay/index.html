@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Battle Royale — Demo Day Tickets</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <h1>Typing Battle Royale</h1>
+            <span class="subtitle">Demo Day · Backlog de tickets para cerrar el MVP de 4 jugadores</span>
+        </div>
+        <div class="stats" id="stats">
+            <!-- generado por JS -->
+        </div>
+    </header>
+
+    <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="active">
+            <span class="tab-label">Activos</span>
+            <span class="tab-count" id="tabCountActive">0</span>
+        </button>
+        <button class="tab" data-tab="done">
+            <span class="tab-label">Completados</span>
+            <span class="tab-count" id="tabCountDone">0</span>
+        </button>
+        <button class="tab" data-tab="graph">
+            <span class="tab-label">Dependencias</span>
+        </button>
+    </nav>
+
+    <section class="filters">
+        <div class="filter-group" data-filter-key="type">
+            <span class="filter-label">Tipo</span>
+            <button class="chip active" data-value="all">Todos</button>
+            <button class="chip" data-value="bug">Bug</button>
+            <button class="chip" data-value="feature">Feature</button>
+            <button class="chip" data-value="tech">Tech Debt</button>
+        </div>
+        <div class="filter-group" data-filter-key="priority">
+            <span class="filter-label">Prioridad</span>
+            <button class="chip active" data-value="all">Todas</button>
+            <button class="chip" data-value="critical">Crítica</button>
+            <button class="chip" data-value="high">Alta</button>
+            <button class="chip" data-value="medium">Media</button>
+            <button class="chip" data-value="low">Baja</button>
+        </div>
+        <div class="filter-group" data-filter-key="assignee" id="assigneeFilters">
+            <span class="filter-label">Asignado</span>
+            <!-- chips inyectados por JS desde la lista TEAM -->
+        </div>
+        <div class="filter-group">
+            <input type="search" id="search" placeholder="Buscar por título, ID o archivo…" />
+        </div>
+    </section>
+
+    <main id="view">
+        <!-- la vista (board / done / graph) se renderiza por JS -->
+    </main>
+
+    <footer class="footer">
+        Generado a partir del análisis en
+        <a href="../Diagrams.md">Diagrams.md</a> ·
+        <a href="../Specs.md">Specs.md</a>
+        — 2026-05-06
+    </footer>
+
+    <dialog id="ticketModal" class="ticket-modal">
+        <article id="modalContent"></article>
+        <button class="close-modal" id="closeModal" aria-label="Cerrar">&times;</button>
+    </dialog>
+
+    <!-- Datos: definen TEAM y TICKETS -->
+    <script src="src/data.js"></script>
+
+    <!-- Walkthroughs por ola: cada uno extiende window.TICKET_STEPS de forma independiente.
+         Los agentes pueden trabajar en paralelo sobre archivos distintos. -->
+    <script src="src/steps/wave1.js"></script>
+    <script src="src/steps/wave2.js"></script>
+    <script src="src/steps/wave3.js"></script>
+    <script src="src/steps/wave4.js"></script>
+    <script src="src/steps/wave5.js"></script>
+    <script src="src/steps/wave6.js"></script>
+
+    <!-- App: render, modal, filtros, init (al final, depende de todo lo anterior) -->
+    <script src="src/app.js"></script>
+</body>
+</html>
