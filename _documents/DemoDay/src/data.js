@@ -199,7 +199,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: Flan, status: 'done',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
