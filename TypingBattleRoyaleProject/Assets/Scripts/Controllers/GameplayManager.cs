@@ -22,7 +22,17 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private EndGameUI _endGameUI;
 
     [Header("Propiedades")]
-    public PlayerController PlayerController => _playerController;
+    public PlayerController PlayerController
+    {
+        get
+        {
+            return _playerController;
+        }
+        set
+        {
+            _playerController = value;
+        }
+    }
     public CastInputController CastInputController => _castInputController;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
     public TextMeshProUGUI CountdownText => _countdownText;
@@ -64,16 +74,16 @@ public class GameplayManager : NetworkBehaviour
 
     private void Start()
     {
-        /*InitializeStates();
-        stateMachine.ChangeState(waitingState);*/
+        InitializeStates();
+        stateMachine.ChangeState(explorationState);
         
         SpawnPlayers();
     }
 
-    /*private void Update()
+    private void Update()
     {
         stateMachine?.Update();
-    }*/
+    }
 
     private void InitializeStates()
     {
@@ -85,7 +95,7 @@ public class GameplayManager : NetworkBehaviour
         battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
         if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
 
-        SetupSpawns();
+        //SetupSpawns();
     }
 
     private void HandleOnSpellCast()
@@ -186,7 +196,7 @@ public class GameplayManager : NetworkBehaviour
     }
     //Aca terminan los nuevo metodos
 
-    private void SetupSpawns()
+    /*private void SetupSpawns()
     {
         Vector3[] position = new Vector3[_spawnPoints.Length];
 
@@ -202,7 +212,7 @@ public class GameplayManager : NetworkBehaviour
             Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
             controller.transform.position = spawnPoint;
         }
-    }
+    }*/
 
     public void TriggerGameOver(string winnerID)
     {

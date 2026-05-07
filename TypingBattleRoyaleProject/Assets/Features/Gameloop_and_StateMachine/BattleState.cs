@@ -18,6 +18,7 @@ public class BattleState : IGameState
         _castInput.enabled = true;
         _playerController.enabled = false;
         _animatorView.TriggerCasting();
+        _playerController.onExplorationState = true;
     }
 
     void IGameState.Execute(float tick) { }

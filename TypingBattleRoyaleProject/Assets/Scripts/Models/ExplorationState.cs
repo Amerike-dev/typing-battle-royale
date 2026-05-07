@@ -17,7 +17,7 @@ public class ExplorationState : IGameState
     { 
         cameraController.OnCamaraMove = true; 
         _gameplayManager.PlayerController.onExplorationState = true;
-        
+        _gameplayManager.PlayerController.onExplorationState = false;
     }
 
     public void Execute(float tick)
