@@ -27,7 +27,7 @@ public class ExplorationState : IGameState
 
     public void Update()
     {
-
+        
     }
 
     public void Exit()

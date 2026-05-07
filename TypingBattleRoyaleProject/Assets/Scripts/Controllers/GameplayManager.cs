@@ -77,6 +77,7 @@ public class GameplayManager : NetworkBehaviour
 
     private void InitializeStates()
     {
+        explorationState = new ExplorationState(_playerController.cameraController, this);
         waitingState = new WaitingState(this);
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");

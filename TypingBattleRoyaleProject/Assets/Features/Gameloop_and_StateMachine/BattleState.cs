@@ -22,7 +22,10 @@ public class BattleState : IGameState
 
     void IGameState.Execute(float tick) { }
 
-    void IGameState.Update() { }
+    void IGameState.Update()
+    {
+        
+    }
 
     void IGameState.Exit()
     {
