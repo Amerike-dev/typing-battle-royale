@@ -4,10 +4,13 @@
 // =====================================================================
 
 const TEAM = [
-    { id: 'banyo', name: 'Banyo',  color: '#8b5cf6' },
-    { id: 'rafa',  name: 'Rafa',   color: '#3b82f6' },
-    { id: 'harry', name: 'Harry',  color: '#22c55e' },
-    { id: 'sofia', name: 'Sofía',  color: '#f97316' }
+    { id: 'Flan',    name: 'Flan',    color: '#8b5cf6' }, // violeta
+    { id: 'Jorge',   name: 'Jorge',   color: '#3b82f6' }, // azul
+    { id: 'Cesar',   name: 'Cesar',   color: '#22c55e' }, // verde
+    { id: 'Alicia',  name: 'Alicia',  color: '#f97316' }, // naranja
+    { id: 'Juan',    name: 'Juan',    color: '#ec4899' }, // rosa
+    { id: 'Barrera', name: 'Barrera', color: '#06b6d4' }, // cian
+    { id: 'Angel',   name: 'Angel',   color: '#eab308' }  // amarillo
 ];
 
 const TICKETS = [
