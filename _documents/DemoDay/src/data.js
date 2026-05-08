@@ -312,7 +312,7 @@ const TICKETS = [
         id: 'TBR-014',
         title: 'Lobby — capacidad configurable (4–8) + lista en vivo',
         type: 'feature', priority: 'low', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: Ches, status: 'done',
         summary:
             'LobbyController acepta cualquier cantidad de clientes. Ahora se quiere probar hasta 8 jugadores. Hacer la capacidad configurable (campo serializado, default 4, max 8) y mostrar lista en vivo de jugadores conectados con su nombre/ID. NO bloquear hard a 4: validar el límite contra el campo configurable.',
         acceptance: [
