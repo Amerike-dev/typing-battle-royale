@@ -390,7 +390,7 @@ const TICKETS = [
         id: 'TBR-018',
         title: 'Spawn points como Transforms en escena (no hardcoded)',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'done',
         summary:
             'Los 4 spawn points están escritos como Vector3 literales en código. Convertir a array de Transforms serializados en GameplayManager para que el level designer los mueva sin tocar código.',
         acceptance: [
