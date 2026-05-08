@@ -26,7 +26,7 @@ public class SelectController : MonoBehaviour
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
             startButton.SetActive(NetworkManager.Singleton.IsServer);
-
+            
             foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
             {
                 SyncPlayer(client.ClientId);

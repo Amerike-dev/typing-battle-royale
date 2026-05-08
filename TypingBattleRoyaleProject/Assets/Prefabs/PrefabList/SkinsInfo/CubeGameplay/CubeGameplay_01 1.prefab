@@ -1565,7 +1565,6 @@ GameObject:
   - component: {fileID: 9142911174015477040}
   - component: {fileID: 2161856938669245882}
   - component: {fileID: 7764153401064371651}
-  - component: {fileID: 5882688657681479793}
   - component: {fileID: 2652816636590692540}
   - component: {fileID: 70666034920921235}
   - component: {fileID: 2907905682181783749}
@@ -1680,33 +1679,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &5882688657681479793
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6025732026901377866}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &2652816636590692540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1754,6 +1726,23 @@ MonoBehaviour:
   cameraController: {fileID: 0}
   castInputController: {fileID: 2907905682181783749}
   explorationState: {fileID: 6220136020045020557, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
+  jumpAction:
+    m_Name: Jump
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c228d3ff-1c6a-4adb-a172-34f71acbb6a3
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f2945f98-cc74-4bd2-adbd-f552c531a724
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Jump
+      m_Flags: 0
+    m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
   stats:

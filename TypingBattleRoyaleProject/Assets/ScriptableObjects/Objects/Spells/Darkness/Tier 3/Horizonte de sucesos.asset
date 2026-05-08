@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
+  m_Name: Horizonte de sucesos
+  m_EditorClassIdentifier: Assembly-CSharp::Spell
+  spellName: 'Horizonte de sucesos '
+  elementType: 7
+  description: Invoca un agujero negro que va creciendo exponencialmente, atrae constantemente
+    a los enemigos y si alguno toca el centro muere instantaneamente perdiendo todas
+    sus vidas.
+  spellTypes: 00000000
+  damage: 0
+  range: 10
+  speed: 20
+  duration: 0
+  loop: 1
+  startSpeed: 2
+  startSize: 1
+  emissionRate: 50
+  shapeRadius: 2
+  materialVFX: {fileID: 0}
