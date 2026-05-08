@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonolithController : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class MonolithController : MonoBehaviour
     [Header("Datos Elementos")]
     public List<Spell> allSpells = new List<Spell>();
     public List<SpellData> allSpellData = new List<SpellData>();
-
 
     void Awake()
     {
@@ -108,4 +108,5 @@ public class MonolithController : MonoBehaviour
             }
         }
     }
+    
 }
