@@ -6,7 +6,7 @@
 const TEAM = [
     { id: 'Flan',    name: 'Flan',    color: '#8b5cf6' }, // violeta
     { id: 'Jorge',   name: 'Jorge',   color: '#3b82f6' }, // azul
-    { id: 'Cesar',   name: 'Cesar',   color: '#22c55e' }, // verde
+    { id: 'Ches',    name: 'Ches',    color: '#22c55e' }, // verde
     { id: 'Alicia',  name: 'Alicia',  color: '#f97316' }, // naranja
     { id: 'Juan',    name: 'Juan',    color: '#ec4899' }, // rosa
     { id: 'Barrera', name: 'Barrera', color: '#06b6d4' }, // cian
@@ -312,7 +312,7 @@ const TICKETS = [
         id: 'TBR-014',
         title: 'Lobby — capacidad configurable (4–8) + lista en vivo',
         type: 'feature', priority: 'low', effort: 'M',
-        assignee: Ches, status: 'done',
+        assignee: 'Ches', status: 'done',
         summary:
             'LobbyController acepta cualquier cantidad de clientes. Ahora se quiere probar hasta 8 jugadores. Hacer la capacidad configurable (campo serializado, default 4, max 8) y mostrar lista en vivo de jugadores conectados con su nombre/ID. NO bloquear hard a 4: validar el límite contra el campo configurable.',
         acceptance: [
