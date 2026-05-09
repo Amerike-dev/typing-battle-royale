@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7516006046721862410}
   - component: {fileID: 8489492535113698032}
   m_Layer: 0
-  m_Name: CharacterPrefab_01 5
+  m_Name: CharacterBotas_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: c1a1df81e3669ee488fd555c730a7aea, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d1f0661fd96750047b7f9329e49516f6, type: 2}
+      objectReference: {fileID: 2100000, guid: 03419d17fc630c14aa7f9b827b8857bb, type: 2}
     - target: {fileID: 919132149155446097, guid: c1a1df81e3669ee488fd555c730a7aea, type: 3}
       propertyPath: m_Name
       value: PersonajesLowPoly
