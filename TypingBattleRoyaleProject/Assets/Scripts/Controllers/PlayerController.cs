@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        MoveCharacter();
+        if (onExplorationState) MoveCharacter();
     }
 
     void MoveCharacter()
@@ -106,6 +106,8 @@ public class PlayerController : MonoBehaviour
 
     public void ExplorationState(InputAction.CallbackContext context)
     {
+        onExplorationState = !onExplorationState;
+        
         if (onExplorationState)
             GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
         else

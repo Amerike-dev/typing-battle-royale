@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
+using Unity.Netcode;
 
 public class LobbyUIController : MonoBehaviour
 {
@@ -9,12 +11,16 @@ public class LobbyUIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI instructionsText;
     [SerializeField] private TextMeshProUGUI statusText;
 
+    [Header("Player Slots")]
+    [SerializeField] private TextMeshProUGUI[] _playerSlots;
+
     [Header("Configuration")]
     [SerializeField] private ushort defaultPort = 7777;
 
     private void Start()
     {
         DisplayNetworkInformation();
+        UpdatePlayerSlots(new NetworkList<ulong>(), 4);
     }
 
     private void DisplayNetworkInformation()
@@ -59,5 +65,40 @@ TIPS:
         }
 
         Debug.Log(isError ? $"<color=red>{message}</color>" : $"<color=green>{message}</color>");
+    }
+
+    public void UpdatePlayerSlots(NetworkList<ulong> connectedClients, int maxPlayers)
+    {
+        if (_playerSlots == null)
+            return;
+
+        for (int i = 0; i < _playerSlots.Length; i++)
+        {
+            if (i >= maxPlayers)
+            {
+                _playerSlots[i].gameObject.SetActive(false);
+                continue;
+            }
+
+            _playerSlots[i].gameObject.SetActive(true);
+
+            if (i < connectedClients.Count)
+            {
+                _playerSlots[i].text = $"Player {connectedClients[i]}";
+                _playerSlots[i].color = GetPlayerColor(i);
+            }
+            else
+            {
+                _playerSlots[i].text = "Waiting";
+                _playerSlots[i].color = Color.gray;
+            }
+
+        }
+    }
+
+    private Color GetPlayerColor(int index)
+    {
+        Color[] colors = { Color.red };
+        return colors[index % colors.Length];
     }
 }
