@@ -585,7 +585,7 @@ const TICKETS = [
         id: 'TBR-027',
         title: 'Splash screen estática → lobby',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: Ches, status: 'Done',
+        assignee: Ches, status: 'done',
         summary:
             'Pantalla de inicio simple: logo del estudio (1.5s) → fade → logo del juego con tagline (2s) → fade → LobbyScene. Sin cinemática ni Timeline. Solo estética, no cambia el flujo. Cualquier tecla salta a LobbyScene.',
         acceptance: [
