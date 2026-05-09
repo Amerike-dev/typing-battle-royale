@@ -52,6 +52,7 @@ public class GameplayManager : NetworkBehaviour
 
     [SerializeField] private SkinInfo[] arraySkins;
     private List<Vector3> _shuffledPositions = new List<Vector3>();
+    private bool _allSpawned = false;
 
     private void Awake()
     {
@@ -115,7 +116,7 @@ public class GameplayManager : NetworkBehaviour
         //Identificar si eres host o no
         //Si eres host popula spawnPoints sino espera a que este lista
 
-        if (OwnerClientId == 0)
+        if (NetworkManager.Singleton.IsHost)
         {
             if (_spawnPoints == null || _spawnPoints.Count == 0)
             {
@@ -134,18 +135,23 @@ public class GameplayManager : NetworkBehaviour
             }
 
             RandomizeSpawnPoints();
-
             AssignPlayersToSpawnPoints();
-
+            NotifySpawnDoneClientRpc();
             yield return null;
         }
         else 
         {
-            Debug.Log("Espera unos 5 segundos");
-
-            yield return new WaitForSeconds(5f);
+            while (!_allSpawned)
+            {
+                yield return null;
+            }
         }
-        
+    }
+    
+    [ClientRpc]
+    private void NotifySpawnDoneClientRpc()
+    {
+        if (!IsServer) _allSpawned = true;
     }
 
     private void RandomizeSpawnPoints()
@@ -224,10 +230,7 @@ public class GameplayManager : NetworkBehaviour
 
     private void OnDestroy()
     {
-        if (_castInputController != null)
-        {
-            _castInputController.OnSpellCast -= HandleOnSpellCast;
-        }
+        if (_castInputController != null) _castInputController.OnSpellCast -= HandleOnSpellCast;
     }
     
     private void OnDrawGizmos()
