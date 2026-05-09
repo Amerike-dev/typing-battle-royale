@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(CharacterController))]
@@ -20,6 +21,7 @@ public class NetworkPlayerController : NetworkBehaviour
     private bool jumpInput;
     private bool isGrounded;
     private Vector3 velocity;
+    private PlayerInput actions;
 
     private void Awake()
     {
@@ -29,7 +31,11 @@ public class NetworkPlayerController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) return;
+        if (!IsOwner)
+        {
+            enabled = false;
+            return;
+        }
 
         Debug.Log($"<color=cyan>Player {OwnerClientId} spawnado. IsOwner: {IsOwner}</color>");
     }

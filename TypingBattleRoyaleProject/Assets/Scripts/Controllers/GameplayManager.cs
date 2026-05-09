@@ -78,7 +78,7 @@ public class GameplayManager : NetworkBehaviour
         InitializeStates();
         stateMachine.ChangeState(explorationState);
         
-        SpawnPlayers();
+        if(IsServer) SpawnPlayers();
     }
 
     private void Update()
