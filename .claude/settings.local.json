@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check 'd:/Amerike/2026/typing-battle-royale/_documents/DemoDay/tickets.js')",
+      "Bash(node --check 'd:/Amerike/2026/typing-battle-royale/_documents/DemoDay/src/data.js')"
+    ]
+  }
+}
