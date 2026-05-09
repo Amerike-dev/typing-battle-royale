@@ -141,12 +141,10 @@ public class GameplayManager : NetworkBehaviour
         }
         else 
         {
-            Debug.Log("[Cliente] Esperando confirmación de spawn del servidor...");
             while (!_allSpawned)
             {
                 yield return null;
             }
-            Debug.Log("[Cliente] Servidor terminó el spawn. Continuando...");
         }
     }
     
@@ -232,10 +230,7 @@ public class GameplayManager : NetworkBehaviour
 
     private void OnDestroy()
     {
-        if (_castInputController != null)
-        {
-            _castInputController.OnSpellCast -= HandleOnSpellCast;
-        }
+        if (_castInputController != null) _castInputController.OnSpellCast -= HandleOnSpellCast;
     }
     
     private void OnDrawGizmos()
