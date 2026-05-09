@@ -376,7 +376,7 @@ const TICKETS = [
         id: 'TBR-017',
         title: 'Sustituir OwnerClientId==0 por IsHost y eliminar WaitForSeconds(5f)',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'done',
         summary:
             'GameplayManager.PopulateSpawnPoint usa OwnerClientId == 0 como check de Host (frágil) y hace que los clientes esperen 5 s ciegos. Reemplazar por NetworkManager.Singleton.IsHost / IsServer y sincronizar el spawn por evento o ClientRpc.',
         acceptance: [
