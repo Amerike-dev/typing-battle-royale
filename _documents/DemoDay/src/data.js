@@ -227,7 +227,7 @@ const TICKETS = [
         id: 'TBR-010',
         title: 'Migrar GameOverState fuera de NetworkManagerMock',
         type: 'bug', priority: 'critical', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'GameOverState.cs:21,28,38 lee NetworkManagerMock.Instance.Controllers, que no existe en partida con red real (Netcode no expone .Controllers). Provoca NullReferenceException al terminar la partida. Migrar a NetworkManager.Singleton.ConnectedClientsList y consultar PlayerStats vía componente.',
         acceptance: [
