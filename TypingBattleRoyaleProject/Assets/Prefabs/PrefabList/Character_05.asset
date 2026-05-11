@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Character_05
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
   characterName: Character_05
-  characterPrefab: {fileID: 2676667982181866762, guid: 71932d6e05763ea408becedc4525e42e, type: 3}
+  characterPrefab: {fileID: 7302442932413617, guid: 9ad1577bb2b97d2488bf76f04c7ce145, type: 3}
   skins:
   - {r: 0.8301887, g: 0.2636762, b: 0.2636762, a: 1}
   - {r: 0.17841452, g: 0.5849056, b: 0.56253606, a: 1}

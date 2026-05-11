@@ -20364,6 +20364,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: afaca3788eb4e1e4e8218a55ab76d942, type: 2}
   - {fileID: 11400000, guid: 9789dbaf4227e5d46821ae492ad8d6f9, type: 2}
   - {fileID: 11400000, guid: bdfacfb9ec5b3b242b10aaa0aa135e57, type: 2}
+  - {fileID: 11400000, guid: 59f9be5442c00e944a423bff4a130d06, type: 2}
+  - {fileID: 11400000, guid: c770ba0013e033640bab4750998b70fb, type: 2}
   spawnsPoints: []
 --- !u!114 &1753686372
 MonoBehaviour:
