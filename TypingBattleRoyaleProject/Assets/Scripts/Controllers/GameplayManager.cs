@@ -198,25 +198,6 @@ public class GameplayManager : NetworkBehaviour
 
         if (networkObject != null) networkObject.SpawnWithOwnership(clientId);
     }
-    //Aca terminan los nuevo metodos
-
-    /*private void SetupSpawns()
-    {
-        Vector3[] position = new Vector3[_spawnPoints.Length];
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
-        {
-            position[i] = _spawnPoints[i].position;
-        }
-
-        SpawnCalculator spawnCalculator = new SpawnCalculator(position);
-
-        foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
-        {
-            Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
-            controller.transform.position = spawnPoint;
-        }
-    }*/
 
     public void TriggerGameOver(string winnerID)
     {
