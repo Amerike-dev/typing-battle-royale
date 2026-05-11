@@ -1,9 +1,11 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NetworkObject))]
+[RequireComponent(typeof(PlayerStatsNet))]
 public class NetworkPlayerController : NetworkBehaviour
 {
     [Header("Configuración de Movimiento")]
@@ -14,6 +16,7 @@ public class NetworkPlayerController : NetworkBehaviour
     [Header("Referencias")]
     private CharacterController characterController;
     private NetworkObject networkObject;
+    private PlayerStatsNet statsNet;
 
     [Header("Input")]
     private Vector2 moveInput;
@@ -25,6 +28,7 @@ public class NetworkPlayerController : NetworkBehaviour
     {
         characterController = GetComponent<CharacterController>();
         networkObject = GetComponent<NetworkObject>();
+        statsNet = GetComponent<PlayerStatsNet>();
     }
 
     public override void OnNetworkSpawn()
@@ -75,6 +79,85 @@ public class NetworkPlayerController : NetworkBehaviour
         velocity.y += Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void TakeDamageServerRpc(float damage, ulong attackerId)
+    {
+        if (!statsNet.isAlive.Value)
+            return;
+
+        if (statsNet.currentHP.Value <= 0)
+            return;
+
+        statsNet.currentHP.Value = Mathf.Max(0, statsNet.currentHP.Value - damage);
+
+        Debug.Log($"Player {OwnerClientId} recibió {damage} de daño. HP actual: {statsNet.currentHP.Value}");
+
+        if (statsNet.currentHP.Value <= 0)
+        {
+            HandleDeathServer(attackerId);
+        }
+    }
+
+    private void HandleDeathServer(ulong attackerId)
+    {
+        if (!IsServer) return;
+
+        statsNet.currentLifes.Value--;
+
+        Debug.Log($"Player {OwnerClientId} perdió una vida. Vidas restantes: {statsNet.currentLifes.Value}");
+
+        GiveKillToAttacker(attackerId);
+
+        if (statsNet.currentLifes.Value > 0)
+        {
+            statsNet.currentHP.Value = statsNet.MaxHP;
+            statsNet.isAlive.Value = true;
+
+            Debug.Log($"Player {OwnerClientId} respawnea con HP lleno.");
+        }
+        else
+        {
+            statsNet.isAlive.Value = false;
+
+            Debug.Log($"Player {OwnerClientId} se quedó sin vidas.");
+        }
+    }
+
+    private void GiveKillToAttacker(ulong attackerId)
+    {
+        if (!IsServer) return;
+
+        if (attackerId == OwnerClientId)
+        {
+            Debug.Log("El atacante es el mismo jugador. No se suma kill.");
+            return;
+        }
+
+        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(attackerId, out var attackerClient))
+        {
+            Debug.LogWarning($"No se encontró al atacante con ID {attackerId}");
+            return;
+        }
+
+        if (attackerClient.PlayerObject == null)
+        {
+            Debug.LogWarning("El atacante no tiene PlayerObject.");
+            return;
+        }
+
+        PlayerStatsNet attackerStats = attackerClient.PlayerObject.GetComponent<PlayerStatsNet>();
+
+        if (attackerStats == null)
+        {
+            Debug.LogWarning("El atacante no tiene PlayerStatsNet.");
+            return;
+        }
+
+        attackerStats.killCount.Value++;
+
+        Debug.Log($"Player {attackerId} ganó una kill. Total: {attackerStats.killCount.Value}");
+    }
     
     [ClientRpc]
     public void SetPlayerColorClientRpc(Color newColor)
@@ -100,5 +183,12 @@ public class NetworkPlayerController : NetworkBehaviour
         
         GUI.Label(new Rect(10, 10, 300, 20), $"ID: {OwnerClientId}");
         GUI.Label(new Rect(10, 30, 300, 20), $"Position: {transform.position}");
+
+        if (statsNet != null)
+        {
+            GUI.Label(new Rect(10, 50, 300, 20), $"HP: {statsNet.currentHP.Value}");
+            GUI.Label(new Rect(10, 70, 300, 20), $"Lives: {statsNet.currentLifes.Value}");
+            GUI.Label(new Rect(10, 90, 300, 20), $"Kills: {statsNet.killCount.Value}");
+        }
     }
 }
