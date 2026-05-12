@@ -6,9 +6,27 @@
 
 const TYPE_LABEL = { bug: 'Bug', feature: 'Feature', tech: 'Tech Debt' };
 const PRIORITY_LABEL = { critical: 'Crítica', high: 'Alta', medium: 'Media', low: 'Baja' };
-const EFFORT_LABEL = { S: 'Effort: S (≤4h)', M: 'Effort: M (1-2 días)', L: 'Effort: L (3+ días)' };
+const EFFORT_LABEL = { S: 'S (≤4h)', M: 'M (1-2 días)', L: 'L (3+ días)' };
 const STATUS_LABEL = { todo: 'Pendiente', 'in-progress': 'En curso', done: 'Hecho' };
 const STATUS_CLASS = { todo: 'status-todo', 'in-progress': 'status-progress', done: 'status-done' };
+
+// Economía del sprint: monedas por ticket → rebanadas de pizza al cierre.
+const COINS_BY_EFFORT = { S: 2, M: 6, L: 14 };
+const SLICE_PRICE = 8;          // monedas que cuesta 1 rebanada
+const PIZZA_EMOJI = '🍕';
+const COIN_EMOJI = '🪙';
+
+function coinsFor(t) { return COINS_BY_EFFORT[t.effort] || 0; }
+function sumCoins(list) { return list.reduce((s, t) => s + coinsFor(t), 0); }
+function slicesAndRem(coins) {
+    return { slices: Math.floor(coins / SLICE_PRICE), rem: coins % SLICE_PRICE };
+}
+function fmtPizza(coins) {
+    const { slices, rem } = slicesAndRem(coins);
+    if (slices === 0) return `${coins} ${COIN_EMOJI}`;
+    if (rem === 0) return `${slices} ${PIZZA_EMOJI}`;
+    return `${slices} ${PIZZA_EMOJI} + ${rem} ${COIN_EMOJI}`;
+}
 
 const state = { tab: 'active', type: 'all', priority: 'all', assignee: 'all', search: '' };
 
@@ -127,23 +145,67 @@ function renderAvatar(assigneeId, sizeClass = '') {
 
 function renderStats() {
     const active = TICKETS.filter(t => t.status !== 'done');
-    const counts = {
-        total: TICKETS.length,
-        done: TICKETS.filter(t => t.status === 'done').length,
-        critical: active.filter(t => t.priority === 'critical').length,
-        high: active.filter(t => t.priority === 'high').length,
-        medium: active.filter(t => t.priority === 'medium').length,
-        low: active.filter(t => t.priority === 'low').length
-    };
+    const done = TICKETS.filter(t => t.status === 'done');
+    const totalCoins = sumCoins(TICKETS);
+    const claimedCoins = sumCoins(done);
+    const totalSlices = Math.floor(totalCoins / SLICE_PRICE);
+    const claimedSlices = Math.floor(claimedCoins / SLICE_PRICE);
+    const perPerson = TEAM.length > 0
+        ? (totalCoins / TEAM.length / SLICE_PRICE).toFixed(1)
+        : '—';
+
     document.getElementById('stats').innerHTML = `
-        <div class="stat-card"><div class="num">${counts.total}</div><div class="lbl">Total</div></div>
-        <div class="stat-card low"><div class="num">${counts.done}</div><div class="lbl">Hechos</div></div>
-        <div class="stat-card critical"><div class="num">${counts.critical}</div><div class="lbl">Crítica</div></div>
-        <div class="stat-card high"><div class="num">${counts.high}</div><div class="lbl">Alta</div></div>
-        <div class="stat-card medium"><div class="num">${counts.medium}</div><div class="lbl">Media</div></div>
+        <div class="stat-card"><div class="num">${TICKETS.length}</div><div class="lbl">Tickets</div></div>
+        <div class="stat-card low"><div class="num">${done.length}</div><div class="lbl">Hechos</div></div>
+        <div class="stat-card coins"><div class="num">${COIN_EMOJI} ${totalCoins}</div><div class="lbl">Pool</div></div>
+        <div class="stat-card pizza"><div class="num">${PIZZA_EMOJI} ${totalSlices}</div><div class="lbl">Rebanadas</div></div>
+        <div class="stat-card pizza"><div class="num">${perPerson}</div><div class="lbl">${PIZZA_EMOJI} / persona</div></div>
+        <div class="stat-card critical"><div class="num">${active.filter(t => t.priority === 'critical').length}</div><div class="lbl">Crítica</div></div>
     `;
-    document.getElementById('tabCountActive').textContent = TICKETS.filter(t => t.status !== 'done').length;
-    document.getElementById('tabCountDone').textContent = counts.done;
+    document.getElementById('tabCountActive').textContent = active.length;
+    document.getElementById('tabCountDone').textContent = done.length;
+
+    renderEconomy(claimedCoins, totalCoins, claimedSlices, totalSlices);
+}
+
+function renderEconomy(claimedCoins, totalCoins, claimedSlices, totalSlices) {
+    const container = document.getElementById('economy');
+    if (!container) return;
+
+    // Acumulado por persona (solo tickets DONE).
+    const byMember = {};
+    TEAM.forEach(m => byMember[m.id] = 0);
+    TICKETS.filter(t => t.status === 'done' && t.assignee).forEach(t => {
+        if (byMember[t.assignee] !== undefined) byMember[t.assignee] += coinsFor(t);
+    });
+
+    const cards = TEAM.map(m => {
+        const coins = byMember[m.id] || 0;
+        const { slices, rem } = slicesAndRem(coins);
+        return `
+            <div class="member-pizza" title="${m.name}: ${coins} ${COIN_EMOJI}">
+                <span class="avatar" style="background:${m.color}">${getInitials(m.name)}</span>
+                <span class="mp-name">${m.name}</span>
+                <span class="mp-coins">${COIN_EMOJI} ${coins}</span>
+                <span class="mp-slices">${slices} ${PIZZA_EMOJI}${rem ? ` <em>+${rem}${COIN_EMOJI}</em>` : ''}</span>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <div class="economy-banner">
+            <div class="econ-rule">
+                <strong>${SLICE_PRICE} ${COIN_EMOJI} = 1 ${PIZZA_EMOJI} rebanada</strong>
+                <span class="econ-meta">Effort S = ${COINS_BY_EFFORT.S} · M = ${COINS_BY_EFFORT.M} · L = ${COINS_BY_EFFORT.L} ${COIN_EMOJI}</span>
+            </div>
+            <div class="econ-totals">
+                <span>Reclamadas: <strong>${claimedCoins} ${COIN_EMOJI}</strong> = <strong>${claimedSlices} ${PIZZA_EMOJI}</strong></span>
+                <span class="econ-sep">·</span>
+                <span>Pool restante: <strong>${totalCoins - claimedCoins} ${COIN_EMOJI}</strong></span>
+            </div>
+        </div>
+        <div class="leaderboard">${cards}</div>
+    `;
 }
 
 function applyFilters(list) {
@@ -192,7 +254,7 @@ function renderCard(t) {
             <div class="badges">
                 <span class="badge ${t.type}">${TYPE_LABEL[t.type]}</span>
                 <span class="badge ${t.priority}">${PRIORITY_LABEL[t.priority]}</span>
-                <span class="badge effort">${EFFORT_LABEL[t.effort]}</span>
+                <span class="badge coins" title="${EFFORT_LABEL[t.effort]} · ${coinsFor(t)} monedas">${COIN_EMOJI} ${coinsFor(t)}</span>
                 <span class="badge ${STATUS_CLASS[t.status]}">${STATUS_LABEL[t.status]}</span>
             </div>
             <div class="ticket-assignee">${renderAvatar(t.assignee)}</div>
@@ -253,6 +315,7 @@ function renderWaveCard(t) {
             <h4>${t.title}</h4>
             <div class="wave-meta">
                 <span class="badge ${t.type}">${TYPE_LABEL[t.type]}</span>
+                <span class="badge coins">${COIN_EMOJI} ${coinsFor(t)}</span>
                 ${deps ? `<span>← ${deps} dep${deps > 1 ? 's' : ''}</span>` : ''}
                 ${blocks ? `<span class="deps-count">→ bloquea ${blocks}</span>` : ''}
             </div>
@@ -301,7 +364,7 @@ function openModal(id) {
                 <div class="badges" style="margin-top:8px;">
                     <span class="badge ${t.type}">${TYPE_LABEL[t.type]}</span>
                     <span class="badge ${t.priority}">${PRIORITY_LABEL[t.priority]}</span>
-                    <span class="badge effort">${EFFORT_LABEL[t.effort]}</span>
+                    <span class="badge coins" title="Esfuerzo: ${EFFORT_LABEL[t.effort]}">${COIN_EMOJI} ${coinsFor(t)} monedas (${fmtPizza(coinsFor(t))})</span>
                     <span class="badge ${STATUS_CLASS[t.status]}">${STATUS_LABEL[t.status]}</span>
                 </div>
             </div>
