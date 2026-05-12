@@ -76,9 +76,12 @@ public class GameplayManager : NetworkBehaviour
     private void Start()
     {
         InitializeStates();
-        stateMachine.ChangeState(explorationState);
+        if (explorationState != null)
+        {
+            stateMachine.ChangeState(explorationState);
+        }
         
-        SpawnPlayers();
+        if(IsServer) SpawnPlayers();
     }
 
     private void Update()
@@ -88,15 +91,37 @@ public class GameplayManager : NetworkBehaviour
 
     private void InitializeStates()
     {
-        explorationState = new ExplorationState(_playerController.cameraController, this);
         waitingState = new WaitingState(this);
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");
         stateMachine = new StateMachine(waitingState, 0f);
-        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
-        if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+
+        if (_playerController != null)
+        {
+            explorationState = new ExplorationState(_playerController.cameraController, this);
+            battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+            if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+        }
 
         //SetupSpawns();
+    }
+
+    public void RegisterLocalPlayer(PlayerController player)
+    {
+        _playerController = player;
+        _castInputController = player.castInputController;
+        _playerAnimatorView = player.playerAnimatorView;
+
+        explorationState = new ExplorationState(_playerController.cameraController, this);
+        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+        
+        if (_castInputController != null) 
+        {
+            _castInputController.OnSpellCast -= HandleOnSpellCast;
+            _castInputController.OnSpellCast += HandleOnSpellCast;
+        }
+
+        stateMachine.ChangeState(explorationState);
     }
 
     private void HandleOnSpellCast()
@@ -177,7 +202,7 @@ public class GameplayManager : NetworkBehaviour
                 Debug.LogWarning("No hay suficientes puntos de spawn para todos los jugadores.");
                 return;
             }
-
+            Debug.Log($"[SPAWN] from clientId={NetworkManager.Singleton.LocalClientId}, IsHost={IsHost}, IsServer={IsServer}");
             SpawnSelectedPlayer(clientId, _shuffledPositions[spawnIndex]);
             spawnIndex++;
         }
@@ -190,33 +215,22 @@ public class GameplayManager : NetworkBehaviour
             selection = new IDController.PlayerSelection(0, 0);
         }
 
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
+            {
+                client.PlayerObject.Despawn(true);
+            }
+        }
+
         GameObject prefab = arraySkins[selection.skinIndex].gameplayPrefabs[selection.colorIndex];
 
         GameObject playerInstance = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
         NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
 
-        if (networkObject != null) networkObject.SpawnWithOwnership(clientId);
+        if (networkObject != null) networkObject.SpawnAsPlayerObject(clientId);
     }
-    //Aca terminan los nuevo metodos
-
-    /*private void SetupSpawns()
-    {
-        Vector3[] position = new Vector3[_spawnPoints.Length];
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
-        {
-            position[i] = _spawnPoints[i].position;
-        }
-
-        SpawnCalculator spawnCalculator = new SpawnCalculator(position);
-
-        foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
-        {
-            Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
-            controller.transform.position = spawnPoint;
-        }
-    }*/
 
     public void TriggerGameOver(string winnerID)
     {

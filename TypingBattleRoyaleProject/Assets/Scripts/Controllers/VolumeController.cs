@@ -7,15 +7,20 @@ public class VolumeController : MonoBehaviour
     
     void Start()
     {
-        volumeSlider.value = 1;
-        SetVolume();
-
+        if(volumeSlider != null)
+        {
+            volumeSlider.value = 1;
+            SetVolume();
+        }
     }
 
     public void SetVolume()
     {
-        AudioListener.volume = Mathf.Clamp01(volumeSlider.value);
-        Debug.Log(AudioListener.volume);
+        if(volumeSlider != null)
+        {
+            AudioListener.volume = Mathf.Clamp01(volumeSlider.value);
+            Debug.Log(AudioListener.volume);
+        }
     }
     
 }

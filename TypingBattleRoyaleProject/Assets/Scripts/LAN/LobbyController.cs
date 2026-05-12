@@ -123,7 +123,7 @@ public class LobbyController : NetworkBehaviour
         }
 
         response.Approved = true;
-        response.CreatePlayerObject = false;
+        response.CreatePlayerObject = true;
     }
 
     private void OnClientConnectedLocal(ulong clientId)

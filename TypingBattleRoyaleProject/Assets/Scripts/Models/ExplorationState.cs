@@ -14,12 +14,10 @@ public class ExplorationState : IGameState
     }
 
     public void Enter()
-    { 
-        cameraController.OnCamaraMove = true; 
+    {
+        cameraController.OnCamaraMove = true;
         _gameplayManager.PlayerController.onExplorationState = true;
-        _gameplayManager.PlayerController.onExplorationState = false;
     }
-
     public void Execute(float tick)
     {
         

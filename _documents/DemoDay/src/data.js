@@ -19,7 +19,7 @@ const TICKETS = [
         id: 'TBR-001',
         title: 'Completar menú de pausa funcional',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'PauseController abre el panel y pausa con Time.timeScale, pero faltan: SFX mute, sliders de volumen vinculados, botón Reanudar funcional, botón "Volver al menú" que apunte a una escena válida (hoy carga "MainMenu" que no está en build), y bloquear la apertura cuando GameOverState esté activo.',
         acceptance: [
@@ -42,7 +42,7 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, cargar su rune (texto) en CastInputController para que el typing sea sobre ese spell. Hoy spellText es fijo y no consume el inventario.',
         acceptance: [
@@ -157,7 +157,7 @@ const TICKETS = [
         id: 'TBR-007',
         title: 'Bug: los jugadores no se ven entre sí en red',
         type: 'bug', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'done',
         summary:
             'En partida real cada cliente solo ve a su propio personaje. Tres causas confirmadas en código: (1) GameplayManager.cs:118 usa OwnerClientId == 0 que evalúa true en todos los clientes; (2) PlayerController (MonoBehaviour de escena) mueve un transform que no es el del NetworkObject spawneado; (3) posible falta de NetworkTransform en el prefab.',
         acceptance: [
@@ -227,7 +227,7 @@ const TICKETS = [
         id: 'TBR-010',
         title: 'Migrar GameOverState fuera de NetworkManagerMock',
         type: 'bug', priority: 'critical', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'GameOverState.cs:21,28,38 lee NetworkManagerMock.Instance.Controllers, que no existe en partida con red real (Netcode no expone .Controllers). Provoca NullReferenceException al terminar la partida. Migrar a NetworkManager.Singleton.ConnectedClientsList y consultar PlayerStats vía componente.',
         acceptance: [
@@ -247,7 +247,7 @@ const TICKETS = [
         id: 'TBR-011',
         title: 'Sincronizar PlayerStats por red (HP, vidas, kills)',
         type: 'tech', priority: 'critical', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'done',
         summary:
             'PlayerStats hoy es POCO local: TakeDamage en un cliente no llega al resto. Convertir HP/vidas/kills a NetworkVariable<float>/<int> en NetworkPlayerController y exponer ServerRpc TakeDamageServerRpc(damage, attackerId).',
         acceptance: [
@@ -626,7 +626,7 @@ const TICKETS = [
         id: 'TBR-029',
         title: 'Loading screen real (reemplazar checkboxes manuales)',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'LoadingScreenController hoy tiene checkboxes manuales (checkServer, checkPlayers, checkMap, checkLoot) — debug. Reemplazar por SceneManager.LoadSceneAsync con barra de progreso real y un tip aleatorio de gameplay rotando.',
         acceptance: [
@@ -710,7 +710,7 @@ const TICKETS = [
         id: 'TBR-033',
         title: 'Custom player name en LobbyScene',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Añadir input "Tu nombre" en LobbyScene, persistente en PlayerPrefs. Propagar como NetworkVariable<FixedString64Bytes> en NetworkPlayerController y mostrar en EnemyLabel y leaderboard final.',
         acceptance: [
@@ -752,7 +752,7 @@ const TICKETS = [
         id: 'TBR-035',
         title: 'Modo demo / attract mode para pitch presencial',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'todo',
         summary:
             'Si nadie toca controles en LobbyScene durante 30s, arranca una partida demo con bots IA básicos: se mueven, casean spells, mueren y respawnean. Cualquier tecla aborta el demo y vuelve al lobby.',
         acceptance: [

@@ -1,9 +1,10 @@
 using System;
 using TMPro.Examples;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 5f;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private float _jumpValue = 0.5f;
     void Start()
     {
+        continuousSpeed = moveSpeed;
         _characterController = GetComponent<CharacterController>();
 
         if (_characterController == null)
@@ -38,8 +40,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            DisableLocalOnlyComponents();
+            return;
+        }
+
         if (explorationState == null)
         {
             return;
@@ -47,17 +56,49 @@ public class PlayerController : MonoBehaviour
         explorationState.action.started += ExplorationState;
         explorationState.action.Enable();
         jumpAction.Enable();
-    }
-    void OnDisable()
-    {
-        if (explorationState == null)
+
+        cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController == null) cameraController = FindAnyObjectByType<CameraController>();
+        if (cameraController != null)
         {
-            return;
+            cameraController.SetTarget(transform);
         }
-        explorationState.action.started -= ExplorationState;
-        explorationState.action.Disable();
-        jumpAction.Disable();
     }
+
+    private void DisableLocalOnlyComponents()
+    {
+        var playerInput = GetComponentInChildren<PlayerInput>(true);
+        if (playerInput != null) playerInput.enabled = false;
+
+        foreach (var cam in GetComponentsInChildren<Camera>(true))
+        {
+            cam.enabled = false;
+        }
+
+        foreach (var listener in GetComponentsInChildren<AudioListener>(true))
+        {
+            listener.enabled = false;
+        }
+
+        foreach (var canvas in GetComponentsInChildren<Canvas>(true))
+        {
+            canvas.gameObject.SetActive(false);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (!IsOwner) return;
+
+        if (explorationState != null && explorationState.action != null)
+        {
+            explorationState.action.started -= ExplorationState;
+            explorationState.action.Disable();
+        }
+        if (jumpAction != null) jumpAction.Disable();
+    }
+
     void Awake()
     {
         onExplorationState = true;
@@ -65,6 +106,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
+
         if (onExplorationState) MoveCharacter();
     }
 

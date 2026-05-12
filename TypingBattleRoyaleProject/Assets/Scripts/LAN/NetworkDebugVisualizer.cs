@@ -127,8 +127,8 @@ public class NetworkDebugVisualizer : MonoBehaviour
     private void DrawPlayerPositions()
     {
         string positions = "=== Posiciones de Jugadores ===\n";
-        
-        NetworkPlayerController[] players = FindObjectsByType<NetworkPlayerController>(0);
+
+        PlayerController[] players = FindObjectsByType<PlayerController>(0);
 
         foreach (var player in players)
         {
@@ -174,8 +174,8 @@ public class NetworkDebugVisualizer : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (!showPlayerPositions) return;
-        
-        NetworkPlayerController[] players = FindObjectsByType<NetworkPlayerController>(0);
+
+        PlayerController[] players = FindObjectsByType<PlayerController>(0);
 
         foreach (var player in players)
         {
