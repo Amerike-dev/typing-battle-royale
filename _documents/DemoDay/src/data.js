@@ -19,7 +19,7 @@ const TICKETS = [
         id: 'TBR-001',
         title: 'Completar menú de pausa funcional',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'PauseController abre el panel y pausa con Time.timeScale, pero faltan: SFX mute, sliders de volumen vinculados, botón Reanudar funcional, botón "Volver al menú" que apunte a una escena válida (hoy carga "MainMenu" que no está en build), y bloquear la apertura cuando GameOverState esté activo.',
         acceptance: [
@@ -42,7 +42,7 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, cargar su rune (texto) en CastInputController para que el typing sea sobre ese spell. Hoy spellText es fijo y no consume el inventario.',
         acceptance: [
@@ -247,7 +247,7 @@ const TICKETS = [
         id: 'TBR-011',
         title: 'Sincronizar PlayerStats por red (HP, vidas, kills)',
         type: 'tech', priority: 'critical', effort: 'L',
-        assignee: Flan, status: 'done',
+        assignee: 'Flan', status: 'done',
         summary:
             'PlayerStats hoy es POCO local: TakeDamage en un cliente no llega al resto. Convertir HP/vidas/kills a NetworkVariable<float>/<int> en NetworkPlayerController y exponer ServerRpc TakeDamageServerRpc(damage, attackerId).',
         acceptance: [
@@ -626,7 +626,7 @@ const TICKETS = [
         id: 'TBR-029',
         title: 'Loading screen real (reemplazar checkboxes manuales)',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'LoadingScreenController hoy tiene checkboxes manuales (checkServer, checkPlayers, checkMap, checkLoot) — debug. Reemplazar por SceneManager.LoadSceneAsync con barra de progreso real y un tip aleatorio de gameplay rotando.',
         acceptance: [
