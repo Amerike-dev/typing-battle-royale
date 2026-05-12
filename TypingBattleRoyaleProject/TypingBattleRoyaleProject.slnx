@@ -67,6 +67,7 @@
   <Project Path="Unity.Services.Deployment.Editor.Shared.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.ConversionSystem.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.Services.Core.Analytics.csproj" />
   <Project Path="UnityEditor.UI.Analytics.csproj" />
   <Project Path="Unity.Netcode.Editor.csproj" />
