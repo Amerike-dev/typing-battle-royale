@@ -76,7 +76,10 @@ public class GameplayManager : NetworkBehaviour
     private void Start()
     {
         InitializeStates();
-        stateMachine.ChangeState(explorationState);
+        if (explorationState != null)
+        {
+            stateMachine.ChangeState(explorationState);
+        }
         
         if(IsServer) SpawnPlayers();
     }
@@ -88,15 +91,37 @@ public class GameplayManager : NetworkBehaviour
 
     private void InitializeStates()
     {
-        explorationState = new ExplorationState(_playerController.cameraController, this);
         waitingState = new WaitingState(this);
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");
         stateMachine = new StateMachine(waitingState, 0f);
-        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
-        if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+
+        if (_playerController != null)
+        {
+            explorationState = new ExplorationState(_playerController.cameraController, this);
+            battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+            if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
+        }
 
         //SetupSpawns();
+    }
+
+    public void RegisterLocalPlayer(PlayerController player)
+    {
+        _playerController = player;
+        _castInputController = player.castInputController;
+        _playerAnimatorView = player.playerAnimatorView;
+
+        explorationState = new ExplorationState(_playerController.cameraController, this);
+        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+        
+        if (_castInputController != null) 
+        {
+            _castInputController.OnSpellCast -= HandleOnSpellCast;
+            _castInputController.OnSpellCast += HandleOnSpellCast;
+        }
+
+        stateMachine.ChangeState(explorationState);
     }
 
     private void HandleOnSpellCast()
