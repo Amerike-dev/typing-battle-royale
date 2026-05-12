@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float sensitivity = 0.1f;
     
     [Header("References")]
-    [SerializeField] private Transform playerBody;
+    private Transform playerBody;
     public InputActionReference lookAction;
     public bool OnCamaraMove = true;
     private float returnSpeed = 10f;
@@ -25,6 +25,8 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (playerBody == null) return;
+
         ActiveForState();
     }
 
@@ -51,5 +53,10 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, returnSpeed * Time.deltaTime);
         _xRotation = transform.localEulerAngles.x;
         if (_xRotation > 180f) _xRotation -= 360f;
+    }
+
+    public void SetTarget(Transform newPlayerBody)
+    {
+        playerBody = newPlayerBody;
     }
 }

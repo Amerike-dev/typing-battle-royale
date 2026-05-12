@@ -1814,7 +1814,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
@@ -1896,7 +1896,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4631980267213377421
+--- !u!114 &8330394395018193721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1905,9 +1905,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6025732026901377866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4250d20c7ba18994d8880b1290b5b1a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a49daa97cddc314582125df32c4ac04, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerController
+  m_EditorClassIdentifier: Assembly-CSharp::IDController
   ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 5
   rotationSpeed: 10
