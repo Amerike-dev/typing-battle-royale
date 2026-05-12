@@ -17,3 +17,7 @@ MonoBehaviour:
   - {fileID: 6405105131187791291, guid: ba47d7511ddfbc64fbb6979631c2cb4e, type: 3}
   - {fileID: 6405105131187791291, guid: b7580b76def653342b14bbd16f4d9e67, type: 3}
   - {fileID: 6405105131187791291, guid: fec5fb1b873edb4439f0db57ab7c929d, type: 3}
+  gameplayPrefabs:
+  - {fileID: 6025732026901377866, guid: ef0f5d28af01dd045ae98cac9d5d2cf0, type: 3}
+  - {fileID: 6025732026901377866, guid: aaea396eb701700498667403aad38d10, type: 3}
+  - {fileID: 6025732026901377866, guid: 960e89a4e653c6543a7ad402454b3979, type: 3}

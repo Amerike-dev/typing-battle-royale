@@ -33,12 +33,26 @@ public class CastInputController : MonoBehaviour
     {
         _casting = true;
         _typingStats = new TypingStats();
-        _cast.action.started += EvaluateAccuracy;
+        
+        if (_cast != null && _cast.action != null)
+        {
+            _cast.action.started += EvaluateAccuracy;
+        }
+
         wordsPerMinute = 0;
         accuracy = 0;
         StartCoroutine(CountTimeElapsed());
-        castSpell.onEndEdit.AddListener(CastText);
-        spell.text = spellText;
+        
+        if (castSpell != null)
+        {
+            castSpell.onEndEdit.AddListener(CastText);
+        }
+        
+        if (spell != null)
+        {
+            spell.text = spellText;
+        }
+
         stringIndex = 0;
         lastInInput = 0;
     }
@@ -46,7 +60,16 @@ public class CastInputController : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(CountTimeElapsed());
-        castSpell.onEndEdit.RemoveListener(CastText);
+        
+        if (castSpell != null)
+        {
+            castSpell.onEndEdit.RemoveListener(CastText);
+        }
+
+        if (_cast != null && _cast.action != null)
+        {
+            _cast.action.started -= EvaluateAccuracy;
+        }
     }
 
     public void CastText(string cast)
