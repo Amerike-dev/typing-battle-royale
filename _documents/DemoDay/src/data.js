@@ -710,7 +710,7 @@ const TICKETS = [
         id: 'TBR-033',
         title: 'Custom player name en LobbyScene',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Añadir input "Tu nombre" en LobbyScene, persistente en PlayerPrefs. Propagar como NetworkVariable<FixedString64Bytes> en NetworkPlayerController y mostrar en EnemyLabel y leaderboard final.',
         acceptance: [
@@ -752,7 +752,7 @@ const TICKETS = [
         id: 'TBR-035',
         title: 'Modo demo / attract mode para pitch presencial',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'todo',
         summary:
             'Si nadie toca controles en LobbyScene durante 30s, arranca una partida demo con bots IA básicos: se mueven, casean spells, mueren y respawnean. Cualquier tecla aborta el demo y vuelve al lobby.',
         acceptance: [
