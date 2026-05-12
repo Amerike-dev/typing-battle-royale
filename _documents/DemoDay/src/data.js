@@ -247,7 +247,7 @@ const TICKETS = [
         id: 'TBR-011',
         title: 'Sincronizar PlayerStats por red (HP, vidas, kills)',
         type: 'tech', priority: 'critical', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: Flan, status: 'done',
         summary:
             'PlayerStats hoy es POCO local: TakeDamage en un cliente no llega al resto. Convertir HP/vidas/kills a NetworkVariable<float>/<int> en NetworkPlayerController y exponer ServerRpc TakeDamageServerRpc(damage, attackerId).',
         acceptance: [
