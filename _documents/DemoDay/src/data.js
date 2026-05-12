@@ -268,7 +268,7 @@ const TICKETS = [
         id: 'TBR-012',
         title: 'Detección "último vivo" → TriggerGameOver',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Falta la lógica que cierra la partida cuando solo queda un jugador con vidas. Suscribirse a OnAllLifeLost desde GameplayManager y comprobar el contador de vivos.',
         acceptance: [
