@@ -177,7 +177,7 @@ public class GameplayManager : NetworkBehaviour
                 Debug.LogWarning("No hay suficientes puntos de spawn para todos los jugadores.");
                 return;
             }
-
+            Debug.Log($"[SPAWN] from clientId={NetworkManager.Singleton.LocalClientId}, IsHost={IsHost}, IsServer={IsServer}");
             SpawnSelectedPlayer(clientId, _shuffledPositions[spawnIndex]);
             spawnIndex++;
         }
