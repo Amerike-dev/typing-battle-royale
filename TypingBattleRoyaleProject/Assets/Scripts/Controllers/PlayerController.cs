@@ -45,8 +45,7 @@ public class PlayerController : NetworkBehaviour
         base.OnNetworkSpawn();
         if (!IsOwner)
         {
-            var playerInput = GetComponentInChildren<PlayerInput>();
-            if (playerInput != null) playerInput.enabled = false;
+            DisableLocalOnlyComponents();
             return;
         }
 
@@ -58,10 +57,32 @@ public class PlayerController : NetworkBehaviour
         explorationState.action.Enable();
         jumpAction.Enable();
 
-        cameraController = FindAnyObjectByType<CameraController>();
+        cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController == null) cameraController = FindAnyObjectByType<CameraController>();
         if (cameraController != null)
         {
             cameraController.SetTarget(transform);
+        }
+    }
+
+    private void DisableLocalOnlyComponents()
+    {
+        var playerInput = GetComponentInChildren<PlayerInput>(true);
+        if (playerInput != null) playerInput.enabled = false;
+
+        foreach (var cam in GetComponentsInChildren<Camera>(true))
+        {
+            cam.enabled = false;
+        }
+
+        foreach (var listener in GetComponentsInChildren<AudioListener>(true))
+        {
+            listener.enabled = false;
+        }
+
+        foreach (var canvas in GetComponentsInChildren<Canvas>(true))
+        {
+            canvas.gameObject.SetActive(false);
         }
     }
 

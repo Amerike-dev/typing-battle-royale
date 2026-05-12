@@ -38,13 +38,13 @@ public class HUDController : MonoBehaviour
 
     private void FindLocalPlayerStats()
     {
-        NetworkPlayerController[] players = FindObjectsByType<NetworkPlayerController>(FindObjectsSortMode.None);
+        PlayerStatsNet[] stats = FindObjectsByType<PlayerStatsNet>(FindObjectsSortMode.None);
 
-        foreach (NetworkPlayerController player in players)
+        foreach (PlayerStatsNet s in stats)
         {
-            if (player.IsOwner)
+            if (s.IsOwner)
             {
-                localStats = player.GetComponent<PlayerStatsNet>();
+                localStats = s;
                 break;
             }
         }

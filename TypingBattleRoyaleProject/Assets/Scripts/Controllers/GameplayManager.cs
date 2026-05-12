@@ -215,13 +215,21 @@ public class GameplayManager : NetworkBehaviour
             selection = new IDController.PlayerSelection(0, 0);
         }
 
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
+            {
+                client.PlayerObject.Despawn(true);
+            }
+        }
+
         GameObject prefab = arraySkins[selection.skinIndex].gameplayPrefabs[selection.colorIndex];
 
         GameObject playerInstance = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
         NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
 
-        if (networkObject != null) networkObject.SpawnWithOwnership(clientId);
+        if (networkObject != null) networkObject.SpawnAsPlayerObject(clientId);
     }
 
     public void TriggerGameOver(string winnerID)
