@@ -1,10 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
-<<<<<<< HEAD
 using Unity.Services.Lobbies.Models;
-=======
 using UnityEngine.InputSystem;
->>>>>>> TBR-007_BugJugadoresNoSeVen
+
 
 
 [RequireComponent(typeof(CharacterController))]
