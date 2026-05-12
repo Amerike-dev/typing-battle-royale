@@ -1,50 +1,82 @@
 using UnityEngine;
 using System.Collections;
+
 public class PlayerInteractorView : MonoBehaviour
 {
-    public MonolithView NearestMonolith { get; private set; }
+    public MonolithView MonolithView { get; private set; }
+    public DebugPop debugPop;
+
     public GameObject[] Monoliths;
+    public GameObject NearMonolith;
+
+    [SerializeField] Vector2 hiddenPos =new Vector2 (0,600);
+    [SerializeField] Vector2 visiblePos =new Vector2 (0,400);
+
     public float proximityRange = 3f;
-    public float checkerMonolith = 0.1f;
+    public float checkerMonolith = 0.5f;
 
-    /*private void OnTriggerEnter(Collider other)
+    public bool isVisible = false;
+
+    private void Start()
     {
-        MonolithView monolith = other.GetComponent<MonolithView>();
-        if (monolith != null && monolith != NearestMonolith)
-        {
-            NearestMonolith = monolith;
-        }
-
+        StartCoroutine(CheckMonolith());
     }
-    private void OnTriggerExit(Collider other)
+
+    public void NearMonolithCheck()
     {
-        MonolithView monolith = other.GetComponent<MonolithView>();
-        if (monolith != null)
+        float nearestDistance = Mathf.Infinity;
+
+        NearMonolith = null;
+
+        foreach (var monolith in Monoliths)
         {
-            NearestMonolith = null;
+            if (monolith == null) continue;
+
+            float distance = Vector3.Distance(monolith.transform.position, transform.position);
+
+            if (distance < proximityRange && distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                NearMonolith = monolith;
+            }
+            
         }
-    }*/
-    public void NearMonolith()
-    {
-        float Nearest = 0;
-        GameObject NearMonolith;
-        foreach (var Monolith in Monoliths)
+
+        if (NearMonolith != null)
         {
-            float Distance=Vector3.Distance(Monolith.transform.position,transform.position);
-            if(Distance < proximityRange)
+            MonolithView = NearMonolith.GetComponent<MonolithView>();
+            Debug.Log("El monolito más cercano es " + NearMonolith.name);
+        }
+        else
+        {
+            MonolithView = null;
+        }
+
+        if (NearMonolith != null)
+        {
+            if (!isVisible)
             {
-                if(Nearest < Distance)
-                {
-                    Nearest = Distance;
-                    NearMonolith = Monolith;
-                }
-                while(true)
-                NearestMonolith = Monolith.GetComponent<MonolithView>();
+                isVisible = true;
+                debugPop.MoveSignal(visiblePos);
             }
-            if(Distance > proximityRange)
+        }
+        else
+        {
+            if (isVisible)
             {
-                NearestMonolith = null;
+                isVisible = false;
+                debugPop.MoveSignal(hiddenPos);
             }
+        }
+    }
+
+    IEnumerator CheckMonolith()
+    {
+        while (true)
+        {
+            NearMonolithCheck();
+
+            yield return new WaitForSeconds(checkerMonolith);
         }
     }
 }
