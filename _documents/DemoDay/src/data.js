@@ -157,7 +157,7 @@ const TICKETS = [
         id: 'TBR-007',
         title: 'Bug: los jugadores no se ven entre sí en red',
         type: 'bug', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: "Jorge", status: 'todo',
         summary:
             'En partida real cada cliente solo ve a su propio personaje. Tres causas confirmadas en código: (1) GameplayManager.cs:118 usa OwnerClientId == 0 que evalúa true en todos los clientes; (2) PlayerController (MonoBehaviour de escena) mueve un transform que no es el del NetworkObject spawneado; (3) posible falta de NetworkTransform en el prefab.',
         acceptance: [
