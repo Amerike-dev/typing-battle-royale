@@ -42,7 +42,7 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: 'Ches', status: 'todo',
+        assignee: null, status: 'todo',
         summary:
             'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, cargar su rune (texto) en CastInputController para que el typing sea sobre ese spell. Hoy spellText es fijo y no consume el inventario.',
         acceptance: [
@@ -432,7 +432,7 @@ const TICKETS = [
         id: 'TBR-020',
         title: 'Decidir destino del botón "Volver al Menú"',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'EndGameUI y PauseController cargan "MainMenu" por nombre, pero MainMenu.unity no está en build → fallará. Opción A: meter MainMenu en build y reactivar el flujo previo. Opción B (recomendada): redirigir a LobbyScene como menú principal.',
         acceptance: [
