@@ -42,15 +42,16 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: 'Ches', status: 'todo',
+        assignee: null, status: 'todo',
         summary:
-            'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, cargar su rune (texto) en CastInputController para que el typing sea sobre ese spell. Hoy spellText es fijo y no consume el inventario.',
+            'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, asignar el Spell SO a CastInputController.currentSpell y spellText = Spell.runeString para que el typing sea sobre ese spell. Si el inventario está vacío, fallback a default spell (TBR-044).',
         acceptance: [
             'Al entrar a BattleState aparece SpellBookUI con los hechizos desbloqueados.',
             'Filtrado por tier según playerTier (gris para tiers superiores, amarillo seleccionado).',
             'Mouse wheel o teclas pageUp/pageDown navegan páginas (3 slots/pág).',
-            'Al confirmar selección, CastInputController.spellText = SpellData.runeChallenge.',
-            'Cancelar selección regresa a PlayState sin penalización.',
+            'Al confirmar selección: CastInputController.currentSpell = Spell, spellText = Spell.runeString.',
+            'Si PlayerInventory está vacío, usa el default de TBR-044 (Bola de Fuego).',
+            'Cancelar selección regresa a ExplorationState sin penalización.',
             'PlayerInventory.GetSpellsByTier alimenta la UI.'
         ],
         files: [
@@ -58,9 +59,9 @@ const TICKETS = [
             'Assets/Scripts/Controllers/CastInputController.cs',
             'Assets/Features/Gameloop_and_StateMachine/BattleState.cs',
             'Assets/Scripts/Models/PlayerInventory.cs',
-            'Assets/ScriptableObjects/Scripts/SpellData.cs'
+            'Assets/ScriptableObjects/Scripts/Spell.cs'
         ],
-        deps: ['TBR-004']
+        deps: ['TBR-004', 'TBR-044']
     },
     {
         id: 'TBR-003',
@@ -72,43 +73,44 @@ const TICKETS = [
         acceptance: [
             'Al entrar a BattleState, FindClosestTarget retorna el NetworkPlayer vivo más cercano dentro del radio.',
             'Indicador visual flotante sobre el target (similar a EnemyLabel pero con icono de lock).',
-            'Si el target muere o sale del radio, retarget automático.',
-            'En PlayState el lock se desactiva.',
-            'Respeta IsAlive y excluye al jugador local.'
+            'Si el target muere o sale del radio, retarget automático al siguiente vivo en rango.',
+            'En ExplorationState el lock se desactiva.',
+            'Excluye al jugador local (OwnerClientId) y a jugadores con PlayerStatsNet.isAlive=false.',
+            'Si no hay targets vivos en rango: target=null y el spell se reproduce sin daño (feedback "sin objetivo").'
         ],
         files: [
             'Assets/Scripts/Controllers/TargetSystem.cs',
             'Assets/Features/Gameloop_and_StateMachine/BattleState.cs',
-            'Assets/Features/Player_and_Movement/EnemyLabel.cs'
+            'Assets/Features/Player_and_Movement/EnemyLabel.cs',
+            'Assets/Scripts/LAN/PlayerStatsNet.cs'
         ],
-        deps: ['TBR-005']
+        deps: ['TBR-005', 'TBR-043']
     },
     {
         id: 'TBR-004',
-        title: 'Animaciones de hechizos + cálculo de daño con mira guiada',
-        type: 'feature', priority: 'critical', effort: 'L',
+        title: 'Animaciones de cast + integración VFX-daño (la red de VFX ya existe)',
+        type: 'feature', priority: 'high', effort: 'M',
         assignee: null, status: 'todo',
         summary:
-            'Conectar OnSpellCast → TargetSystem → DamageCalculator → PlayerStats.TakeDamage del target. El hechizo siempre acierta (mira guiada / proyectil teledirigido). Reproducir VFX/anim del SpellData. Aplicar multiplier por accuracy de TypingStats.GetDamageBonusMultiplier.',
+            'La red de VFX ya está implementada (SpellNetworkController con ServerRpc + ClientRpc + SpellCatalog + ProjectileVFX). Falta: (1) animación de cast del Animator del player cuando se dispare el evento, (2) feedback de "sin objetivo en rango" cuando target=null, (3) integración con accuracy multiplier — ver TBR-048 para el daño server-side y cooldown. Este ticket cubre solo la capa visual/animación cliente.',
         acceptance: [
-            'Spell completado → spawn de proyectil teledirigido al target seleccionado por TargetSystem.',
-            'VFX y animación del spell vienen de SpellData (campos vfx, animTrigger).',
-            'Daño = SpellData.baseDamage × TypingStats.GetDamageBonusMultiplier(accuracy).',
-            'Daño se aplica vía ServerRpc para sincronización en red.',
-            'Si accuracy < 30 % no se daña (multiplier 0×) pero igualmente se reproduce VFX para feedback.',
-            'Cooldown del hechizo configurable por SpellData.cooldown.'
+            'Animator del player dispara trigger "Casting" cuando CastInputController.OnSpellCast se dispara.',
+            'PlayerAnimatorView lee el archetype del Spell y elige animación distinta para Projectile vs AOE vs Aura vs Beam.',
+            'Si TargetSystem.target == null al castear: VFX se reproduce pero con tinta gris/feedback "sin objetivo".',
+            'El VFX local del caster (cast en mano) se reproduce vía SpellCatalog.Get + Bind antes de la trayectoria del proyectil.',
+            'Cuando el proyectil impacta (TBR-048), se reproduce VFX_Hit en el target.',
+            'Validado: 4 jugadores casteando simultáneamente sin frame drops perceptibles.'
         ],
         files: [
-            'Assets/Features/TypingCombat_and_System/SpellUIController.cs',
-            'Assets/Scripts/Controllers/CastInputController.cs',
-            'Assets/Scripts/Controllers/SpellCaster.cs',
-            'Assets/Scripts/Models/DamageCalculator.cs',
-            'Assets/Scripts/Models/TypingStats.cs',
-            'Assets/Data/PlayerStats.cs',
-            'Assets/ScriptableObjects/Scripts/SpellData.cs',
+            'Assets/Scripts/VFX/SpellNetworkController.cs',
+            'Assets/Scripts/VFX/SpellCatalog.cs',
+            'Assets/Scripts/VFX/SpellVFXBinder.cs',
+            'Assets/Scripts/VFX/ProjectileVFX.cs',
+            'Assets/Features/Player_and_Movement/PlayerAnimatorView.cs',
+            'Assets/Scripts/Controllers/TargetSystem.cs',
             'Assets/ScriptableObjects/Scripts/Spell.cs'
         ],
-        deps: ['TBR-003', 'TBR-011']
+        deps: ['TBR-003', 'TBR-011', 'TBR-048']
     },
     {
         id: 'TBR-005',
@@ -432,7 +434,7 @@ const TICKETS = [
         id: 'TBR-020',
         title: 'Decidir destino del botón "Volver al Menú"',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'EndGameUI y PauseController cargan "MainMenu" por nombre, pero MainMenu.unity no está en build → fallará. Opción A: meter MainMenu en build y reactivar el flujo previo. Opción B (recomendada): redirigir a LobbyScene como menú principal.',
         acceptance: [
@@ -497,25 +499,29 @@ const TICKETS = [
     },
     {
         id: 'TBR-023',
-        title: 'VFX particles para los ~50 hechizos',
-        type: 'feature', priority: 'high', effort: 'L',
+        title: 'VFX para los ~50 hechizos (arquitectura de arquetipos + tiers)',
+        type: 'feature', priority: 'high', effort: 'M',
         assignee: null, status: 'todo',
         summary:
-            'Crear/importar ParticleSystems asignados a cada SpellData. Cada elemento (fuego/agua/aire/tierra/rayo/oscuridad) con su VFX de cast (en mano), proyectil (trail) y hit (impacto). Sincronizados por red. Pooling obligatorio.',
+            'La base ya está hecha: Spell.cs con tier/archetype/runeString, SpellVFXBinder con multiplicadores T1=1x/T2=1.4x/T3=2x sobre size/emission, ProjectileVFX local determinista, VFX_Projectile.prefab + M_Fire_T1.mat creados via VFXPrefabBuilder editor tool. Ahora hay que: (1) crear los 5 arquetipos restantes (AOE/Aura/Beam/Summon/Buff-Debuff) via tool (TBR-045), (2) un material por elemento (TBR-046), (3) mapear cada Spell SO a su archetype + asignar materialVFX correcto (TBR-047). Este ticket es el "umbrella" que se completa cuando TBR-045/046/047 estén done.',
         acceptance: [
-            'Cada SpellData tiene asignados 3 prefabs VFX (cast / projectile / hit).',
-            'Reproducción sincronizada vía ClientRpc desde el server al castear.',
-            'PoolManager reutiliza los sistemas (no instancia/destroy en loop).',
-            '60 fps mantenido durante los 4 jugadores casteando simultáneamente.',
-            'Cell-shading aplicado a partículas donde aplique.'
+            'Los 6 arquetipos VFX existen como prefabs: VFX_Projectile (hecho), VFX_AOE, VFX_Aura, VFX_Beam, VFX_Summon, VFX_BuffDebuff.',
+            'Existe un material por elemento bajo Assets/Materials/VFX/: M_Fire, M_Water, M_Earth, M_Air, M_Ice, M_Lava, M_Lightning, M_Nature, M_Light, M_Darkness.',
+            'Cada uno de los ~50 Spell SOs tiene asignados: tier, archetype, runeString, materialVFX, damage, range, speed.',
+            'Reproducción sincronizada via SpellNetworkController.ClientRpc (sin daño, daño en TBR-048).',
+            'PoolManager registra entradas para los 6 archetypes con size=20 cada uno.',
+            '60 fps con 4 jugadores casteando simultáneamente (validar contra TBR-036).'
         ],
         files: [
-            'Assets/ScriptableObjects/Scripts/SpellData.cs',
-            'Assets/ScriptableObjects/Scripts/Spell.cs',
-            'Assets/Scripts/Controllers/PoolManager.cs',
-            'Assets/VFX/'
+            'Assets/Scripts/VFX/SpellVFXBinder.cs',
+            'Assets/Scripts/VFX/ProjectileVFX.cs',
+            'Assets/Scripts/VFX/SpellCatalog.cs',
+            'Assets/Editor/VFX/VFXPrefabBuilder.cs',
+            'Assets/Prefabs/VFX/',
+            'Assets/Materials/VFX/',
+            'Assets/ScriptableObjects/Objects/Spells/'
         ],
-        deps: ['TBR-004']
+        deps: ['TBR-045', 'TBR-046', 'TBR-047']
     },
     {
         id: 'TBR-024',
@@ -903,16 +909,16 @@ const TICKETS = [
     },
     {
         id: 'TBR-042',
-        title: 'Tab interrumpe el cast en BattleState',
+        title: 'Tab interrumpe el cast y sale de BattleState',
         type: 'feature', priority: 'medium', effort: 'S',
         assignee: null, status: 'todo',
         summary:
-            'Al pulsar Tab durante un typing activo en BattleState (con spell seleccionado del SpellBookUI), cancelar el cast: limpiar typing buffer, no consumir el spell del inventory ni dar damage, cancelar VFX en preparación. Volver a PlayState.',
+            'Tab es el botón único de toggle Exploration↔Battle (TBR-043). En BattleState con typing activo: cancela el cast, limpia buffer, NO consume spell ni aplica daño, cancela VFX en preparación y vuelve a ExplorationState. Sin typing activo, Tab simplemente cambia a ExplorationState.',
         acceptance: [
-            'Tab durante typing → cast cancelado.',
-            'CastInputController.spellText limpiado.',
+            'Tab durante typing → cast cancelado + transición a ExplorationState.',
+            'CastInputController.spellText y currentSpell se limpian.',
             'Inventory no se afecta (no se consume el spell).',
-            'PlayState restaurado, mover OK.',
+            'ExplorationState restaurado: cámara libre, movimiento OK.',
             'VFX cast en preparación se cancelan localmente.',
             'Cooldown del spell NO se aplica si el cast fue cancelado.'
         ],
@@ -921,6 +927,152 @@ const TICKETS = [
             'Assets/Scripts/Controllers/CastInputController.cs',
             'Assets/Features/Gameloop_and_StateMachine/BattleState.cs'
         ],
-        deps: ['TBR-002']
+        deps: ['TBR-002', 'TBR-043']
+    },
+
+    // ─── Mecánica final + sistema VFX completo (TBR-043 a TBR-048) ───
+    {
+        id: 'TBR-043',
+        title: 'State Machine por jugador: Exploration ↔ Battle con Tab',
+        type: 'feature', priority: 'critical', effort: 'M',
+        assignee: null, status: 'todo',
+        summary:
+            'Implementar la maquina de estados local por jugador: ExplorationState (movimiento + cámara libre) y BattleState (UI de typing visible, cámara fija al target, movimiento bloqueado). Tab alterna entre ambos. Estado es local de cada cliente (no se sincroniza por red — solo afecta input/cámara del jugador local).',
+        acceptance: [
+            'PlayerController arranca en ExplorationState al spawnear.',
+            'En ExplorationState: WASD mueve, mouse rota cámara, CastInputController está disabled, SpellBookUI oculto.',
+            'Tab → transición a BattleState: movimiento bloqueado (moveSpeed=0), cámara apunta a TargetSystem.target, SpellBookUI visible.',
+            'Tab desde BattleState → ExplorationState (ver TBR-042 para cancelar cast pendiente).',
+            'Cambio de estado dispara eventos OnEnterBattle / OnExitBattle para que HUD/Animator/SFX reaccionen.',
+            'GameOver/Death/Spectator suspenden la state machine (no se puede entrar a BattleState muerto).',
+            'Estado solo afecta al cliente local; otros jugadores no necesitan saber en qué estado estamos.'
+        ],
+        files: [
+            'Assets/Scripts/Controllers/PlayerController.cs',
+            'Assets/Scripts/Controllers/CastInputController.cs',
+            'Assets/Features/Gameloop_and_StateMachine/BattleState.cs',
+            'Assets/Scripts/Models/ExplorationState.cs',
+            'Assets/Scripts/Models/PlayState.cs'
+        ],
+        deps: []
+    },
+    {
+        id: 'TBR-044',
+        title: 'Default Spell fallback (Bola de Fuego) en CastInputController',
+        type: 'feature', priority: 'high', effort: 'S',
+        assignee: null, status: 'todo',
+        summary:
+            'Mientras TBR-002 (SpellBook) y TBR-039 (desbloqueo en monolito) no estén integrados, cada jugador debe poder castear igual. Asignar Bola de Fuego como default cuando PlayerInventory.spells está vacío para validar el loop completo y probar VFX/daño en red sin depender del flujo de monolitos.',
+        acceptance: [
+            'CastInputController tiene un campo defaultSpell asignado en el inspector del prefab del jugador.',
+            'Si PlayerInventory está vacío al entrar a BattleState, currentSpell = defaultSpell y spellText = defaultSpell.runeString.',
+            'Cuando TBR-002 + TBR-039 estén integrados, este default solo aplica como fallback de emergencia.',
+            'Bola de Fuego SO ya tiene runeString="boladefuego" y materialVFX asignado (TBR-046).',
+            'Test: 4 jugadores en LAN sin tocar monolitos pueden castear Bola de Fuego entre sí.'
+        ],
+        files: [
+            'Assets/Scripts/Controllers/CastInputController.cs',
+            'Assets/Scripts/Models/PlayerInventory.cs',
+            'Assets/ScriptableObjects/Objects/Spells/Fire/Tier 1/Bola de Fuego.asset'
+        ],
+        deps: ['TBR-046']
+    },
+    {
+        id: 'TBR-045',
+        title: 'Editor tool: crear los 5 arquetipos VFX restantes',
+        type: 'feature', priority: 'high', effort: 'M',
+        assignee: null, status: 'todo',
+        summary:
+            'VFXPrefabBuilder.cs hoy genera VFX_Projectile.prefab. Extender el tool con menu items para generar los 5 arquetipos faltantes: VFX_AOE (suelo expansivo), VFX_Aura (loop sobre el caster), VFX_Beam (rayo continuo entre caster y target), VFX_Summon (criatura efímera), VFX_BuffDebuff (icono+partícula sobre target). Cada uno con su SpellVFXBinder + script específico de comportamiento.',
+        acceptance: [
+            'Menu Tools/TBR/Build VFX_AOE Prefab → genera Prefabs/VFX/VFX_AOE.prefab con ParticleSystem en disco horizontal expansivo.',
+            'Menu Tools/TBR/Build VFX_Aura Prefab → genera prefab loop con simulationSpace=Local que se parente al caster.',
+            'Menu Tools/TBR/Build VFX_Beam Prefab → genera prefab con LineRenderer + ParticleSystem para rayo persistente entre 2 puntos.',
+            'Menu Tools/TBR/Build VFX_Summon Prefab → genera prefab con placeholder mesh + ParticleSystem (placeholder hasta TBR-025).',
+            'Menu Tools/TBR/Build VFX_BuffDebuff Prefab → genera prefab pequeño que sigue al target con icono floating.',
+            'Cada uno tiene componente específico: AOEVFX, AuraVFX, BeamVFX, SummonVFX, BuffDebuffVFX (paralelos a ProjectileVFX).',
+            'Cada componente recibe Spell vía Launch(spell, origin, direction|target) y usa duration/range/speed del SO.',
+            'Idempotente: correr el menu 2 veces no duplica prefabs.'
+        ],
+        files: [
+            'Assets/Editor/VFX/VFXPrefabBuilder.cs',
+            'Assets/Scripts/VFX/AOEVFX.cs',
+            'Assets/Scripts/VFX/AuraVFX.cs',
+            'Assets/Scripts/VFX/BeamVFX.cs',
+            'Assets/Scripts/VFX/SummonVFX.cs',
+            'Assets/Scripts/VFX/BuffDebuffVFX.cs',
+            'Assets/Prefabs/VFX/'
+        ],
+        deps: []
+    },
+    {
+        id: 'TBR-046',
+        title: 'Materiales por elemento (10 elementos) bajo Assets/Materials/VFX/',
+        type: 'feature', priority: 'high', effort: 'S',
+        assignee: null, status: 'todo',
+        summary:
+            'Hoy solo existe M_Fire_T1.mat. Crear un material URP/Particles/Unlit por elemento del enum Elements (Fire, Water, Earth, Air, Nature, Thunder/Lightning, Dark, Light, Ice, Lava) con color de marca apropiado por elemento. Un solo material por elemento — el tier se controla en el binder (size/emission), no necesita 3 materiales por elemento.',
+        acceptance: [
+            '10 archivos .mat en Assets/Materials/VFX/: M_Fire, M_Water, M_Earth, M_Air, M_Nature, M_Lightning, M_Darkness, M_Light, M_Ice, M_Lava.',
+            'Todos usan shader Universal Render Pipeline/Particles/Unlit con additive blending.',
+            'Colores: Fire=naranja rojizo, Water=azul, Earth=marrón, Air=gris-blanco, Nature=verde, Lightning=amarillo, Darkness=violeta oscuro, Light=blanco-dorado, Ice=cian claro, Lava=rojo intenso.',
+            'EmissionColor configurado para que brillen con bloom (post-process de TBR-030).',
+            'Editor tool: extender VFXPrefabBuilder con menu Tools/TBR/Build All Element Materials que genera los 10.',
+            'Idempotente: si ya existe, no sobreescribe (solo crea los faltantes).'
+        ],
+        files: [
+            'Assets/Editor/VFX/VFXPrefabBuilder.cs',
+            'Assets/Materials/VFX/',
+            'Assets/Scripts/Brand/WotKBrand.cs'
+        ],
+        deps: []
+    },
+    {
+        id: 'TBR-047',
+        title: 'Mapeo de los ~50 Spell SOs a archetype + asignar materialVFX',
+        type: 'tech', priority: 'high', effort: 'M',
+        assignee: null, status: 'todo',
+        summary:
+            'Iterar todos los Spell SOs de Assets/ScriptableObjects/Objects/Spells/** y asignar: archetype (Projectile/AOE/Aura/Beam/Summon/Buff/Debuff), tier (TierOne/TierTwo/TierThree según carpeta), runeString (palabra sin espacios sin tildes en lowercase), materialVFX (M_<elemento>.mat según elementType). Hacer un editor tool que lo automatice y luego revisar manualmente los casos especiales (ej. Curación = Buff, no proyectil).',
+        acceptance: [
+            'Menu Tools/TBR/Auto-Assign Spell Archetypes que recorre todos los Spell SOs.',
+            'tier se infiere del path: ".../Tier 1/..." → TierOne, etc.',
+            'archetype default = Projectile pero respeta el campo si ya fue asignado manualmente.',
+            'runeString default = spellName.ToLower().Replace(" ", "").Quitar tildes/ñ — pero solo si está vacío (no sobreescribir).',
+            'materialVFX se asigna según elementType (mapping del enum a los .mat de TBR-046).',
+            'Genera reporte console con los spells modificados y los que necesitan revisión manual.',
+            'Validación final manual: cada uno de los ~50 spells revisado y firmado por un asignee.'
+        ],
+        files: [
+            'Assets/Editor/VFX/VFXPrefabBuilder.cs',
+            'Assets/ScriptableObjects/Scripts/Spell.cs',
+            'Assets/ScriptableObjects/Objects/Spells/'
+        ],
+        deps: ['TBR-045', 'TBR-046']
+    },
+    {
+        id: 'TBR-048',
+        title: 'Server-side damage + accuracy multiplier + cooldown en cast',
+        type: 'feature', priority: 'critical', effort: 'M',
+        assignee: null, status: 'todo',
+        summary:
+            'La red de VFX ya está pero NO aplica daño (SpellNetworkController solo dispara ClientRpc visual). Falta: (1) ProjectileVFX.OnTriggerEnter aplica daño solo en IsServer; (2) PlayerStatsNet.TakeDamageServerRpc(damage, attackerId) que decrementa currentHP y dispara OnDamageTaken; (3) accuracy multiplier (TypingStats.GetDamageBonusMultiplier) se pasa por el ServerRpc; (4) cooldown por SpellNetworkController para evitar spam.',
+        acceptance: [
+            'ProjectileVFX.OnTriggerEnter detecta PlayerStatsNet y llama TakeDamageServerRpc solo si IsServer y other.OwnerClientId != caster.',
+            'PlayerStatsNet.TakeDamageServerRpc decrementa currentHP (NetworkVariable) y dispara OnDamageTaken via OnValueChanged.',
+            'CastSpellServerRpc valida cooldown: SpellNetworkController guarda lastCastTime por spellId y rechaza casts antes de spell.cooldown segundos.',
+            'damage final = spell.damage × accuracy multiplier (TypingStats.GetDamageBonusMultiplier(accuracy)) — accuracy se manda desde el client en el ServerRpc.',
+            'Si accuracy < 0.3 → multiplier 0 (sin daño) pero el VFX se reproduce (feedback).',
+            'killCount del atacante incrementa cuando currentHP del target llega a 0 (dispara TBR-005 chain).',
+            'Validado con 4 clientes: el daño es consistente, no hay daño doble por race conditions.'
+        ],
+        files: [
+            'Assets/Scripts/VFX/SpellNetworkController.cs',
+            'Assets/Scripts/VFX/ProjectileVFX.cs',
+            'Assets/Scripts/LAN/PlayerStatsNet.cs',
+            'Assets/Scripts/Models/TypingStats.cs',
+            'Assets/Scripts/Models/DamageCalculator.cs'
+        ],
+        deps: ['TBR-011', 'TBR-023']
     }
 ];

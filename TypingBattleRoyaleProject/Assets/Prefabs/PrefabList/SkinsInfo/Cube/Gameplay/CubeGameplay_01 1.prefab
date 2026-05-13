@@ -1573,7 +1573,6 @@ GameObject:
   - component: {fileID: 5137736192988664721}
   - component: {fileID: 5493427378232170685}
   - component: {fileID: 5436502623114698702}
-  - component: {fileID: 4631980267213377421}
   - component: {fileID: 1539743655646405333}
   m_Layer: 0
   m_Name: CubeGameplay_01 1

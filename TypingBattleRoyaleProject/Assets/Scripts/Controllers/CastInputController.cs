@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 
 public class CastInputController : MonoBehaviour
 {
-    public event Action OnSpellCast;
+    public event Action<Spell> OnSpellCast;
 
     public TMP_InputField castSpell;
     public TextMeshProUGUI spell;
+    public Spell currentSpell;
     public string spellText;
     public int stringIndex = 0;
     public int lastInInput = 0;
@@ -113,7 +114,7 @@ public class CastInputController : MonoBehaviour
         accuracy = _typingStats.GetAccuracy();
         _casting = false;
 
-        OnSpellCast?.Invoke();
+        OnSpellCast?.Invoke(currentSpell);
         //Se reinicia el script en el onDisable, aqui antes de eso iria la funcion que castea el hechizo y ense�ar el wpm y el accuracy en un display
 
         gameObject.SetActive(false);

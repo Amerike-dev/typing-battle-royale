@@ -124,9 +124,9 @@ public class GameplayManager : NetworkBehaviour
         stateMachine.ChangeState(explorationState);
     }
 
-    private void HandleOnSpellCast()
+    private void HandleOnSpellCast(Spell spell)
     {
-        Debug.Log("GameplayManager escucho el evento OnSpellCast");
+        Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
     }
 
     private void SpawnPlayers()

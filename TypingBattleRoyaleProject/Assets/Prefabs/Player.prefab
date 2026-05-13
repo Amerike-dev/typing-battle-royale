@@ -710,9 +710,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraController1
   sensitivity: 0.1
-  playerBody: {fileID: 8524643825518991717}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  OnCamaraMove: 1
+  OnCamaraMove: 0
 --- !u!1 &2482189523147153423
 GameObject:
   m_ObjectHideFlags: 0
@@ -1329,7 +1328,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraController1
   sensitivity: 0.1
-  playerBody: {fileID: 8524643825518991717}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
 --- !u!1 &4993070895236498224
@@ -1765,6 +1763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db39074b7b6c8948aa7a2b090af5765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 0
   jumpForce: 2
   cameraController: {fileID: 9158168436735624119}
@@ -1780,7 +1779,7 @@ MonoBehaviour:
     m_SingletonActionBindings: []
     m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
-  onExplorationState: 0
+  onExplorationState: 1
   stats:
     _id: 
     _maxHP: 0
@@ -1792,13 +1791,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 267e0123ea183d740a5f693347d46f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CastInputController
   castSpell: {fileID: 0}
   spell: {fileID: 0}
+  currentSpell: {fileID: 0}
   spellText: Banyo salvanos plis
   stringIndex: 0
   lastInInput: 0
