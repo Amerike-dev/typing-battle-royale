@@ -94,6 +94,8 @@ public class PlayerStatsNet : NetworkBehaviour
 
         if (newValue <= 0)
         {
+            if (IsServer) isAlive.Value = false; 
+            
             OnAllLifeLost?.Invoke();
         }
     }

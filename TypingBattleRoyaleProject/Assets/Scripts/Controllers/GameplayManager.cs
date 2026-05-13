@@ -9,7 +9,7 @@ using System.Linq;
 public class GameplayManager : NetworkBehaviour
 {
     public static GameplayManager Instance;
-    [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
+    public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
@@ -176,6 +176,8 @@ public class GameplayManager : NetworkBehaviour
     {
         Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
         if (spell == null || _castInputController == null) return;
+        
+        SubmitWPMServerRpc(_castInputController.wordsPerMinute);
 
         Transform origin = _castInputController.castOrigin != null
             ? _castInputController.castOrigin
@@ -316,7 +318,11 @@ public class GameplayManager : NetworkBehaviour
             if (IsServer)
             {
                 var ps = playerInstance.GetComponent<PlayerStatsNet>();
-                if (ps != null) ps.OnAllLifeLost += () => CheckLastAlive();
+                if (ps != null) 
+                {
+                    ps.networkPlayerID.Value = "Player_" + clientId;
+                    ps.OnAllLifeLost += () => CheckLastAlive();
+                }
             }
         }
     }
@@ -400,6 +406,17 @@ public class GameplayManager : NetworkBehaviour
         {
             gameOverState.SetWinnerID(winnerID);
             stateMachine.ChangeState(gameOverState);
+        }
+    }
+    
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void SubmitWPMServerRpc(float newWPM, RpcParams rpcParams = default)
+    {
+        ulong clientId = rpcParams.Receive.SenderClientId;
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            var ps = client.PlayerObject?.GetComponent<PlayerStatsNet>();
+            if (ps != null) ps.wPM.Value = ps.wPM.Value == 0f ? newWPM : (ps.wPM.Value + newWPM) / 2f;
         }
     }
 }

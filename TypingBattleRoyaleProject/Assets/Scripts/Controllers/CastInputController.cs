@@ -44,6 +44,8 @@ public class CastInputController : MonoBehaviour
     private float _armingTime;
     private Coroutine _fadeRoutine;
 
+    private float _castStartTime;
+
     private void OnEnable()
     {
         ResolveReferences();
@@ -215,6 +217,7 @@ public class CastInputController : MonoBehaviour
 
     private void ResetCasting()
     {
+        _castStartTime = Time.time;
         _casting = true;
         _completed = false;
         _typingStats = new TypingStats();
@@ -279,10 +282,14 @@ public class CastInputController : MonoBehaviour
         _completed = true;
         _casting = false;
 
-        _typingStats.timeElapsed = _timeElapsed;
+        //_typingStats.timeElapsed = _timeElapsed;
+        float elapsedSeconds = Time.time - _castStartTime;
+        float elapsedMinutes = Mathf.Max(0.001f, elapsedSeconds / 60f);
+        
+        wordsPerMinute = (_totalKeysPressed / 5f) / elapsedMinutes; 
         _typingStats.hits = Mathf.Max(0, (spellText != null ? spellText.Length : 0) - incorrectInput);
         _typingStats.totalKeystrokes = _totalKeysPressed;
-        wordsPerMinute = _typingStats.GetWPM();
+        //wordsPerMinute = _typingStats.GetWPM();
         accuracy = _typingStats.GetAccuracy();
 
         OnSpellCast?.Invoke(currentSpell);

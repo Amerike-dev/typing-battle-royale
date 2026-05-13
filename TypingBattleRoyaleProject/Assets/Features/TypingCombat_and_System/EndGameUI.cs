@@ -43,7 +43,7 @@ public class EndGameUI : MonoBehaviour
         {
             if (player == null) continue;
 
-            sb.AppendLine($"{player.ID} | Kills: {player.killCount} | WPM: {player.wPM:0.0}");
+            sb.AppendLine($"{player.ID} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
 
         return sb.ToString();
