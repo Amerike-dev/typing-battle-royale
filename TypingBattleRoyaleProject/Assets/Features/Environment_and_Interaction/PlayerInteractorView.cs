@@ -9,8 +9,8 @@ public class PlayerInteractorView : MonoBehaviour
     public GameObject[] Monoliths;
     public GameObject NearMonolith;
 
-    [SerializeField] Vector2 hiddenPos=new Vector2(0,0);
-    [SerializeField] Vector2 visiblePos = new Vector2(0, 0);
+    [SerializeField] Vector2 signalHidePos;
+    [SerializeField] Vector2 signalShowPos;
 
     public float proximityRange = 3f;
     public float checkerMonolith = 0.5f;
@@ -49,7 +49,7 @@ public class PlayerInteractorView : MonoBehaviour
             if (!isVisible)
             {
                 isVisible = true;
-                debugPop.MoveSignal(visiblePos, 1f);
+                debugPop.MoveSignal(signalShowPos, 1f);
             }
             Debug.Log("El monolito más cercano es " + NearMonolith.name);
         }
@@ -59,7 +59,7 @@ public class PlayerInteractorView : MonoBehaviour
             if (isVisible)
             {
                 isVisible = false;
-                debugPop.MoveSignal(hiddenPos, 0f);
+                debugPop.MoveSignal(signalHidePos, 0f);
             }
         }
     }
