@@ -6,19 +6,20 @@ public class DebugPop : MonoBehaviour
 {
     public Image Pop;
     Coroutine signalMove;
-    public CanvasGroup Siganl;
-    public void MoveSignal(Vector2 target)
+    public CanvasGroup Signal;
+    public void MoveSignal(Vector2 target, float targetAlpha)
     {
         if(signalMove != null)
         {
             StopCoroutine(signalMove);
         }
-        signalMove = StartCoroutine(NearMonolithSignal(target));
+        signalMove = StartCoroutine(NearMonolithSignal(target, targetAlpha));
     }
 
-    IEnumerator NearMonolithSignal(Vector2 target)
+    IEnumerator NearMonolithSignal(Vector2 target, float targetAlpha)
     {
         Vector2 startPos = Pop.rectTransform.anchoredPosition;
+        float startAlpha = Signal.alpha;
 
         float time = 0f;
         float duration = 0.3f;
@@ -26,11 +27,14 @@ public class DebugPop : MonoBehaviour
         while (time < duration)
         {
             Pop.rectTransform.anchoredPosition = Vector2.Lerp(startPos, target, time / duration);
+            Signal.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / duration);
+
             time += Time.deltaTime;
 
             yield return null;
         }
 
         Pop.rectTransform.anchoredPosition = target;
+        Signal.alpha = targetAlpha;
     }
 }
