@@ -19,26 +19,17 @@ public class GameOverState : GameState
 
     public override void Enter()
     {
-        List<PlayerStats> players = new List<PlayerStats>();
+        List<PlayerStatsNet> players = new List<PlayerStatsNet>();
 
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+        if (NetworkManager.Singleton != null)
         {
-            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            var allStats = Object.FindObjectsByType<PlayerStatsNet>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            players.AddRange(allStats);
+            
+            if (NetworkManager.Singleton.LocalClient != null && NetworkManager.Singleton.LocalClient.PlayerObject != null)
             {
-                if (client.PlayerObject == null) continue;
-
-                var pc = client.PlayerObject.GetComponent<PlayerController>();
+                var pc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
                 if (pc != null) pc.enabled = false;
-
-                var ps = client.PlayerObject.GetComponent<PlayerStats>();
-                if (ps != null)
-                {
-                    players.Add(ps);
-                }
-                else if (pc != null && pc.stats != null)
-                {
-                    players.Add(pc.stats);
-                }
             }
         }
 
@@ -50,11 +41,9 @@ public class GameOverState : GameState
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.LocalClient != null && NetworkManager.Singleton.LocalClient.PlayerObject != null)
             {
-                var localPc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
-                if (localPc != null && localPc.stats != null)
-                {
-                    localPlayerID = localPc.stats.ID;
-                }
+                var localStats = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerStatsNet>();
+                
+                if (localStats != null) localPlayerID = localStats.ID;
             }
 
             if (!string.IsNullOrEmpty(localPlayerID) && _winnerID == localPlayerID)
@@ -68,7 +57,6 @@ public class GameOverState : GameState
                 manager.WinnerText.color = Color.red;
             }
         }
-
         manager.EndGameUI?.Populate(_winnerID, players);
         Time.timeScale = 0f;
     }

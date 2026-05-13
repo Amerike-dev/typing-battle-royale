@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System;
+using Unity.Collections;
 
 public class PlayerStatsNet : NetworkBehaviour
 {
@@ -34,6 +35,20 @@ public class PlayerStatsNet : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    
+    public NetworkVariable<float> wPM = new(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    
+    public NetworkVariable<FixedString32Bytes> networkPlayerID = new(
+        "",
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    
+    public string ID => networkPlayerID.Value.ToString();
 
     public Action OnLifeLost;
     public Action OnAllLifeLost;
@@ -79,6 +94,8 @@ public class PlayerStatsNet : NetworkBehaviour
 
         if (newValue <= 0)
         {
+            if (IsServer) isAlive.Value = false; 
+            
             OnAllLifeLost?.Invoke();
         }
     }
