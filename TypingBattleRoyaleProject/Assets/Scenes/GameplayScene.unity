@@ -57275,7 +57275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1105336616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77915,7 +77915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1692022441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77995,6 +77995,7 @@ RectTransform:
   - {fileID: 1566385584}
   - {fileID: 1951700202}
   - {fileID: 1942957263}
+  - {fileID: 1489365628}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -80369,10 +80370,18 @@ MonoBehaviour:
   _playerController: {fileID: 70666034920921235, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _castInputController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _playerAnimatorView: {fileID: -2689246101718839236, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
+  _targetSystem: {fileID: 0}
   _countdownText: {fileID: 1951700203}
   _winnerText: {fileID: 384223408}
   _endGameCanvas: {fileID: 1942957264}
   _endGameUI: {fileID: 1942957265}
+  _spellBookUI: {fileID: 1489365627}
+  _defaultSpellFallback: {fileID: 11400000, guid: 08405417850fa8941b382ee1544032ee, type: 2}
+  _vfxPrefabFallback: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+  _spellUICanvasGroup: {fileID: 1566385585}
+  _spellInputField: {fileID: 298589996}
+  _spellDisplayText: {fileID: 805632013}
+  _spellUIController: {fileID: 1054458753}
   _spawnPoints:
   - {fileID: 150492205}
   - {fileID: 1333959156}

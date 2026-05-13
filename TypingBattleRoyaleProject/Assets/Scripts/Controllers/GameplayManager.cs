@@ -4,11 +4,12 @@ using NUnit.Framework;
 using Unity.Netcode;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 public class GameplayManager : NetworkBehaviour
 {
     public static GameplayManager Instance;
-    [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
+    public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
@@ -22,6 +23,16 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
     [SerializeField] private SpellBookUI _spellBookUI;
+
+    [Header("Combat fallbacks")]
+    [SerializeField] private Spell _defaultSpellFallback;
+    [SerializeField] private GameObject _vfxPrefabFallback;
+
+    [Header("Spell UI (escena)")]
+    [SerializeField] private CanvasGroup _spellUICanvasGroup;
+    [SerializeField] private TMPro.TMP_InputField _spellInputField;
+    [SerializeField] private TextMeshProUGUI _spellDisplayText;
+    [SerializeField] private SpellUIController _spellUIController;
 
     [Header("Propiedades")]
     public PlayerController PlayerController
@@ -124,6 +135,22 @@ public class GameplayManager : NetworkBehaviour
         _castInputController = player.castInputController;
         _playerAnimatorView = player.playerAnimatorView;
 
+        if (_castInputController != null)
+        {
+            if (_castInputController.defaultSpell == null && _defaultSpellFallback != null)
+                _castInputController.defaultSpell = _defaultSpellFallback;
+
+            if (_spellUICanvasGroup != null) _castInputController.uiCanvasGroup = _spellUICanvasGroup;
+            if (_spellInputField != null) _castInputController.castSpell = _spellInputField;
+            if (_spellDisplayText != null) _castInputController.spell = _spellDisplayText;
+            if (_spellUIController != null)
+            {
+                _castInputController.uiController = _spellUIController;
+                _spellUIController.inputController = _castInputController;
+                if (_spellDisplayText != null) _spellUIController.displayText = _spellDisplayText;
+            }
+        }
+
         explorationState = new ExplorationState(_playerController.cameraController, this);
         battleState = new BattleState(
             _castInputController,
@@ -148,6 +175,43 @@ public class GameplayManager : NetworkBehaviour
     private void HandleOnSpellCast(Spell spell)
     {
         Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
+        if (spell == null || _castInputController == null) return;
+        
+        SubmitWPMServerRpc(_castInputController.wordsPerMinute);
+
+        Transform origin = _castInputController.castOrigin != null
+            ? _castInputController.castOrigin
+            : _castInputController.transform;
+
+        Vector3 forward = origin.forward;
+        Vector3 spawnPos = origin.position
+                           + forward.normalized * 1.5f
+                           + Vector3.up * 1f;
+
+        int spellId = SpellCatalog.Instance != null ? SpellCatalog.Instance.IndexOf(spell) : -1;
+        BroadcastSpellVfxServerRpc(spellId, spawnPos, forward);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void BroadcastSpellVfxServerRpc(int spellId, Vector3 origin, Vector3 direction)
+    {
+        PlaySpellVfxClientRpc(spellId, origin, direction);
+    }
+
+    [ClientRpc]
+    private void PlaySpellVfxClientRpc(int spellId, Vector3 origin, Vector3 direction)
+    {
+        if (_vfxPrefabFallback == null) return;
+
+        Spell spell = null;
+        if (spellId >= 0 && SpellCatalog.Instance != null) spell = SpellCatalog.Instance.Get(spellId);
+        if (spell == null) spell = _defaultSpellFallback;
+        if (spell == null) return;
+
+        Quaternion rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
+        GameObject go = Instantiate(_vfxPrefabFallback, origin, rot);
+        var projectile = go.GetComponent<ProjectileVFX>();
+        if (projectile != null) projectile.Launch(spell, direction);
     }
 
     private void SpawnPlayers()
@@ -159,9 +223,6 @@ public class GameplayManager : NetworkBehaviour
 
     private IEnumerator PopulateSpawnPoint()
     {
-        //Identificar si eres host o no
-        //Si eres host popula spawnPoints sino espera a que este lista
-
         if (NetworkManager.Singleton.IsHost)
         {
             if (_spawnPoints == null || _spawnPoints.Count == 0)
@@ -250,18 +311,21 @@ public class GameplayManager : NetworkBehaviour
 
         NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
 
-        if (networkObject != null) networkObject.SpawnAsPlayerObject(clientId);
-    }
-
-    public void TriggerGameOver(string winnerID)
-    {
-        if (gameOverState != null)
+        if (networkObject != null)
         {
-            gameOverState.SetWinnerID(winnerID);
-            stateMachine.ChangeState(gameOverState);
+            networkObject.SpawnAsPlayerObject(clientId);
+            
+            if (IsServer)
+            {
+                var ps = playerInstance.GetComponent<PlayerStatsNet>();
+                if (ps != null) 
+                {
+                    ps.networkPlayerID.Value = "Player_" + clientId;
+                    ps.OnAllLifeLost += () => CheckLastAlive();
+                }
+            }
         }
     }
-
 
     private void OnDestroy()
     {
@@ -280,6 +344,79 @@ public class GameplayManager : NetworkBehaviour
                 Gizmos.DrawWireSphere(sp.position, 0.5f);
                 Gizmos.DrawLine(sp.position, sp.position + sp.forward * 1.0f);
             }
+        }
+    }
+    
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+        if (!IsServer) return;
+
+        foreach (var c in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (c.PlayerObject != null)
+            {
+                var ps = c.PlayerObject.GetComponent<PlayerStatsNet>(); 
+                if (ps != null) ps.OnAllLifeLost += () => CheckLastAlive();
+            }
+        }
+    }
+    
+    private void CheckLastAlive()
+    {
+        if (!IsServer) return;
+
+        var alive = NetworkManager.Singleton.ConnectedClientsList
+            .Select(c => c.PlayerObject?.GetComponent<PlayerStatsNet>())
+            .Where(ps => ps != null && ps.isAlive.Value).ToList(); 
+
+        if (alive.Count == 1) TriggerGameOver(alive[0].ID); 
+    }
+    
+    public void HandleTimeUp()
+    {
+        if (!IsServer) return;
+
+        var winner = NetworkManager.Singleton.ConnectedClientsList
+            .Select(c => c.PlayerObject?.GetComponent<PlayerStatsNet>())
+            .Where(ps => ps != null)
+            .OrderByDescending(ps => ps.killCount.Value)
+            .ThenByDescending(ps => ps.currentHP.Value)
+            .ThenByDescending(ps => ps.wPM.Value) 
+            .FirstOrDefault();
+
+        if (winner != null)
+        {
+            TriggerGameOver(winner.ID);
+        }
+    }
+    
+    public void TriggerGameOver(string winnerID)
+    {
+        if (!IsServer) return; 
+        
+        EndGameClientRpc(winnerID);
+    }
+
+    [ClientRpc]
+    private void EndGameClientRpc(string winnerID)
+    {
+        if (gameOverState != null)
+        {
+            gameOverState.SetWinnerID(winnerID);
+            stateMachine.ChangeState(gameOverState);
+        }
+    }
+    
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void SubmitWPMServerRpc(float newWPM, RpcParams rpcParams = default)
+    {
+        ulong clientId = rpcParams.Receive.SenderClientId;
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            var ps = client.PlayerObject?.GetComponent<PlayerStatsNet>();
+            if (ps != null) ps.wPM.Value = ps.wPM.Value == 0f ? newWPM : (ps.wPM.Value + newWPM) / 2f;
         }
     }
 }

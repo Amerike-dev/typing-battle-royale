@@ -95,7 +95,7 @@ public static class CharacterSelectStyler
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = TextPrimary;
             tmp.fontStyle = FontStyles.Bold;
-            tmp.enableWordWrapping = false;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
         }
     }
 
@@ -159,7 +159,7 @@ public static class CharacterSelectStyler
                     }
                 }
                 tmp.alignment = TextAlignmentOptions.Center;
-                tmp.enableWordWrapping = false;
+                tmp.textWrappingMode = TextWrappingModes.NoWrap;
                 tmp.overflowMode = TextOverflowModes.Truncate;
                 if (isEstado)
                 {

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Apotheosis
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Apotheosis
+  runeString: ascension divina del santo patron de los mendigos
   elementType: 8
   description: "Invoca una luz que irradia da\xF1o en un rango grande mientras los
     enemigos no se salgan de su rango o se escondan detr\xE1s de un obstaculo"

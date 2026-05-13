@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Horizonte de sucesos
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: 'Horizonte de sucesos '
+  runeString: voragine inevitable de la tia siniestra
   elementType: 7
   description: Invoca un agujero negro que va creciendo exponencialmente, atrae constantemente
     a los enemigos y si alguno toca el centro muere instantaneamente perdiendo todas

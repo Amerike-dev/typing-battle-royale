@@ -75,11 +75,15 @@ function topologicalWaves(tickets) {
 // ───────────── Markdown ─────────────
 
 // Mini markdown renderer — soporta # headings, **bold**, *italic*, `code`,
-// fenced code (```), listas - / 1., líneas en blanco como párrafo.
+// fenced code (```), listas - / 1., tablas | col | col |, líneas en blanco como párrafo.
 // [TBR-XXX] se renderiza como link clickeable al ticket.
+// Defensivo: los walkthroughs en src/steps/*.js usan template literals con `\\\``
+// que evalúa a `\``; el primer replace normaliza eso para que el regex de `code` no
+// deje barras sueltas en el render.
 function mdToHtml(md) {
     if (!md) return '';
     md = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    md = md.replace(/\\`/g, '`');
     const lines = md.split('\n');
     let html = '';
     let inList = null;
@@ -96,7 +100,23 @@ function mdToHtml(md) {
         .replace(/\*([^*]+)\*/g, '<em>$1</em>')
         .replace(/\[([A-Z]+-\d+)\]/g, '<span class="dep-link" data-id="$1">$1</span>');
 
-    for (let line of lines) {
+    const isTableRow = (s) => {
+        const t = s.trim();
+        return t.startsWith('|') && t.endsWith('|') && t.length >= 3;
+    };
+    const isTableSeparator = (s) => {
+        const t = s.trim();
+        if (!isTableRow(t)) return false;
+        return /^\|[\s:|-]+\|$/.test(t) && t.includes('-');
+    };
+    const splitCells = (s) => {
+        const t = s.trim().slice(1, -1);
+        return t.split('|').map(c => c.trim());
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
         if (line.startsWith('```')) {
             flushP(); closeList();
             if (inCode) { html += '</code></pre>'; inCode = false; }
@@ -104,6 +124,29 @@ function mdToHtml(md) {
             continue;
         }
         if (inCode) { html += line + '\n'; continue; }
+
+        if (isTableRow(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+            flushP(); closeList();
+            const headers = splitCells(line);
+            i += 2;
+            const rows = [];
+            while (i < lines.length && isTableRow(lines[i])) {
+                rows.push(splitCells(lines[i]));
+                i++;
+            }
+            i--;
+            html += '<table class="md-table"><thead><tr>';
+            for (const h of headers) html += `<th>${inline(h)}</th>`;
+            html += '</tr></thead><tbody>';
+            for (const r of rows) {
+                html += '<tr>';
+                for (let c = 0; c < headers.length; c++) html += `<td>${inline(r[c] || '')}</td>`;
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            continue;
+        }
+
         if (line.startsWith('### ')) { flushP(); closeList(); html += `<h5 class="md-h">${inline(line.slice(4))}</h5>`; continue; }
         if (line.startsWith('## '))  { flushP(); closeList(); html += `<h4 class="md-h">${inline(line.slice(3))}</h4>`; continue; }
         const ulm = line.match(/^- (.*)/);

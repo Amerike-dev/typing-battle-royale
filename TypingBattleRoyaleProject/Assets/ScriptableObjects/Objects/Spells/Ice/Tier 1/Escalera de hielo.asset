@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Escalera de hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Escalera de hielo
+  runeString: raspado que sube
   elementType: 9
   description: "Invoca una escalera de hielo, el caster tiene m\xE1s velocidad de
     movimiento sobre la estructura"

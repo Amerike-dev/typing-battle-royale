@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "Curaci\xF3n"
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Curaci\xF3n"
+  runeString: remedio abuelita
   elementType: 5
   description: Curate 50 de vida
   spellTypes: 03000000
