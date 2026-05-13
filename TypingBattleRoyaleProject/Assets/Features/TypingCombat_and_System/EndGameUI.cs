@@ -22,7 +22,7 @@ public class EndGameUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Populate(string winnerId, List<PlayerStats> players)
+    public void Populate(string winnerId, List<PlayerStatsNet> players)
     {
         if (_winnerText != null)
             _winnerText.text = winnerId;
@@ -32,14 +32,14 @@ public class EndGameUI : MonoBehaviour
 
     }
 
-    private string BuildStats(List<PlayerStats> players)
+    private string BuildStats(List<PlayerStatsNet> players)
     {
         if (players == null || players.Count == 0)
             return string.Empty;
 
         StringBuilder sb = new StringBuilder();
 
-        foreach (PlayerStats player in players)
+        foreach (PlayerStatsNet player in players)
         {
             if (player == null) continue;
 
