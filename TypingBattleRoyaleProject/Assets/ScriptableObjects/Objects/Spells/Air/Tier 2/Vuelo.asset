@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Vuelo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Vuelo
+  runeString: alas de iguana voladora
   elementType: 0
   description: Te permite volar por 15 segundos.
   spellTypes: 0300000001000000

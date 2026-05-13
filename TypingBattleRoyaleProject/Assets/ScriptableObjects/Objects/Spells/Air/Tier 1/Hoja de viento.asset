@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hoja de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Hoja de viento
+  runeString: viento navaja
   elementType: 4
   description: "Libera en un angulo de 360 grados una hoja de viento de corto alcance
     que hace poco da\xF1o."

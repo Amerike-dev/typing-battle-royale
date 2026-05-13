@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Daga Electica
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Daga electrica
+  runeString: punal del cortocircuito que sacude bocho
   elementType: 6
   description: "Equipa una daga de 3 usos que al usarla haras un dash de distancia
     media y si colisionas con un enemigo le haras da\xF1o alto"

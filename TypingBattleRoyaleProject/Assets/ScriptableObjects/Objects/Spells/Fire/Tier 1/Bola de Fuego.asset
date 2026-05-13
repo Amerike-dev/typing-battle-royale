@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bola de Fuego
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Bola de fuego
+  runeString: desechos de fenix
   elementType: 1
   tier: 0
   archetype: 0

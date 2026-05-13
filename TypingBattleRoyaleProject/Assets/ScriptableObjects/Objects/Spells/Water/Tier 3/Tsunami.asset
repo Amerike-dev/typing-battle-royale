@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tsunami
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Tsunami
+  runeString: ola gigante que arrasa todito veracruz playero
   elementType: 2
   description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
   spellTypes: 0000000004000000

@@ -73,9 +73,22 @@ public class PlayerController : NetworkBehaviour
         if (castInputController == null) castInputController = GetComponentInChildren<CastInputController>(true);
         if (playerAnimatorView == null) playerAnimatorView = GetComponentInChildren<PlayerAnimatorView>(true);
 
+        EnsureSingleAudioListener();
+
         if (GameplayManager.Instance != null)
         {
             GameplayManager.Instance.RegisterLocalPlayer(this);
+        }
+    }
+
+    private void EnsureSingleAudioListener()
+    {
+        var myListener = GetComponentInChildren<AudioListener>(true);
+        var allListeners = FindObjectsByType<AudioListener>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var listener in allListeners)
+        {
+            if (listener == null) continue;
+            listener.enabled = (listener == myListener);
         }
     }
 
@@ -116,6 +129,7 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         onExplorationState = true;
+        if (inventory == null) inventory = new PlayerInventory();
     }
 
     void Update()

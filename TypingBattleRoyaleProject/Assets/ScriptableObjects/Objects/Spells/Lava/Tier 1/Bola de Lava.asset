@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bola de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Bola de Lava
+  runeString: albondiga ardiente
   elementType: 10
   description: "Arroja una bola de lava lenta que hace da\xF1o medio"
   spellTypes: 00000000
