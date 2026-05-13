@@ -189,7 +189,7 @@ public class GameplayManager : NetworkBehaviour
         BroadcastSpellVfxServerRpc(spellId, spawnPos, forward);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void BroadcastSpellVfxServerRpc(int spellId, Vector3 origin, Vector3 direction)
     {
         PlaySpellVfxClientRpc(spellId, origin, direction);
