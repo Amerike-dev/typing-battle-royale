@@ -18217,7 +18217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1105336616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20410,6 +20410,12 @@ MonoBehaviour:
   _endGameCanvas: {fileID: 1942957264}
   _endGameUI: {fileID: 1942957265}
   _spellBookUI: {fileID: 1489365627}
+  _defaultSpellFallback: {fileID: 11400000, guid: 08405417850fa8941b382ee1544032ee, type: 2}
+  _vfxPrefabFallback: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+  _spellUICanvasGroup: {fileID: 1566385585}
+  _spellInputField: {fileID: 298589996}
+  _spellDisplayText: {fileID: 805632013}
+  _spellUIController: {fileID: 1054458753}
   _spawnPoints:
   - {fileID: 150492205}
   - {fileID: 1333959156}

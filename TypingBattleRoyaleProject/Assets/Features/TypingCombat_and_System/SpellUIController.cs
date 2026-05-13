@@ -5,20 +5,27 @@ public class SpellUIController : MonoBehaviour
 {
     public CastInputController inputController;
     [Header("References")]
-    [SerializeField] private TextMeshProUGUI displayText;
+    public TextMeshProUGUI displayText;
 
     [Header("Colors")]
     [SerializeField] private Color correctColor = Color.green;
     [SerializeField] private Color incorrectColor = Color.red;
     [SerializeField] private Color pendingColor = Color.white;
-    
+
     private string GetHex(Color color) => "#" + ColorUtility.ToHtmlStringRGB(color);
 
     public void UpdateDisplay(int currentIndex, bool hasError)
     {
+        if (inputController == null) inputController = GetComponentInParent<CastInputController>(true);
+        if (inputController == null || displayText == null) return;
+
         string originalText = inputController.spellText;
 
-        if (string.IsNullOrEmpty(originalText)) return;
+        if (string.IsNullOrEmpty(originalText))
+        {
+            displayText.text = string.Empty;
+            return;
+        }
 
         string formattedText = "";
 
