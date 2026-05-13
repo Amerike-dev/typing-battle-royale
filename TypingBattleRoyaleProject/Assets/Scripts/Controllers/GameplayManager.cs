@@ -4,11 +4,12 @@ using NUnit.Framework;
 using Unity.Netcode;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 public class GameplayManager : NetworkBehaviour
 {
     public static GameplayManager Instance;
-    [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
+    public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
@@ -175,6 +176,8 @@ public class GameplayManager : NetworkBehaviour
     {
         Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
         if (spell == null || _castInputController == null) return;
+        
+        SubmitWPMServerRpc(_castInputController.wordsPerMinute);
 
         Transform origin = _castInputController.castOrigin != null
             ? _castInputController.castOrigin
@@ -220,9 +223,6 @@ public class GameplayManager : NetworkBehaviour
 
     private IEnumerator PopulateSpawnPoint()
     {
-        //Identificar si eres host o no
-        //Si eres host popula spawnPoints sino espera a que este lista
-
         if (NetworkManager.Singleton.IsHost)
         {
             if (_spawnPoints == null || _spawnPoints.Count == 0)
@@ -311,18 +311,21 @@ public class GameplayManager : NetworkBehaviour
 
         NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
 
-        if (networkObject != null) networkObject.SpawnAsPlayerObject(clientId);
-    }
-
-    public void TriggerGameOver(string winnerID)
-    {
-        if (gameOverState != null)
+        if (networkObject != null)
         {
-            gameOverState.SetWinnerID(winnerID);
-            stateMachine.ChangeState(gameOverState);
+            networkObject.SpawnAsPlayerObject(clientId);
+            
+            if (IsServer)
+            {
+                var ps = playerInstance.GetComponent<PlayerStatsNet>();
+                if (ps != null) 
+                {
+                    ps.networkPlayerID.Value = "Player_" + clientId;
+                    ps.OnAllLifeLost += () => CheckLastAlive();
+                }
+            }
         }
     }
-
 
     private void OnDestroy()
     {
@@ -341,6 +344,79 @@ public class GameplayManager : NetworkBehaviour
                 Gizmos.DrawWireSphere(sp.position, 0.5f);
                 Gizmos.DrawLine(sp.position, sp.position + sp.forward * 1.0f);
             }
+        }
+    }
+    
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+        if (!IsServer) return;
+
+        foreach (var c in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (c.PlayerObject != null)
+            {
+                var ps = c.PlayerObject.GetComponent<PlayerStatsNet>(); 
+                if (ps != null) ps.OnAllLifeLost += () => CheckLastAlive();
+            }
+        }
+    }
+    
+    private void CheckLastAlive()
+    {
+        if (!IsServer) return;
+
+        var alive = NetworkManager.Singleton.ConnectedClientsList
+            .Select(c => c.PlayerObject?.GetComponent<PlayerStatsNet>())
+            .Where(ps => ps != null && ps.isAlive.Value).ToList(); 
+
+        if (alive.Count == 1) TriggerGameOver(alive[0].ID); 
+    }
+    
+    public void HandleTimeUp()
+    {
+        if (!IsServer) return;
+
+        var winner = NetworkManager.Singleton.ConnectedClientsList
+            .Select(c => c.PlayerObject?.GetComponent<PlayerStatsNet>())
+            .Where(ps => ps != null)
+            .OrderByDescending(ps => ps.killCount.Value)
+            .ThenByDescending(ps => ps.currentHP.Value)
+            .ThenByDescending(ps => ps.wPM.Value) 
+            .FirstOrDefault();
+
+        if (winner != null)
+        {
+            TriggerGameOver(winner.ID);
+        }
+    }
+    
+    public void TriggerGameOver(string winnerID)
+    {
+        if (!IsServer) return; 
+        
+        EndGameClientRpc(winnerID);
+    }
+
+    [ClientRpc]
+    private void EndGameClientRpc(string winnerID)
+    {
+        if (gameOverState != null)
+        {
+            gameOverState.SetWinnerID(winnerID);
+            stateMachine.ChangeState(gameOverState);
+        }
+    }
+    
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void SubmitWPMServerRpc(float newWPM, RpcParams rpcParams = default)
+    {
+        ulong clientId = rpcParams.Receive.SenderClientId;
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            var ps = client.PlayerObject?.GetComponent<PlayerStatsNet>();
+            if (ps != null) ps.wPM.Value = ps.wPM.Value == 0f ? newWPM : (ps.wPM.Value + newWPM) / 2f;
         }
     }
 }
