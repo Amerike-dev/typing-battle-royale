@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class VolumeController : MonoBehaviour
 {
     public Slider volumeSlider;
-    
+
     void Start()
     {
         if(volumeSlider != null)
@@ -18,8 +18,9 @@ public class VolumeController : MonoBehaviour
     {
         if(volumeSlider != null)
         {
-            AudioListener.volume = Mathf.Clamp01(volumeSlider.value);
-            Debug.Log(AudioListener.volume);
+            AudioManager.instance.SetVolume(null, volumeSlider.value);
+            PlayerPrefs.SetFloat("vol.master", AudioListener.volume);
+            PlayerPrefs.Save();
         }
     }
     
