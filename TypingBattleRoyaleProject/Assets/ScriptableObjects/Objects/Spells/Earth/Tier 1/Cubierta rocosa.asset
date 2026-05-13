@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Cubierta rocosa
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Cuvierta rocosa
+  runeString: caparazon tortuga
   elementType: 3
   description: Crea una pared enfrente de ti que bloquea hechizos
   spellTypes: 02000000

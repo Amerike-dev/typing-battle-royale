@@ -86,6 +86,10 @@ public class NetworkManagerMock : MonoBehaviour
                 playerCamera.enabled = true;
                 audioListener.enabled = true;
 
+                if (GameplayManager.Instance != null)
+                {
+                    GameplayManager.Instance.RegisterLocalPlayer(playerController);
+                }
             }
 
             Players.Add(generatedStats);

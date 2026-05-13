@@ -1,9 +1,11 @@
 using UnityEngine;
 
 //Gestionar la selección de objetivos (Lock-on) y el apuntado manual.
-//Este sistema será implementado detalladamente en FEAT-02. No eliminar.
+//Este sistema será implementado detalladamente en TBR-003. No eliminar.
 public class TargetSystem : MonoBehaviour
 {
+    public Transform target;
+
     void Start()
     {
 
@@ -13,9 +15,9 @@ public class TargetSystem : MonoBehaviour
     {
 
     }
-    
+
     // Busca y selecciona al enemigo más cercano dentro de un radio específico.
-    public void FindClosestTarget() 
+    public void FindClosestTarget()
     {
     }
 

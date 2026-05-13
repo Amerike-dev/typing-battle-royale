@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tridente
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Tridente
+  runeString: trinche del rey neptuno cabron
   elementType: 2
   description: "Equipa un tridente de 1 uso, lo puedes lanzar como proyectil, al
     impactar hace da\xF1o alto y atrae al enemigo hacia ti"

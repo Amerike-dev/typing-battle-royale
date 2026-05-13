@@ -25,6 +25,12 @@ public class PlayerController : NetworkBehaviour
     public PlayerStats stats;
     public PlayerInventory inventory;
 
+    public event Action OnEnterBattle;
+    public event Action OnExitBattle;
+
+    public void RaiseEnterBattle() => OnEnterBattle?.Invoke();
+    public void RaiseExitBattle() => OnExitBattle?.Invoke();
+
     private float _verticalVelocity;
     private float _x, _z;
     private Vector3 _inputDirection;
@@ -62,6 +68,27 @@ public class PlayerController : NetworkBehaviour
         if (cameraController != null)
         {
             cameraController.SetTarget(transform);
+        }
+
+        if (castInputController == null) castInputController = GetComponentInChildren<CastInputController>(true);
+        if (playerAnimatorView == null) playerAnimatorView = GetComponentInChildren<PlayerAnimatorView>(true);
+
+        EnsureSingleAudioListener();
+
+        if (GameplayManager.Instance != null)
+        {
+            GameplayManager.Instance.RegisterLocalPlayer(this);
+        }
+    }
+
+    private void EnsureSingleAudioListener()
+    {
+        var myListener = GetComponentInChildren<AudioListener>(true);
+        var allListeners = FindObjectsByType<AudioListener>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var listener in allListeners)
+        {
+            if (listener == null) continue;
+            listener.enabled = (listener == myListener);
         }
     }
 
@@ -102,6 +129,7 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         onExplorationState = true;
+        if (inventory == null) inventory = new PlayerInventory();
     }
 
     void Update()
@@ -149,12 +177,17 @@ public class PlayerController : NetworkBehaviour
 
     public void ExplorationState(InputAction.CallbackContext context)
     {
+        var gm = GameplayManager.Instance;
+        if (gm == null || gm.stateMachine == null) return;
+
+        if (gm.stateMachine.currentState is GameOverState) return;
+
         onExplorationState = !onExplorationState;
-        
+
         if (onExplorationState)
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
+            gm.stateMachine.ChangeState(gm.explorationState);
         else
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
+            gm.stateMachine.ChangeState(gm.battleState);
     }
 
     public void NullMoveSpeed()

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Anillo de fuego
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Anillo de fuego
+  runeString: rosca del diablo
   elementType: 1
   description: Crea un anillo de fuego en un area alrededor de ti
   spellTypes: 0200000006000000

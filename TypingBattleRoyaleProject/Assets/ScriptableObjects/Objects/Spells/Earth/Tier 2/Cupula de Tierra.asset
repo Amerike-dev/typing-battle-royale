@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Cupula de Tierra
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
+  spellName:
+  runeString: domo del aguacatero gigante
   elementType: 0
   description: 
   spellTypes: 

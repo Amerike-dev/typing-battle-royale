@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Fenix
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Fenix
+  runeString: ave inmortal renacida en tequila bravo de jalisco
   elementType: 1
   description: "Invoca un ave fenix que viaja hacia delante y hace da\xF1o alto a
     todos los enemigos en el area"

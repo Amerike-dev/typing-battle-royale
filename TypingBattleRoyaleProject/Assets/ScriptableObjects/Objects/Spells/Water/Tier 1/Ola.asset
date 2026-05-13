@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Ola
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Ola
+  runeString: chapuzon
   elementType: 2
   description: "Invoca una ola que viaja en linea recta a travez del suelo para hacer
     da\xF1o bajo y realentizar."
