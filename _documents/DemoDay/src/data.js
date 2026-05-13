@@ -117,7 +117,7 @@ const TICKETS = [
         id: 'TBR-005',
         title: 'Muerte por barra de vida agotada',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'PlayerStats expone TakeDamage y LoseLife pero no hay loop que detecte HP <= 0 → restar vida → respawn. Hoy isAlive nunca cambia a false en flujo real. Implementar la cadena: damage → check HP → si HP<=0 invocar OnAllLifeLost (si lives==0) o OnLifeLost + respawn.',
         acceptance: [
@@ -337,7 +337,7 @@ const TICKETS = [
         id: 'TBR-015',
         title: 'Manejo de desconexión durante partida',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Hoy si un cliente se desconecta el server no lo sabe limpiamente: su prefab queda vivo y puede romper la condición de "último vivo". Manejar OnClientDisconnectCallback para despawnear, marcar isAlive=false y reevaluar fin de partida.',
         acceptance: [
@@ -357,7 +357,7 @@ const TICKETS = [
         id: 'TBR-016',
         title: 'Sincronizar Monolitos por red',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'MonolithSpawn instancia GameObjects con Instantiate plano: cada cliente ve sus propios monolitos no sincronizados. Convertir prefab Monolith a NetworkObject y spawnear desde el Host con NetworkObject.Spawn(). TryInteract debe ejecutarse vía ServerRpc.',
         acceptance: [
@@ -415,7 +415,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
@@ -846,7 +846,7 @@ const TICKETS = [
         id: 'TBR-039',
         title: 'Typing challenge de desbloqueo de hechizo en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Una vez seleccionado el nivel (TBR-038), mostrar el rune text del SpellData. Bloquear movimiento (PlayerController.NullMoveSpeed). El jugador tipea sin error; un solo error reinicia el char actual (no penaliza). Al completar exitoso, agregar SpellData al PlayerInventory y marcar el monolito como exhausted (TBR-016). ESC cancela.',
         acceptance: [
@@ -1092,7 +1092,7 @@ const TICKETS = [
         id: 'TBR-049',
         title: 'Polish escena Splash — fade in/out global + branding WotK',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'La escena Splash (TBR-027) ya carga logos pero sin transiciones suaves: aparición y corte abrupto. Aplicar fade-in/fade-out a TODOS los elementos visibles (logo estudio Red Blood Cells → logo Wizards of the Keyboard + tagline → transición a LobbyScene) usando CanvasGroup.alpha y DOTween. Fondo negro brand (#070504), logos centrados, tagline en blanco con tipografía del brand book. Cualquier tecla skipea con fade-out acelerado (no corte seco).',
         acceptance: [
