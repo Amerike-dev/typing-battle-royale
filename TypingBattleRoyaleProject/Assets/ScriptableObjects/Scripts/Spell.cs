@@ -10,7 +10,10 @@ public class Spell : ScriptableObject
 {
     [Header("General Info")]
     public string spellName;
+    public string runeString;
     public Elements elementType;
+    public SpellTiers tier;
+    public SpellTypes archetype;
     public string description;
     [Header("Characteristics")]
     public SpellTypes[] spellTypes;
