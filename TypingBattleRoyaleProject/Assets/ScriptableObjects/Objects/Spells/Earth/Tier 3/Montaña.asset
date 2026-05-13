@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "Monta\xF1a"
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Monta\xF1a"
+  runeString: despierta popocatepetl colerico ancestro
   elementType: 3
   description: "Crea una monta\xF1a en los pies de quien castea el hechizo."
   spellTypes: 02000000

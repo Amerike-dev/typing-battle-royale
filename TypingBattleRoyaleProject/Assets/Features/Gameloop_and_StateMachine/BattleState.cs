@@ -46,18 +46,19 @@ public class BattleState : IGameState
             inventorySpells = _playerController.inventory.GetUnlockedSpells();
         }
 
-        bool inventoryEmpty = inventorySpells == null || inventorySpells.Count == 0;
-
-        ApplyDefaultSpellAndEnableCast();
-
         if (_spellBookUI != null)
         {
+            if (_castInput != null) _castInput.enabled = false;
             _spellBookUI.OnSpellConfirmed += HandleSpellConfirmed;
             _spellBookUI.OnSelectionCancelled += HandleSelectionCancelled;
             _spellBookUI.Show(inventorySpells);
         }
+        else
+        {
+            ApplyDefaultSpellAndEnableCast();
+        }
 
-        Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}, defaultSpell={_castInput?.defaultSpell != null}");
+        Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}, defaultSpell={(_castInput != null ? _castInput.defaultSpell != null : false)}");
 
         _playerController.RaiseEnterBattle();
     }
@@ -104,25 +105,45 @@ public class BattleState : IGameState
 
     private void HandleSpellConfirmed(SpellData spell)
     {
-        if (_castInput == null || spell == null) return;
+        if (_castInput == null) return;
 
-        Spell mapped = null;
-        if (SpellCatalog.Instance != null)
+        if (spell == null)
         {
-            mapped = SpellCatalog.Instance.GetByRune(spell.runeString);
-        }
-
-        if (mapped == null) mapped = _castInput.defaultSpell;
-
-        if (mapped != null)
-        {
-            _castInput.currentSpell = mapped;
-            _castInput.spellText = mapped.runeString;
+            if (_castInput.defaultSpell == null)
+            {
+                Debug.LogWarning("[BattleState] No defaultSpell assigned and user confirmed empty slot. Cannot cast.");
+                return;
+            }
+            _castInput.currentSpell = _castInput.defaultSpell;
+            _castInput.spellText = _castInput.defaultSpell.runeString;
         }
         else
         {
-            _castInput.spellText = spell.runeString;
+            Spell mapped = null;
+            if (SpellCatalog.Instance != null)
+            {
+                mapped = SpellCatalog.Instance.GetByRune(spell.runeString);
+            }
+            if (mapped == null) mapped = _castInput.defaultSpell;
+
+            if (mapped != null)
+            {
+                _castInput.currentSpell = mapped;
+                _castInput.spellText = mapped.runeString;
+            }
+            else
+            {
+                _castInput.spellText = spell.runeString;
+            }
         }
+
+        if (string.IsNullOrEmpty(_castInput.spellText))
+        {
+            Debug.LogError($"[BattleState] Spell has empty runeString. Set the 'Rune String' field on the Spell ScriptableObject (spellName='{(_castInput.currentSpell != null ? _castInput.currentSpell.spellName : "?")}'). Cancelling cast.");
+            return;
+        }
+
+        Debug.Log($"[BattleState] Spell confirmed: '{_castInput.spellText}'");
 
         if (_spellBookUI != null) _spellBookUI.Hide();
         _castInput.enabled = true;

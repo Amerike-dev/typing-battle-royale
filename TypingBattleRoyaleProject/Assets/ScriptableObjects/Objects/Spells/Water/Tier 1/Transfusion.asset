@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Transfusion
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Transfusion
+  runeString: trago bendito
   elementType: 2
   description: Robale poca vida al oponente
   spellTypes: 0300000004000000

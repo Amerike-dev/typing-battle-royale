@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Reino de las sombras
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Reino de las sombras
+  runeString: tinieblas del armario abandonado del abuelo
   elementType: 7
   description: "En una gran delante del personaje, extiende tu sombra para hacerle
     una instancia de da\xF1o a todos los enemigos y realentizarlos"

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Huracan
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Hurac\xE1n"
+  runeString: danza furiosa de la mama bien enojada
   elementType: 0
   description: "invoca un hurac\xE1n enorme que hace da\xF1o en los bordes pero no
     en el centro"

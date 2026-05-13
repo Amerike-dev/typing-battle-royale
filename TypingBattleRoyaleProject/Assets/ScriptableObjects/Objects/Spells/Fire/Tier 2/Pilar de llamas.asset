@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Pilar de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Pilar de llamas
+  runeString: columna eterna del comalero divino
   elementType: 1
   description: "Lanza un proyectil que al impactar crea un pilar de fuego que hace
     da\xF1o alto"

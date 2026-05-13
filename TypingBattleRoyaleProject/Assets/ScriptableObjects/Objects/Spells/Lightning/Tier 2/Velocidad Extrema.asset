@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Velocidad Extrema
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Velocidad extrema
+  runeString: salida bala del semaforo en rojo
   elementType: 6
   description: Aumenta tu velocidad de movimiento considerablemente
   spellTypes: 0100000003000000
