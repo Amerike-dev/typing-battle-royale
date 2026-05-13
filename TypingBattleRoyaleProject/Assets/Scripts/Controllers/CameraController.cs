@@ -5,14 +5,18 @@ public class CameraController : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float sensitivity = 0.1f;
-    
+    [SerializeField] private float battleSlerpSpeed = 8f;
+
     [Header("References")]
-    [SerializeField] private Transform playerBody;
+    private Transform playerBody;
     public InputActionReference lookAction;
     public bool OnCamaraMove = true;
     private float returnSpeed = 10f;
     private float _xRotation = 0f;
     private Vector2 _lookInput;
+
+    private Transform _battleTarget;
+    private bool _hasBattleTarget;
 
     void Start()
     {
@@ -25,13 +29,27 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (playerBody == null) return;
+
         ActiveForState();
     }
 
     void ActiveForState()
     {
-        if (OnCamaraMove) { CameraMovement(); }
-        if (!OnCamaraMove) { LookAhead(); }
+        if (OnCamaraMove)
+        {
+            CameraMovement();
+            return;
+        }
+
+        if (_hasBattleTarget && _battleTarget != null)
+        {
+            LookAtBattleTarget();
+        }
+        else
+        {
+            LookAhead();
+        }
     }
 
     void CameraMovement()
@@ -51,5 +69,43 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, returnSpeed * Time.deltaTime);
         _xRotation = transform.localEulerAngles.x;
         if (_xRotation > 180f) _xRotation -= 360f;
+    }
+
+    void LookAtBattleTarget()
+    {
+        Vector3 toTarget = _battleTarget.position - playerBody.position;
+        Vector3 flatToTarget = new Vector3(toTarget.x, 0f, toTarget.z);
+
+        if (flatToTarget.sqrMagnitude > 0.0001f)
+        {
+            Quaternion targetBodyRot = Quaternion.LookRotation(flatToTarget, Vector3.up);
+            playerBody.rotation = Quaternion.Slerp(playerBody.rotation, targetBodyRot, battleSlerpSpeed * Time.deltaTime);
+        }
+
+        Vector3 camToTarget = _battleTarget.position - transform.position;
+        if (camToTarget.sqrMagnitude < 0.0001f) return;
+
+        float horizontalDistance = new Vector2(camToTarget.x, camToTarget.z).magnitude;
+        float pitch = -Mathf.Atan2(camToTarget.y, horizontalDistance) * Mathf.Rad2Deg;
+        Quaternion targetLocalPitch = Quaternion.Euler(pitch, 0f, 0f);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetLocalPitch, battleSlerpSpeed * Time.deltaTime);
+        _xRotation = pitch;
+    }
+
+    public void SetTarget(Transform newPlayerBody)
+    {
+        playerBody = newPlayerBody;
+    }
+
+    public void SetBattleTarget(Transform target)
+    {
+        _battleTarget = target;
+        _hasBattleTarget = target != null;
+    }
+
+    public void ClearBattleTarget()
+    {
+        _battleTarget = null;
+        _hasBattleTarget = false;
     }
 }

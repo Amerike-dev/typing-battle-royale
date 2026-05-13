@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleState : IGameState
@@ -5,19 +6,60 @@ public class BattleState : IGameState
     private CastInputController _castInput;
     private PlayerController _playerController;
     private PlayerAnimatorView _animatorView;
+    private CameraController _cameraController;
+    private TargetSystem _targetSystem;
+    private SpellBookUI _spellBookUI;
 
-    public BattleState(CastInputController castInput, PlayerController playerController, PlayerAnimatorView animatorView)
+    public BattleState(
+        CastInputController castInput,
+        PlayerController playerController,
+        PlayerAnimatorView animatorView,
+        CameraController cameraController = null,
+        TargetSystem targetSystem = null,
+        SpellBookUI spellBookUI = null)
     {
-        this._castInput = castInput;
-        this._playerController = playerController;
-        this._animatorView = animatorView;
+        _castInput = castInput;
+        _playerController = playerController;
+        _animatorView = animatorView;
+        _cameraController = cameraController;
+        _targetSystem = targetSystem;
+        _spellBookUI = spellBookUI;
     }
 
     void IGameState.Enter()
     {
-        _castInput.enabled = true;
-        _playerController.enabled = false;
-        _animatorView.TriggerCasting();
+        _playerController.onExplorationState = false;
+        _playerController.NullMoveSpeed();
+        if (_animatorView != null) _animatorView.TriggerCasting();
+
+        var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
+        if (camera != null)
+        {
+            camera.OnCamaraMove = false;
+            Transform t = _targetSystem != null ? _targetSystem.target : null;
+            camera.SetBattleTarget(t);
+        }
+
+        IReadOnlyList<SpellData> inventorySpells = null;
+        if (_playerController.inventory != null)
+        {
+            inventorySpells = _playerController.inventory.GetUnlockedSpells();
+        }
+
+        bool inventoryEmpty = inventorySpells == null || inventorySpells.Count == 0;
+
+        ApplyDefaultSpellAndEnableCast();
+
+        if (_spellBookUI != null)
+        {
+            _spellBookUI.OnSpellConfirmed += HandleSpellConfirmed;
+            _spellBookUI.OnSelectionCancelled += HandleSelectionCancelled;
+            _spellBookUI.Show(inventorySpells);
+        }
+
+        Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}, defaultSpell={_castInput?.defaultSpell != null}");
+
+        _playerController.RaiseEnterBattle();
     }
 
     void IGameState.Execute(float tick) { }
@@ -26,8 +68,72 @@ public class BattleState : IGameState
 
     void IGameState.Exit()
     {
-        _castInput.enabled = false;
-        _playerController.enabled = true;
-        _animatorView.StopCasting();
+        if (_castInput != null) _castInput.enabled = false;
+        _playerController.MoveSpeed();
+        if (_animatorView != null) _animatorView.StopCasting();
+
+        var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
+        if (camera != null)
+        {
+            camera.ClearBattleTarget();
+        }
+
+        if (_spellBookUI != null)
+        {
+            _spellBookUI.OnSpellConfirmed -= HandleSpellConfirmed;
+            _spellBookUI.OnSelectionCancelled -= HandleSelectionCancelled;
+            _spellBookUI.Hide();
+        }
+
+        Debug.Log("[BattleState] Exit");
+        _playerController.RaiseExitBattle();
+    }
+
+    private void ApplyDefaultSpellAndEnableCast()
+    {
+        if (_castInput == null) return;
+
+        if (_castInput.defaultSpell != null)
+        {
+            _castInput.currentSpell = _castInput.defaultSpell;
+            _castInput.spellText = _castInput.defaultSpell.runeString;
+        }
+
+        _castInput.enabled = true;
+    }
+
+    private void HandleSpellConfirmed(SpellData spell)
+    {
+        if (_castInput == null || spell == null) return;
+
+        Spell mapped = null;
+        if (SpellCatalog.Instance != null)
+        {
+            mapped = SpellCatalog.Instance.GetByRune(spell.runeString);
+        }
+
+        if (mapped == null) mapped = _castInput.defaultSpell;
+
+        if (mapped != null)
+        {
+            _castInput.currentSpell = mapped;
+            _castInput.spellText = mapped.runeString;
+        }
+        else
+        {
+            _castInput.spellText = spell.runeString;
+        }
+
+        if (_spellBookUI != null) _spellBookUI.Hide();
+        _castInput.enabled = true;
+    }
+
+    private void HandleSelectionCancelled()
+    {
+        var gm = GameplayManager.Instance;
+        if (gm == null || gm.stateMachine == null) return;
+
+        _playerController.onExplorationState = true;
+        gm.stateMachine.ChangeState(gm.explorationState);
     }
 }

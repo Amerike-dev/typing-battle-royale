@@ -43,7 +43,7 @@ public class MultiplayerSetupHelper : EditorWindow
             "- NetworkObject (sincronización de red)\n" +
             "- NetworkTransform (posición/rotación)\n" +
             "- CharacterController (física)\n" +
-            "- NetworkPlayerController (control de movimiento)",
+            "- PlayerController (control de movimiento)",
             MessageType.None
         );
 
@@ -122,13 +122,13 @@ public class MultiplayerSetupHelper : EditorWindow
         bool hasNetworkObject = playerPrefab.GetComponent<NetworkObject>() != null;
         bool hasNetworkTransform = playerPrefab.GetComponent<NetworkTransform>() != null;
         bool hasCharacterController = playerPrefab.GetComponent<CharacterController>() != null;
-        bool hasPlayerController = playerPrefab.GetComponent<NetworkPlayerController>() != null;
+        bool hasPlayerController = playerPrefab.GetComponent<PlayerController>() != null;
 
         string report = "Estado del Player Prefab:\n\n";
         report += $"NetworkObject: {(hasNetworkObject ? "✓" : "✗")}\n";
         report += $"NetworkTransform: {(hasNetworkTransform ? "✓" : "✗")}\n";
         report += $"CharacterController: {(hasCharacterController ? "✓" : "✗")}\n";
-        report += $"NetworkPlayerController: {(hasPlayerController ? "✓" : "✗")}\n\n";
+        report += $"PlayerController: {(hasPlayerController ? "✓" : "✗")}\n\n";
 
         if (hasNetworkObject && hasNetworkTransform && hasCharacterController && hasPlayerController)
         {
@@ -234,12 +234,12 @@ public class MultiplayerSetupHelper : EditorWindow
             bool hasNetworkObject = playerPrefab.GetComponent<NetworkObject>() != null;
             bool hasNetworkTransform = playerPrefab.GetComponent<NetworkTransform>() != null;
             bool hasCharacterController = playerPrefab.GetComponent<CharacterController>() != null;
-            bool hasPlayerController = playerPrefab.GetComponent<NetworkPlayerController>() != null;
+            bool hasPlayerController = playerPrefab.GetComponent<PlayerController>() != null;
 
             report += $"NetworkObject: {(hasNetworkObject ? "✓" : "✗")}\n";
             report += $"NetworkTransform: {(hasNetworkTransform ? "✓" : "✗")}\n";
             report += $"CharacterController: {(hasCharacterController ? "✓" : "✗")}\n";
-            report += $"NetworkPlayerController: {(hasPlayerController ? "✓" : "✗")}\n";
+            report += $"PlayerController: {(hasPlayerController ? "✓" : "✗")}\n";
             report += "\n";
         }
         

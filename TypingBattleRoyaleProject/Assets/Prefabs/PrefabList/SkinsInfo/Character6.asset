@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75624399eb846d47966ec4bf6b1fec4, type: 3}
+  m_Name: Character6
+  m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
+  skinName: Cubols
+  models:
+  - {fileID: 5831692925840354386, guid: 3f8d0cde07500c64f90e86f403cec9c8, type: 3}
+  - {fileID: 5831692925840354386, guid: de6ce3440ccfbb6459779fd9479042e8, type: 3}
+  - {fileID: 5831692925840354386, guid: 41191ae5ae27f1a4c9ae603ab8bfdea9, type: 3}
+  gameplayPrefabs:
+  - {fileID: 6025732026901377866, guid: 1e78bd0975652b549a5ef7fb00694697, type: 3}
+  - {fileID: 6025732026901377866, guid: 4f2aba91c7f9acb4fbea88318e2fd1fb, type: 3}
+  - {fileID: 6025732026901377866, guid: e6bcd7c408eb0f648994eb06791dd44e, type: 3}

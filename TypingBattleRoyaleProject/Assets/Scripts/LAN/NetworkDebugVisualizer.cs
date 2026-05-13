@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.InputSystem;
 
 public class NetworkDebugVisualizer : MonoBehaviour
 {
@@ -49,17 +50,17 @@ public class NetworkDebugVisualizer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Keyboard.current.f1Key.wasPressedThisFrame)
         {
             showDebugInfo = !showDebugInfo;
         }
-
-        if (Input.GetKeyDown(KeyCode.F2))
+    
+        if (Keyboard.current.f2Key.wasPressedThisFrame)
         {
             showNetworkMetrics = !showNetworkMetrics;
         }
 
-        if (Input.GetKeyDown(KeyCode.F3))
+        if (Keyboard.current.f3Key.wasPressedThisFrame)
         {
             showPlayerPositions = !showPlayerPositions;
         }
@@ -126,8 +127,8 @@ public class NetworkDebugVisualizer : MonoBehaviour
     private void DrawPlayerPositions()
     {
         string positions = "=== Posiciones de Jugadores ===\n";
-        
-        NetworkPlayerController[] players = FindObjectsByType<NetworkPlayerController>(0);
+
+        PlayerController[] players = FindObjectsByType<PlayerController>(0);
 
         foreach (var player in players)
         {
@@ -173,8 +174,8 @@ public class NetworkDebugVisualizer : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (!showPlayerPositions) return;
-        
-        NetworkPlayerController[] players = FindObjectsByType<NetworkPlayerController>(0);
+
+        PlayerController[] players = FindObjectsByType<PlayerController>(0);
 
         foreach (var player in players)
         {

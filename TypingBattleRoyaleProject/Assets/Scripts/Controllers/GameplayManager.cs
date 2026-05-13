@@ -1,33 +1,48 @@
 using UnityEngine;
 using TMPro;
 using NUnit.Framework;
+using Unity.Netcode;
 using System.Collections.Generic;
+using System.Collections;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : NetworkBehaviour
 {
     public static GameplayManager Instance;
-    public PlayerController playerController;
     [SerializeField]public List<GameObject> Monolith = new List<GameObject>();
 
     [Header("Player references")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
+    [SerializeField] private TargetSystem _targetSystem;
 
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
+    [SerializeField] private SpellBookUI _spellBookUI;
 
     [Header("Propiedades")]
-    public PlayerController PlayerController => _playerController;
+    public PlayerController PlayerController
+    {
+        get
+        {
+            return _playerController;
+        }
+        set
+        {
+            _playerController = value;
+        }
+    }
     public CastInputController CastInputController => _castInputController;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
+    public TargetSystem TargetSystem => _targetSystem;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
     public CanvasGroup EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
+    public SpellBookUI SpellBookUI => _spellBookUI;
 
     [Header("Estados")]
     public StateMachine stateMachine;
@@ -37,7 +52,11 @@ public class GameplayManager : MonoBehaviour
     public PlayState playState;
     public GameOverState gameOverState;
 
-    [SerializeField] private Transform[] _spawnPoints;
+    [SerializeField] private List<Transform> _spawnPoints;
+
+    [SerializeField] private SkinInfo[] arraySkins;
+    private List<Vector3> _shuffledPositions = new List<Vector3>();
+    private bool _allSpawned = false;
 
     private void Awake()
     {
@@ -51,17 +70,27 @@ public class GameplayManager : MonoBehaviour
             return;
         }
 
-        var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        /*var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
         foreach(var mc in monolithControllers)
         {
             Monolith.Add(mc.gameObject);
-        }
+        }*/
     }
 
     private void Start()
     {
         InitializeStates();
-        stateMachine.ChangeState(waitingState);
+        if (explorationState != null)
+        {
+            stateMachine.ChangeState(explorationState);
+        }
+        
+        if(IsServer) SpawnPlayers();
+    }
+
+    private void Update()
+    {
+        stateMachine?.Update();
     }
 
     private void InitializeStates()
@@ -70,35 +99,158 @@ public class GameplayManager : MonoBehaviour
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");
         stateMachine = new StateMachine(waitingState, 0f);
-        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
-        if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
 
-        SetupSpawns();
-    }
-
-    private void HandleOnSpellCast()
-    {
-        Debug.Log("GameplayManager escucho el evento OnSpellCast");
-    }
-
-    private void SetupSpawns()
-    {
-        Vector3[] position = new Vector3[_spawnPoints.Length];
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
+        if (_playerController != null)
         {
-            position[i] = _spawnPoints[i].position;
+            explorationState = new ExplorationState(_playerController.cameraController, this);
+            battleState = new BattleState(
+                _castInputController,
+                _playerController,
+                _playerAnimatorView,
+                _playerController.cameraController,
+                _targetSystem,
+                _spellBookUI);
+            if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
         }
 
-        SpawnCalculator spawnCalculator = new SpawnCalculator(position);
+        //SetupSpawns();
+    }
 
-        NetworkManagerMock.Instance.GameInitialize();
+    public void RegisterLocalPlayer(PlayerController player)
+    {
+        if (player == null) return;
 
-        foreach (PlayerController controller in NetworkManagerMock.Instance.Controllers)
+        _playerController = player;
+        _castInputController = player.castInputController;
+        _playerAnimatorView = player.playerAnimatorView;
+
+        explorationState = new ExplorationState(_playerController.cameraController, this);
+        battleState = new BattleState(
+            _castInputController,
+            _playerController,
+            _playerAnimatorView,
+            _playerController.cameraController,
+            _targetSystem,
+            _spellBookUI);
+
+        if (_castInputController != null)
         {
-            Vector3 spawnPoint = spawnCalculator.GetSpawnPoint();
-            controller.transform.position = spawnPoint;
+            _castInputController.OnSpellCast -= HandleOnSpellCast;
+            _castInputController.OnSpellCast += HandleOnSpellCast;
         }
+
+        Debug.Log($"[GameplayManager] RegisterLocalPlayer: camera={_playerController.cameraController != null}, castInput={_castInputController != null}, spellBookUI={_spellBookUI != null}, targetSystem={_targetSystem != null}");
+
+        if (stateMachine == null) stateMachine = new StateMachine(explorationState, 0f);
+        else stateMachine.ChangeState(explorationState);
+    }
+
+    private void HandleOnSpellCast(Spell spell)
+    {
+        Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
+    }
+
+    private void SpawnPlayers()
+    {
+
+        StartCoroutine(PopulateSpawnPoint());
+        
+    }
+
+    private IEnumerator PopulateSpawnPoint()
+    {
+        //Identificar si eres host o no
+        //Si eres host popula spawnPoints sino espera a que este lista
+
+        if (NetworkManager.Singleton.IsHost)
+        {
+            if (_spawnPoints == null || _spawnPoints.Count == 0)
+            {
+                Debug.LogError("¡No hay Spawn Points asignados en el GameplayManager!");
+                yield break;
+            }
+
+            if (_spawnPoints.Count < NetworkManager.Singleton.ConnectedClientsIds.Count) 
+                Debug.LogWarning($"[SPAWN] Solo hay {_spawnPoints.Count} puntos para {NetworkManager.Singleton.ConnectedClientsIds.Count} jugadores.");
+
+            _shuffledPositions.Clear();
+            
+            foreach (var t in _spawnPoints)
+            {
+                if (t != null) _shuffledPositions.Add(t.position);
+            }
+
+            RandomizeSpawnPoints();
+            AssignPlayersToSpawnPoints();
+            NotifySpawnDoneClientRpc();
+            yield return null;
+        }
+        else 
+        {
+            while (!_allSpawned)
+            {
+                yield return null;
+            }
+        }
+    }
+    
+    [ClientRpc]
+    private void NotifySpawnDoneClientRpc()
+    {
+        if (!IsServer) _allSpawned = true;
+    }
+
+    private void RandomizeSpawnPoints()
+    {
+        for (int i = 0; i < _shuffledPositions.Count; i++)
+        {
+            int randomIndex = Random.Range(i, _shuffledPositions.Count);
+            Vector3 temp = _shuffledPositions[i];
+            _shuffledPositions[i] = _shuffledPositions[randomIndex];
+            _shuffledPositions[randomIndex] = temp;
+        }
+        Debug.Log("Spawns mezclados correctamente.");
+    }
+
+    private void AssignPlayersToSpawnPoints()
+    {
+        int spawnIndex = 0;
+
+        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            if (spawnIndex >= _spawnPoints.Count)
+            {
+                Debug.LogWarning("No hay suficientes puntos de spawn para todos los jugadores.");
+                return;
+            }
+            Debug.Log($"[SPAWN] from clientId={NetworkManager.Singleton.LocalClientId}, IsHost={IsHost}, IsServer={IsServer}");
+            SpawnSelectedPlayer(clientId, _shuffledPositions[spawnIndex]);
+            spawnIndex++;
+        }
+    }
+
+    private void SpawnSelectedPlayer(ulong clientId, Vector3 spawnPosition)
+    {
+        if (!IDController.savedSelections.TryGetValue(clientId, out IDController.PlayerSelection selection))
+        {
+            selection = new IDController.PlayerSelection(0, 0);
+        }
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null && client.PlayerObject.IsSpawned)
+            {
+                client.PlayerObject.Despawn(true);
+            }
+        }
+
+        GameObject prefab = arraySkins[selection.skinIndex].gameplayPrefabs[selection.colorIndex];
+
+        GameObject playerInstance = Instantiate(prefab, spawnPosition, Quaternion.identity);
+
+        NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
+
+        if (networkObject != null) networkObject.SpawnAsPlayerObject(clientId);
     }
 
     public void TriggerGameOver(string winnerID)
@@ -110,16 +262,24 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        stateMachine?.Update();
-    }
 
     private void OnDestroy()
     {
-        if (_castInputController != null)
+        if (_castInputController != null) _castInputController.OnSpellCast -= HandleOnSpellCast;
+    }
+    
+    private void OnDrawGizmos()
+    {
+        if (_spawnPoints == null || _spawnPoints.Count == 0) return;
+
+        Gizmos.color = Color.cyan;
+        foreach (var sp in _spawnPoints)
         {
-            _castInputController.OnSpellCast -= HandleOnSpellCast;
+            if (sp != null)
+            {
+                Gizmos.DrawWireSphere(sp.position, 0.5f);
+                Gizmos.DrawLine(sp.position, sp.position + sp.forward * 1.0f);
+            }
         }
     }
 }

@@ -1,20 +1,22 @@
 using System;
 using TMPro.Examples;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 5f;
     private float continuousSpeed;
     public float jumpForce = 5f;
     private Vector2 _moveInput;
-    private Rigidbody _rb;
+    private CharacterController _characterController;
     private bool _isGrounded;
     public CameraController cameraController;
     public CastInputController castInputController;
     public InputActionReference explorationState;
+    public InputAction jumpAction;
 
     [Header("Other")]
     public PlayerAnimatorView playerAnimatorView;
@@ -23,58 +25,121 @@ public class PlayerController : MonoBehaviour
     public PlayerStats stats;
     public PlayerInventory inventory;
 
+    public event Action OnEnterBattle;
+    public event Action OnExitBattle;
+
+    public void RaiseEnterBattle() => OnEnterBattle?.Invoke();
+    public void RaiseExitBattle() => OnExitBattle?.Invoke();
+
+    private float _verticalVelocity;
+    private float _x, _z;
+    private Vector3 _inputDirection;
+    private float _jumpValue = 0.5f;
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        continuousSpeed = moveSpeed;
+        _characterController = GetComponent<CharacterController>();
 
-        if (_rb == null)
+        if (_characterController == null)
         {
-            _rb = gameObject.AddComponent<Rigidbody>();
+            _characterController = gameObject.AddComponent<CharacterController>();
         }
-        _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        
-
     }
 
-    void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            DisableLocalOnlyComponents();
+            return;
+        }
+
         if (explorationState == null)
         {
             return;
         }
         explorationState.action.started += ExplorationState;
         explorationState.action.Enable();
-    }
-    void OnDisable()
-    {
-        if (explorationState == null)
+        jumpAction.Enable();
+
+        cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController == null) cameraController = FindAnyObjectByType<CameraController>();
+        if (cameraController != null)
         {
-            return;
+            cameraController.SetTarget(transform);
         }
-        explorationState.action.started -= ExplorationState;
-        explorationState.action.Disable();
+
+        if (castInputController == null) castInputController = GetComponentInChildren<CastInputController>(true);
+        if (playerAnimatorView == null) playerAnimatorView = GetComponentInChildren<PlayerAnimatorView>(true);
+
+        if (GameplayManager.Instance != null)
+        {
+            GameplayManager.Instance.RegisterLocalPlayer(this);
+        }
     }
+
+    private void DisableLocalOnlyComponents()
+    {
+        var playerInput = GetComponentInChildren<PlayerInput>(true);
+        if (playerInput != null) playerInput.enabled = false;
+
+        foreach (var cam in GetComponentsInChildren<Camera>(true))
+        {
+            cam.enabled = false;
+        }
+
+        foreach (var listener in GetComponentsInChildren<AudioListener>(true))
+        {
+            listener.enabled = false;
+        }
+
+        foreach (var canvas in GetComponentsInChildren<Canvas>(true))
+        {
+            canvas.gameObject.SetActive(false);
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (!IsOwner) return;
+
+        if (explorationState != null && explorationState.action != null)
+        {
+            explorationState.action.started -= ExplorationState;
+            explorationState.action.Disable();
+        }
+        if (jumpAction != null) jumpAction.Disable();
+    }
+
     void Awake()
     {
         onExplorationState = true;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        MoveCharacter();
+        if (!IsOwner) return;
+
+        if (onExplorationState) MoveCharacter();
     }
 
     void MoveCharacter()
     {
-        Vector3 moveDirection = (transform.forward * _moveInput.y) + (transform.right * _moveInput.x);
-        
-        if (moveDirection.magnitude > 1) moveDirection.Normalize();
-        
-        Vector3 targetVelocity = moveDirection * moveSpeed;
-        
-        _rb.linearVelocity = new Vector3(targetVelocity.x, _rb.linearVelocity.y, targetVelocity.z);
-        
-        _isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        _isGrounded = _characterController.isGrounded;
+
+        Jump();
+
+        _x = _moveInput.x;
+        _z = _moveInput.y;
+
+        Vector3 horizontalMovement = transform.right * _x + transform.forward * _z;
+
+        Vector3 movement = horizontalMovement * moveSpeed;
+
+        movement.y = _verticalVelocity;
+        _characterController.Move(movement * Time.deltaTime);
     }
 
     public void OnMove(InputValue value)
@@ -82,20 +147,33 @@ public class PlayerController : MonoBehaviour
         _moveInput = value.Get<Vector2>();
     }
 
-    public void OnJump(InputValue value)
+    public void Jump()
     {
-        if (_isGrounded && value.isPressed)
+        if (_isGrounded)
         {
-            _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            _verticalVelocity = -2f;
         }
+        if (_isGrounded && (jumpAction.ReadValue<float>() > _jumpValue))
+        {
+            _verticalVelocity = Mathf.Sqrt(jumpForce * -2f * -9.81f);
+        }
+
+        _verticalVelocity += -9.81f * Time.deltaTime;
     }
 
     public void ExplorationState(InputAction.CallbackContext context)
     {
+        var gm = GameplayManager.Instance;
+        if (gm == null || gm.stateMachine == null) return;
+
+        if (gm.stateMachine.currentState is GameOverState) return;
+
+        onExplorationState = !onExplorationState;
+
         if (onExplorationState)
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
+            gm.stateMachine.ChangeState(gm.explorationState);
         else
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
+            gm.stateMachine.ChangeState(gm.battleState);
     }
 
     public void NullMoveSpeed()
@@ -107,7 +185,4 @@ public class PlayerController : MonoBehaviour
     {
         moveSpeed = continuousSpeed;
     }
-
-
-    
 }

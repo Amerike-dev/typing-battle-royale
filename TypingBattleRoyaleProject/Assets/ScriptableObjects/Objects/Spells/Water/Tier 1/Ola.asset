@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
+  m_Name: Ola
+  m_EditorClassIdentifier: Assembly-CSharp::Spell
+  spellName: Ola
+  elementType: 2
+  description: "Invoca una ola que viaja en linea recta a travez del suelo para hacer
+    da\xF1o bajo y realentizar."
+  spellTypes: 
+  damage: 15
+  debuff: 1
+  range: 20
+  speed: 10
+  uses: 0
+  duration: 0
+  particleLifeDuration: 0
+  loop: 1
+  startSpeed: 2
+  startSize: 1
+  emissionRate: 50
+  shapeRadius: 2
+  materialVFX: {fileID: 0}
