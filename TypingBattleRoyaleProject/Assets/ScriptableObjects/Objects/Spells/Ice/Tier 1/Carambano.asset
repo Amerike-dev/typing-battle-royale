@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Carambano
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Carambano
+  runeString: paleta helada
   elementType: 9
   description: "Invoca un pico de hielo en los pies del oponente seleccionado, haciendo
     da\xF1o y aplicando realintizaci\xF3n."

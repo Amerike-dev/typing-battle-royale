@@ -32,13 +32,16 @@ public class SpellBookUI : MonoBehaviour
 
     private void EnsurePlaceholderSlots()
     {
-        if (GetComponent<RectTransform>() == null) gameObject.AddComponent<RectTransform>();
+        var rect = GetComponent<RectTransform>();
+        if (rect == null) rect = gameObject.AddComponent<RectTransform>();
 
-        var background = GetComponent<Image>();
-        if (background == null)
+        if (rect.anchorMin == Vector2.zero && rect.anchorMax == Vector2.one && rect.sizeDelta == Vector2.zero)
         {
-            background = gameObject.AddComponent<Image>();
-            background.color = new Color(0f, 0f, 0f, 0.55f);
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = new Vector2(420f, 220f);
         }
 
         var layout = GetComponent<VerticalLayoutGroup>();
@@ -96,7 +99,7 @@ public class SpellBookUI : MonoBehaviour
         gameObject.SetActive(true);
         currentPage = 0;
         selectedIndex = 0;
-        Refresh(spells, 0);
+        Refresh(spells ?? new List<SpellData>(), 0);
     }
 
     public void Hide()
@@ -145,7 +148,7 @@ public class SpellBookUI : MonoBehaviour
 
     void Update()
     {
-        if (currentSpells == null) return;
+        if (!gameObject.activeInHierarchy) return;
 
         HandlePageNavigation();
         HandleSelectionNavigation();
@@ -167,7 +170,8 @@ public class SpellBookUI : MonoBehaviour
 
     private void HandlePageNavigation()
     {
-        int maxPage = Mathf.Max(0, Mathf.CeilToInt((float)currentSpells.Count / spellsPerPage) - 1);
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
+        int maxPage = Mathf.Max(0, Mathf.CeilToInt((float)spellCount / spellsPerPage) - 1);
 
         float scroll = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
         bool pageUp = Keyboard.current != null && Keyboard.current.pageUpKey.wasPressedThisFrame;
@@ -191,25 +195,36 @@ public class SpellBookUI : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame) selectedIndex--;
+        if (Keyboard.current.downArrowKey.wasPressedThisFrame) selectedIndex++;
+
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
+        int maxIndex;
+        if (spellCount == 0)
         {
-            selectedIndex--;
+            maxIndex = 0;
+        }
+        else
+        {
+            int onThisPage = Mathf.Min(spellsPerPage, spellCount - currentPage * spellsPerPage);
+            maxIndex = Mathf.Max(0, onThisPage - 1);
         }
 
-        if (Keyboard.current.downArrowKey.wasPressedThisFrame)
-        {
-            selectedIndex++;
-        }
-
-        selectedIndex = Mathf.Clamp(selectedIndex, 0, slots.Length - 1);
+        selectedIndex = Mathf.Clamp(selectedIndex, 0, maxIndex);
     }
 
     private void ConfirmSelection()
     {
-        if (currentSpells == null) return;
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
+
+        if (spellCount == 0 && selectedIndex == 0)
+        {
+            OnSpellConfirmed?.Invoke(null);
+            return;
+        }
 
         int spellIndex = currentPage * spellsPerPage + selectedIndex;
-        if (spellIndex < 0 || spellIndex >= currentSpells.Count) return;
+        if (spellIndex < 0 || spellIndex >= spellCount) return;
 
         SpellData chosen = currentSpells[spellIndex];
         if (chosen == null) return;
@@ -221,14 +236,24 @@ public class SpellBookUI : MonoBehaviour
 
     void UpdateSelectionVisual()
     {
-        if (currentSpells == null) return;
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
 
         for (int i = 0; i < images.Length; i++)
         {
             int spellIndex = currentPage * spellsPerPage + i;
 
-            if (spellIndex >= currentSpells.Count)
+            if (spellIndex >= spellCount)
+            {
+                if (spellCount == 0 && i == 0)
+                {
+                    images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
+                }
+                else
+                {
+                    images[i].color = new Color(1f, 1f, 1f, 0.25f);
+                }
                 continue;
+            }
 
             SpellData spell = currentSpells[spellIndex];
 
@@ -238,14 +263,7 @@ public class SpellBookUI : MonoBehaviour
                 continue;
             }
 
-            if (i == selectedIndex)
-            {
-                images[i].color = Color.yellow;
-            }
-            else
-            {
-                images[i].color = Color.white;
-            }
+            images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
         }
     }
 }

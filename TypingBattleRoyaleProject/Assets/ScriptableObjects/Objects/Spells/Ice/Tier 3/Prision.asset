@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Prision
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Prision
+  runeString: carcel helada del freezer maldito patron
   elementType: 9
   description: "Congela al enemigo seleccionado el doble de la duraci\xF3n normal"
   spellTypes: 04000000

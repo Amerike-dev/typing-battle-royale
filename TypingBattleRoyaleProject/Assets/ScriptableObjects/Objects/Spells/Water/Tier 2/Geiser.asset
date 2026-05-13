@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Geiser
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Geiser
+  runeString: manguerazo del jardinero peleonero
   elementType: 2
   description: "Invoca un geiser en los pies de un enemigo haciendole da\xF1o medio
     y lo lanza al aire"

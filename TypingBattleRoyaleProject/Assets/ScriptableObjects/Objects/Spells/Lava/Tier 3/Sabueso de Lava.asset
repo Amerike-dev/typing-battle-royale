@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Sabueso de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Suelo de lava
+  runeString: perro chamuscado del taquero infernal poderoso
   elementType: 10
   description: "Invoca un sabueso que corre hacia el enemigo m\xE1s cercano y al
     colisionar con el hace da\xF1o en invoca \"suelo de lava\" en el punto de impacto"

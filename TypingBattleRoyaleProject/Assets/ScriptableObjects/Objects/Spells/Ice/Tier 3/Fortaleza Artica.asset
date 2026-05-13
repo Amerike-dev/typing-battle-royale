@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Fortaleza Artica
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Fortaleza Artica
+  runeString: iglu blindado del polo perdido jefazo
   elementType: 9
   description: "Invoca Un castillo de hielo en el cual tienes velocidad de movimiento
     aumentada y los enemigos dentro toman da\xF1o peri\xF3dico"

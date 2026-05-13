@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Neblina
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Neblina
+  runeString: fumarola del diablo arrabalero
   elementType: 4
   description: "Lanza un c\xFAmulo de neblina que al impactar en un terreno genera
     una neblina en un area, el caster puede ver a lon enemigos dento de ella"

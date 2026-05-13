@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Apocalipsis
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Apocalipsis
+  runeString: fin del mundo cuajado en chinampas calientes
   elementType: 10
   description: Haz que caigan meteoritos en un area alrededor del caster, los meteoritos
     invocan "suelo de lava" donde impactan"

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Piel de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Piel de lava
+  runeString: playera comal
   elementType: 10
   description: "Obten +20 de vida y mientras tengas esta vida extra haz da\xF1o a
     los enemigos en un rango cercano"

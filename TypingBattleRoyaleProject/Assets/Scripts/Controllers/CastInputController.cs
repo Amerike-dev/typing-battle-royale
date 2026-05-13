@@ -22,20 +22,23 @@ public class CastInputController : MonoBehaviour
     private bool _casting;
     private TypingStats _typingStats;
     private float _timeElapsed;
-    public int _totalKeysPressed; //esta era priivada
+    public int _totalKeysPressed;
     public float wordsPerMinute;
     public float accuracy;
 
-    //Toda la logica de reinicio de cambio de hechizos esta en onEnable  onDisable
     [Header("ViewFeedback")]
     public SpellUIController uiController;
+
+    private float _armingTime;
+    private CanvasGroup _uiCanvasGroup;
 
 
     private void OnEnable()
     {
         _casting = true;
         _typingStats = new TypingStats();
-        
+        _armingTime = Time.unscaledTime + 0.15f;
+
         if (_cast != null && _cast.action != null)
         {
             _cast.action.started += EvaluateAccuracy;
@@ -43,26 +46,36 @@ public class CastInputController : MonoBehaviour
 
         wordsPerMinute = 0;
         accuracy = 0;
+        stringIndex = 0;
+        lastInInput = 0;
+        incorrectInput = 0;
+        _totalKeysPressed = 0;
+        _timeElapsed = 0;
         StartCoroutine(CountTimeElapsed());
-        
+
         if (castSpell != null)
         {
+            castSpell.text = string.Empty;
             castSpell.onEndEdit.AddListener(CastText);
         }
-        
+
         if (spell != null)
         {
             spell.text = spellText;
         }
 
-        stringIndex = 0;
-        lastInInput = 0;
+        SetUIVisible(true);
+
+        if (castSpell != null)
+        {
+            castSpell.ActivateInputField();
+        }
     }
 
     private void OnDisable()
     {
-        StopCoroutine(CountTimeElapsed());
-        
+        StopAllCoroutines();
+
         if (castSpell != null)
         {
             castSpell.onEndEdit.RemoveListener(CastText);
@@ -71,6 +84,24 @@ public class CastInputController : MonoBehaviour
         if (_cast != null && _cast.action != null)
         {
             _cast.action.started -= EvaluateAccuracy;
+        }
+
+        SetUIVisible(false);
+    }
+
+    private void SetUIVisible(bool visible)
+    {
+        if (_uiCanvasGroup == null)
+        {
+            Transform anchor = castSpell != null ? castSpell.transform : (spell != null ? spell.transform : null);
+            if (anchor != null) _uiCanvasGroup = anchor.GetComponentInParent<CanvasGroup>();
+        }
+
+        if (_uiCanvasGroup != null)
+        {
+            _uiCanvasGroup.alpha = visible ? 1f : 0f;
+            _uiCanvasGroup.interactable = visible;
+            _uiCanvasGroup.blocksRaycasts = visible;
         }
     }
 
@@ -82,13 +113,14 @@ public class CastInputController : MonoBehaviour
         Debug.Log("Current Text: " + cast);
 
         if (cast.Length == 0) return;
+        if (string.IsNullOrEmpty(spellText)) return;
 
         if (cast[stringIndex] == spellText[stringIndex])
         {
             if (stringIndex <= lastInInput + 1)
             {
                 lastInInput = stringIndex;
-                uiController.UpdateDisplay(lastInInput + 1, false);
+                if (uiController != null) uiController.UpdateDisplay(lastInInput + 1, false);
             }
         }
 
@@ -96,36 +128,38 @@ public class CastInputController : MonoBehaviour
         {
             incorrectInput++;
             Debug.Log("Tsijni");
-            uiController.UpdateDisplay(lastInInput + 1, true);
+            if (uiController != null) uiController.UpdateDisplay(lastInInput + 1, true);
         }
 
         if (cast.Length == spellText.Length)
         {
-            Debug.Log("Spell Complete Crash");
-            OnDisable();
+            Debug.Log("Spell Complete");
+            enabled = false;
         }
     }
 
     private void EvaluateAccuracy(InputAction.CallbackContext obj)
     {
+        if (Time.unscaledTime < _armingTime) return;
+        if (castSpell != null && string.IsNullOrEmpty(castSpell.text)) return;
+
         _typingStats.timeElapsed = _timeElapsed;
-        _typingStats.hits = spellText.Length - incorrectInput;
+        _typingStats.hits = Mathf.Max(0, (spellText != null ? spellText.Length : 0) - incorrectInput);
         _typingStats.totalKeystrokes = _totalKeysPressed;
         wordsPerMinute = _typingStats.GetWPM();
         accuracy = _typingStats.GetAccuracy();
         _casting = false;
 
         OnSpellCast?.Invoke(currentSpell);
-        //Se reinicia el script en el onDisable, aqui antes de eso iria la funcion que castea el hechizo y ense�ar el wpm y el accuracy en un display
 
-        gameObject.SetActive(false);
+        enabled = false;
     }
 
     public IEnumerator CountTimeElapsed()
     {
-        while(_casting)
+        while (_casting)
         {
-            _timeElapsed ++;
+            _timeElapsed++;
             yield return new WaitForSeconds(1f);
         }
     }

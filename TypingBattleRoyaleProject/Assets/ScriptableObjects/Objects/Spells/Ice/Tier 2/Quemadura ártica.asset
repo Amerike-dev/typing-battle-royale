@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: "Quemadura \xE1rtica"
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Quemadura Artica
+  runeString: frio quemante de la ex despechada
   elementType: 0
   description: "Realiza un ataque en un area a muy corta distancia que hace da\xF1o
     alto"

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Arco de Hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Arco de hielo
+  runeString: flecha congelada del oxxo nocturno
   elementType: 9
   description: Equipa un arco de hielo de un solo uso que dispara un proyectil de
     alta velocidad que al impactar congela a un enemigo

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Golpe de madera
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Golpe de madera
+  runeString: tabazo ancestral del mezquite milenario sediento
   elementType: 5
   description: "Invoca un pilar de madera del suelo que viaja horizontalmente y hace
     da\xF1o alto a un enemigo"

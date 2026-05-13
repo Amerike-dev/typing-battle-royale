@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Spray de veneno
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Spray de veneno
+  runeString: pesticida espesa de la madrina mala
   elementType: 5
   description: Envenena en un cono enfrente de ti
   spellTypes: 0600000004000000
