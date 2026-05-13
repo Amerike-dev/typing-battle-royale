@@ -1805,7 +1805,6 @@ MonoBehaviour:
   currentSpell: {fileID: 0}
   defaultSpell: {fileID: 11400000, guid: 08405417850fa8941b382ee1544032ee, type: 2}
   spellText:
-  vfxPrefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
   castOrigin: {fileID: 0}
   _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
   _totalKeysPressed: 0

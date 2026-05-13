@@ -22,10 +22,7 @@ public class CastInputController : MonoBehaviour
     public string spellText;
 
     [Header("VFX")]
-    public GameObject vfxPrefab;
     public Transform castOrigin;
-    [SerializeField] private float vfxForwardOffset = 1.5f;
-    [SerializeField] private float vfxVerticalOffset = 1f;
 
     [Header("Typing Stats")]
     [SerializeField] private InputActionReference _cast;
@@ -288,7 +285,6 @@ public class CastInputController : MonoBehaviour
         wordsPerMinute = _typingStats.GetWPM();
         accuracy = _typingStats.GetAccuracy();
 
-        SpawnLocalVfx();
         OnSpellCast?.Invoke(currentSpell);
 
         FadeTo(0f, () =>
@@ -320,20 +316,6 @@ public class CastInputController : MonoBehaviour
         if (gm.explorationState == null) return;
         if (gm.PlayerController != null) gm.PlayerController.onExplorationState = true;
         gm.stateMachine.ChangeState(gm.explorationState);
-    }
-
-    private void SpawnLocalVfx()
-    {
-        if (vfxPrefab == null || currentSpell == null) return;
-        Transform origin = castOrigin != null ? castOrigin : transform;
-        Vector3 forward = origin.forward;
-        Vector3 spawnPos = origin.position
-                           + forward.normalized * vfxForwardOffset
-                           + Vector3.up * vfxVerticalOffset;
-        Quaternion rot = forward.sqrMagnitude > 0f ? Quaternion.LookRotation(forward) : origin.rotation;
-        GameObject go = Instantiate(vfxPrefab, spawnPos, rot);
-        var projectile = go.GetComponent<ProjectileVFX>();
-        if (projectile != null) projectile.Launch(currentSpell, forward);
     }
 
     private void EvaluateAccuracy(InputAction.CallbackContext obj)
