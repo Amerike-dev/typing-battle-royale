@@ -11,6 +11,7 @@ public class CastInputController : MonoBehaviour
     public TMP_InputField castSpell;
     public TextMeshProUGUI spell;
     public Spell currentSpell;
+    public Spell defaultSpell;
     public string spellText;
     public int stringIndex = 0;
     public int lastInInput = 0;

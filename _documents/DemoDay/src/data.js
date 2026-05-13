@@ -10,7 +10,8 @@ const TEAM = [
     { id: 'Alicia',  name: 'Alicia',  color: '#f97316' }, // naranja
     { id: 'Juan',    name: 'Juan',    color: '#ec4899' }, // rosa
     { id: 'Barrera', name: 'Barrera', color: '#06b6d4' }, // cian
-    { id: 'Angel',   name: 'Angel',   color: '#eab308' }  // amarillo
+    { id: 'Angel',   name: 'Angel',   color: '#eab308' }, // amarillo
+    { id: 'Banyo',   name: 'Banyo',   color: '#14b8a6' }  // teal
 ];
 
 const TICKETS = [
@@ -42,7 +43,7 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Banyo', status: 'todo',
         summary:
             'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, asignar el Spell SO a CastInputController.currentSpell y spellText = Spell.runeString para que el typing sea sobre ese spell. Si el inventario está vacío, fallback a default spell (TBR-044).',
         acceptance: [
@@ -869,7 +870,7 @@ const TICKETS = [
         id: 'TBR-040',
         title: 'Cámara estática y movimiento bloqueado en BattleState',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Banyo', status: 'todo',
         summary:
             'Al entrar a BattleState la cámara debe quedar estática (sin look libre del mouse) y apuntar al target lockeado por TargetSystem. Movimiento bloqueado (NullMoveSpeed). Salir del estado restaura cámara y movimiento.',
         acceptance: [
@@ -935,7 +936,7 @@ const TICKETS = [
         id: 'TBR-043',
         title: 'State Machine por jugador: Exploration ↔ Battle con Tab',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Banyo', status: 'todo',
         summary:
             'Implementar la maquina de estados local por jugador: ExplorationState (movimiento + cámara libre) y BattleState (UI de typing visible, cámara fija al target, movimiento bloqueado). Tab alterna entre ambos. Estado es local de cada cliente (no se sincroniza por red — solo afecta input/cámara del jugador local).',
         acceptance: [

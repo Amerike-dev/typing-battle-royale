@@ -14,12 +14,14 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
+    [SerializeField] private TargetSystem _targetSystem;
 
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
+    [SerializeField] private SpellBookUI _spellBookUI;
 
     [Header("Propiedades")]
     public PlayerController PlayerController
@@ -35,10 +37,12 @@ public class GameplayManager : NetworkBehaviour
     }
     public CastInputController CastInputController => _castInputController;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
+    public TargetSystem TargetSystem => _targetSystem;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
     public CanvasGroup EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
+    public SpellBookUI SpellBookUI => _spellBookUI;
 
     [Header("Estados")]
     public StateMachine stateMachine;
@@ -99,7 +103,13 @@ public class GameplayManager : NetworkBehaviour
         if (_playerController != null)
         {
             explorationState = new ExplorationState(_playerController.cameraController, this);
-            battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
+            battleState = new BattleState(
+                _castInputController,
+                _playerController,
+                _playerAnimatorView,
+                _playerController.cameraController,
+                _targetSystem,
+                _spellBookUI);
             if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
         }
 
@@ -108,20 +118,31 @@ public class GameplayManager : NetworkBehaviour
 
     public void RegisterLocalPlayer(PlayerController player)
     {
+        if (player == null) return;
+
         _playerController = player;
         _castInputController = player.castInputController;
         _playerAnimatorView = player.playerAnimatorView;
 
         explorationState = new ExplorationState(_playerController.cameraController, this);
-        battleState = new BattleState(_castInputController, _playerController, _playerAnimatorView);
-        
-        if (_castInputController != null) 
+        battleState = new BattleState(
+            _castInputController,
+            _playerController,
+            _playerAnimatorView,
+            _playerController.cameraController,
+            _targetSystem,
+            _spellBookUI);
+
+        if (_castInputController != null)
         {
             _castInputController.OnSpellCast -= HandleOnSpellCast;
             _castInputController.OnSpellCast += HandleOnSpellCast;
         }
 
-        stateMachine.ChangeState(explorationState);
+        Debug.Log($"[GameplayManager] RegisterLocalPlayer: camera={_playerController.cameraController != null}, castInput={_castInputController != null}, spellBookUI={_spellBookUI != null}, targetSystem={_targetSystem != null}");
+
+        if (stateMachine == null) stateMachine = new StateMachine(explorationState, 0f);
+        else stateMachine.ChangeState(explorationState);
     }
 
     private void HandleOnSpellCast(Spell spell)
