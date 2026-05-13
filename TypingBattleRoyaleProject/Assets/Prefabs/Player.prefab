@@ -1397,7 +1397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Objetive
+  m_text:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1798,19 +1798,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267e0123ea183d740a5f693347d46f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CastInputController
-  castSpell: {fileID: 0}
-  spell: {fileID: 0}
+  castSpell: {fileID: 4248038468191811577}
+  spell: {fileID: 2628445262154866196}
+  uiCanvasGroup: {fileID: 5914723390339531604}
+  fadeDuration: 0.25
   currentSpell: {fileID: 0}
-  defaultSpell: {fileID: 0}
-  spellText: Banyo salvanos plis
-  stringIndex: 0
-  lastInInput: 0
-  incorrectInput: 0
+  defaultSpell: {fileID: 11400000, guid: 08405417850fa8941b382ee1544032ee, type: 2}
+  spellText:
+  vfxPrefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+  castOrigin: {fileID: 0}
   _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
   _totalKeysPressed: 0
   wordsPerMinute: 0
   accuracy: 0
   uiController: {fileID: 4326235195450624020}
+  stringIndex: 0
+  lastInInput: 0
+  incorrectInput: 0
 --- !u!114 &-2689246101718839236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2123,8 +2127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d140a5817b88fb4469e745f9b11d9856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellUIController
-  inputController: {fileID: 0}
-  displayText: {fileID: 2782660490193147381}
+  inputController: {fileID: 2907905682181783749}
+  displayText: {fileID: 2628445262154866196}
   correctColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectColor: {r: 1, g: 0, b: 0, a: 1}
   pendingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7237,7 +7241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6421368093047999591
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7266,9 +7270,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7868697153098377851}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &7979627327810979313
 GameObject:

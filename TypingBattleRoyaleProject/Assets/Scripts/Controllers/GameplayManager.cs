@@ -23,6 +23,16 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private EndGameUI _endGameUI;
     [SerializeField] private SpellBookUI _spellBookUI;
 
+    [Header("Combat fallbacks")]
+    [SerializeField] private Spell _defaultSpellFallback;
+    [SerializeField] private GameObject _vfxPrefabFallback;
+
+    [Header("Spell UI (escena)")]
+    [SerializeField] private CanvasGroup _spellUICanvasGroup;
+    [SerializeField] private TMPro.TMP_InputField _spellInputField;
+    [SerializeField] private TextMeshProUGUI _spellDisplayText;
+    [SerializeField] private SpellUIController _spellUIController;
+
     [Header("Propiedades")]
     public PlayerController PlayerController
     {
@@ -123,6 +133,24 @@ public class GameplayManager : NetworkBehaviour
         _playerController = player;
         _castInputController = player.castInputController;
         _playerAnimatorView = player.playerAnimatorView;
+
+        if (_castInputController != null)
+        {
+            if (_castInputController.defaultSpell == null && _defaultSpellFallback != null)
+                _castInputController.defaultSpell = _defaultSpellFallback;
+            if (_castInputController.vfxPrefab == null && _vfxPrefabFallback != null)
+                _castInputController.vfxPrefab = _vfxPrefabFallback;
+
+            if (_spellUICanvasGroup != null) _castInputController.uiCanvasGroup = _spellUICanvasGroup;
+            if (_spellInputField != null) _castInputController.castSpell = _spellInputField;
+            if (_spellDisplayText != null) _castInputController.spell = _spellDisplayText;
+            if (_spellUIController != null)
+            {
+                _castInputController.uiController = _spellUIController;
+                _spellUIController.inputController = _castInputController;
+                if (_spellDisplayText != null) _spellUIController.displayText = _spellDisplayText;
+            }
+        }
 
         explorationState = new ExplorationState(_playerController.cameraController, this);
         battleState = new BattleState(
