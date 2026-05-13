@@ -43,7 +43,7 @@ const TICKETS = [
         id: 'TBR-002',
         title: 'Spell Book selector dentro de BattleState',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: 'Banyo', status: 'todo',
+        assignee: 'Banyo', status: 'done',
         summary:
             'Cuando el jugador entra a BattleState, mostrar la lista de hechizos del PlayerInventory (separada por tier). Al elegir uno, asignar el Spell SO a CastInputController.currentSpell y spellText = Spell.runeString para que el typing sea sobre ese spell. Si el inventario está vacío, fallback a default spell (TBR-044).',
         acceptance: [
@@ -870,7 +870,7 @@ const TICKETS = [
         id: 'TBR-040',
         title: 'Cámara estática y movimiento bloqueado en BattleState',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: 'Banyo', status: 'todo',
+        assignee: 'Banyo', status: 'done',
         summary:
             'Al entrar a BattleState la cámara debe quedar estática (sin look libre del mouse) y apuntar al target lockeado por TargetSystem. Movimiento bloqueado (NullMoveSpeed). Salir del estado restaura cámara y movimiento.',
         acceptance: [
@@ -936,7 +936,7 @@ const TICKETS = [
         id: 'TBR-043',
         title: 'State Machine por jugador: Exploration ↔ Battle con Tab',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: 'Banyo', status: 'todo',
+        assignee: 'Banyo', status: 'done',
         summary:
             'Implementar la maquina de estados local por jugador: ExplorationState (movimiento + cámara libre) y BattleState (UI de typing visible, cámara fija al target, movimiento bloqueado). Tab alterna entre ambos. Estado es local de cada cliente (no se sincroniza por red — solo afecta input/cámara del jugador local).',
         acceptance: [
@@ -961,7 +961,7 @@ const TICKETS = [
         id: 'TBR-044',
         title: 'Default Spell fallback (Bola de Fuego) en CastInputController',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Banyo', status: 'done',
         summary:
             'Mientras TBR-002 (SpellBook) y TBR-039 (desbloqueo en monolito) no estén integrados, cada jugador debe poder castear igual. Asignar Bola de Fuego como default cuando PlayerInventory.spells está vacío para validar el loop completo y probar VFX/daño en red sin depender del flujo de monolitos.',
         acceptance: [
