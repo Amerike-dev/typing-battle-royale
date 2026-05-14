@@ -68,7 +68,7 @@ const TICKETS = [
         id: 'TBR-003',
         title: 'Auto-lock de enemigos cercanos en BattleState',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'TargetSystem.cs hoy es stub (FindClosestTarget y ToggleLockOn vacíos). Implementar selección automática del enemigo más cercano dentro de un radio configurable cuando se entra a BattleState, con indicador visual sobre el target (anillo/flecha) y persistencia mientras dure el casteo. Sin manual cycling (Tab toggles battle mode).',
         acceptance: [
@@ -91,7 +91,7 @@ const TICKETS = [
         id: 'TBR-004',
         title: 'Animaciones de cast + integración VFX-daño (la red de VFX ya existe)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'La red de VFX ya está implementada (SpellNetworkController con ServerRpc + ClientRpc + SpellCatalog + ProjectileVFX). Falta: (1) animación de cast del Animator del player cuando se dispare el evento, (2) feedback de "sin objetivo en rango" cuando target=null, (3) integración con accuracy multiplier — ver TBR-048 para el daño server-side y cooldown. Este ticket cubre solo la capa visual/animación cliente.',
         acceptance: [
@@ -182,7 +182,7 @@ const TICKETS = [
         id: 'TBR-008',
         title: 'UI de muerte + cámara espectadora del asesino + respawn por vidas',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Al morir mostrar overlay de muerte (con cuenta regresiva al respawn y vidas restantes), cámara sigue al jugador que mató al local hasta que el contador termine, luego respawn en spawn point libre. Si no quedan vidas, deriva a TBR-009.',
         acceptance: [
@@ -205,7 +205,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
@@ -655,7 +655,7 @@ const TICKETS = [
         id: 'TBR-030',
         title: 'Skybox + iluminación + post-process del mapa',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Skybox custom (procedural HDR o cubemap), luces baked, niebla de profundidad, post-process volume con bloom + color grading + vignette. Estética coherente con cell shading.',
         acceptance: [
@@ -697,7 +697,7 @@ const TICKETS = [
         id: 'TBR-032',
         title: 'Podium + leaderboard animado en EndGame',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Reemplazar el panel plano de EndGameUI por un podio 3D con los jugadores ordenados (ganador en el centro, alto), animación de entrada en cascada y confetti para el primero. Stats principales por jugador (kills, daño, WPM medio).',
         acceptance: [
@@ -781,7 +781,7 @@ const TICKETS = [
         id: 'TBR-036',
         title: 'Performance pass — target 60fps consistentes',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Profiling con Unity Profiler tras integrar VFX (TBR-023) y shader (TBR-024). Identificar batching breaks, GC allocs en bucle, draw calls excesivos. Asegurar pooling activo. Target: 60fps en hardware modesto.',
         acceptance: [
