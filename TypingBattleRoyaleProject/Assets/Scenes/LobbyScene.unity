@@ -2963,8 +2963,8 @@ MonoBehaviour:
   _startMatchButton: {fileID: 2026167088}
   lobbyUI: {fileID: 1556095908}
   defaultPort: 7777
-  gameScene: CharacterSelect
-  _maxPlayers: 6
+  gameScene: LoadingScreen
+  _maxPlayers: 4
 --- !u!4 &1775311880
 Transform:
   m_ObjectHideFlags: 0
