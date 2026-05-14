@@ -459,7 +459,7 @@ const TICKETS = [
         id: 'TBR-021',
         title: 'Integrar AudioManager en todos los eventos del juego',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Una vez que AudioManager esté implementado (TBR-013), conectar PlaySFX/ChangeMusic a todos los eventos: cast de hechizo, hit de daño, pérdida de vida, jump, footsteps, monolith unlock, countdown, transiciones de escena, hover/click de UI. Música distinta por escena con crossfade.',
         acceptance: [
@@ -482,7 +482,7 @@ const TICKETS = [
         id: 'TBR-022',
         title: 'Biblioteca de SFX completa (importación + cataloging)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Importar y catalogar en AudioDataBase los clips para todas las acciones. Mínimo 25 clips únicos.',
         acceptance: [
@@ -740,7 +740,7 @@ const TICKETS = [
         id: 'TBR-034',
         title: 'Pantalla de stats finales del jugador',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Después del podio, pantalla personal con: kills, daño infligido/recibido, hechizos casteados, WPM medio, accuracy media, hechizo más usado, tiempo más rápido de cast.',
         acceptance: [
@@ -1330,7 +1330,7 @@ const TICKETS = [
         id: 'TBR-057',
         title: 'Polish NPCs ambientales — pájaros/luciérnagas que cruzan el mapa',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Para dar vida al mapa sin tocar gameplay, agregar NPCs pasivos puramente visuales: bandadas de pájaros (sprites o quads texturizados) que cruzan el cielo cada 20-40s en path lineal, y luciérnagas (point lights pequeños + sprite billboard) flotando lentamente en zonas bajas. Sin colisión, sin red (solo cliente local), sin lógica de juego. Deterministas no — pueden variar entre clientes.',
         acceptance: [
