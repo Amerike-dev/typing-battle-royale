@@ -140,7 +140,7 @@ const TICKETS = [
         id: 'TBR-006',
         title: 'Mover barra de vida del prefab al Canvas UI global',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'El prefab del player tiene un Canvas mundial con su barra de vida. Eso causa duplicación, problemas de orden de render y trabajo extra de NetworkObject. Quitarlo del prefab y dejar la HUD del jugador local en un único Canvas screen-space del HUDController.',
         acceptance: [
@@ -634,7 +634,7 @@ const TICKETS = [
         id: 'TBR-029',
         title: 'Loading screen real (reemplazar checkboxes manuales)',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'LoadingScreenController hoy tiene checkboxes manuales (checkServer, checkPlayers, checkMap, checkLoot) — debug. Reemplazar por SceneManager.LoadSceneAsync con barra de progreso real y un tip aleatorio de gameplay rotando.',
         acceptance: [
@@ -1056,7 +1056,7 @@ const TICKETS = [
         id: 'TBR-048',
         title: 'Server-side damage + accuracy multiplier + cooldown en cast',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'La red de VFX ya está pero NO aplica daño (SpellNetworkController solo dispara ClientRpc visual). Falta: (1) ProjectileVFX.OnTriggerEnter aplica daño solo en IsServer; (2) PlayerStatsNet.TakeDamageServerRpc(damage, attackerId) que decrementa currentHP y dispara OnDamageTaken; (3) accuracy multiplier (TypingStats.GetDamageBonusMultiplier) se pasa por el ServerRpc; (4) cooldown por SpellNetworkController para evitar spam.',
         acceptance: [
