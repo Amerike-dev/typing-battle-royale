@@ -338,7 +338,7 @@ const TICKETS = [
         id: 'TBR-015',
         title: 'Manejo de desconexión durante partida',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Hoy si un cliente se desconecta el server no lo sabe limpiamente: su prefab queda vivo y puede romper la condición de "último vivo". Manejar OnClientDisconnectCallback para despawnear, marcar isAlive=false y reevaluar fin de partida.',
         acceptance: [
