@@ -52,22 +52,26 @@ public class LoadingScreenController : MonoBehaviour
 
     IEnumerator LoadAsync(string sceneName)
     {
-        var op = SceneManager.LoadSceneAsync(sceneName);
-        if (op == null) yield break;
+        float duration = 3f;
+        float timeElapsed = 0f;
 
-        op.allowSceneActivation = false;
-        
-        while (op.progress < 0.9f)
+        while (timeElapsed < duration)
         {
+            timeElapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(timeElapsed / duration);
+            
             if (progressBar != null)
-                progressBar.value = op.progress;
+                progressBar.value = progress;
+                
             yield return null;
         }
 
         if (progressBar != null)
             progressBar.value = 1f;
-            
-        yield return new WaitForSeconds(1f);
-        op.allowSceneActivation = true;
+
+        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsServer)
+        {
+            Unity.Netcode.NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        }
     }
 }
