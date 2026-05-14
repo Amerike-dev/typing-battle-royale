@@ -107,4 +107,53 @@ public class PlayerStatsNet : NetworkBehaviour
             OnEnemyKilled?.Invoke();
         }
     }
+
+    public void TakeDamage(float damage, ulong attackerId = 0)
+    {
+        if (!IsServer || !isAlive.Value) return;
+
+        Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
+
+        currentHP.Value -= damage;
+
+        if (currentHP.Value <= 0)
+        {
+            HandleDeath(attackerId);
+        }
+    }
+
+    private void HandleDeath(ulong killerId)
+    {
+        if (currentLifes.Value > 1)
+        {
+            currentLifes.Value--;
+            currentHP.Value = maxHP;
+            RespawnOwnerClientRpc();
+        }
+        else
+        {
+            currentLifes.Value = 0;
+            currentHP.Value = 0;
+            isAlive.Value = false;
+        }
+    }
+
+    [ClientRpc]
+    private void RespawnOwnerClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        if (IsOwner)
+        {
+            RespawnController respawn = FindFirstObjectByType<RespawnController>();
+            PlayerController controller = GetComponent<PlayerController>();
+
+            if (respawn != null && controller != null)
+            {
+                respawn.RespawnPlayer(controller);
+            }
+            else
+            {
+                Debug.LogWarning("No se encontró RespawnController o PlayerController local.");
+            }
+        }
+    }
 }
