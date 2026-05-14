@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0dfe0a6ebc848d41bf1de447016af2a, type: 3}
   m_Name: AudioMusica
   m_EditorClassIdentifier: Assembly-CSharp::AudioDataBase
+  list:
+  - {fileID: 11400000, guid: 699e41e0af12ca44cb79e898cc1b209d, type: 2}
+  - {fileID: 11400000, guid: ad069d4a58cf00447af8ec7493bbc793, type: 2}
