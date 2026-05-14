@@ -571,7 +571,7 @@ const TICKETS = [
         id: 'TBR-026',
         title: 'Animaciones de UI (tweens y micro-interacciones)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Polish UX: fade-in/out de paneles, slide del HUD al iniciar partida, pop del countdown 3-2-1-Lucha, pulse en target lockeado, hover con scale 1.05 en botones, transición de selección en SpellBookUI. Usar DOTween (free) o LeanTween.',
         acceptance: [
@@ -803,7 +803,7 @@ const TICKETS = [
         id: 'TBR-037',
         title: 'Prompt de proximidad a monolitos',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Al entrar al rango de un monolito (PlayerInteractorView.NearestMonolith != null), mostrar un texto flotante "Pulsa E" sobre el monolito. Al salir del rango, ocultar. Listener de input "E" que dispara el modal de selección (TBR-038). Prompt es local (no replica por red).',
         acceptance: [
@@ -824,7 +824,7 @@ const TICKETS = [
         id: 'TBR-038',
         title: 'Modal de selección de nivel en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Al pulsar E (TBR-037), abrir modal con 3 botones que muestran los 3 niveles del elemento del monolito (ej. agua: Nivel 1 / 2 / 3). Mouse hover destaca; click selecciona y dispara TBR-039. ESC cancela sin efecto.',
         acceptance: [
@@ -892,7 +892,7 @@ const TICKETS = [
         id: 'TBR-041',
         title: 'Indicador visual de rango y filtrado de target en BattleState',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'En BattleState mostrar un anillo/cone visual del rango de auto-target. Solo enemigos dentro del rango son seleccionables por TargetSystem. Si no hay enemigos en rango, target = null y los spells se ejecutan sin damage (feedback "sin objetivo").',
         acceptance: [
@@ -913,7 +913,7 @@ const TICKETS = [
         id: 'TBR-042',
         title: 'Tab interrumpe el cast y sale de BattleState',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Tab es el botón único de toggle Exploration↔Battle (TBR-043). En BattleState con typing activo: cancela el cast, limpia buffer, NO consume spell ni aplica daño, cancela VFX en preparación y vuelve a ExplorationState. Sin typing activo, Tab simplemente cambia a ExplorationState.',
         acceptance: [
@@ -1120,7 +1120,7 @@ const TICKETS = [
         id: 'TBR-050',
         title: 'Polish escena Lobby — aplicar identidad visual del brand book',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'El LobbyScene hoy es funcional pero gráficamente plano. Rediseñarlo siguiendo el BRAND BOOK WIZARDS OF THE KEYBOARD.pdf: fondo con isotipo en marca de agua, header con logo_wotk_black, slots de jugadores con frame magico (bordes redondeados + acento RojoLotti), tipografía del brand, botones con estilo de "rune card" (fondo Black, borde GatorOrange en hover, texto White). Mantener funcionalidad existente (capacidad 4-8, lista en vivo, ready states) — este ticket es 100% visual.',
         acceptance: [
@@ -1180,7 +1180,7 @@ const TICKETS = [
         id: 'TBR-052',
         title: 'Polish UI Typing — caja de runas + feedback de tecleo on-brand',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'La UI de typing actual muestra el spellText como texto plano. Rediseñarla como una "caja de runas" centrada en pantalla durante BattleState: el spellText completo visible en gris claro, las letras ya tecleadas en GatorOrange con leve glow, la letra activa (next) en RojoLotti con pulso, las erróneas en rojo apagado con shake corto. Barra de accuracy/WPM debajo en estilo brand. Indicador de cast progress estilo "rune circle" alrededor del player.',
         acceptance: [
@@ -1210,7 +1210,7 @@ const TICKETS = [
         id: 'TBR-053',
         title: 'Polish UI Exploration State — minimapa, crosshair y HUD ambient',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'En ExplorationState (TBR-043) la UI es casi nula. Diseñar un HUD ambient on-brand: barra de vida ornamentada (esquina sup-izq) estilo "tinta sobre pergamino", contador de vidas como pequeños iconos de gota-de-mana, mini compass/heading en la sup-der, contador de monolitos visitados, prompts contextuales ("Pulsa TAB para combate" cerca de enemigos, "Pulsa E para interactuar" cerca de monolitos). Estética calmada con paleta fría (VibrantViolet dominante).',
         acceptance: [
@@ -1240,7 +1240,7 @@ const TICKETS = [
         id: 'TBR-054',
         title: 'Polish UI Pausa — panel modal grimorio + sliders on-brand',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'El menú de pausa (TBR-001) hoy es funcional pero un panel gris. Rediseñarlo como un "tomo abierto" central: fondo del juego con blur+darken (CanvasGroup 0→0.7), panel central con frame ornamental, título "PAUSA" en display font, botones Reanudar/Volver al Lobby con estilo brand, sliders de volumen Master/Music/SFX con knob personalizado y fill en RojoLotti, footer con créditos cortos del estudio. Mantener funcionalidad existente.',
         acceptance: [
