@@ -291,11 +291,8 @@ const TICKETS = [
         id: 'TBR-013',
         title: 'Implementar AudioManager (música y SFX)',
         type: 'feature', priority: 'medium', effort: 'M',
-<<<<<<< HEAD
-        assignee: 'Ches', status: 'done',
-=======
         assignee: 'Barrera', status: 'done',
->>>>>>> main
+
         summary:
             'AudioManager, MusicController y AudioSettings están como stubs. Implementar PlaySFX(name) usando AudioDataBase, ChangeMusic con crossfade en MusicController, persistir volúmenes con Save/Load y conectar VolumeController.',
         acceptance: [
