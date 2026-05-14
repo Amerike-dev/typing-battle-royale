@@ -68,7 +68,7 @@ const TICKETS = [
         id: 'TBR-003',
         title: 'Auto-lock de enemigos cercanos en BattleState',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'TargetSystem.cs hoy es stub (FindClosestTarget y ToggleLockOn vacíos). Implementar selección automática del enemigo más cercano dentro de un radio configurable cuando se entra a BattleState, con indicador visual sobre el target (anillo/flecha) y persistencia mientras dure el casteo. Sin manual cycling (Tab toggles battle mode).',
         acceptance: [
@@ -91,7 +91,7 @@ const TICKETS = [
         id: 'TBR-004',
         title: 'Animaciones de cast + integración VFX-daño (la red de VFX ya existe)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'La red de VFX ya está implementada (SpellNetworkController con ServerRpc + ClientRpc + SpellCatalog + ProjectileVFX). Falta: (1) animación de cast del Animator del player cuando se dispare el evento, (2) feedback de "sin objetivo en rango" cuando target=null, (3) integración con accuracy multiplier — ver TBR-048 para el daño server-side y cooldown. Este ticket cubre solo la capa visual/animación cliente.',
         acceptance: [
@@ -117,7 +117,7 @@ const TICKETS = [
         id: 'TBR-005',
         title: 'Muerte por barra de vida agotada',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'PlayerStats expone TakeDamage y LoseLife pero no hay loop que detecte HP <= 0 → restar vida → respawn. Hoy isAlive nunca cambia a false en flujo real. Implementar la cadena: damage → check HP → si HP<=0 invocar OnAllLifeLost (si lives==0) o OnLifeLost + respawn.',
         acceptance: [
@@ -182,7 +182,7 @@ const TICKETS = [
         id: 'TBR-008',
         title: 'UI de muerte + cámara espectadora del asesino + respawn por vidas',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Al morir mostrar overlay de muerte (con cuenta regresiva al respawn y vidas restantes), cámara sigue al jugador que mató al local hasta que el contador termine, luego respawn en spawn point libre. Si no quedan vidas, deriva a TBR-009.',
         acceptance: [
@@ -205,7 +205,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
@@ -338,7 +338,7 @@ const TICKETS = [
         id: 'TBR-015',
         title: 'Manejo de desconexión durante partida',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Hoy si un cliente se desconecta el server no lo sabe limpiamente: su prefab queda vivo y puede romper la condición de "último vivo". Manejar OnClientDisconnectCallback para despawnear, marcar isAlive=false y reevaluar fin de partida.',
         acceptance: [
@@ -358,7 +358,7 @@ const TICKETS = [
         id: 'TBR-016',
         title: 'Sincronizar Monolitos por red',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'MonolithSpawn instancia GameObjects con Instantiate plano: cada cliente ve sus propios monolitos no sincronizados. Convertir prefab Monolith a NetworkObject y spawnear desde el Host con NetworkObject.Spawn(). TryInteract debe ejecutarse vía ServerRpc.',
         acceptance: [
@@ -416,7 +416,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
@@ -529,7 +529,7 @@ const TICKETS = [
         id: 'TBR-024',
         title: 'Cell-shading shader pass (estilo toon)',
         type: 'feature', priority: 'medium', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Implementar shader cell-shading custom o vía package (URP Toon Shader). Aplicar a personajes, monolitos y entorno. Outline por post-process o Geometry pass. Validar performance vs PBR estándar.',
         acceptance: [
@@ -550,7 +550,7 @@ const TICKETS = [
         id: 'TBR-025',
         title: 'Integración de modelos y rigs reales (skins finales)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Reemplazar prefabs placeholder de SkinInfo por modelos finales de los 4 personajes con sus 4 variantes de color cada uno. Animator con state machine: Idle / Run / Jump / Casting / Hit / Death.',
         acceptance: [
@@ -614,7 +614,7 @@ const TICKETS = [
         id: 'TBR-028',
         title: 'Polish del Lobby (estados listos + countdown de inicio)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Mostrar slots de jugadores con avatar/iniciales/estado "Esperando…" o "Listo ✓". Cuando todos confirman (o el host pulsa Empezar), countdown sincronizado de 3 segundos antes de cargar siguiente escena. Animaciones de entrada/salida cuando alguien se conecta/desconecta. Música de lobby propia.',
         acceptance: [
@@ -655,7 +655,7 @@ const TICKETS = [
         id: 'TBR-030',
         title: 'Skybox + iluminación + post-process del mapa',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Skybox custom (procedural HDR o cubemap), luces baked, niebla de profundidad, post-process volume con bloom + color grading + vignette. Estética coherente con cell shading.',
         acceptance: [
@@ -697,7 +697,7 @@ const TICKETS = [
         id: 'TBR-032',
         title: 'Podium + leaderboard animado en EndGame',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Reemplazar el panel plano de EndGameUI por un podio 3D con los jugadores ordenados (ganador en el centro, alto), animación de entrada en cascada y confetti para el primero. Stats principales por jugador (kills, daño, WPM medio).',
         acceptance: [
@@ -781,7 +781,7 @@ const TICKETS = [
         id: 'TBR-036',
         title: 'Performance pass — target 60fps consistentes',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Profiling con Unity Profiler tras integrar VFX (TBR-023) y shader (TBR-024). Identificar batching breaks, GC allocs en bucle, draw calls excesivos. Asegurar pooling activo. Target: 60fps en hardware modesto.',
         acceptance: [
@@ -847,7 +847,7 @@ const TICKETS = [
         id: 'TBR-039',
         title: 'Typing challenge de desbloqueo de hechizo en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Una vez seleccionado el nivel (TBR-038), mostrar el rune text del SpellData. Bloquear movimiento (PlayerController.NullMoveSpeed). El jugador tipea sin error; un solo error reinicia el char actual (no penaliza). Al completar exitoso, agregar SpellData al PlayerInventory y marcar el monolito como exhausted (TBR-016). ESC cancela.',
         acceptance: [
@@ -1093,7 +1093,7 @@ const TICKETS = [
         id: 'TBR-049',
         title: 'Polish escena Splash — fade in/out global + branding WotK',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'La escena Splash (TBR-027) ya carga logos pero sin transiciones suaves: aparición y corte abrupto. Aplicar fade-in/fade-out a TODOS los elementos visibles (logo estudio Red Blood Cells → logo Wizards of the Keyboard + tagline → transición a LobbyScene) usando CanvasGroup.alpha y DOTween. Fondo negro brand (#070504), logos centrados, tagline en blanco con tipografía del brand book. Cualquier tecla skipea con fade-out acelerado (no corte seco).',
         acceptance: [
@@ -1270,7 +1270,7 @@ const TICKETS = [
         id: 'TBR-055',
         title: 'Polish background del mapa — skydome, parallax y atmósfera',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'GameplayScene hoy tiene skybox plano y horizonte vacío. Implementar un background atmosférico estilo cell-shaded coherente con WotK: skydome con gradiente VibrantViolet (cenit) → GatorOrange (horizonte) → Black (zenith inferior), 2-3 capas de montañas/torres lejanas en parallax sutil (rotación con la cámara), partículas ambientales lentas (motas, polen, brasas) y fog de profundidad. Coordinar con TBR-030 (post-process) — este ticket es el background per se.',
         acceptance: [
@@ -1367,7 +1367,7 @@ const TICKETS = [
         id: 'TBR-058',
         title: 'Implementar maqueta Isla 1 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo entregado por los artistas para la Isla 1 (bioma central / zona de spawn). Import del FBX, generar prefab compuesto con colliders y materiales, ubicarlo en GameplayScene en el offset definido y validar que el flujo gameplay (spawn, navegación, monolitos sobre la isla) funciona sin clipping ni cracks.',
         acceptance: [
@@ -1395,7 +1395,7 @@ const TICKETS = [
         id: 'TBR-059',
         title: 'Implementar maqueta Isla 2 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Integrar el modelo de la Isla 2 (segundo bioma) entregado por los artistas. Mismo pipeline que TBR-058 pero con el modelo y la ubicación correspondientes. Validar coherencia visual con la Isla 1 si comparten frontera o si hay puentes/conexiones.',
         acceptance: [
@@ -1422,7 +1422,7 @@ const TICKETS = [
         id: 'TBR-060',
         title: 'Implementar maqueta Isla 3 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 3 (tercer bioma) entregado por los artistas. Mismo pipeline que TBR-058. Validar transiciones con las islas adyacentes.',
         acceptance: [
@@ -1449,7 +1449,7 @@ const TICKETS = [
         id: 'TBR-061',
         title: 'Implementar maqueta Isla 4 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 4 (cuarto bioma) entregado por los artistas. Mismo pipeline que TBR-058. Última isla del mapa; con esta debe quedar el contorno completo de la arena para el demo day.',
         acceptance: [
