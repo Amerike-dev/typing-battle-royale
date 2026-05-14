@@ -17,8 +17,9 @@ public class LoadingScreenController : MonoBehaviour
     public RectTransform spinner;
 
     [Header("Settings")]
-    public float spinnerSpeed = -200f;
-    
+    public float pulseSpeed = 5f;
+    public float minScale = 0.95f;
+    public float maxScale = 1.05f;
     public static string SceneToLoad = "CharacterSelect";
 
     private string[] tips = {
@@ -46,7 +47,8 @@ public class LoadingScreenController : MonoBehaviour
     {
         if (spinner != null)
         {
-            spinner.Rotate(0, 0, spinnerSpeed * Time.deltaTime);
+            float scale = Mathf.Lerp(minScale, maxScale, (Mathf.Sin(Time.time * pulseSpeed) + 1) / 2f);
+            spinner.localScale = new Vector3(scale, scale, scale);
         }
     }
 

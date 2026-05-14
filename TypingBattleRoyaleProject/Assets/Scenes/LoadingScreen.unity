@@ -196,7 +196,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 755737299}
   m_HandleRect: {fileID: 0}
@@ -829,15 +829,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40.5
-  m_fontSizeBase: 36
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -914,7 +914,9 @@ MonoBehaviour:
   progressBar: {fileID: 130032985}
   tipsText: {fileID: 1598477726}
   spinner: {fileID: 773591972}
-  spinnerSpeed: -200
+  pulseSpeed: 5
+  minScale: 2.5
+  maxScale: 3.7135
 --- !u!4 &1661589251
 Transform:
   m_ObjectHideFlags: 0
