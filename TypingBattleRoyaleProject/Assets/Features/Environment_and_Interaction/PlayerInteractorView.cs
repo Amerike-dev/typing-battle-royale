@@ -1,23 +1,76 @@
 using UnityEngine;
+using System.Collections;
+
 public class PlayerInteractorView : MonoBehaviour
 {
-    public MonolithView NearestMonolith { get; private set; }
+    public MonolithView MonolithView { get; private set; }
+    public DebugPop debugPop;
 
-    private void OnTriggerEnter(Collider other)
+    public GameObject[] Monoliths;
+    public GameObject NearMonolith;
+
+    [SerializeField] Vector2 signalHidePos;
+    [SerializeField] Vector2 signalShowPos;
+
+    public float proximityRange = 3f;
+    public float checkerMonolith = 0.5f;
+
+    public bool isVisible = false;
+
+    private void Start()
     {
-        MonolithView monolith = other.GetComponent<MonolithView>();
-        if (monolith != null && monolith != NearestMonolith)
+
+        StartCoroutine(CheckMonolith());
+    }
+
+    public void NearMonolithCheck()
+    {
+        float nearestDistance = Mathf.Infinity;
+
+        NearMonolith = null;
+
+        foreach (var monolith in Monoliths)
         {
-            NearestMonolith = monolith;
+            if (monolith == null) continue;
+
+            float distance = Vector3.Distance(monolith.transform.position, transform.position);
+
+            if (distance < proximityRange && distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                NearMonolith = monolith;
+            }
+            
         }
 
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        MonolithView monolith = other.GetComponent<MonolithView>();
-        if (monolith != null)
+        if (NearMonolith != null)
         {
-            NearestMonolith = null;
+            MonolithView = NearMonolith.GetComponent<MonolithView>();
+            if (!isVisible)
+            {
+                isVisible = true;
+                debugPop.MoveSignal(signalShowPos, 1f);
+            }
+            Debug.Log("El monolito más cercano es " + NearMonolith.name);
+        }
+        else
+        {
+            MonolithView = null;
+            if (isVisible)
+            {
+                isVisible = false;
+                debugPop.MoveSignal(signalHidePos, 0f);
+            }
+        }
+    }
+
+    IEnumerator CheckMonolith()
+    {
+        while (true)
+        {
+            NearMonolithCheck();
+
+            yield return new WaitForSeconds(checkerMonolith);
         }
     }
 }

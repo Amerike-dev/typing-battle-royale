@@ -803,7 +803,7 @@ const TICKETS = [
         id: 'TBR-037',
         title: 'Prompt de proximidad a monolitos',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'Al entrar al rango de un monolito (PlayerInteractorView.NearestMonolith != null), mostrar un texto flotante "Pulsa E" sobre el monolito. Al salir del rango, ocultar. Listener de input "E" que dispara el modal de selección (TBR-038). Prompt es local (no replica por red).',
         acceptance: [
