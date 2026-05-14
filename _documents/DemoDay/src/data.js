@@ -503,7 +503,7 @@ const TICKETS = [
         id: 'TBR-023',
         title: 'VFX para los ~50 hechizos (arquitectura de arquetipos + tiers)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'La base ya está hecha: Spell.cs con tier/archetype/runeString, SpellVFXBinder con multiplicadores T1=1x/T2=1.4x/T3=2x sobre size/emission, ProjectileVFX local determinista, VFX_Projectile.prefab + M_Fire_T1.mat creados via VFXPrefabBuilder editor tool. Ahora hay que: (1) crear los 5 arquetipos restantes (AOE/Aura/Beam/Summon/Buff-Debuff) via tool (TBR-045), (2) un material por elemento (TBR-046), (3) mapear cada Spell SO a su archetype + asignar materialVFX correcto (TBR-047). Este ticket es el "umbrella" que se completa cuando TBR-045/046/047 estén done.',
         acceptance: [
@@ -676,7 +676,7 @@ const TICKETS = [
         id: 'TBR-031',
         title: 'Hit feedback visual (shake, flash, hit-stop)',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Al recibir daño: camera shake corto (~120ms), flash rojo en bordes del HUD, hit-stop (Time.timeScale 0) de ~30ms para weight. Al impactar a un enemigo: pequeño zoom y vibración del crosshair.',
         acceptance: [
@@ -1011,7 +1011,7 @@ const TICKETS = [
         id: 'TBR-046',
         title: 'Materiales por elemento (10 elementos) bajo Assets/Materials/VFX/',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Hoy solo existe M_Fire_T1.mat. Crear un material URP/Particles/Unlit por elemento del enum Elements (Fire, Water, Earth, Air, Nature, Thunder/Lightning, Dark, Light, Ice, Lava) con color de marca apropiado por elemento. Un solo material por elemento — el tier se controla en el binder (size/emission), no necesita 3 materiales por elemento.',
         acceptance: [
@@ -1033,7 +1033,7 @@ const TICKETS = [
         id: 'TBR-047',
         title: 'Mapeo de los ~50 Spell SOs a archetype + asignar materialVFX',
         type: 'tech', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Iterar todos los Spell SOs de Assets/ScriptableObjects/Objects/Spells/** y asignar: archetype (Projectile/AOE/Aura/Beam/Summon/Buff/Debuff), tier (TierOne/TierTwo/TierThree según carpeta), runeString (palabra sin espacios sin tildes en lowercase), materialVFX (M_<elemento>.mat según elementType). Hacer un editor tool que lo automatice y luego revisar manualmente los casos especiales (ej. Curación = Buff, no proyectil).',
         acceptance: [
@@ -1300,7 +1300,7 @@ const TICKETS = [
         id: 'TBR-056',
         title: 'Polish luces del mapa — key light, rim y luces mágicas dinámicas',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Iluminación actual es la Directional Light default. Setup completo: key light direccional cálida (tinte GatorOrange) con sombras suaves, fill light fría (tinte VibrantViolet) sin sombras, rim light sutil sobre los players para separación, point lights mágicas pulsando suavemente en los monolitos y spawn points, y un leve flicker en áreas de combate. Lightmapping para estática + realtime solo donde sea necesario.',
         acceptance: [
