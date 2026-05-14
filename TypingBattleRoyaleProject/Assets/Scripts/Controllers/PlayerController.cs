@@ -35,6 +35,8 @@ public class PlayerController : NetworkBehaviour
     private float _x, _z;
     private Vector3 _inputDirection;
     private float _jumpValue = 0.5f;
+
+    [SerializeField] private PlayerInput _playerInput;
     void Start()
     {
         continuousSpeed = moveSpeed;
@@ -65,9 +67,21 @@ public class PlayerController : NetworkBehaviour
 
         cameraController = GetComponentInChildren<CameraController>();
         if (cameraController == null) cameraController = FindAnyObjectByType<CameraController>();
+
         if (cameraController != null)
         {
-            cameraController.SetTarget(transform);
+            if (IsOwner)
+            {
+                cameraController.isMine = true; 
+                cameraController.lookAction.action.Enable(); 
+                cameraController.SetTarget(transform);
+                cameraController.gameObject.SetActive(true);
+            }
+            else
+            {
+                cameraController.isMine = false;
+                cameraController.gameObject.SetActive(false);
+            }
         }
 
         if (castInputController == null) castInputController = GetComponentInChildren<CastInputController>(true);
@@ -75,9 +89,15 @@ public class PlayerController : NetworkBehaviour
 
         EnsureSingleAudioListener();
 
-        if (GameplayManager.Instance != null)
+        if (_playerInput == null) _playerInput = GetComponent<PlayerInput>();
+        if (IsOwner)
         {
+            if (_playerInput != null) _playerInput.enabled = true;
             GameplayManager.Instance.RegisterLocalPlayer(this);
+        }
+        else
+        {
+            if (_playerInput != null) _playerInput.enabled = false;
         }
     }
 
@@ -137,6 +157,13 @@ public class PlayerController : NetworkBehaviour
         if (!IsOwner) return;
 
         if (onExplorationState) MoveCharacter();
+
+        // para pruebas de desconexion
+        if (IsOwner && Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            Debug.Log("Forzando desconexión local...");
+            NetworkManager.Singleton.Shutdown();
+        }
     }
 
     void MoveCharacter()

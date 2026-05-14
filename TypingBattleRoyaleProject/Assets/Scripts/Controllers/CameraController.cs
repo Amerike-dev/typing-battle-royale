@@ -17,6 +17,8 @@ public class CameraController : MonoBehaviour
 
     private Transform _battleTarget;
     private bool _hasBattleTarget;
+    
+    public bool isMine = false;
 
     void Start()
     {
@@ -24,8 +26,15 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void OnEnable() => lookAction.action.Enable();
-    void OnDisable() => lookAction.action.Disable();
+    void OnEnable()
+    {
+        if (isMine && lookAction != null) lookAction.action.Enable();
+    }
+
+    void OnDisable()
+    {
+        if (isMine && lookAction != null) lookAction.action.Disable();
+    }
 
     void Update()
     {
