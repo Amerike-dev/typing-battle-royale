@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,61 +12,50 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource _musicSource;
     [SerializeField] private List<AudioSource> sfxPool = new();
 
-    private void Awake()
+    [SerializeField] private float _masterVolume = 1f;
+    [SerializeField] private float _musicVolume = 0.7f;
+    [SerializeField] private float _sfxVolume = 1f;
+
+    public void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
-
         DontDestroyOnLoad(gameObject);
-
-        _settings.Load();
+        _masterVolume = PlayerPrefs.GetFloat("vol.master", 1f); 
+        _musicVolume = PlayerPrefs.GetFloat("vol.music", 0.7f); 
+        _sfxVolume = PlayerPrefs.GetFloat("vol.sfx", 1f);
     }
 
-    public void PlaySFX(string name)
+    public void PlaySFX(string id)
     {
-        AudioEntry entry = _db.GetEntry(name);
+        var entry = _db.GetEntry(id);
 
-        if (entry == null)
+        if(entry == null)
         {
-            Debug.LogWarning($"[AUDIO] SFX missing: {name}");
+            Debug.LogWarning($"[AUDIO] SFX missing: {id}");
             return;
         }
 
-          Debug.Log($"[AUDIO] Playing SFX: {name}");
-
-        AudioSource source = GetFreeSource();
-
-        source.clip = entry.clip;
-
-        source.volume =
-            entry.defaultVolume *
-            _settings.sfxVolume *
-            _settings.masterVolume;
-
-        source.pitch = entry.pitch;
-
-        source.loop = entry.loop;
-
-        source.Play();
+        var scr = GetFreeSource();
+        scr.clip = entry.clip;
+        scr.volume = entry.volume * _sfxVolume * _masterVolume;
+        scr.pitch = entry.randomizePitch ? entry.pitch * UnityEngine.Random.Range(0.95f, 1.05f) : entry.pitch;
+        scr.Play();
     }
 
-    public void ChangeMusic(string name, float duration = 0.5f)
+    public AudioSource GetFreeSource()
     {
-        AudioEntry entry = _db.GetEntry(name);
-
-        if (entry == null)
+        foreach(var src in sfxPool)
         {
-            Debug.LogWarning($"[AUDIO] Music missing: {name}");
-            return;
+            if (!src.isPlaying)
+                return src;
         }
-        Debug.Log($"[AUDIO] Changing music to: {name}");
 
-        StartCoroutine(_music.CrossfadeTo(entry.clip, duration));
+        return sfxPool[Time.frameCount % sfxPool.Count];
     }
 
     public void SetVolume(string channel, float value)
@@ -98,16 +88,17 @@ public class AudioManager : MonoBehaviour
         _settings.Save();
     }
 
-    private AudioSource GetFreeSource()
+    public void ChangeMusic(string id, float duration = 0.5f)
     {
-        foreach (AudioSource source in sfxPool)
+        var entry = _db.GetEntry(id);
+        if (entry == null || entry.clip == null)
         {
-            if (!source.isPlaying)
-            {
-                return source;
-            }
+            Debug.LogWarning($"[AUDIO] Music entry '{id}' not found");
+            return;
         }
 
-        return sfxPool[Time.frameCount % sfxPool.Count];
+        float targetVolume = entry.volume * _musicVolume * _masterVolume;
+        StartCoroutine(_music.CrossfadeTo(_musicSource, entry.clip, duration, targetVolume));
     }
 }
+

@@ -2,40 +2,48 @@ using System.Collections;
 using UnityEngine;
 
 public class MusicController : MonoBehaviour
+
 {
-    [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioClip currentClip;
 
-    public IEnumerator CrossfadeTo(AudioClip newClip, float duration = 0.5f)
+    public IEnumerator CrossfadeTo(AudioSource source, AudioClip newClip, float duration, float targetVolume)
     {
-        if (newClip == null)
+        if (source == null)
         {
+            Debug.LogError("AudioSource is null. Cannot perform crossfade.");
             yield break;
         }
 
-        float startVolume = musicSource.volume;
+        float startVolume = source.volume;
 
-        while (musicSource.volume > 0)
+        // Fade out
+        if (source.isPlaying)
         {
-            musicSource.volume -= startVolume * Time.deltaTime / duration;
+            float fadeOutDuration = duration / 2f;
+            float timer = 0f;
 
-            yield return null;
+            while (timer < fadeOutDuration)
+            {
+                source.volume = Mathf.Lerp(startVolume, 0f, timer / fadeOutDuration);
+                timer += Time.deltaTime;
+                yield return null;
+            }
         }
 
-        musicSource.Stop();
-
-        musicSource.clip = newClip;
+        source.Stop();
+        source.clip = newClip;
+        source.Play();
         currentClip = newClip;
 
-        musicSource.Play();
-
-        while (musicSource.volume < startVolume)
+        // Fade in
+        float fadeInDuration = duration / 2f;
+        float fadeInTimer = 0f;
+        while (fadeInTimer < fadeInDuration)
         {
-            musicSource.volume += startVolume * Time.deltaTime / duration;
-
+            source.volume = Mathf.Lerp(0f, targetVolume, fadeInTimer / fadeInDuration);
+            fadeInTimer += Time.deltaTime;
             yield return null;
         }
-
-        musicSource.volume = startVolume;
+        source.volume = targetVolume;
     }
 }
