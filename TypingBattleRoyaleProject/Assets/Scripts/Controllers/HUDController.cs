@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
-    [SerializeField] private PlayerController player;
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI killCountText;
     public TextMeshProUGUI timerText;
@@ -14,53 +13,56 @@ public class HUDController : MonoBehaviour
 
     public PlayerStatsNet localStats;
 
-    private void Start()
+    private void Update()
     {
-       FindLocalPlayerStats();
+        // Busca continuamente al jugador local hasta que se encuentre.
+        if (localStats == null) {
+            FindLocalPlayerStats();
+        }
     }
     private void OnEnable()
     {
         if (GameManager.Instance != null && GameManager.Instance.gameTimer != null)
         {
-            GameManager.Instance.gameTimer.OnSecondElapsed += UpdateTime;
+            GameManager.Instance.gameTimer.OnSecondElapsed += UpdateTimerUI;
         }
 
     }
     private void OnDisable()
     {
         UnsubscribeFromStats();
-
+        
         if (GameManager.Instance != null && GameManager.Instance.gameTimer != null)
         {
-            GameManager.Instance.gameTimer.OnSecondElapsed -= UpdateTime;
+            GameManager.Instance.gameTimer.OnSecondElapsed -= UpdateTimerUI;
         }
     }
 
     private void FindLocalPlayerStats()
     {
-        PlayerStatsNet[] stats = FindObjectsByType<PlayerStatsNet>(FindObjectsSortMode.None);
-
-        foreach (PlayerStatsNet s in stats)
+        // Asegurarse de que el NetworkManager está listo y el cliente local tiene un PlayerObject.
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient || NetworkManager.Singleton.LocalClient.PlayerObject == null)
         {
-            if (s.IsOwner)
-            {
-                localStats = s;
-                break;
-            }
+            return; // Aún no está listo, se intentará en el próximo frame.
         }
+
+        localStats = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerStatsNet>();
 
         if (localStats == null)
         {
-            Debug.LogWarning("HUDController no encontró PlayerStatsNet del jugador local.");
+            // El componente puede no estar listo todavía.
             return;
         }
 
+        Debug.Log("HUDController encontró las estadísticas del jugador local y se suscribe a los eventos.");
         SubscribeToStats();
         RefreshAllUI();
     }
 
     private void SubscribeToStats()
     {
+        if (localStats == null) return;
+
         localStats.currentHP.OnValueChanged += OnHPChanged;
         localStats.currentLifes.OnValueChanged += OnLivesChanged;
         localStats.killCount.OnValueChanged += OnKillCountChanged;
@@ -99,7 +101,7 @@ public class HUDController : MonoBehaviour
 
     private void UpdateHealth(float currentHP)
     {
-        hpText.text = currentHP.ToString("0");
+        if (hpText != null) hpText.text = currentHP.ToString("0");
 
         if (healthUI != null && localStats != null)
         {
@@ -109,6 +111,8 @@ public class HUDController : MonoBehaviour
 
     private void UpdateLives(int currentLives)
     {
+        if (lifeImages == null) return;
+
         for (int i = 0; i < lifeImages.Length; i++)
         {
             lifeImages[i].SetActive(i < currentLives);
@@ -117,14 +121,17 @@ public class HUDController : MonoBehaviour
 
     private void UpdateKillCount(int kills)
     {
-        killCountText.text = kills.ToString();
+        if (killCountText != null) killCountText.text = kills.ToString();
     }
 
-    public void UpdateTime()
+    private void UpdateTimerUI()
     {
         if (GameManager.Instance == null || GameManager.Instance.gameTimer == null)
             return;
 
-        timerText.text = $"{GameManager.Instance.gameTimer.MinutesRemaining}:{GameManager.Instance.gameTimer.SecondsRemaining}";
+        if (timerText != null)
+        {
+            timerText.text = $"{GameManager.Instance.gameTimer.MinutesRemaining:D2}:{GameManager.Instance.gameTimer.SecondsRemaining:D2}";
+        }
     }
 }
