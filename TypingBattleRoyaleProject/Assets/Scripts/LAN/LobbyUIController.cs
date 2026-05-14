@@ -90,7 +90,7 @@ TIPS:
             else
             {
                 _playerSlots[i].text = "Waiting";
-                _playerSlots[i].color = Color.gray;
+                _playerSlots[i].color = Color.white;
             }
 
         }
@@ -98,7 +98,7 @@ TIPS:
 
     private Color GetPlayerColor(int index)
     {
-        Color[] colors = { Color.red };
+        Color[] colors = { Color.white, Color.cyan, Color.yellow, Color.magenta, Color.green, Color.blue };
         return colors[index % colors.Length];
     }
 }

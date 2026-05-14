@@ -17,8 +17,9 @@ public class LoadingScreenController : MonoBehaviour
     public RectTransform spinner;
 
     [Header("Settings")]
-    public float spinnerSpeed = -200f;
-    
+    public float pulseSpeed = 5f;
+    public float minScale = 0.95f;
+    public float maxScale = 1.05f;
     public static string SceneToLoad = "CharacterSelect";
 
     private string[] tips = {
@@ -46,28 +47,33 @@ public class LoadingScreenController : MonoBehaviour
     {
         if (spinner != null)
         {
-            spinner.Rotate(0, 0, spinnerSpeed * Time.deltaTime);
+            float scale = Mathf.Lerp(minScale, maxScale, (Mathf.Sin(Time.time * pulseSpeed) + 1) / 2f);
+            spinner.localScale = new Vector3(scale, scale, scale);
         }
     }
 
     IEnumerator LoadAsync(string sceneName)
     {
-        var op = SceneManager.LoadSceneAsync(sceneName);
-        if (op == null) yield break;
+        float duration = 3f;
+        float timeElapsed = 0f;
 
-        op.allowSceneActivation = false;
-        
-        while (op.progress < 0.9f)
+        while (timeElapsed < duration)
         {
+            timeElapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(timeElapsed / duration);
+            
             if (progressBar != null)
-                progressBar.value = op.progress;
+                progressBar.value = progress;
+                
             yield return null;
         }
 
         if (progressBar != null)
             progressBar.value = 1f;
-            
-        yield return new WaitForSeconds(1f);
-        op.allowSceneActivation = true;
+
+        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsServer)
+        {
+            Unity.Netcode.NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        }
     }
 }
