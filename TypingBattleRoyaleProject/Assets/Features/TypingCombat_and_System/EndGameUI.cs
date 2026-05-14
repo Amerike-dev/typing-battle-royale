@@ -17,7 +17,7 @@ public class EndGameUI : MonoBehaviour
             _playAgainButton.onClick.AddListener(() => SceneLoader.Reload());
 
         if (_mainMenuButton != null)
-            _mainMenuButton.onClick.AddListener(() => SceneLoader.LoadScene("MainMenu"));
+            _mainMenuButton.onClick.AddListener(() => SceneLoader.LoadScene("LobbyScene"));
 
         gameObject.SetActive(false);
     }

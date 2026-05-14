@@ -436,7 +436,7 @@ const TICKETS = [
         id: 'TBR-020',
         title: 'Decidir destino del botón "Volver al Menú"',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'EndGameUI y PauseController cargan "MainMenu" por nombre, pero MainMenu.unity no está en build → fallará. Opción A: meter MainMenu en build y reactivar el flujo previo. Opción B (recomendada): redirigir a LobbyScene como menú principal.',
         acceptance: [
