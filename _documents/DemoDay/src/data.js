@@ -20,7 +20,7 @@ const TICKETS = [
         id: 'TBR-001',
         title: 'Completar menú de pausa funcional',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'PauseController abre el panel y pausa con Time.timeScale, pero faltan: SFX mute, sliders de volumen vinculados, botón Reanudar funcional, botón "Volver al menú" que apunte a una escena válida (hoy carga "MainMenu" que no está en build), y bloquear la apertura cuando GameOverState esté activo.',
         acceptance: [
