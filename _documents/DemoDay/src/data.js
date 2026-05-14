@@ -20,7 +20,7 @@ const TICKETS = [
         id: 'TBR-001',
         title: 'Completar menú de pausa funcional',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'PauseController abre el panel y pausa con Time.timeScale, pero faltan: SFX mute, sliders de volumen vinculados, botón Reanudar funcional, botón "Volver al menú" que apunte a una escena válida (hoy carga "MainMenu" que no está en build), y bloquear la apertura cuando GameOverState esté activo.',
         acceptance: [
@@ -68,7 +68,7 @@ const TICKETS = [
         id: 'TBR-003',
         title: 'Auto-lock de enemigos cercanos en BattleState',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'TargetSystem.cs hoy es stub (FindClosestTarget y ToggleLockOn vacíos). Implementar selección automática del enemigo más cercano dentro de un radio configurable cuando se entra a BattleState, con indicador visual sobre el target (anillo/flecha) y persistencia mientras dure el casteo. Sin manual cycling (Tab toggles battle mode).',
         acceptance: [
@@ -91,7 +91,7 @@ const TICKETS = [
         id: 'TBR-004',
         title: 'Animaciones de cast + integración VFX-daño (la red de VFX ya existe)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'La red de VFX ya está implementada (SpellNetworkController con ServerRpc + ClientRpc + SpellCatalog + ProjectileVFX). Falta: (1) animación de cast del Animator del player cuando se dispare el evento, (2) feedback de "sin objetivo en rango" cuando target=null, (3) integración con accuracy multiplier — ver TBR-048 para el daño server-side y cooldown. Este ticket cubre solo la capa visual/animación cliente.',
         acceptance: [
@@ -117,7 +117,7 @@ const TICKETS = [
         id: 'TBR-005',
         title: 'Muerte por barra de vida agotada',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'PlayerStats expone TakeDamage y LoseLife pero no hay loop que detecte HP <= 0 → restar vida → respawn. Hoy isAlive nunca cambia a false en flujo real. Implementar la cadena: damage → check HP → si HP<=0 invocar OnAllLifeLost (si lives==0) o OnLifeLost + respawn.',
         acceptance: [
@@ -182,7 +182,7 @@ const TICKETS = [
         id: 'TBR-008',
         title: 'UI de muerte + cámara espectadora del asesino + respawn por vidas',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Al morir mostrar overlay de muerte (con cuenta regresiva al respawn y vidas restantes), cámara sigue al jugador que mató al local hasta que el contador termine, luego respawn en spawn point libre. Si no quedan vidas, deriva a TBR-009.',
         acceptance: [
@@ -205,7 +205,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
@@ -291,7 +291,8 @@ const TICKETS = [
         id: 'TBR-013',
         title: 'Implementar AudioManager (música y SFX)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'done',
+
         summary:
             'AudioManager, MusicController y AudioSettings están como stubs. Implementar PlaySFX(name) usando AudioDataBase, ChangeMusic con crossfade en MusicController, persistir volúmenes con Save/Load y conectar VolumeController.',
         acceptance: [
@@ -337,7 +338,7 @@ const TICKETS = [
         id: 'TBR-015',
         title: 'Manejo de desconexión durante partida',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Hoy si un cliente se desconecta el server no lo sabe limpiamente: su prefab queda vivo y puede romper la condición de "último vivo". Manejar OnClientDisconnectCallback para despawnear, marcar isAlive=false y reevaluar fin de partida.',
         acceptance: [
@@ -357,7 +358,7 @@ const TICKETS = [
         id: 'TBR-016',
         title: 'Sincronizar Monolitos por red',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'MonolithSpawn instancia GameObjects con Instantiate plano: cada cliente ve sus propios monolitos no sincronizados. Convertir prefab Monolith a NetworkObject y spawnear desde el Host con NetworkObject.Spawn(). TryInteract debe ejecutarse vía ServerRpc.',
         acceptance: [
@@ -415,7 +416,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
@@ -458,7 +459,7 @@ const TICKETS = [
         id: 'TBR-021',
         title: 'Integrar AudioManager en todos los eventos del juego',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Una vez que AudioManager esté implementado (TBR-013), conectar PlaySFX/ChangeMusic a todos los eventos: cast de hechizo, hit de daño, pérdida de vida, jump, footsteps, monolith unlock, countdown, transiciones de escena, hover/click de UI. Música distinta por escena con crossfade.',
         acceptance: [
@@ -481,7 +482,7 @@ const TICKETS = [
         id: 'TBR-022',
         title: 'Biblioteca de SFX completa (importación + cataloging)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Importar y catalogar en AudioDataBase los clips para todas las acciones. Mínimo 25 clips únicos.',
         acceptance: [
@@ -502,7 +503,7 @@ const TICKETS = [
         id: 'TBR-023',
         title: 'VFX para los ~50 hechizos (arquitectura de arquetipos + tiers)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'La base ya está hecha: Spell.cs con tier/archetype/runeString, SpellVFXBinder con multiplicadores T1=1x/T2=1.4x/T3=2x sobre size/emission, ProjectileVFX local determinista, VFX_Projectile.prefab + M_Fire_T1.mat creados via VFXPrefabBuilder editor tool. Ahora hay que: (1) crear los 5 arquetipos restantes (AOE/Aura/Beam/Summon/Buff-Debuff) via tool (TBR-045), (2) un material por elemento (TBR-046), (3) mapear cada Spell SO a su archetype + asignar materialVFX correcto (TBR-047). Este ticket es el "umbrella" que se completa cuando TBR-045/046/047 estén done.',
         acceptance: [
@@ -528,7 +529,7 @@ const TICKETS = [
         id: 'TBR-024',
         title: 'Cell-shading shader pass (estilo toon)',
         type: 'feature', priority: 'medium', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Implementar shader cell-shading custom o vía package (URP Toon Shader). Aplicar a personajes, monolitos y entorno. Outline por post-process o Geometry pass. Validar performance vs PBR estándar.',
         acceptance: [
@@ -549,7 +550,7 @@ const TICKETS = [
         id: 'TBR-025',
         title: 'Integración de modelos y rigs reales (skins finales)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Reemplazar prefabs placeholder de SkinInfo por modelos finales de los 4 personajes con sus 4 variantes de color cada uno. Animator con state machine: Idle / Run / Jump / Casting / Hit / Death.',
         acceptance: [
@@ -570,7 +571,7 @@ const TICKETS = [
         id: 'TBR-026',
         title: 'Animaciones de UI (tweens y micro-interacciones)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Polish UX: fade-in/out de paneles, slide del HUD al iniciar partida, pop del countdown 3-2-1-Lucha, pulse en target lockeado, hover con scale 1.05 en botones, transición de selección en SpellBookUI. Usar DOTween (free) o LeanTween.',
         acceptance: [
@@ -613,7 +614,7 @@ const TICKETS = [
         id: 'TBR-028',
         title: 'Polish del Lobby (estados listos + countdown de inicio)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Mostrar slots de jugadores con avatar/iniciales/estado "Esperando…" o "Listo ✓". Cuando todos confirman (o el host pulsa Empezar), countdown sincronizado de 3 segundos antes de cargar siguiente escena. Animaciones de entrada/salida cuando alguien se conecta/desconecta. Música de lobby propia.',
         acceptance: [
@@ -654,7 +655,7 @@ const TICKETS = [
         id: 'TBR-030',
         title: 'Skybox + iluminación + post-process del mapa',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Skybox custom (procedural HDR o cubemap), luces baked, niebla de profundidad, post-process volume con bloom + color grading + vignette. Estética coherente con cell shading.',
         acceptance: [
@@ -675,7 +676,7 @@ const TICKETS = [
         id: 'TBR-031',
         title: 'Hit feedback visual (shake, flash, hit-stop)',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Al recibir daño: camera shake corto (~120ms), flash rojo en bordes del HUD, hit-stop (Time.timeScale 0) de ~30ms para weight. Al impactar a un enemigo: pequeño zoom y vibración del crosshair.',
         acceptance: [
@@ -696,7 +697,7 @@ const TICKETS = [
         id: 'TBR-032',
         title: 'Podium + leaderboard animado en EndGame',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Reemplazar el panel plano de EndGameUI por un podio 3D con los jugadores ordenados (ganador en el centro, alto), animación de entrada en cascada y confetti para el primero. Stats principales por jugador (kills, daño, WPM medio).',
         acceptance: [
@@ -739,7 +740,7 @@ const TICKETS = [
         id: 'TBR-034',
         title: 'Pantalla de stats finales del jugador',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Después del podio, pantalla personal con: kills, daño infligido/recibido, hechizos casteados, WPM medio, accuracy media, hechizo más usado, tiempo más rápido de cast.',
         acceptance: [
@@ -780,7 +781,7 @@ const TICKETS = [
         id: 'TBR-036',
         title: 'Performance pass — target 60fps consistentes',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Flan', status: 'todo',
         summary:
             'Profiling con Unity Profiler tras integrar VFX (TBR-023) y shader (TBR-024). Identificar batching breaks, GC allocs en bucle, draw calls excesivos. Asegurar pooling activo. Target: 60fps en hardware modesto.',
         acceptance: [
@@ -823,7 +824,7 @@ const TICKETS = [
         id: 'TBR-038',
         title: 'Modal de selección de nivel en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Al pulsar E (TBR-037), abrir modal con 3 botones que muestran los 3 niveles del elemento del monolito (ej. agua: Nivel 1 / 2 / 3). Mouse hover destaca; click selecciona y dispara TBR-039. ESC cancela sin efecto.',
         acceptance: [
@@ -846,7 +847,7 @@ const TICKETS = [
         id: 'TBR-039',
         title: 'Typing challenge de desbloqueo de hechizo en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Una vez seleccionado el nivel (TBR-038), mostrar el rune text del SpellData. Bloquear movimiento (PlayerController.NullMoveSpeed). El jugador tipea sin error; un solo error reinicia el char actual (no penaliza). Al completar exitoso, agregar SpellData al PlayerInventory y marcar el monolito como exhausted (TBR-016). ESC cancela.',
         acceptance: [
@@ -891,7 +892,7 @@ const TICKETS = [
         id: 'TBR-041',
         title: 'Indicador visual de rango y filtrado de target en BattleState',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'En BattleState mostrar un anillo/cone visual del rango de auto-target. Solo enemigos dentro del rango son seleccionables por TargetSystem. Si no hay enemigos en rango, target = null y los spells se ejecutan sin damage (feedback "sin objetivo").',
         acceptance: [
@@ -912,7 +913,7 @@ const TICKETS = [
         id: 'TBR-042',
         title: 'Tab interrumpe el cast y sale de BattleState',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'Tab es el botón único de toggle Exploration↔Battle (TBR-043). En BattleState con typing activo: cancela el cast, limpia buffer, NO consume spell ni aplica daño, cancela VFX en preparación y vuelve a ExplorationState. Sin typing activo, Tab simplemente cambia a ExplorationState.',
         acceptance: [
@@ -1010,7 +1011,7 @@ const TICKETS = [
         id: 'TBR-046',
         title: 'Materiales por elemento (10 elementos) bajo Assets/Materials/VFX/',
         type: 'feature', priority: 'high', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Hoy solo existe M_Fire_T1.mat. Crear un material URP/Particles/Unlit por elemento del enum Elements (Fire, Water, Earth, Air, Nature, Thunder/Lightning, Dark, Light, Ice, Lava) con color de marca apropiado por elemento. Un solo material por elemento — el tier se controla en el binder (size/emission), no necesita 3 materiales por elemento.',
         acceptance: [
@@ -1032,7 +1033,7 @@ const TICKETS = [
         id: 'TBR-047',
         title: 'Mapeo de los ~50 Spell SOs a archetype + asignar materialVFX',
         type: 'tech', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Iterar todos los Spell SOs de Assets/ScriptableObjects/Objects/Spells/** y asignar: archetype (Projectile/AOE/Aura/Beam/Summon/Buff/Debuff), tier (TierOne/TierTwo/TierThree según carpeta), runeString (palabra sin espacios sin tildes en lowercase), materialVFX (M_<elemento>.mat según elementType). Hacer un editor tool que lo automatice y luego revisar manualmente los casos especiales (ej. Curación = Buff, no proyectil).',
         acceptance: [
@@ -1092,7 +1093,7 @@ const TICKETS = [
         id: 'TBR-049',
         title: 'Polish escena Splash — fade in/out global + branding WotK',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'La escena Splash (TBR-027) ya carga logos pero sin transiciones suaves: aparición y corte abrupto. Aplicar fade-in/fade-out a TODOS los elementos visibles (logo estudio Red Blood Cells → logo Wizards of the Keyboard + tagline → transición a LobbyScene) usando CanvasGroup.alpha y DOTween. Fondo negro brand (#070504), logos centrados, tagline en blanco con tipografía del brand book. Cualquier tecla skipea con fade-out acelerado (no corte seco).',
         acceptance: [
@@ -1119,7 +1120,7 @@ const TICKETS = [
         id: 'TBR-050',
         title: 'Polish escena Lobby — aplicar identidad visual del brand book',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'El LobbyScene hoy es funcional pero gráficamente plano. Rediseñarlo siguiendo el BRAND BOOK WIZARDS OF THE KEYBOARD.pdf: fondo con isotipo en marca de agua, header con logo_wotk_black, slots de jugadores con frame magico (bordes redondeados + acento RojoLotti), tipografía del brand, botones con estilo de "rune card" (fondo Black, borde GatorOrange en hover, texto White). Mantener funcionalidad existente (capacidad 4-8, lista en vivo, ready states) — este ticket es 100% visual.',
         acceptance: [
@@ -1179,7 +1180,7 @@ const TICKETS = [
         id: 'TBR-052',
         title: 'Polish UI Typing — caja de runas + feedback de tecleo on-brand',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'La UI de typing actual muestra el spellText como texto plano. Rediseñarla como una "caja de runas" centrada en pantalla durante BattleState: el spellText completo visible en gris claro, las letras ya tecleadas en GatorOrange con leve glow, la letra activa (next) en RojoLotti con pulso, las erróneas en rojo apagado con shake corto. Barra de accuracy/WPM debajo en estilo brand. Indicador de cast progress estilo "rune circle" alrededor del player.',
         acceptance: [
@@ -1209,7 +1210,7 @@ const TICKETS = [
         id: 'TBR-053',
         title: 'Polish UI Exploration State — minimapa, crosshair y HUD ambient',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'En ExplorationState (TBR-043) la UI es casi nula. Diseñar un HUD ambient on-brand: barra de vida ornamentada (esquina sup-izq) estilo "tinta sobre pergamino", contador de vidas como pequeños iconos de gota-de-mana, mini compass/heading en la sup-der, contador de monolitos visitados, prompts contextuales ("Pulsa TAB para combate" cerca de enemigos, "Pulsa E para interactuar" cerca de monolitos). Estética calmada con paleta fría (VibrantViolet dominante).',
         acceptance: [
@@ -1239,7 +1240,7 @@ const TICKETS = [
         id: 'TBR-054',
         title: 'Polish UI Pausa — panel modal grimorio + sliders on-brand',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'todo',
         summary:
             'El menú de pausa (TBR-001) hoy es funcional pero un panel gris. Rediseñarlo como un "tomo abierto" central: fondo del juego con blur+darken (CanvasGroup 0→0.7), panel central con frame ornamental, título "PAUSA" en display font, botones Reanudar/Volver al Lobby con estilo brand, sliders de volumen Master/Music/SFX con knob personalizado y fill en RojoLotti, footer con créditos cortos del estudio. Mantener funcionalidad existente.',
         acceptance: [
@@ -1269,7 +1270,7 @@ const TICKETS = [
         id: 'TBR-055',
         title: 'Polish background del mapa — skydome, parallax y atmósfera',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'GameplayScene hoy tiene skybox plano y horizonte vacío. Implementar un background atmosférico estilo cell-shaded coherente con WotK: skydome con gradiente VibrantViolet (cenit) → GatorOrange (horizonte) → Black (zenith inferior), 2-3 capas de montañas/torres lejanas en parallax sutil (rotación con la cámara), partículas ambientales lentas (motas, polen, brasas) y fog de profundidad. Coordinar con TBR-030 (post-process) — este ticket es el background per se.',
         acceptance: [
@@ -1299,7 +1300,7 @@ const TICKETS = [
         id: 'TBR-056',
         title: 'Polish luces del mapa — key light, rim y luces mágicas dinámicas',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Alicia', status: 'todo',
         summary:
             'Iluminación actual es la Directional Light default. Setup completo: key light direccional cálida (tinte GatorOrange) con sombras suaves, fill light fría (tinte VibrantViolet) sin sombras, rim light sutil sobre los players para separación, point lights mágicas pulsando suavemente en los monolitos y spawn points, y un leve flicker en áreas de combate. Lightmapping para estática + realtime solo donde sea necesario.',
         acceptance: [
@@ -1329,7 +1330,7 @@ const TICKETS = [
         id: 'TBR-057',
         title: 'Polish NPCs ambientales — pájaros/luciérnagas que cruzan el mapa',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: null, status: 'todo',
+        assignee: 'Barrera', status: 'todo',
         summary:
             'Para dar vida al mapa sin tocar gameplay, agregar NPCs pasivos puramente visuales: bandadas de pájaros (sprites o quads texturizados) que cruzan el cielo cada 20-40s en path lineal, y luciérnagas (point lights pequeños + sprite billboard) flotando lentamente en zonas bajas. Sin colisión, sin red (solo cliente local), sin lógica de juego. Deterministas no — pueden variar entre clientes.',
         acceptance: [
@@ -1366,7 +1367,7 @@ const TICKETS = [
         id: 'TBR-058',
         title: 'Implementar maqueta Isla 1 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo entregado por los artistas para la Isla 1 (bioma central / zona de spawn). Import del FBX, generar prefab compuesto con colliders y materiales, ubicarlo en GameplayScene en el offset definido y validar que el flujo gameplay (spawn, navegación, monolitos sobre la isla) funciona sin clipping ni cracks.',
         acceptance: [
@@ -1394,7 +1395,7 @@ const TICKETS = [
         id: 'TBR-059',
         title: 'Implementar maqueta Isla 2 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Integrar el modelo de la Isla 2 (segundo bioma) entregado por los artistas. Mismo pipeline que TBR-058 pero con el modelo y la ubicación correspondientes. Validar coherencia visual con la Isla 1 si comparten frontera o si hay puentes/conexiones.',
         acceptance: [
@@ -1421,7 +1422,7 @@ const TICKETS = [
         id: 'TBR-060',
         title: 'Implementar maqueta Isla 3 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 3 (tercer bioma) entregado por los artistas. Mismo pipeline que TBR-058. Validar transiciones con las islas adyacentes.',
         acceptance: [
@@ -1448,7 +1449,7 @@ const TICKETS = [
         id: 'TBR-061',
         title: 'Implementar maqueta Isla 4 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 4 (cuarto bioma) entregado por los artistas. Mismo pipeline que TBR-058. Última isla del mapa; con esta debe quedar el contorno completo de la arena para el demo day.',
         acceptance: [

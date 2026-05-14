@@ -58,6 +58,10 @@ public class PauseController : MonoBehaviour
     }
     public void OnPausa()
     {
+        var state = GameplayManager.Instance.stateMachine.currentState;
+
+        if(state is GameOverState || state is WaitingState) return;
+
         if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
         TogglePause();
@@ -120,7 +124,7 @@ public class PauseController : MonoBehaviour
 
     public void SceneMenu()
     {
-        SceneManager.LoadScene(sceneMenu);
+        SceneManager.LoadScene("LobbyScene");
     }
 
     
