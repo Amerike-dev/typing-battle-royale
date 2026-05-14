@@ -140,7 +140,7 @@ const TICKETS = [
         id: 'TBR-006',
         title: 'Mover barra de vida del prefab al Canvas UI global',
         type: 'tech', priority: 'medium', effort: 'S',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'El prefab del player tiene un Canvas mundial con su barra de vida. Eso causa duplicación, problemas de orden de render y trabajo extra de NetworkObject. Quitarlo del prefab y dejar la HUD del jugador local en un único Canvas screen-space del HUDController.',
         acceptance: [
