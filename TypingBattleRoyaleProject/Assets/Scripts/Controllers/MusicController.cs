@@ -1,11 +1,17 @@
+using System.Collections;
 using UnityEngine;
 using System.Collections;
 
+<<<<<<< HEAD
 [System.Serializable]
 public class MusicController
+=======
+public class MusicController : MonoBehaviour
+>>>>>>> main
 {
     [SerializeField] private AudioClip currentClip;
 
+<<<<<<< HEAD
     public IEnumerator CrossfadeTo(AudioSource source, AudioClip newClip, float duration, float targetVolume)
     {
         if (source == null)
@@ -45,5 +51,38 @@ public class MusicController
             yield return null;
         }
         source.volume = targetVolume;
+=======
+    public IEnumerator CrossfadeTo(AudioClip newClip, float duration = 0.5f)
+    {
+        if (newClip == null)
+        {
+            yield break;
+        }
+
+        float startVolume = musicSource.volume;
+
+        while (musicSource.volume > 0)
+        {
+            musicSource.volume -= startVolume * Time.deltaTime / duration;
+
+            yield return null;
+        }
+
+        musicSource.Stop();
+
+        musicSource.clip = newClip;
+        currentClip = newClip;
+
+        musicSource.Play();
+
+        while (musicSource.volume < startVolume)
+        {
+            musicSource.volume += startVolume * Time.deltaTime / duration;
+
+            yield return null;
+        }
+
+        musicSource.volume = startVolume;
+>>>>>>> main
     }
 }
