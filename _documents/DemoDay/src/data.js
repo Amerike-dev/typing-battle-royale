@@ -117,7 +117,7 @@ const TICKETS = [
         id: 'TBR-005',
         title: 'Muerte por barra de vida agotada',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'PlayerStats expone TakeDamage y LoseLife pero no hay loop que detecte HP <= 0 → restar vida → respawn. Hoy isAlive nunca cambia a false en flujo real. Implementar la cadena: damage → check HP → si HP<=0 invocar OnAllLifeLost (si lives==0) o OnLifeLost + respawn.',
         acceptance: [

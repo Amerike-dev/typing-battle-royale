@@ -68,6 +68,10 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged += HandleHPChanged;
         currentLifes.OnValueChanged += HandleLivesChanged;
         killCount.OnValueChanged += HandleKillCountChanged;
+        
+        // FLAN tu fuiste el sacrificado, solo quita el comentario de la linea de abajo y borras este
+        // El evento lo tienes que llamar asi "public static event Action<string, float, ulong> OnLookDead;"
+        //if (IsServer) TargetSystem.OnLookDead += HandleGlobalDamageReceived;
     }
 
     public override void OnNetworkDespawn()
@@ -75,22 +79,26 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged -= HandleHPChanged;
         currentLifes.OnValueChanged -= HandleLivesChanged;
         killCount.OnValueChanged -= HandleKillCountChanged;
+        
+        // FLAN tu fuiste el sacrificado, solo quita el comentario de la linea de abajo y borras este
+        //if (IsServer) TargetSystem.OnLookDead -= HandleGlobalDamageReceived;
+    }
+    
+    private void HandleGlobalDamageReceived(string targetID, float damage, ulong attackerId)
+    {
+        if (!IsServer) return;
+        
+        if (this.ID == targetID) TakeDamage(damage, attackerId);
     }
 
     private void HandleHPChanged(float oldValue, float newValue)
     {
-        if (newValue < oldValue)
-        {
-            OnDamageTaken?.Invoke();
-        }
+        if (newValue < oldValue) OnDamageTaken?.Invoke();
     }
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        if (newValue < oldValue)
-        {
-            OnLifeLost?.Invoke();
-        }
+        if (newValue < oldValue) OnLifeLost?.Invoke();
 
         if (newValue <= 0)
         {
@@ -102,10 +110,7 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleKillCountChanged(int oldValue, int newValue)
     {
-        if (newValue > oldValue)
-        {
-            OnEnemyKilled?.Invoke();
-        }
+        if (newValue > oldValue) OnEnemyKilled?.Invoke();
     }
 
     public void TakeDamage(float damage, ulong attackerId = 0)
@@ -113,13 +118,9 @@ public class PlayerStatsNet : NetworkBehaviour
         if (!IsServer || !isAlive.Value) return;
 
         Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
-
         currentHP.Value -= damage;
 
-        if (currentHP.Value <= 0)
-        {
-            HandleDeath(attackerId);
-        }
+        if (currentHP.Value <= 0) HandleDeath(attackerId);
     }
 
     private void HandleDeath(ulong killerId)
@@ -147,13 +148,9 @@ public class PlayerStatsNet : NetworkBehaviour
             PlayerController controller = GetComponent<PlayerController>();
 
             if (respawn != null && controller != null)
-            {
                 respawn.RespawnPlayer(controller);
-            }
             else
-            {
-                Debug.LogWarning("No se encontró RespawnController o PlayerController local.");
-            }
+                Debug.LogWarning("No se encontro RespawnController o PlayerController local.");
         }
     }
 }
