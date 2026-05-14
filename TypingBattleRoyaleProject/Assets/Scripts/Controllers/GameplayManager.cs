@@ -68,6 +68,8 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private SkinInfo[] arraySkins;
     private List<Vector3> _shuffledPositions = new List<Vector3>();
     private bool _allSpawned = false;
+    
+    public Dictionary<ulong, NetworkObject> _matchPlayers = new Dictionary<ulong, NetworkObject>();
 
     private void Awake()
     {
@@ -216,9 +218,7 @@ public class GameplayManager : NetworkBehaviour
 
     private void SpawnPlayers()
     {
-
         StartCoroutine(PopulateSpawnPoint());
-        
     }
 
     private IEnumerator PopulateSpawnPoint()
@@ -323,6 +323,7 @@ public class GameplayManager : NetworkBehaviour
                     ps.networkPlayerID.Value = "Player_" + clientId;
                     ps.OnAllLifeLost += () => CheckLastAlive();
                 }
+                _matchPlayers[clientId] = networkObject;
             }
         }
     }
@@ -352,6 +353,10 @@ public class GameplayManager : NetworkBehaviour
         base.OnNetworkSpawn();
         
         if (!IsServer) return;
+        
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+        NetworkManager.Singleton.ConnectionApprovalCallback = null;
+        NetworkManager.Singleton.ConnectionApprovalCallback = ConnectionApprovalCallback;
 
         foreach (var c in NetworkManager.Singleton.ConnectedClientsList)
         {
@@ -360,6 +365,16 @@ public class GameplayManager : NetworkBehaviour
                 var ps = c.PlayerObject.GetComponent<PlayerStatsNet>(); 
                 if (ps != null) ps.OnAllLifeLost += () => CheckLastAlive();
             }
+        }
+    }
+    
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (IsServer && NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+            NetworkManager.Singleton.ConnectionApprovalCallback = null;
         }
     }
     
@@ -419,4 +434,43 @@ public class GameplayManager : NetworkBehaviour
             if (ps != null) ps.wPM.Value = ps.wPM.Value == 0f ? newWPM : (ps.wPM.Value + newWPM) / 2f;
         }
     }
+    
+    private void OnClientDisconnect(ulong clientId)
+    {
+        Debug.Log($"<color=orange>[SERVER] Detectó la desconexión del cliente {clientId}</color>");
+
+        if (_matchPlayers.TryGetValue(clientId, out var netObj))
+        {
+            if (netObj != null)
+            {
+                var ps = netObj.GetComponent<PlayerStatsNet>();
+                if (ps != null)
+                {
+                    Debug.Log($"<color=orange>[SERVER] Marcando a {clientId} como muerto</color>");
+                    ps.isAlive.Value = false; 
+                    ps.OnAllLifeLost?.Invoke();
+                }
+                Debug.Log($"<color=orange>[SERVER] Despawneando a {clientId}</color>");
+                if (netObj.IsSpawned) netObj.Despawn(true);
+            }
+        }
+        else
+        {
+            Debug.Log($"<color=red>[SERVER] El cliente {clientId} se desconectó pero no estaba en el diccionario _matchPlayers</color>");
+        }
+        
+        CheckLastAlive();
+    }
+    
+    private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+     {
+         if (stateMachine != null && stateMachine.currentState is PlayState)
+         {
+             response.Approved = false;
+             response.Reason = "Partida en curso";
+             return;
+         }
+         response.Approved = true;
+         response.CreatePlayerObject = false;
+     }
 }

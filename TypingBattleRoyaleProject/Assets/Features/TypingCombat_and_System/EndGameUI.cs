@@ -41,8 +41,11 @@ public class EndGameUI : MonoBehaviour
 
         foreach (PlayerStatsNet player in players)
         {
-            if (player == null) continue;
-
+            if (player == null)
+            {
+                sb.AppendLine("Desconectado");
+                continue;
+            }
             sb.AppendLine($"{player.ID} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
 
