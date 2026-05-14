@@ -8,6 +8,7 @@ public class VolumeController : MonoBehaviour
     [SerializeField] private string volumeType;
 
     private void Start()
+
     {
         if (volumeSlider != null)
         {
@@ -17,6 +18,11 @@ public class VolumeController : MonoBehaviour
 
     public void SetVolume(float value)
     {
-        AudioManager.Instance.SetVolume(volumeType, value);
+        if(volumeSlider != null)
+        {
+            AudioManager.Instance.SetVolume(volumeType, volumeSlider.value);
+            PlayerPrefs.SetFloat($"vol.{volumeType}", AudioListener.volume);
+            PlayerPrefs.Save();
+        }
     }
 }
