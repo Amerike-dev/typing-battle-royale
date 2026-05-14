@@ -529,7 +529,7 @@ const TICKETS = [
         id: 'TBR-024',
         title: 'Cell-shading shader pass (estilo toon)',
         type: 'feature', priority: 'medium', effort: 'L',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Implementar shader cell-shading custom o vía package (URP Toon Shader). Aplicar a personajes, monolitos y entorno. Outline por post-process o Geometry pass. Validar performance vs PBR estándar.',
         acceptance: [
@@ -550,7 +550,7 @@ const TICKETS = [
         id: 'TBR-025',
         title: 'Integración de modelos y rigs reales (skins finales)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Reemplazar prefabs placeholder de SkinInfo por modelos finales de los 4 personajes con sus 4 variantes de color cada uno. Animator con state machine: Idle / Run / Jump / Casting / Hit / Death.',
         acceptance: [
@@ -614,7 +614,7 @@ const TICKETS = [
         id: 'TBR-028',
         title: 'Polish del Lobby (estados listos + countdown de inicio)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Mostrar slots de jugadores con avatar/iniciales/estado "Esperando…" o "Listo ✓". Cuando todos confirman (o el host pulsa Empezar), countdown sincronizado de 3 segundos antes de cargar siguiente escena. Animaciones de entrada/salida cuando alguien se conecta/desconecta. Música de lobby propia.',
         acceptance: [
@@ -1270,7 +1270,7 @@ const TICKETS = [
         id: 'TBR-055',
         title: 'Polish background del mapa — skydome, parallax y atmósfera',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'GameplayScene hoy tiene skybox plano y horizonte vacío. Implementar un background atmosférico estilo cell-shaded coherente con WotK: skydome con gradiente VibrantViolet (cenit) → GatorOrange (horizonte) → Black (zenith inferior), 2-3 capas de montañas/torres lejanas en parallax sutil (rotación con la cámara), partículas ambientales lentas (motas, polen, brasas) y fog de profundidad. Coordinar con TBR-030 (post-process) — este ticket es el background per se.',
         acceptance: [
@@ -1367,7 +1367,7 @@ const TICKETS = [
         id: 'TBR-058',
         title: 'Implementar maqueta Isla 1 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo entregado por los artistas para la Isla 1 (bioma central / zona de spawn). Import del FBX, generar prefab compuesto con colliders y materiales, ubicarlo en GameplayScene en el offset definido y validar que el flujo gameplay (spawn, navegación, monolitos sobre la isla) funciona sin clipping ni cracks.',
         acceptance: [
@@ -1395,7 +1395,7 @@ const TICKETS = [
         id: 'TBR-059',
         title: 'Implementar maqueta Isla 2 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Integrar el modelo de la Isla 2 (segundo bioma) entregado por los artistas. Mismo pipeline que TBR-058 pero con el modelo y la ubicación correspondientes. Validar coherencia visual con la Isla 1 si comparten frontera o si hay puentes/conexiones.',
         acceptance: [
@@ -1422,7 +1422,7 @@ const TICKETS = [
         id: 'TBR-060',
         title: 'Implementar maqueta Isla 3 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 3 (tercer bioma) entregado por los artistas. Mismo pipeline que TBR-058. Validar transiciones con las islas adyacentes.',
         acceptance: [
@@ -1449,7 +1449,7 @@ const TICKETS = [
         id: 'TBR-061',
         title: 'Implementar maqueta Isla 4 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Juan', status: 'todo',
         summary:
             'Integrar el modelo de la Isla 4 (cuarto bioma) entregado por los artistas. Mismo pipeline que TBR-058. Última isla del mapa; con esta debe quedar el contorno completo de la arena para el demo day.',
         acceptance: [
