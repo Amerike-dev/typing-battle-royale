@@ -66,7 +66,6 @@ public class NetworkManagerMock : MonoBehaviour
             PlayerInventory generatedInventory = new PlayerInventory();
 
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
-            //playerController.stats = generatedStats;
             playerController.inventory = generatedInventory;
             playerController.enabled = false;
 

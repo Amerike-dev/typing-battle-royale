@@ -154,6 +154,38 @@ MonoBehaviour:
   battleSlerpSpeed: 8
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
+  isMine: 0
+--- !u!1 &2717365232136191568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8725315973751114929}
+  m_Layer: 0
+  m_Name: CastOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8725315973751114929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717365232136191568}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.002, z: 0.567}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8524643825518991717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4774929182903595443
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,9 +318,9 @@ GameObject:
   - component: {fileID: 5137736192988664721}
   - component: {fileID: 5493427378232170685}
   - component: {fileID: 5436502623114698702}
-  - component: {fileID: 1539743655646405333}
   - component: {fileID: 3262988486507016911}
   - component: {fileID: -4072262869325525323}
+  - component: {fileID: 7741289723519730763}
   m_Layer: 0
   m_Name: CylinderGameplay_01 1
   m_TagString: Untagged
@@ -313,6 +345,7 @@ Transform:
   - {fileID: 2219271632113978124}
   - {fileID: 282621845863819666}
   - {fileID: 5913133207784075213}
+  - {fileID: 8725315973751114929}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9142911174015477040
@@ -464,10 +497,8 @@ MonoBehaviour:
     m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
-  stats:
-    _id: 
-    _maxHP: 0
-    _maxLives: 0
+  stats: {fileID: 0}
+  _playerInput: {fileID: 0}
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -615,28 +646,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!64 &1539743655646405333
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6025732026901377866}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &3262988486507016911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,6 +753,26 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+--- !u!114 &7741289723519730763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99626186099a3164281253a947cb3625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellNetworkController
+  ShowTopMostFoldoutHeaderGroup: 1
+  projectileVfxPrefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+  aoeVfxPrefab: {fileID: 0}
+  auraVfxPrefab: {fileID: 0}
+  beamVfxPrefab: {fileID: 0}
+  summonVfxPrefab: {fileID: 0}
+  buffDebuffVfxPrefab: {fileID: 0}
+  castOrigin: {fileID: 8725315973751114929}
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0
