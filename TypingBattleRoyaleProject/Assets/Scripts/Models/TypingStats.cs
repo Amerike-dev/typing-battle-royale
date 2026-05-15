@@ -44,4 +44,15 @@ public class TypingStats
         return 0f;
     }
 
+    public static float GetDamageBonusMultiplier(float accuracy)
+    {
+        foreach (var rule in DamageBonusTable)
+        {
+            if (accuracy >= rule.minAccuracy)
+                return rule.multiplier;
+        }
+
+        return 0f;
+    }
+
 }

@@ -1056,7 +1056,7 @@ const TICKETS = [
         id: 'TBR-048',
         title: 'Server-side damage + accuracy multiplier + cooldown en cast',
         type: 'feature', priority: 'critical', effort: 'M',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'La red de VFX ya está pero NO aplica daño (SpellNetworkController solo dispara ClientRpc visual). Falta: (1) ProjectileVFX.OnTriggerEnter aplica daño solo en IsServer; (2) PlayerStatsNet.TakeDamageServerRpc(damage, attackerId) que decrementa currentHP y dispara OnDamageTaken; (3) accuracy multiplier (TypingStats.GetDamageBonusMultiplier) se pasa por el ServerRpc; (4) cooldown por SpellNetworkController para evitar spam.',
         acceptance: [
