@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SpellNetworkController : NetworkBehaviour
 {
@@ -14,46 +15,68 @@ public class SpellNetworkController : NetworkBehaviour
     [Header("Origen del cast")]
     public Transform castOrigin;
 
+    private CastInputController _caster;
+    private readonly Dictionary<int, float> _lastCastTimes = new();
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
-        var caster = GetComponent<CastInputController>();
-        if (caster != null) caster.OnSpellCast += HandleLocalSpellCast;
+        _caster = GetComponent<CastInputController>();
+        if (_caster != null) _caster.OnSpellCast += HandleLocalSpellCast;
     }
 
     public override void OnNetworkDespawn()
     {
-        var caster = GetComponent<CastInputController>();
-        if (caster != null) caster.OnSpellCast -= HandleLocalSpellCast;
+        if (!IsOwner) return;
+        if (_caster != null) _caster.OnSpellCast -= HandleLocalSpellCast;
     }
 
     void HandleLocalSpellCast(Spell spell)
     {
-        if (!IsOwner || spell == null) return;
+        if (!IsOwner || spell == null || _caster == null) return;
+
         var catalog = SpellCatalog.Instance;
         if (catalog == null)
         {
-            Debug.LogWarning("[SpellNetworkController] No SpellCatalog en Resources.");
+            Debug.LogWarning("[SpellNetworkController] No se encontró SpellCatalog en Resources.");
             return;
         }
         int id = catalog.IndexOf(spell);
         if (id < 0)
         {
-            Debug.LogWarning($"[SpellNetworkController] Spell '{spell.spellName}' no esta en el catalogo.");
+            Debug.LogWarning($"[SpellNetworkController] El hechizo '{spell.spellName}' no está en el catálogo.");
             return;
         }
+
+        if (_lastCastTimes.TryGetValue(id, out float lastCastTime))
+        {
+            if (Time.time < lastCastTime + spell.cooldown) // Ahora 'cooldown' existe en Spell.cs
+            {
+                Debug.Log($"[SpellNetworkController] Hechizo '{spell.spellName}' en cooldown.");
+                return;
+            }
+        }
+        _lastCastTimes[id] = Time.time;
+
         Transform origin = castOrigin != null ? castOrigin : transform;
-        CastSpellServerRpc(id, origin.position, origin.forward);
+        // La precisión se obtiene del CastInputController, que la calcula antes de disparar el evento.
+        CastSpellServerRpc(id, origin.position, origin.forward, _caster.accuracy);
     }
 
     [ServerRpc]
-    void CastSpellServerRpc(int spellId, Vector3 origin, Vector3 direction, ServerRpcParams rpcParams = default)
+    void CastSpellServerRpc(int spellId, Vector3 origin, Vector3 direction, float accuracy, ServerRpcParams rpcParams = default)
     {
-        PlaySpellVFXClientRpc(spellId, origin, direction, rpcParams.Receive.SenderClientId);
+        var spell = SpellCatalog.Instance.Get(spellId);
+        if (spell == null) return;
+
+        float damageMultiplier = TypingStats.GetDamageBonusMultiplier(accuracy); // Usamos el método estático
+        float finalDamage = spell.damage * damageMultiplier;
+
+        PlaySpellVFXClientRpc(spellId, origin, direction, rpcParams.Receive.SenderClientId, finalDamage);
     }
 
     [ClientRpc]
-    void PlaySpellVFXClientRpc(int spellId, Vector3 origin, Vector3 direction, ulong casterClientId)
+    void PlaySpellVFXClientRpc(int spellId, Vector3 origin, Vector3 direction, ulong casterClientId, float damage)
     {
         var spell = SpellCatalog.Instance != null ? SpellCatalog.Instance.Get(spellId) : null;
         if (spell == null) return;
@@ -80,7 +103,7 @@ public class SpellNetworkController : NetworkBehaviour
                 break;
             case SpellTypes.Projectile:
             default:
-                SpawnProjectile(spell, origin, direction);
+                SpawnProjectile(spell, origin, direction, damage, casterClientId);
                 break;
         }
     }
@@ -97,13 +120,13 @@ public class SpellNetworkController : NetworkBehaviour
         return go;
     }
 
-    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction)
+    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId)
     {
         var rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
         var go = SpawnFromPoolOrInstantiate("VFX_Projectile", projectileVfxPrefab, origin, rot);
         if (go == null) return;
-        var vfx = go.GetComponent<ProjectileVFX>();
-        if (vfx != null) vfx.Launch(spell, direction);
+        var vfx = go.GetComponent<ProjectileVFX>(); // El daño se calcula en el servidor y se pasa aquí
+        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer); // IsServer asegura que el daño solo se aplique en el servidor
     }
 
     void SpawnAOE(Spell spell, Vector3 origin)

@@ -17,7 +17,8 @@ public class PlayState : GameState
     }
     public override void Enter()
     {
-        manager.PlayerController.enabled = true;
+        if (manager.PlayerController != null)
+            manager.PlayerController.enabled = true;
         
         if (_gameTimer != null)
         {
@@ -35,7 +36,8 @@ public class PlayState : GameState
 
     public override void Exit()
     {
-        manager.PlayerController.enabled = false;
+        if (manager.PlayerController != null)
+            manager.PlayerController.enabled = false;
         
         if (_timerCoroutine != null) manager.StopCoroutine(_timerCoroutine);
         

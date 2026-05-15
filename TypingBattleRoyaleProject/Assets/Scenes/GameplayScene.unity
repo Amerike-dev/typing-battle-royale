@@ -20044,7 +20044,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 0.000579834}
+  m_AnchoredPosition: {x: 0, y: 0.00061035156}
   m_SizeDelta: {x: 17034, y: 9581.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1492469785
@@ -21306,8 +21306,6 @@ MonoBehaviour:
   _endGameCanvas: {fileID: 1942957264}
   _endGameUI: {fileID: 1942957265}
   _spellBookUI: {fileID: 1489365627}
-  _defaultSpellFallback: {fileID: 11400000, guid: 08405417850fa8941b382ee1544032ee, type: 2}
-  _vfxPrefabFallback: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
   _spellUICanvasGroup: {fileID: 1566385585}
   _spellInputField: {fileID: 298589996}
   _spellDisplayText: {fileID: 805632013}
@@ -27258,7 +27256,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1186140072}
   m_FillRect: {fileID: 440226879}
   m_HandleRect: {fileID: 1186140071}

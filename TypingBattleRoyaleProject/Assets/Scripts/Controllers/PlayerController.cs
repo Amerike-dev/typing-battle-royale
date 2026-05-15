@@ -22,7 +22,7 @@ public class PlayerController : NetworkBehaviour
     public PlayerAnimatorView playerAnimatorView;
 
     public bool onExplorationState;
-    public PlayerStats stats;
+    public PlayerStatsNet stats;
     public PlayerInventory inventory;
 
     public event Action OnEnterBattle;

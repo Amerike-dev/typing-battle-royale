@@ -154,6 +154,7 @@ MonoBehaviour:
   battleSlerpSpeed: 8
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
+  isMine: 0
 --- !u!1 &6025732026901377866
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +178,7 @@ GameObject:
   - component: {fileID: 5436502623114698702}
   - component: {fileID: -785928258290587213}
   - component: {fileID: -7152228699945959382}
+  - component: {fileID: 7387810183387781476}
   m_Layer: 0
   m_Name: BotasGameplay_01 2
   m_TagString: Untagged
@@ -201,6 +203,7 @@ Transform:
   - {fileID: 2219271632113978124}
   - {fileID: 282621845863819666}
   - {fileID: 3847614118327141349}
+  - {fileID: 5361563112799311054}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9142911174015477040
@@ -277,7 +280,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1.4544191, z: 1}
   m_Center: {x: 0, y: -0.22720976, z: 0}
@@ -373,10 +376,8 @@ MonoBehaviour:
     m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
-  stats:
-    _id: 
-    _maxHP: 0
-    _maxLives: 0
+  stats: {fileID: -7152228699945959382}
+  _playerInput: {fileID: 0}
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,6 +632,57 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+--- !u!114 &7387810183387781476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99626186099a3164281253a947cb3625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpellNetworkController
+  ShowTopMostFoldoutHeaderGroup: 1
+  projectileVfxPrefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+  aoeVfxPrefab: {fileID: 0}
+  auraVfxPrefab: {fileID: 0}
+  beamVfxPrefab: {fileID: 0}
+  summonVfxPrefab: {fileID: 0}
+  buffDebuffVfxPrefab: {fileID: 0}
+  castOrigin: {fileID: 5361563112799311054}
+--- !u!1 &6067828554676709740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5361563112799311054}
+  m_Layer: 0
+  m_Name: CastOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5361563112799311054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6067828554676709740}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.18, z: 0.415}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8524643825518991717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0

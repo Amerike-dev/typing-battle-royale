@@ -24,10 +24,6 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private EndGameUI _endGameUI;
     [SerializeField] private SpellBookUI _spellBookUI;
 
-    [Header("Combat fallbacks")]
-    [SerializeField] private Spell _defaultSpellFallback;
-    [SerializeField] private GameObject _vfxPrefabFallback;
-
     [Header("Spell UI (escena)")]
     [SerializeField] private CanvasGroup _spellUICanvasGroup;
     [SerializeField] private TMPro.TMP_InputField _spellInputField;
@@ -123,7 +119,6 @@ public class GameplayManager : NetworkBehaviour
                 _playerController.cameraController,
                 _targetSystem,
                 _spellBookUI);
-            if (_castInputController != null) _castInputController.OnSpellCast += HandleOnSpellCast;
         }
 
         //SetupSpawns();
@@ -139,9 +134,6 @@ public class GameplayManager : NetworkBehaviour
 
         if (_castInputController != null)
         {
-            if (_castInputController.defaultSpell == null && _defaultSpellFallback != null)
-                _castInputController.defaultSpell = _defaultSpellFallback;
-
             if (_spellUICanvasGroup != null) _castInputController.uiCanvasGroup = _spellUICanvasGroup;
             if (_spellInputField != null) _castInputController.castSpell = _spellInputField;
             if (_spellDisplayText != null) _castInputController.spell = _spellDisplayText;
@@ -162,58 +154,10 @@ public class GameplayManager : NetworkBehaviour
             _targetSystem,
             _spellBookUI);
 
-        if (_castInputController != null)
-        {
-            _castInputController.OnSpellCast -= HandleOnSpellCast;
-            _castInputController.OnSpellCast += HandleOnSpellCast;
-        }
-
         Debug.Log($"[GameplayManager] RegisterLocalPlayer: camera={_playerController.cameraController != null}, castInput={_castInputController != null}, spellBookUI={_spellBookUI != null}, targetSystem={_targetSystem != null}");
 
         if (stateMachine == null) stateMachine = new StateMachine(explorationState, 0f);
         else stateMachine.ChangeState(explorationState);
-    }
-
-    private void HandleOnSpellCast(Spell spell)
-    {
-        Debug.Log($"GameplayManager escucho el evento OnSpellCast: {(spell != null ? spell.spellName : "null")}");
-        if (spell == null || _castInputController == null) return;
-        
-        SubmitWPMServerRpc(_castInputController.wordsPerMinute);
-
-        Transform origin = _castInputController.castOrigin != null
-            ? _castInputController.castOrigin
-            : _castInputController.transform;
-
-        Vector3 forward = origin.forward;
-        Vector3 spawnPos = origin.position
-                           + forward.normalized * 1.5f
-                           + Vector3.up * 1f;
-
-        int spellId = SpellCatalog.Instance != null ? SpellCatalog.Instance.IndexOf(spell) : -1;
-        BroadcastSpellVfxServerRpc(spellId, spawnPos, forward);
-    }
-
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void BroadcastSpellVfxServerRpc(int spellId, Vector3 origin, Vector3 direction)
-    {
-        PlaySpellVfxClientRpc(spellId, origin, direction);
-    }
-
-    [ClientRpc]
-    private void PlaySpellVfxClientRpc(int spellId, Vector3 origin, Vector3 direction)
-    {
-        if (_vfxPrefabFallback == null) return;
-
-        Spell spell = null;
-        if (spellId >= 0 && SpellCatalog.Instance != null) spell = SpellCatalog.Instance.Get(spellId);
-        if (spell == null) spell = _defaultSpellFallback;
-        if (spell == null) return;
-
-        Quaternion rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
-        GameObject go = Instantiate(_vfxPrefabFallback, origin, rot);
-        var projectile = go.GetComponent<ProjectileVFX>();
-        if (projectile != null) projectile.Launch(spell, direction);
     }
 
     private void SpawnPlayers()
@@ -328,11 +272,6 @@ public class GameplayManager : NetworkBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        if (_castInputController != null) _castInputController.OnSpellCast -= HandleOnSpellCast;
-    }
-    
     private void OnDrawGizmos()
     {
         if (_spawnPoints == null || _spawnPoints.Count == 0) return;

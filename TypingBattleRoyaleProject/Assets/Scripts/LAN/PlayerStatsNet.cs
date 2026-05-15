@@ -136,6 +136,21 @@ public class PlayerStatsNet : NetworkBehaviour
             currentLifes.Value = 0;
             currentHP.Value = 0;
             isAlive.Value = false;
+
+            if (IsServer) AwardKillTo(killerId);
+        }
+    }
+
+    private void AwardKillTo(ulong killerId)
+    {
+        if (killerId == OwnerClientId || killerId == 0) return;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(killerId, out var killerClient))
+        {
+            if (killerClient.PlayerObject != null && killerClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var killerStats))
+            {
+                killerStats.killCount.Value++;
+            }
         }
     }
 
