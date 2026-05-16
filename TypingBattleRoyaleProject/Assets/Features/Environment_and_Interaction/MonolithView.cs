@@ -1,31 +1,33 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 
 public class MonolithView : NetworkBehaviour
 {
     [SerializeField] private MonolithData monolithData;
     [SerializeField] private ParticleSystem unlockVFX;
-    [SerializeField] private Renderer monolithRenderer;
+    private Renderer monolithRenderer;
     public NetworkVariable<bool> IsExhausted = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public System.Action<SpellData> OnMonolithUnlocked;
-
-    public static event System.Action<MonolithView> OnMonolithRegistered;
-    public static event System.Action<MonolithView> OnMonolithUnregistered;
 
     public int Level => monolithData != null ? monolithData.Level : 0;
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log($"[MonolithView] OnNetworkSpawn — IsServer:{IsServer} IsClient:{IsClient} IsHost:{IsHost} | {gameObject.name}");
+        monolithRenderer = GetComponent<Renderer>();
+
+        Debug.Log($"[MonolithView] OnNetworkSpawn — IsServer:{IsServer} IsClient:{IsClient} | {gameObject.name} | escena:{gameObject.scene.name}");
 
         IsExhausted.OnValueChanged += OnExhaustedChanged;
-        OnMonolithRegistered?.Invoke(this);
+
+        if (IsServer)
+            GetComponent<MonolithController>().ServerInitialize();
     }
+
 
     public override void OnNetworkDespawn()
     {
         IsExhausted.OnValueChanged -= OnExhaustedChanged;
-        OnMonolithUnregistered?.Invoke(this);
     }
 
     private void OnExhaustedChanged(bool previousValue, bool newValue)

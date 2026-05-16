@@ -21,6 +21,10 @@ public class MonolithController : MonoBehaviour
     void Awake()
     {
         data = new MonolithData(id, level, runeChallenge);
+    }
+
+    public void ServerInitialize()
+    {
         PopulateSpells();
     }
 

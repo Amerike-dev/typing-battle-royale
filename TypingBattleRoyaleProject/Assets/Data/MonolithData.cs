@@ -18,16 +18,15 @@ public class MonolithData
     public int Level
     {
         get { return _level; }
-
         set
         {
-            if (value < 4 && value > 0)
+            if (value >= 1 && value <= 3)
             {
                 _level = value;
             }
             else
             {
-                Debug.Log("Value not valid. Setting Default (1)");
+                Debug.LogWarning($"[MonolithData] Level '{value}' inválido. Debe ser 1-3. Usando 1.");
                 _level = 1;
             }
         }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7939123051989688747}
   - component: {fileID: 2656037322409463498}
   - component: {fileID: 4180394864273671833}
+  - component: {fileID: -7339513429800172571}
   m_Layer: 0
   m_Name: Monolith
   m_TagString: Untagged
@@ -152,9 +153,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonolithController
   id: 
-  level: 0
+  level: 1
   runeChallenge: 
   idPlayers: []
   spells: []
   allSpells: []
   allSpellData: []
+--- !u!114 &-7339513429800172571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687778378914436356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d109571d9d5be4886c6e52e36173f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonolithView
+  ShowTopMostFoldoutHeaderGroup: 1
+  unlockVFX: {fileID: 0}
+  IsExhausted:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
