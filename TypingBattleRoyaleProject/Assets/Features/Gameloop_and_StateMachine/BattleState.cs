@@ -31,13 +31,19 @@ public class BattleState : IGameState
     {
         _playerController.onExplorationState = false;
         _playerController.NullMoveSpeed();
+
+        Debug.Log($"[BattleState] _targetSystem asignado: {_targetSystem != null}");
+
         if (_animatorView != null) _animatorView.TriggerCasting();
 
         var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
 
         if (_targetSystem != null && _playerController != null)
-        {    
+        {
+            _targetSystem.SetSource(_playerController.transform);
             _targetSystem.FindClosestTarget();
+
+            Debug.Log($"[BattleState] Target actual después de buscar: {(_targetSystem.CurrentTarget != null ? _targetSystem.CurrentTarget.name : "NULL")}");
         }
 
         if (camera != null)
@@ -75,11 +81,14 @@ public class BattleState : IGameState
 
     void IGameState.Update() 
     {
+
         if (_targetSystem == null)
             return;
 
-        if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame)
         {
+            Debug.Log("[BattleState] Tab presionado. Ejecutando Cycle.");
+
             _targetSystem.Cycle();
 
             var camera = _cameraController != null ? _cameraController : _playerController.cameraController;

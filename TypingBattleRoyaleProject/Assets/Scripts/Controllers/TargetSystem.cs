@@ -1,12 +1,14 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections.Generic;
 
-//Gestionar la selección de objetivos (Lock-on) y el apuntado manual.
-//Este sistema será implementado detalladamente en TBR-003. No eliminar.
 public class TargetSystem : MonoBehaviour
 {
+    public static event Action<string, float, ulong> OnLookDead;
+
     [Header("Target Setting")]
-    [SerializeField] private float _defaultMaxRadius = 30f;
+    [SerializeField] private float _defaultMaxRadius = 4f;
 
     [Header("Target Marker")]
     [SerializeField] private GameObject _targetMarkerPrefab;
@@ -23,6 +25,10 @@ public class TargetSystem : MonoBehaviour
 
     private float _nextRetargetTime;
     private Vector3 _lastSearchPosition;
+
+    private readonly List<Transform> _validTargets = new();
+
+    private Transform _sourceTransform;
 
     void Start()
     {
@@ -69,17 +75,14 @@ public class TargetSystem : MonoBehaviour
 
             PlayerStatsNet stats = candidate.GetComponent<PlayerStatsNet>();
 
-            if (stats == null)
-                continue;
+            if (stats == null) continue;
 
             // Excluir jugadores muertos.
-            if (!stats.isAlive.Value)
-                continue;
+            if (!stats.isAlive.Value) continue;
 
             float distance = Vector3.Distance(from, candidate.position);
 
-            if (distance > maxRadius)
-                continue;
+            if (distance > maxRadius) continue;
 
             if (distance < closestDistance)
             {
@@ -103,13 +106,84 @@ public class TargetSystem : MonoBehaviour
     // Busca y selecciona al enemigo más cercano dentro de un radio específico.
     public void FindClosestTarget()
     {
-        _lastSearchPosition = transform.position;
+        _lastSearchPosition = GetSearchPosition();
         SetTarget(FindClosestTarget(_lastSearchPosition, _defaultMaxRadius));
     }
 
     public void Cycle()
     {
-        
+        BuildValidTargetsList();
+
+        if (_validTargets.Count == 0)
+        {
+            SetTarget(null);
+            Debug.Log("[TargetSystem] No hay targets disponibles para ciclar.");
+            return;
+        }
+
+        if (CurrentTarget == null)
+        {
+            SetTarget(_validTargets[0]);
+            Debug.Log($"[TargetSystem] Cycle seleccionó: {_validTargets[0].name}");
+            return;
+        }
+
+        int currentIndex = _validTargets.IndexOf(CurrentTarget);
+        int nextIndex = currentIndex + 1;
+
+        if (currentIndex == -1 || nextIndex >= _validTargets.Count)
+        {
+            nextIndex = 0;
+        }
+
+        SetTarget(_validTargets[nextIndex]);
+        Debug.Log($"[TargetSystem] Cycle cambió a: {_validTargets[nextIndex].name}");
+    }
+
+    private void BuildValidTargetsList()
+    {
+        _validTargets.Clear();
+    
+        if(NetworkManager.Singleton == null)
+        {
+            Debug.LogWarning("[TargetSystem] No existe NetworkManager.Singleton.");
+            return;
+        }
+
+        Vector3 from = GetSearchPosition();
+    
+        foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client == null || client.PlayerObject == null) continue;
+    
+            NetworkObject playerObject = client.PlayerObject;
+    
+            if (playerObject.OwnerClientId == NetworkManager.Singleton.LocalClientId) continue;
+    
+            Transform candidate = playerObject.transform;
+    
+            PlayerStatsNet stats = candidate.GetComponent<PlayerStatsNet>();
+    
+            if (stats == null) continue;
+
+            if (!stats.isAlive.Value) continue;
+    
+            float distance = Vector3.Distance(from, candidate.position);
+    
+            if (distance > _defaultMaxRadius) continue;
+    
+            _validTargets.Add(candidate);
+        }
+
+        _validTargets.Sort((a, b) =>
+        {
+            float distanceA = Vector3.Distance(from, a.position);
+            float distanceB = Vector3.Distance(from, b.position);
+
+            return distanceA.CompareTo(distanceB);
+        });
+    
+        Debug.Log($"[TargetSystem] Targets válidos encontrados: {_validTargets.Count}");
     }
 
     public void Clear()
@@ -143,7 +217,7 @@ public class TargetSystem : MonoBehaviour
         if (!stats.isAlive.Value)
             return false;
 
-        float distance = Vector3.Distance(transform.position, targetToCheck.position);
+        float distance = Vector3.Distance(GetSearchPosition(), targetToCheck.position);
 
         if (distance > _defaultMaxRadius)
             return false;
@@ -192,5 +266,40 @@ public class TargetSystem : MonoBehaviour
             Destroy(_currentMarker);
             _currentMarker = null;
         }
+    }
+
+    public void ApplyDamageToCurrentTarget(float damage, ulong attackerId)
+    {
+        if (CurrentTarget == null)
+        {
+            Debug.Log("[TargetSystem] Sin objetivo. El spell se reproduce sin daño.");
+            return;
+        }
+
+        PlayerStatsNet targetStats = CurrentTarget.GetComponent<PlayerStatsNet>();
+
+        if (targetStats == null)
+        {
+            Debug.LogWarning("[TargetSystem] El target actual no tiene PlayerStatsNet.");
+            return;
+        }
+
+        string targetID = targetStats.ID;
+
+        Debug.Log($"[TargetSystem] Invocando daño. targetID={targetID}, damage={damage}, attackerId={attackerId}");
+
+        OnLookDead?.Invoke(targetID, damage, attackerId);
+    }
+
+    public void SetSource(Transform source)
+    {
+        _sourceTransform = source;
+    }
+
+    private Vector3 GetSearchPosition()
+    {
+        if (_sourceTransform != null) return _sourceTransform.position;
+
+        return transform.position;
     }
 }

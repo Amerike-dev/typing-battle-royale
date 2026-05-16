@@ -69,9 +69,7 @@ public class PlayerStatsNet : NetworkBehaviour
         currentLifes.OnValueChanged += HandleLivesChanged;
         killCount.OnValueChanged += HandleKillCountChanged;
         
-        // FLAN tu fuiste el sacrificado, solo quita el comentario de la linea de abajo y borras este
-        // El evento lo tienes que llamar asi "public static event Action<string, float, ulong> OnLookDead;"
-        //if (IsServer) TargetSystem.OnLookDead += HandleGlobalDamageReceived;
+        if (IsServer) TargetSystem.OnLookDead += HandleGlobalDamageReceived;
     }
 
     public override void OnNetworkDespawn()
@@ -80,15 +78,21 @@ public class PlayerStatsNet : NetworkBehaviour
         currentLifes.OnValueChanged -= HandleLivesChanged;
         killCount.OnValueChanged -= HandleKillCountChanged;
         
-        // FLAN tu fuiste el sacrificado, solo quita el comentario de la linea de abajo y borras este
-        //if (IsServer) TargetSystem.OnLookDead -= HandleGlobalDamageReceived;
+        if (IsServer) TargetSystem.OnLookDead -= HandleGlobalDamageReceived;
     }
     
     private void HandleGlobalDamageReceived(string targetID, float damage, ulong attackerId)
     {
         if (!IsServer) return;
+
+        Debug.Log($"[PlayerStatsNet] Evento recibido. this.ID={ID}, targetID={targetID}, damage={damage}, attackerId={attackerId}");
+
         
-        if (this.ID == targetID) TakeDamage(damage, attackerId);
+        if (this.ID == targetID) 
+        {
+            Debug.Log($"[PlayerStatsNet] ID coincide. Aplicando daño a {ID}");
+            TakeDamage(damage, attackerId);
+        }
     }
 
     private void HandleHPChanged(float oldValue, float newValue)

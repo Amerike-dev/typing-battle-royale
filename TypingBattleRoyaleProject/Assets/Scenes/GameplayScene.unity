@@ -21300,7 +21300,7 @@ MonoBehaviour:
   _playerController: {fileID: 70666034920921235, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _castInputController: {fileID: 2907905682181783749, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _playerAnimatorView: {fileID: -2689246101718839236, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
-  _targetSystem: {fileID: 0}
+  _targetSystem: {fileID: -922158416777610449, guid: 12e19fe3f726b64448d042086458b8a4, type: 3}
   _countdownText: {fileID: 1951700203}
   _winnerText: {fileID: 384223408}
   _endGameCanvas: {fileID: 1942957264}
