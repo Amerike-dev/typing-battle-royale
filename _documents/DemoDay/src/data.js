@@ -358,7 +358,7 @@ const TICKETS = [
         id: 'TBR-016',
         title: 'Sincronizar Monolitos por red',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'MonolithSpawn instancia GameObjects con Instantiate plano: cada cliente ve sus propios monolitos no sincronizados. Convertir prefab Monolith a NetworkObject y spawnear desde el Host con NetworkObject.Spawn(). TryInteract debe ejecutarse vía ServerRpc.',
         acceptance: [

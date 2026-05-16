@@ -65,9 +65,19 @@ public class LobbyController : NetworkBehaviour
 
     private void OnHostButtonClicked()
     {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            lobbyUI.ShowStatusMessage("El servidor ya está iniciado.", true);
+            return;
+        }
+
         Unity.Netcode.Transports.UTP.UnityTransport transport = NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>();
 
         if (transport != null) transport.SetConnectionData("0.0.0.0", defaultPort);
+        if (transport != null) {
+            transport.ConnectionData.Address = "0.0.0.0";
+            transport.ConnectionData.Port = defaultPort;
+        }
 
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
 
@@ -97,6 +107,12 @@ public class LobbyController : NetworkBehaviour
 
     private void OnJoinButtonClicked()
     {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            lobbyUI.ShowStatusMessage("Ya estás conectado o iniciando una conexión.", true);
+            return;
+        }
+
         string targetIP = ipInputField.text;
         
         if (string.IsNullOrEmpty(targetIP)) return;
@@ -104,6 +120,11 @@ public class LobbyController : NetworkBehaviour
         var transport = NetworkManager.Singleton.GetComponent<Unity.Netcode.Transports.UTP.UnityTransport>();
 
         if (transport != null) transport.SetConnectionData(targetIP, defaultPort );
+        if (transport != null)
+        {
+            transport.ConnectionData.Address = targetIP;
+            transport.ConnectionData.Port = defaultPort;
+        }
         
         bool success = NetworkManager.Singleton.StartClient();
 
