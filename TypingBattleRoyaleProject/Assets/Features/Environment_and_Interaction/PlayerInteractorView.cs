@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractorView : MonoBehaviour
 {
     public MonolithView MonolithView { get; private set; }
     public DebugPop debugPop;
 
-    public GameObject[] Monoliths;
+    private readonly List<MonolithView> registeredMonoliths = new List<MonolithView>();
     public GameObject NearMonolith;
 
     [SerializeField] Vector2 signalHidePos;
@@ -19,17 +22,34 @@ public class PlayerInteractorView : MonoBehaviour
 
     private void Start()
     {
-
         StartCoroutine(CheckMonolith());
+    }
+
+    private void RefreshMonolithList()
+    {
+        var found = FindObjectsByType<MonolithView>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
+
+        foreach (var monolith in found)
+        {
+            if (!registeredMonoliths.Contains(monolith))
+            {
+                registeredMonoliths.Add(monolith);
+                Debug.Log($"[PlayerInteractor] Monolito encontrado: {monolith.name} | Total: {registeredMonoliths.Count}");
+            }
+        }
+
+        registeredMonoliths.RemoveAll(m => m == null);
     }
 
     public void NearMonolithCheck()
     {
         float nearestDistance = Mathf.Infinity;
-
         NearMonolith = null;
 
-        foreach (var monolith in Monoliths)
+        foreach (var monolith in registeredMonoliths)
         {
             if (monolith == null) continue;
 
@@ -38,9 +58,8 @@ public class PlayerInteractorView : MonoBehaviour
             if (distance < proximityRange && distance < nearestDistance)
             {
                 nearestDistance = distance;
-                NearMonolith = monolith;
+                NearMonolith = monolith.gameObject;
             }
-            
         }
 
         if (NearMonolith != null)
@@ -49,9 +68,8 @@ public class PlayerInteractorView : MonoBehaviour
             if (!isVisible)
             {
                 isVisible = true;
-                debugPop.MoveSignal(signalShowPos, 1f);
+                if (debugPop != null) debugPop.MoveSignal(signalShowPos, 1f);
             }
-            Debug.Log("El monolito más cercano es " + NearMonolith.name);
         }
         else
         {
@@ -59,17 +77,18 @@ public class PlayerInteractorView : MonoBehaviour
             if (isVisible)
             {
                 isVisible = false;
-                debugPop.MoveSignal(signalHidePos, 0f);
+                if (debugPop != null) debugPop.MoveSignal(signalHidePos, 0f);
             }
         }
     }
+
 
     IEnumerator CheckMonolith()
     {
         while (true)
         {
+            RefreshMonolithList();
             NearMonolithCheck();
-
             yield return new WaitForSeconds(checkerMonolith);
         }
     }

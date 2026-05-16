@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: -785928258290587213}
   - component: {fileID: -7152228699945959382}
   - component: {fileID: 7387810183387781476}
-  - component: {fileID: 8690037258914259780}
+  - component: {fileID: 4577230542194400807}
   m_Layer: 0
   m_Name: BotasGameplay_01 2
   m_TagString: Untagged
@@ -653,7 +653,7 @@ MonoBehaviour:
   summonVfxPrefab: {fileID: 0}
   buffDebuffVfxPrefab: {fileID: 0}
   castOrigin: {fileID: 5361563112799311054}
---- !u!114 &8690037258914259780
+--- !u!114 &4577230542194400807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -662,14 +662,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6025732026901377866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c68b96890ca5e41a2898d46f395730, type: 3}
+  m_Script: {fileID: 11500000, guid: bb5ab22e948ced54691181982b88eb09, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TargetSystem
-  _defaultMaxRadius: 4
-  _targetMarkerPrefab: {fileID: 8622904970316400021, guid: 279631206b05aefbfb75b700881368df, type: 3}
-  _markerOffset: {x: 0, y: 2.2, z: 0}
-  _retargetInterval: 0.25
-  target: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractorView
+  debugPop: {fileID: 0}
+  NearMonolith: {fileID: 0}
+  signalHidePos: {x: 0, y: 0}
+  signalShowPos: {x: 0, y: 0}
+  proximityRange: 3
+  checkerMonolith: 0.5
+  isVisible: 0
 --- !u!1 &6067828554676709740
 GameObject:
   m_ObjectHideFlags: 0
