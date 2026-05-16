@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class PlayerInteractorView : MonoBehaviour
 {
@@ -19,8 +20,8 @@ public class PlayerInteractorView : MonoBehaviour
 
     private void Start()
     {
-
         StartCoroutine(CheckMonolith());
+        StartCoroutine(FindAllMonolithsRoutine());
     }
 
     public void NearMonolithCheck()
@@ -51,7 +52,7 @@ public class PlayerInteractorView : MonoBehaviour
                 isVisible = true;
                 debugPop.MoveSignal(signalShowPos, 1f);
             }
-            Debug.Log("El monolito más cercano es " + NearMonolith.name);
+            Debug.Log("El monolito mï¿½s cercano es " + NearMonolith.name);
         }
         else
         {
@@ -62,6 +63,12 @@ public class PlayerInteractorView : MonoBehaviour
                 debugPop.MoveSignal(signalHidePos, 0f);
             }
         }
+    }
+
+    IEnumerator FindAllMonolithsRoutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Monoliths = FindObjectsByType<MonolithView>(FindObjectsSortMode.None).Select(m => m.gameObject).ToArray();
     }
 
     IEnumerator CheckMonolith()

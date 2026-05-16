@@ -1,31 +1,59 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class MonolithView : MonoBehaviour
+public class MonolithView : NetworkBehaviour
 {
     [SerializeField] private MonolithData monolithData;
     [SerializeField] private ParticleSystem unlockVFX;
     [SerializeField] private Renderer monolithRenderer;
-    public bool IsExausted {  get; private set; }
+    public NetworkVariable<bool> IsExhausted = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public System.Action<SpellData> OnMonolithUnlocked;
 
     public int Level => monolithData != null ? monolithData.Level : 0;
 
-    public bool TryInteract(PlayerStats interactiongPlayer)
+    public override void OnNetworkSpawn()
     {
-        if(monolithData==null || monolithData.spellData == null) { Debug.Log("monolithData o SpellData no asignado."); }
-        if (IsExausted) { return false; };
-        SpellData spell = monolithData.spellData;
-        OnMonolithUnlocked?.Invoke(spell);
-        PlayUnlockVFX();
+        IsExhausted.OnValueChanged += OnExhaustedChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        IsExhausted.OnValueChanged -= OnExhaustedChanged;
+    }
+
+    private void OnExhaustedChanged(bool previousValue, bool newValue)
+    {
+        if (newValue)
+        {
+            PlayUnlockVFX();
+        }
+    }
+
+    public bool TryInteract(PlayerStats interactingPlayer)
+    {
+        if (IsExhausted.Value) { return false; };
+        InteractServerRpc();
         return true;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractServerRpc(ServerRpcParams rpcParams = default)
+    {
+        if (IsExhausted.Value) return;
+
+        var clientId = rpcParams.Receive.SenderClientId;
+        var controller = GetComponent<MonolithController>();
+
+        if (controller.IdPlayerExist(clientId.ToString())) return;
+
+        if (monolithData == null || monolithData.spellData == null) { Debug.Log("monolithData o SpellData no asignado."); return; }
+
+        IsExhausted.Value = true;
+    }
+
     public void PlayUnlockVFX()
     {
-        if(unlockVFX != null)
-        {
-            unlockVFX.Play();
-            IsExausted = true;
-        }
-
+        if (unlockVFX == null) return;
+        unlockVFX.Play();
     }
 }

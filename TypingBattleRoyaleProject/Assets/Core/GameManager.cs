@@ -10,7 +10,11 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
-                Debug.LogError("El GameManager no esta en la escena");
+                instance = FindAnyObjectByType<GameManager>();
+                if (instance == null)
+                {
+                    Debug.LogError("El GameManager no esta en la escena y no se pudo encontrar.");
+                }
             }
             return instance;
         }
@@ -36,15 +40,13 @@ public class GameManager : MonoBehaviour
         
         DontDestroyOnLoad(gameObject);
 
-        stateMachine = new StateMachine(explorationState, 1.0f);
-        
         explorationState = new ExplorationState(camaraController, gameplayManager);
+        stateMachine = new StateMachine(explorationState, 1.0f);
         stateMachine.ChangeState(explorationState);
     }
 
     private void Start()
     {
-        //ahorita esta en el Start pero esto deberia ser cuando inicie la partida
         StartCoroutine(gameTimer.CountTime());
     }
     private void Update()
