@@ -1,61 +1,75 @@
-using System.Collections;
-using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
+using WotK.Brand;
 
 public class SplashController : MonoBehaviour
 {
-    [Header("Fade Time")]
-    [SerializeField] private float studioFade = 1.5f;
-    [SerializeField] private float gameFade = 2f;
-
+    [Header("UI References")]
+    [SerializeField] private Image backgroundImage;
     [SerializeField] private CanvasGroup studioCanvas;
     [SerializeField] private CanvasGroup gameCanvas;
 
+    [SerializeField] private TMP_Text taglineText;
+
+    [Header("Timing Configuration")]
+    [SerializeField] private float fadeInDuration = 0.5f;
+    [SerializeField] private float holdDuration = 1.5f;
+    [SerializeField] private float fadeOutDuration = 0.5f;
+    [SerializeField] private float skipFadeDuration = 0.2f;
+    
+    private Sequence splashSequence;
+    private bool isSkipping = false;
+
     void Start()
     {
+        if (backgroundImage != null) backgroundImage.color = WotKBrand.Black;
+        
+        if (taglineText != null) taglineText.color = WotKBrand.White;
+        
         studioCanvas.alpha = 0f;
         gameCanvas.alpha = 0f;
-
-        StartCoroutine(SplashCorutine());
+        PlaySplashSequence();
     }
 
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
-        {
-            StopAllCoroutines();
-            SceneManager.LoadScene("LobbyScene", LoadSceneMode.Single);
-        }
+        if (!isSkipping && Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) SkipSplash();
+    }
+    
+    private void PlaySplashSequence()
+    {
+        splashSequence = DOTween.Sequence();
+        splashSequence.SetUpdate(true);
+        splashSequence.Append(studioCanvas.DOFade(1f, fadeInDuration));
+        splashSequence.AppendInterval(holdDuration);
+        splashSequence.Append(studioCanvas.DOFade(0f, fadeOutDuration));
+        splashSequence.Join(gameCanvas.DOFade(1f, fadeInDuration));
+        splashSequence.AppendInterval(holdDuration);
+        splashSequence.Append(gameCanvas.DOFade(0f, fadeOutDuration));
+        splashSequence.OnComplete(LoadLobbyScene);
     }
 
-    private IEnumerator SplashCorutine()
+    private void SkipSplash()
     {
-        yield return StartCoroutine(FadeCanvas(studioCanvas, 1f, studioFade));
-        yield return new WaitForSeconds(1f);
-        yield return StartCoroutine(FadeCanvas(studioCanvas, 0f, 0.5f));
+        isSkipping = true;
+        splashSequence.Kill();
+        Sequence skipSequence = DOTween.Sequence().SetUpdate(true);
+        skipSequence.Join(studioCanvas.DOFade(0f, skipFadeDuration));
+        skipSequence.Join(gameCanvas.DOFade(0f, skipFadeDuration));
+        skipSequence.OnComplete(LoadLobbyScene);
+    }
 
-        yield return StartCoroutine(FadeCanvas(gameCanvas, 1f, gameFade));
-        yield return new WaitForSeconds(1f);
-        yield return StartCoroutine(FadeCanvas(gameCanvas, 0f, 0.5f));
-
+    private void LoadLobbyScene()
+    {
         SceneManager.LoadScene("LobbyScene", LoadSceneMode.Single);
     }
 
-    private IEnumerator FadeCanvas(CanvasGroup canvas, float alphaTarget, float duration)
-    {
-        float startAlpha = canvas.alpha;
-        float time = 0f;
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-
-            canvas.alpha = Mathf.Lerp(startAlpha, alphaTarget, time / duration);
-            yield return null;
-        }
-
-        canvas.alpha = alphaTarget;
+    private void OnDestroy()
+    { 
+        splashSequence?.Kill();
     }
-
 }

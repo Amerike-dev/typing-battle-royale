@@ -1093,7 +1093,7 @@ const TICKETS = [
         id: 'TBR-049',
         title: 'Polish escena Splash — fade in/out global + branding WotK',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'La escena Splash (TBR-027) ya carga logos pero sin transiciones suaves: aparición y corte abrupto. Aplicar fade-in/fade-out a TODOS los elementos visibles (logo estudio Red Blood Cells → logo Wizards of the Keyboard + tagline → transición a LobbyScene) usando CanvasGroup.alpha y DOTween. Fondo negro brand (#070504), logos centrados, tagline en blanco con tipografía del brand book. Cualquier tecla skipea con fade-out acelerado (no corte seco).',
         acceptance: [
