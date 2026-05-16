@@ -18,6 +18,8 @@ public class Spell : ScriptableObject
     [Header("Characteristics")]
     public SpellTypes[] spellTypes;
     public float damage;
+    [Tooltip("Tiempo en segundos que debe esperar el jugador antes de poder volver a lanzar este hechizo.")]
+    public float cooldown;
     public StatusEffects debuff;
     public float range;
     public float speed;

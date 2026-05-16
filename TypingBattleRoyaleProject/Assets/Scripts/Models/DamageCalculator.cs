@@ -9,8 +9,12 @@ public class DamageCalculator
         _playerController = targetPlayer;
     }
 
-    public void CalculateDamage(SpellData castedSpell)
+    public void CalculateDamage(SpellData castedSpell, TypingStats stats, ulong attackerId)
     {
-        _playerController.stats.TakeDamage( castedSpell.baseDamage);
+        float accuracy = stats.GetAccuracy();
+        float multiplier = TypingStats.GetDamageBonusMultiplier(accuracy);
+        float finalDamage = castedSpell.baseDamage * multiplier;
+
+        _playerController.stats.TakeDamage(finalDamage, attackerId);
     }
 }
