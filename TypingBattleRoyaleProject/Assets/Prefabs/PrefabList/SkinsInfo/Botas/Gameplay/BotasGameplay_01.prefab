@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: -1682770728152020553}
   - component: {fileID: 6795158935235160031}
   - component: {fileID: 6570788340928155694}
+  - component: {fileID: 1796556603285625119}
   m_Layer: 0
   m_Name: BotasGameplay_01
   m_TagString: Untagged
@@ -683,6 +684,25 @@ MonoBehaviour:
   summonVfxPrefab: {fileID: 0}
   buffDebuffVfxPrefab: {fileID: 0}
   castOrigin: {fileID: 6042542381098867138}
+--- !u!114 &1796556603285625119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb5ab22e948ced54691181982b88eb09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractorView
+  debugPop: {fileID: 0}
+  NearMonolith: {fileID: 0}
+  signalHidePos: {x: 0, y: 0}
+  signalShowPos: {x: 0, y: 0}
+  proximityRange: 3
+  checkerMonolith: 0.5
+  isVisible: 0
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,16 +9,23 @@ public class MonolithView : NetworkBehaviour
     public NetworkVariable<bool> IsExhausted = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     public System.Action<SpellData> OnMonolithUnlocked;
 
+    public static event System.Action<MonolithView> OnMonolithRegistered;
+    public static event System.Action<MonolithView> OnMonolithUnregistered;
+
     public int Level => monolithData != null ? monolithData.Level : 0;
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"[MonolithView] OnNetworkSpawn — IsServer:{IsServer} IsClient:{IsClient} IsHost:{IsHost} | {gameObject.name}");
+
         IsExhausted.OnValueChanged += OnExhaustedChanged;
+        OnMonolithRegistered?.Invoke(this);
     }
 
     public override void OnNetworkDespawn()
     {
         IsExhausted.OnValueChanged -= OnExhaustedChanged;
+        OnMonolithUnregistered?.Invoke(this);
     }
 
     private void OnExhaustedChanged(bool previousValue, bool newValue)
@@ -31,13 +38,14 @@ public class MonolithView : NetworkBehaviour
 
     public bool TryInteract(PlayerStats interactingPlayer)
     {
-        if (IsExhausted.Value) { return false; };
-        InteractServerRpc();
+        if (IsExhausted.Value) { return false; }
+        ;
+        InteractRpc();
         return true;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void InteractServerRpc(ServerRpcParams rpcParams = default)
+    [Rpc(SendTo.Server)]
+    private void InteractRpc(RpcParams rpcParams = default)
     {
         if (IsExhausted.Value) return;
 
@@ -45,8 +53,7 @@ public class MonolithView : NetworkBehaviour
         var controller = GetComponent<MonolithController>();
 
         if (controller.IdPlayerExist(clientId.ToString())) return;
-
-        if (monolithData == null || monolithData.spellData == null) { Debug.Log("monolithData o SpellData no asignado."); return; }
+        if (monolithData == null || monolithData.spellData == null) return;
 
         IsExhausted.Value = true;
     }
