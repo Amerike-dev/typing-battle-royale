@@ -68,7 +68,7 @@ public class PlayerInteractorView : MonoBehaviour
             if (!isVisible)
             {
                 isVisible = true;
-                debugPop.MoveSignal(signalShowPos, 1f);
+                if (debugPop != null) debugPop.MoveSignal(signalShowPos, 1f);
             }
         }
         else
@@ -77,7 +77,7 @@ public class PlayerInteractorView : MonoBehaviour
             if (isVisible)
             {
                 isVisible = false;
-                debugPop.MoveSignal(signalHidePos, 0f);
+                if (debugPop != null) debugPop.MoveSignal(signalHidePos, 0f);
             }
         }
     }
