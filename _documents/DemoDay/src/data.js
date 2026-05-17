@@ -1367,7 +1367,7 @@ const TICKETS = [
         id: 'TBR-058',
         title: 'Implementar maqueta Isla 1 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Juan', status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Integrar el modelo entregado por los artistas para la Isla 1 (bioma central / zona de spawn). Import del FBX, generar prefab compuesto con colliders y materiales, ubicarlo en GameplayScene en el offset definido y validar que el flujo gameplay (spawn, navegación, monolitos sobre la isla) funciona sin clipping ni cracks.',
         acceptance: [
