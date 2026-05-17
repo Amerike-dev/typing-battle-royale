@@ -68,7 +68,7 @@ const TICKETS = [
         id: 'TBR-003',
         title: 'Auto-lock de enemigos cercanos en BattleState',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Flan', status: 'done',
         summary:
             'TargetSystem.cs hoy es stub (FindClosestTarget y ToggleLockOn vacíos). Implementar selección automática del enemigo más cercano dentro de un radio configurable cuando se entra a BattleState, con indicador visual sobre el target (anillo/flecha) y persistencia mientras dure el casteo. Sin manual cycling (Tab toggles battle mode).',
         acceptance: [

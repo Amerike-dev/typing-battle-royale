@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BattleState : IGameState
 {
@@ -30,13 +31,26 @@ public class BattleState : IGameState
     {
         _playerController.onExplorationState = false;
         _playerController.NullMoveSpeed();
+
+        Debug.Log($"[BattleState] _targetSystem asignado: {_targetSystem != null}");
+
         if (_animatorView != null) _animatorView.TriggerCasting();
 
         var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
+
+        if (_targetSystem != null && _playerController != null)
+        {
+            _targetSystem.SetSource(_playerController.transform);
+            _targetSystem.FindClosestTarget();
+
+            Debug.Log($"[BattleState] Target actual después de buscar: {(_targetSystem.CurrentTarget != null ? _targetSystem.CurrentTarget.name : "NULL")}");
+        }
+
         if (camera != null)
         {
             camera.OnCamaraMove = false;
-            Transform t = _targetSystem != null ? _targetSystem.target : null;
+
+            Transform t = _targetSystem != null ? _targetSystem.CurrentTarget : null;
             camera.SetBattleTarget(t);
         }
 
@@ -65,7 +79,26 @@ public class BattleState : IGameState
 
     void IGameState.Execute(float tick) { }
 
-    void IGameState.Update() { }
+    void IGameState.Update() 
+    {
+
+        if (_targetSystem == null)
+            return;
+
+        if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            Debug.Log("[BattleState] Tab presionado. Ejecutando Cycle.");
+
+            _targetSystem.Cycle();
+
+            var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
+
+            if (camera != null)
+            {
+                camera.SetBattleTarget(_targetSystem.CurrentTarget);
+            }
+        }
+    }
 
     void IGameState.Exit()
     {
@@ -77,6 +110,11 @@ public class BattleState : IGameState
         if (camera != null)
         {
             camera.ClearBattleTarget();
+        }
+
+        if (_targetSystem != null)
+        {
+            _targetSystem.Clear();
         }
 
         if (_spellBookUI != null)

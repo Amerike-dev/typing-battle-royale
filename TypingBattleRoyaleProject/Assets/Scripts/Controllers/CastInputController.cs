@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
 public class CastInputController : MonoBehaviour
 {
@@ -292,6 +293,8 @@ public class CastInputController : MonoBehaviour
         //wordsPerMinute = _typingStats.GetWPM();
         accuracy = _typingStats.GetAccuracy();
 
+        ApplyDamageToLockedTarget();
+
         OnSpellCast?.Invoke(currentSpell);
 
         FadeTo(0f, () =>
@@ -299,6 +302,27 @@ public class CastInputController : MonoBehaviour
             enabled = false;
             RequestExitBattle();
         });
+    }
+
+    private void ApplyDamageToLockedTarget()
+    {
+        var gm = GameplayManager.Instance;
+        if (gm == null) return;
+
+        TargetSystem targetSystem = gm.TargetSystem;
+
+        if (targetSystem == null) return;
+        if (currentSpell == null) return;
+
+        float damage = currentSpell.damage;
+
+        ulong attackerId = NetworkManager.Singleton != null
+            ? NetworkManager.Singleton.LocalClientId
+            : 0;
+
+        Debug.Log($"[CastInputController] Spell completado. Aplicando daño={damage}, attackerId={attackerId}, spell={currentSpell.spellName}");
+
+        targetSystem.ApplyDamageToCurrentTarget(damage, attackerId);
     }
 
     private void CancelCast()

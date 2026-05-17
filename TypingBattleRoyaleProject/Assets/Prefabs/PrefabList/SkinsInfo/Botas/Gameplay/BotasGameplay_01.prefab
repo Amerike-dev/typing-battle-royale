@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 6795158935235160031}
   - component: {fileID: 6570788340928155694}
   - component: {fileID: 1796556603285625119}
+  - component: {fileID: 7901015738979342725}
   m_Layer: 0
   m_Name: BotasGameplay_01
   m_TagString: Untagged
@@ -703,6 +704,23 @@ MonoBehaviour:
   proximityRange: 3
   checkerMonolith: 0.5
   isVisible: 0
+--- !u!114 &7901015738979342725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c68b96890ca5e41a2898d46f395730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TargetSystem
+  _defaultMaxRadius: 4
+  _targetMarkerPrefab: {fileID: 8622904970316400021, guid: 279631206b05aefbfb75b700881368df, type: 3}
+  _markerOffset: {x: 0, y: 2.2, z: 0}
+  _retargetInterval: 0.25
+  target: {fileID: 0}
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0

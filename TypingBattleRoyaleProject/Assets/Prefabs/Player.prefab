@@ -712,7 +712,8 @@ MonoBehaviour:
   sensitivity: 0.1
   battleSlerpSpeed: 8
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  OnCamaraMove: 1
+  OnCamaraMove: 0
+  isMine: 0
 --- !u!1 &2482189523147153423
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1333,7 @@ MonoBehaviour:
   battleSlerpSpeed: 8
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
+  isMine: 0
 --- !u!1 &4993070895236498224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,6 +1620,7 @@ GameObject:
   - component: {fileID: 5493427378232170685}
   - component: {fileID: 5436502623114698702}
   - component: {fileID: 6795158935235160031}
+  - component: {fileID: -922158416777610449}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1807,10 +1810,8 @@ MonoBehaviour:
     m_Flags: 0
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 1
-  stats:
-    _id: 
-    _maxHP: 0
-    _maxLives: 0
+  stats: {fileID: 0}
+  _playerInput: {fileID: 0}
 --- !u!114 &2907905682181783749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2036,6 +2037,23 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+--- !u!114 &-922158416777610449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c68b96890ca5e41a2898d46f395730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TargetSystem
+  _defaultMaxRadius: 30
+  _targetMarkerPrefab: {fileID: 8622904970316400021, guid: 279631206b05aefbfb75b700881368df, type: 3}
+  _markerOffset: {x: 0, y: 2.2, z: 0}
+  _retargetInterval: 0.25
+  target: {fileID: 0}
 --- !u!1 &6118676471917471606
 GameObject:
   m_ObjectHideFlags: 0
@@ -7603,7 +7621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1722c3d629a24df458b181fdd3312711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDController
-  player: {fileID: 70666034920921235}
   hpText: {fileID: 3734777952064259174}
   killCountText: {fileID: 879385071432288464}
   timerText: {fileID: 4682978366753403805}
