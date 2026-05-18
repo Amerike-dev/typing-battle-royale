@@ -718,7 +718,7 @@ const TICKETS = [
         id: 'TBR-033',
         title: 'Custom player name en LobbyScene',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Añadir input "Tu nombre" en LobbyScene, persistente en PlayerPrefs. Propagar como NetworkVariable<FixedString64Bytes> en NetworkPlayerController y mostrar en EnemyLabel y leaderboard final.',
         acceptance: [
