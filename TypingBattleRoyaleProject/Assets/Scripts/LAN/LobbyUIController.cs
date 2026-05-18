@@ -16,11 +16,36 @@ public class LobbyUIController : MonoBehaviour
 
     [Header("Configuration")]
     [SerializeField] private ushort defaultPort = 7777;
+    
+    [Header("Player Settings")]
+    [SerializeField] private TMP_InputField _playerNameInput;
 
     private void Start()
     {
         DisplayNetworkInformation();
         UpdatePlayerSlots(new NetworkList<ulong>(), 4);
+        SetupPlayerNameInput();
+    }
+    
+    private void SetupPlayerNameInput()
+    {
+        if (_playerNameInput == null) return;
+
+        _playerNameInput.characterLimit = 16;
+        _playerNameInput.text = PlayerPrefs.GetString("playerName", "");
+        _playerNameInput.onValueChanged.AddListener(ValidateAndSaveName);
+    }
+
+    private void ValidateAndSaveName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return;
+        
+        string trimmedName = value.Trim();
+        if (trimmedName.Length >= 3 && trimmedName.Length <= 16)
+        {
+            PlayerPrefs.SetString("playerName", trimmedName);
+            PlayerPrefs.Save();
+        }
     }
 
     private void DisplayNetworkInformation()
