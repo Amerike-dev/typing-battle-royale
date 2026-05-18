@@ -46,9 +46,16 @@ public class EndGameUI : MonoBehaviour
                 sb.AppendLine("Desconectado");
                 continue;
             }
-            sb.AppendLine($"{player.ID} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
+            string displayId = player.ID;
+            
+            if (player.TryGetComponent<IDController>(out var idController))
+            {
+                string customName = idController.playerName.Value.ToString();
+                
+                if (!string.IsNullOrEmpty(customName)) displayId = customName;
+            }
+            sb.AppendLine($"{displayId} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
-
         return sb.ToString();
     }
 }

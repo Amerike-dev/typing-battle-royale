@@ -1,6 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Collections;
 
 public class IDController : NetworkBehaviour
 {
@@ -11,7 +13,15 @@ public class IDController : NetworkBehaviour
     public NetworkVariable<int> colorIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> already = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>(
+        "", 
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Owner);
+    
     private GameObject visualModel;
+
+    [SerializeField] private GameObject canvasLabelGO;
+    [SerializeField] private EnemyLabel myEnemyLabel;
 
     //Mis cambios para crear una memoria que guarde la seleccion
     public struct PlayerSelection
@@ -35,10 +45,7 @@ public class IDController : NetworkBehaviour
         {
             SelectController.Instance.SyncPlayer(OwnerClientId);
             
-            if (IsOwner)
-            {
-                SelectController.Instance.RegisterLocalPlayer(this);
-            }
+            if (IsOwner) SelectController.Instance.RegisterLocalPlayer(this);
         }
         else
         {
@@ -49,6 +56,11 @@ public class IDController : NetworkBehaviour
         {
             Debug.Log($"<color=cyan>Player {OwnerClientId} spawnado. IsOwner: {IsOwner}</color>");
             IPHolder.Instance?.SetPlayerId(OwnerClientId);
+            string savedName = PlayerPrefs.GetString("playerName", "");
+            
+            if (string.IsNullOrWhiteSpace(savedName) || savedName.Length < 3) savedName = PlayerIDGenerator.GenerateID();
+            
+            playerName.Value = new FixedString64Bytes(savedName);
         }
         
         skinIndex.OnValueChanged += (oldV, newV) => {
@@ -59,8 +71,22 @@ public class IDController : NetworkBehaviour
             Debug.Log($"Color cambió a: {newV}");
             Update3DModel();
         };
+
+        if (canvasLabelGO != null)
+        {
+            if (!IsOwner)
+                canvasLabelGO.SetActive(true);
+            else
+                canvasLabelGO.SetActive(false);
+        }
+        
+        playerName.OnValueChanged += (oldV, newV) => { 
+            Debug.Log($"<color=orange>[JorSalasDEV - Sync]</color> El jugador {OwnerClientId} actualizó su nombre de {oldV} a: {newV}");
+            UpdateLabel(); 
+        };
         
         Update3DModel();
+        Invoke(nameof(UpdateLabel), 0.2f);
     }
     
     public void ChangeSelection(int skinDir, int colorDir)
@@ -88,6 +114,28 @@ public class IDController : NetworkBehaviour
         visualModel = Instantiate(prefab, worldPosition, Quaternion.identity);
         visualModel.transform.position += Camera.main.transform.forward * -1f; 
         visualModel.transform.localScale = new Vector3(1, 1, 1); 
+        UpdateLabel();
+    }
+    
+    private void UpdateLabel()
+    {
+        string currentName = playerName.Value.ToString();
+        
+        Debug.Log($"<color=cyan>[JorSalasDEV - SYNC]</color> El jugador {OwnerClientId} intentará ponerse el nombre: '{currentName}'");
+
+        if (myEnemyLabel != null)
+        {
+            myEnemyLabel.SetLabel(currentName);
+            
+            if (!IsOwner)
+                myEnemyLabel.gameObject.SetActive(true);
+            else 
+                myEnemyLabel.gameObject.SetActive(false); 
+        }
+        else
+        {
+            Debug.LogError($"<color=red>[JorSalasDEV - ERROR]</color> ¡La variable myEnemyLabel no está asignada en el Inspector del jugador {OwnerClientId}!");
+        }
     }
 
     [ClientRpc]
