@@ -293,7 +293,6 @@ GameObject:
   - component: {fileID: 2907905682181783749}
   - component: {fileID: -2689246101718839236}
   - component: {fileID: 3104773256663949943}
-  - component: {fileID: 5137736192988664721}
   - component: {fileID: 5493427378232170685}
   - component: {fileID: 5436502623114698702}
   - component: {fileID: -5566681312933644012}
@@ -565,20 +564,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &5137736192988664721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 114569e663f190949b5a89a32c1bccb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyLabel
-  _label: {fileID: 0}
-  _cameraTransform: {fileID: 0}
 --- !u!95 &5493427378232170685
 Animator:
   serializedVersion: 7
@@ -727,8 +712,8 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
-  canvasLabelGO: {fileID: 0}
-  myEnemyLabel: {fileID: 0}
+  canvasLabelGO: {fileID: 8390491322096903682}
+  myEnemyLabel: {fileID: 2030932354212121126}
 --- !u!114 &-6219772976536344013
 MonoBehaviour:
   m_ObjectHideFlags: 0

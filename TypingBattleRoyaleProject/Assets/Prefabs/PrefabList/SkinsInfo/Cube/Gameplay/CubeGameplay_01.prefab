@@ -457,11 +457,11 @@ GameObject:
   - component: {fileID: 2907905682181783749}
   - component: {fileID: -2689246101718839236}
   - component: {fileID: 3104773256663949943}
-  - component: {fileID: 5137736192988664721}
   - component: {fileID: 5493427378232170685}
   - component: {fileID: 5436502623114698702}
   - component: {fileID: 4192689620691068958}
   - component: {fileID: 6976426769906375490}
+  - component: {fileID: 6271088567470267376}
   m_Layer: 0
   m_Name: CubeGameplay_01
   m_TagString: Untagged
@@ -728,20 +728,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &5137736192988664721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6025732026901377866}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 114569e663f190949b5a89a32c1bccb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyLabel
-  _label: {fileID: 0}
-  _cameraTransform: {fileID: 0}
 --- !u!95 &5493427378232170685
 Animator:
   serializedVersion: 7
@@ -887,6 +873,109 @@ MonoBehaviour:
   summonVfxPrefab: {fileID: 0}
   buffDebuffVfxPrefab: {fileID: 0}
   castOrigin: {fileID: 7023683877321686954}
+--- !u!114 &6271088567470267376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a49daa97cddc314582125df32c4ac04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IDController
+  ShowTopMostFoldoutHeaderGroup: 1
+  arraySkins: []
+  skinIndex:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  colorIndex:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  already:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  playerName:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+  canvasLabelGO: {fileID: 2721273834940304410}
+  myEnemyLabel: {fileID: 6685381498047761654}
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0
