@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum Elements { None = 0, Fire = 1, Water = 2, Earth = 3, Wind = 4, Nature = 5, Thunder = 6, Dark, Light, Ice, Lava}
 public enum SpellTiers { TierOne, TierTwo, TierThree }
-public enum SpellTypes {Projectile, Movility, Summon, Buff, Debuff, Aura, AOE, Weapon};
+public enum SpellTypes {Projectile, Movility, Summon, Buff, Debuff, Aura, AOE, Weapon, Beam};
 public enum StatusEffects {None, Slow, Freeze, Root, Poison}
 [CreateAssetMenu(fileName = "Spell", menuName = "Scriptable Objects/Spell")]
 
@@ -10,11 +10,16 @@ public class Spell : ScriptableObject
 {
     [Header("General Info")]
     public string spellName;
+    public string runeString;
     public Elements elementType;
+    public SpellTiers tier;
+    public SpellTypes archetype;
     public string description;
     [Header("Characteristics")]
     public SpellTypes[] spellTypes;
     public float damage;
+    [Tooltip("Tiempo en segundos que debe esperar el jugador antes de poder volver a lanzar este hechizo.")]
+    public float cooldown;
     public StatusEffects debuff;
     public float range;
     public float speed;

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hiedra venenosa
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Hiedra venenosa
+  runeString: enredadera traicionera de la jungla ancestral perdida
   elementType: 5
   description: En un area circular alrededor del caster enraiza a todos los enemigos
     y los envenena

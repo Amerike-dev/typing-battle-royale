@@ -6,9 +6,8 @@ public class RespawnController : MonoBehaviour
     [SerializeField] private Transform[] spawnPoints;
     private int selectedIndex;
 
-    public void OnTriggerEnter(Collider other)
+    public void RespawnPlayer(PlayerController player)
     {
-        PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {
             player.gameObject.SetActive(false);
@@ -17,5 +16,11 @@ public class RespawnController : MonoBehaviour
             player.transform.position = targetPosition;
             player.gameObject.SetActive(true);
         }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        PlayerController player = other.GetComponent<PlayerController>();
+        RespawnPlayer(player);
     }
 }

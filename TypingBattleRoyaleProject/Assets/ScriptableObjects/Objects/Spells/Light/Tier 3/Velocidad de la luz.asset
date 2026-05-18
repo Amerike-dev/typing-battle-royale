@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Velocidad de la luz
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Velocidad de la luz
+  runeString: corre mas rapido que el correcaminos endemoniado
   elementType: 8
   description: "Lanza un proyectil r\xE1pido y te teletransporta al punto de impacto"
   spellTypes: 0000000001000000

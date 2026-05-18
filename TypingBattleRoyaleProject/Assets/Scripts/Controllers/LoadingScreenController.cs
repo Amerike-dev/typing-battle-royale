@@ -1,115 +1,79 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class LoadingScreenController : MonoBehaviour
 {
-    [Header("Texto y Slider")]
-    public TextMeshProUGUI estadoTxt;
-    public Slider sliderLoading;
+    [Header("UI Elements")]
+    [FormerlySerializedAs("sliderLoading")]
+    public Slider progressBar;
 
-    private int paso = 1;
-    private float objetivo = 0f;
-    private float velocidad = 0.5f;
-    [Header("Variables de prueba")]
-    public bool checkServer;
-    public bool checkPlayers;
-    public bool checkMap;
-    public bool checkLoot;
+    [FormerlySerializedAs("estadoTxt")]
+    public TextMeshProUGUI tipsText;
+    
+    public RectTransform spinner;
+
+    [Header("Settings")]
+    public float pulseSpeed = 5f;
+    public float minScale = 0.95f;
+    public float maxScale = 1.05f;
+    public static string SceneToLoad = "CharacterSelect";
+
+    private string[] tips = {
+        "Mientras más rápido tipees, haces más daño.",
+        "Acc < 30% no daña — pero el cooldown corre igual.",
+        "Asegúrate de escribir correctamente, los errores cuestan tiempo.",
+        "Las palabras largas infligen más daño a tus oponentes.",
+        "Mantén un ritmo constante para evitar penalizaciones."
+    };
+
     void Start()
     {
-        sliderLoading.value = 0;
+        if (progressBar != null) 
+            progressBar.value = 0;
+            
+        if (tipsText != null)
+        {
+            tipsText.text = tips[Random.Range(0, tips.Length)];
+        }
+
+        StartCoroutine(LoadAsync(SceneToLoad));
     }
 
     void Update()
     {
-        sliderLoading.value = Mathf.MoveTowards(
-            sliderLoading.value,
-            objetivo,
-            velocidad * Time.deltaTime
-        );
-
-        if (sliderLoading.value >= objetivo)
+        if (spinner != null)
         {
-            ProcesarPaso();
+            float scale = Mathf.Lerp(minScale, maxScale, (Mathf.Sin(Time.time * pulseSpeed) + 1) / 2f);
+            spinner.localScale = new Vector3(scale, scale, scale);
         }
     }
 
-    void ProcesarPaso()
+    IEnumerator LoadAsync(string sceneName)
     {
-        switch (paso)
+        float duration = 3f;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
         {
-            case 1:
-                ChecarServidor();
-                break;
-
-            case 2:
-                ChecarJugadores();
-                break;
-
-            case 3:
-                ChecarMapa();
-                break;
-
-            case 4:
-                ChecarLoot();
-                break;
-
-            case 5:
-                estadoTxt.text = "Listo";
-                SceneManager.LoadScene("GameplayScene");
-                break;
-        }
-    }
-
-    public void ChecarServidor()
-    {
-        if (!checkServer)
-        {
-            estadoTxt.text = "Cargando servidor";
-            return;
+            timeElapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(timeElapsed / duration);
+            
+            if (progressBar != null)
+                progressBar.value = progress;
+                
+            yield return null;
         }
 
-        estadoTxt.text = "Servidor Cargado";
-        objetivo = 0.25f;
-        paso++;
-    }
+        if (progressBar != null)
+            progressBar.value = 1f;
 
-    public void ChecarJugadores()
-    {
-        if (!checkPlayers)
+        if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsServer)
         {
-            estadoTxt.text = "Cargando jugadores";
-            return;
+            Unity.Netcode.NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
         }
-
-        estadoTxt.text = "Jugadores cargados";
-        objetivo = 0.5f;
-        paso++;
-    }
-
-    public void ChecarMapa()
-    {
-        if (!checkMap)
-        {
-            estadoTxt.text = "Cargando mapa";
-            return;
-        }
-        estadoTxt.text = "Mapa cargado";
-        objetivo = 0.75f;
-        paso++;
-    }
-
-    public void ChecarLoot()
-    {
-        if (!checkLoot)
-        {
-            estadoTxt.text = "Cargando loot";
-            return;
-        }
-        estadoTxt.text = "Loot cargado";
-        objetivo = 1f;
-        paso++;
     }
 }

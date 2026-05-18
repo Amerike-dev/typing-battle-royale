@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Electrocutar
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Electrocutar
+  runeString: toques del cable
   elementType: 6
   description: "Hace da\xF1o alto a muy corta distancia"
   spellTypes: 06000000

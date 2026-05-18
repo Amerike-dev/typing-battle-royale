@@ -66,7 +66,6 @@ public class NetworkManagerMock : MonoBehaviour
             PlayerInventory generatedInventory = new PlayerInventory();
 
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
-            playerController.stats = generatedStats;
             playerController.inventory = generatedInventory;
             playerController.enabled = false;
 
@@ -86,6 +85,10 @@ public class NetworkManagerMock : MonoBehaviour
                 playerCamera.enabled = true;
                 audioListener.enabled = true;
 
+                if (GameplayManager.Instance != null)
+                {
+                    GameplayManager.Instance.RegisterLocalPlayer(playerController);
+                }
             }
 
             Players.Add(generatedStats);

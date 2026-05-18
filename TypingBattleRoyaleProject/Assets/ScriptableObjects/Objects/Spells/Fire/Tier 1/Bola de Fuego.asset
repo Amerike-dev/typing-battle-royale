@@ -13,19 +13,23 @@ MonoBehaviour:
   m_Name: Bola de Fuego
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Bola de fuego
+  runeString: desechos de fenix
   elementType: 1
+  tier: 0
+  archetype: 0
   description: "Lanza una bola de fuego con  da\xF1o bajo"
   spellTypes: 00000000
   damage: 25
+  cooldown: 3
   debuff: 0
   range: 50
   speed: 50
-  uses: 0
-  duration: 0
+  uses: 10
+  duration: 5
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

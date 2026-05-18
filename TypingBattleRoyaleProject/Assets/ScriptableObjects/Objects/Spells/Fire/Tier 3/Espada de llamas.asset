@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Espada de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Espada de fuego
+  runeString: machete encendido de pancho villa enojado
   elementType: 0
   description: "Equipa una espada de fuego de 5 usos que al usarla hace un ataque
     de poco rango que hace da\xF1o medio e invoca un proyectil que viaja hacia delante

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Elevacion
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Elevaci\xF3n"
+  runeString: alas de gallina
   elementType: 4
   description: "Te hace elevarte una distanc\xEDa media"
   spellTypes: 01000000

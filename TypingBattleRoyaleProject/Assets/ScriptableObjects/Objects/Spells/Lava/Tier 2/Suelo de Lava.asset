@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Suelo de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Suelo de Lava
+  runeString: piso del infierno casero feroz
   elementType: 10
   description: "En un \xE1rea alrededor del caster invoca lava a nivel del suelo
     que hace da\xF1o medio por segundo a los jugadores que lo esten pisando, menos

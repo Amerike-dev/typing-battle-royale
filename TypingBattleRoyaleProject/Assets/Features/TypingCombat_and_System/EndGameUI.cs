@@ -17,12 +17,12 @@ public class EndGameUI : MonoBehaviour
             _playAgainButton.onClick.AddListener(() => SceneLoader.Reload());
 
         if (_mainMenuButton != null)
-            _mainMenuButton.onClick.AddListener(() => SceneLoader.LoadScene("MainMenu"));
+            _mainMenuButton.onClick.AddListener(() => SceneLoader.LoadScene("LobbyScene"));
 
         gameObject.SetActive(false);
     }
 
-    public void Populate(string winnerId, List<PlayerStats> players)
+    public void Populate(string winnerId, List<PlayerStatsNet> players)
     {
         if (_winnerText != null)
             _winnerText.text = winnerId;
@@ -32,18 +32,21 @@ public class EndGameUI : MonoBehaviour
 
     }
 
-    private string BuildStats(List<PlayerStats> players)
+    private string BuildStats(List<PlayerStatsNet> players)
     {
         if (players == null || players.Count == 0)
             return string.Empty;
 
         StringBuilder sb = new StringBuilder();
 
-        foreach (PlayerStats player in players)
+        foreach (PlayerStatsNet player in players)
         {
-            if (player == null) continue;
-
-            sb.AppendLine($"{player.ID} | Kills: {player.killCount} | WPM: {player.wPM:0.0}");
+            if (player == null)
+            {
+                sb.AppendLine("Desconectado");
+                continue;
+            }
+            sb.AppendLine($"{player.ID} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
 
         return sb.ToString();

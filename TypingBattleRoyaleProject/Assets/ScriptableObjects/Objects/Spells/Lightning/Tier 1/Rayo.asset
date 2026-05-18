@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rayo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Rayo
+  runeString: chispazo de enchufe
   elementType: 0
   description: "Haz da\xF1o bajo e infalible instantanemente a un enemigo."
   spellTypes: 04000000

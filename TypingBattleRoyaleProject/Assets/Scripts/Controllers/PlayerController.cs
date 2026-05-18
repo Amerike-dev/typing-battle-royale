@@ -22,13 +22,21 @@ public class PlayerController : NetworkBehaviour
     public PlayerAnimatorView playerAnimatorView;
 
     public bool onExplorationState;
-    public PlayerStats stats;
+    public PlayerStatsNet stats;
     public PlayerInventory inventory;
+
+    public event Action OnEnterBattle;
+    public event Action OnExitBattle;
+
+    public void RaiseEnterBattle() => OnEnterBattle?.Invoke();
+    public void RaiseExitBattle() => OnExitBattle?.Invoke();
 
     private float _verticalVelocity;
     private float _x, _z;
     private Vector3 _inputDirection;
     private float _jumpValue = 0.5f;
+
+    [SerializeField] private PlayerInput _playerInput;
     void Start()
     {
         continuousSpeed = moveSpeed;
@@ -59,9 +67,48 @@ public class PlayerController : NetworkBehaviour
 
         cameraController = GetComponentInChildren<CameraController>();
         if (cameraController == null) cameraController = FindAnyObjectByType<CameraController>();
+
         if (cameraController != null)
         {
-            cameraController.SetTarget(transform);
+            if (IsOwner)
+            {
+                cameraController.isMine = true; 
+                cameraController.lookAction.action.Enable(); 
+                cameraController.SetTarget(transform);
+                cameraController.gameObject.SetActive(true);
+            }
+            else
+            {
+                cameraController.isMine = false;
+                cameraController.gameObject.SetActive(false);
+            }
+        }
+
+        if (castInputController == null) castInputController = GetComponentInChildren<CastInputController>(true);
+        if (playerAnimatorView == null) playerAnimatorView = GetComponentInChildren<PlayerAnimatorView>(true);
+
+        EnsureSingleAudioListener();
+
+        if (_playerInput == null) _playerInput = GetComponent<PlayerInput>();
+        if (IsOwner)
+        {
+            if (_playerInput != null) _playerInput.enabled = true;
+            GameplayManager.Instance.RegisterLocalPlayer(this);
+        }
+        else
+        {
+            if (_playerInput != null) _playerInput.enabled = false;
+        }
+    }
+
+    private void EnsureSingleAudioListener()
+    {
+        var myListener = GetComponentInChildren<AudioListener>(true);
+        var allListeners = FindObjectsByType<AudioListener>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var listener in allListeners)
+        {
+            if (listener == null) continue;
+            listener.enabled = (listener == myListener);
         }
     }
 
@@ -102,6 +149,7 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         onExplorationState = true;
+        if (inventory == null) inventory = new PlayerInventory();
     }
 
     void Update()
@@ -109,6 +157,13 @@ public class PlayerController : NetworkBehaviour
         if (!IsOwner) return;
 
         if (onExplorationState) MoveCharacter();
+
+        // para pruebas de desconexion
+        if (IsOwner && Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            Debug.Log("Forzando desconexión local...");
+            NetworkManager.Singleton.Shutdown();
+        }
     }
 
     void MoveCharacter()
@@ -149,12 +204,17 @@ public class PlayerController : NetworkBehaviour
 
     public void ExplorationState(InputAction.CallbackContext context)
     {
+        var gm = GameplayManager.Instance;
+        if (gm == null || gm.stateMachine == null) return;
+
+        if (gm.stateMachine.currentState is GameOverState) return;
+
         onExplorationState = !onExplorationState;
-        
+
         if (onExplorationState)
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.explorationState);
+            gm.stateMachine.ChangeState(gm.explorationState);
         else
-            GameplayManager.Instance.stateMachine.ChangeState(GameplayManager.Instance.battleState);
+            gm.stateMachine.ChangeState(gm.battleState);
     }
 
     public void NullMoveSpeed()

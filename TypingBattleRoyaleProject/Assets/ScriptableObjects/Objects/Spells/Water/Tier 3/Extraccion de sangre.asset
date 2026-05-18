@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Extraccion de sangre
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Extraccion de sangre
+  runeString: sancion vampirica del martes trece maldito
   elementType: 2
   description: "Si el objetivo tiene m\xE1s de una vida restante, robale una"
   spellTypes: 0300000004000000

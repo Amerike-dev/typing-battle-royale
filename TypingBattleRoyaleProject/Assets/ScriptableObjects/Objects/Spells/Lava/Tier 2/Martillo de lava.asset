@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Martillo de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Martillo de lava
+  runeString: marro derretido del herrero compa
   elementType: 10
   description: "Equipa un Martillo de 2 usos, hace da\xF1o medio en un area grande
     a corta distancia "

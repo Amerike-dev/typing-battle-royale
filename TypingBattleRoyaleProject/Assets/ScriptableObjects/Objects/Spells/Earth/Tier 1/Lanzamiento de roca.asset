@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Lanzamiento de roca
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Lanzamiento de rocas
+  runeString: tira piedra
   elementType: 3
   description: "Invoca varias rocas peque\xF1as para hacer da\xF1o en un cono enfrente
     de ti."

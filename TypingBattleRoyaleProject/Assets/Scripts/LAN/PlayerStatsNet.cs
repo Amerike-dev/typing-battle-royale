@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System;
+using Unity.Collections;
 
 public class PlayerStatsNet : NetworkBehaviour
 {
@@ -34,6 +35,20 @@ public class PlayerStatsNet : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
+    
+    public NetworkVariable<float> wPM = new(
+        0f,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    
+    public NetworkVariable<FixedString32Bytes> networkPlayerID = new(
+        "",
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+    
+    public string ID => networkPlayerID.Value.ToString();
 
     public Action OnLifeLost;
     public Action OnAllLifeLost;
@@ -53,6 +68,8 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged += HandleHPChanged;
         currentLifes.OnValueChanged += HandleLivesChanged;
         killCount.OnValueChanged += HandleKillCountChanged;
+        
+        if (IsServer) TargetSystem.OnLookDead += HandleGlobalDamageReceived;
     }
 
     public override void OnNetworkDespawn()
@@ -60,34 +77,99 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged -= HandleHPChanged;
         currentLifes.OnValueChanged -= HandleLivesChanged;
         killCount.OnValueChanged -= HandleKillCountChanged;
+        
+        if (IsServer) TargetSystem.OnLookDead -= HandleGlobalDamageReceived;
+    }
+    
+    private void HandleGlobalDamageReceived(string targetID, float damage, ulong attackerId)
+    {
+        if (!IsServer) return;
+
+        Debug.Log($"[PlayerStatsNet] Evento recibido. this.ID={ID}, targetID={targetID}, damage={damage}, attackerId={attackerId}");
+
+        
+        if (this.ID == targetID) 
+        {
+            Debug.Log($"[PlayerStatsNet] ID coincide. Aplicando daño a {ID}");
+            TakeDamage(damage, attackerId);
+        }
     }
 
     private void HandleHPChanged(float oldValue, float newValue)
     {
-        if (newValue < oldValue)
-        {
-            OnDamageTaken?.Invoke();
-        }
+        if (newValue < oldValue) OnDamageTaken?.Invoke();
     }
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        if (newValue < oldValue)
-        {
-            OnLifeLost?.Invoke();
-        }
+        if (newValue < oldValue) OnLifeLost?.Invoke();
 
         if (newValue <= 0)
         {
+            if (IsServer) isAlive.Value = false; 
+            
             OnAllLifeLost?.Invoke();
         }
     }
 
     private void HandleKillCountChanged(int oldValue, int newValue)
     {
-        if (newValue > oldValue)
+        if (newValue > oldValue) OnEnemyKilled?.Invoke();
+    }
+
+    public void TakeDamage(float damage, ulong attackerId = 0)
+    {
+        if (!IsServer || !isAlive.Value) return;
+
+        Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
+        currentHP.Value -= damage;
+
+        if (currentHP.Value <= 0) HandleDeath(attackerId);
+    }
+
+    private void HandleDeath(ulong killerId)
+    {
+        if (currentLifes.Value > 1)
         {
-            OnEnemyKilled?.Invoke();
+            currentLifes.Value--;
+            currentHP.Value = maxHP;
+            RespawnOwnerClientRpc();
+        }
+        else
+        {
+            currentLifes.Value = 0;
+            currentHP.Value = 0;
+            isAlive.Value = false;
+
+            if (IsServer) AwardKillTo(killerId);
+        }
+    }
+
+    private void AwardKillTo(ulong killerId)
+    {
+        if (killerId == OwnerClientId || killerId == 0) return;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(killerId, out var killerClient))
+        {
+            if (killerClient.PlayerObject != null && killerClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var killerStats))
+            {
+                killerStats.killCount.Value++;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RespawnOwnerClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        if (IsOwner)
+        {
+            RespawnController respawn = FindFirstObjectByType<RespawnController>();
+            PlayerController controller = GetComponent<PlayerController>();
+
+            if (respawn != null && controller != null)
+                respawn.RespawnPlayer(controller);
+            else
+                Debug.LogWarning("No se encontro RespawnController o PlayerController local.");
         }
     }
 }

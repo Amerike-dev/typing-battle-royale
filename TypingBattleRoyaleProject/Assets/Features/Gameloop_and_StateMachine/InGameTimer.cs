@@ -20,6 +20,7 @@ public class InGameTimer
     public bool IsRunning => _isRunning;
 
     public Action OnSecondElapsed;
+    public Action OnTimeUp;
 
     public IEnumerator CountTime()
     {
@@ -49,6 +50,6 @@ public class InGameTimer
         }
 
         _isRunning = false;
-        
+        OnTimeUp?.Invoke();
     }
 }

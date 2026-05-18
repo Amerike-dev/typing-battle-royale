@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rayo en cadena
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Rayo en cadena
+  runeString: ondazo electrico colectivo del cableado
   elementType: 0
   description: "Dispara un rayo en linea recta que hace 3 instancias de da\xF1o repartidas
     entre los enemigos m\xE1s cercanos"

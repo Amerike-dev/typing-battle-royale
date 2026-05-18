@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Arbol de vida
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Arbol de vida
+  runeString: ahuehuete sagrado del parque mexica
   elementType: 5
   description: Invoca un arbol que cura periodicamente
   spellTypes: 020000000300000005000000

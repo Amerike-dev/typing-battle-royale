@@ -3,24 +3,26 @@ using UnityEngine.UI;
 
 public class VolumeController : MonoBehaviour
 {
-    public Slider volumeSlider;
-    
-    void Start()
+    [SerializeField] private Slider volumeSlider;
+
+    [SerializeField] private string volumeType;
+
+    private void Start()
+
     {
-        if(volumeSlider != null)
+        if (volumeSlider != null)
         {
-            volumeSlider.value = 1;
-            SetVolume();
+            volumeSlider.onValueChanged.AddListener(SetVolume);
         }
     }
 
-    public void SetVolume()
+    public void SetVolume(float value)
     {
         if(volumeSlider != null)
         {
-            AudioListener.volume = Mathf.Clamp01(volumeSlider.value);
-            Debug.Log(AudioListener.volume);
+            AudioManager.Instance.SetVolume(volumeType, volumeSlider.value);
+            PlayerPrefs.SetFloat($"vol.{volumeType}", AudioListener.volume);
+            PlayerPrefs.Save();
         }
     }
-    
 }
