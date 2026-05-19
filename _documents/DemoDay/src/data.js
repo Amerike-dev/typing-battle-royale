@@ -1120,7 +1120,7 @@ const TICKETS = [
         id: 'TBR-050',
         title: 'Polish escena Lobby — aplicar identidad visual del brand book',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'El LobbyScene hoy es funcional pero gráficamente plano. Rediseñarlo siguiendo el BRAND BOOK WIZARDS OF THE KEYBOARD.pdf: fondo con isotipo en marca de agua, header con logo_wotk_black, slots de jugadores con frame magico (bordes redondeados + acento RojoLotti), tipografía del brand, botones con estilo de "rune card" (fondo Black, borde GatorOrange en hover, texto White). Mantener funcionalidad existente (capacidad 4-8, lista en vivo, ready states) — este ticket es 100% visual.',
         acceptance: [
