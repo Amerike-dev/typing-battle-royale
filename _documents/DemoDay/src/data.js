@@ -416,7 +416,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
