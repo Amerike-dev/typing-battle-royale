@@ -205,7 +205,7 @@ const TICKETS = [
         id: 'TBR-009',
         title: 'Modo espectador al perder todas las vidas',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Flan', status: 'done',
         summary:
             'Cuando un jugador agota sus vidas (OnAllLifeLost) entra en modo espectador: no respawnea, su NetworkObject queda invisible/sin colisión, la cámara cicla entre los jugadores aún vivos con teclas izquierda/derecha. Sale del modo cuando termina la partida (TriggerGameOver).',
         acceptance: [
@@ -416,7 +416,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
@@ -781,7 +781,7 @@ const TICKETS = [
         id: 'TBR-036',
         title: 'Performance pass — target 60fps consistentes',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'Profiling con Unity Profiler tras integrar VFX (TBR-023) y shader (TBR-024). Identificar batching breaks, GC allocs en bucle, draw calls excesivos. Asegurar pooling activo. Target: 60fps en hardware modesto.',
         acceptance: [

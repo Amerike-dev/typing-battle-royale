@@ -29,7 +29,11 @@ public class GameOverState : GameState
             if (NetworkManager.Singleton.LocalClient != null && NetworkManager.Singleton.LocalClient.PlayerObject != null)
             {
                 var pc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
-                if (pc != null) pc.enabled = false;
+                if (pc != null)
+                {
+                    pc.ExitSpectatorModeForGameOver();
+                    pc.enabled = false;
+                }
             }
         }
 

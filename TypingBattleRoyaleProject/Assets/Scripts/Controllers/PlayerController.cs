@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using TMPro.Examples;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,6 +18,10 @@ public class PlayerController : NetworkBehaviour
     public CastInputController castInputController;
     public InputActionReference explorationState;
     public InputAction jumpAction;
+
+    [Header("Spectator")]
+    [SerializeField] private SpectatorUI spectatorUI;
+    [SerializeField] private SpectatorController spectatorController;
 
     [Header("Other")]
     public PlayerAnimatorView playerAnimatorView;
@@ -93,6 +98,17 @@ public class PlayerController : NetworkBehaviour
         if (IsOwner)
         {
             if (_playerInput != null) _playerInput.enabled = true;
+
+            if (spectatorUI == null)
+            {
+                spectatorUI = FindFirstObjectByType<SpectatorUI>();
+            }
+
+            if (spectatorController == null)
+            {
+                spectatorController = GetComponent<SpectatorController>();
+            }
+
             GameplayManager.Instance.RegisterLocalPlayer(this);
         }
         else
@@ -158,12 +174,12 @@ public class PlayerController : NetworkBehaviour
 
         if (onExplorationState) MoveCharacter();
 
-        // para pruebas de desconexion
+        /* para pruebas de desconexion
         if (IsOwner && Keyboard.current.pKey.wasPressedThisFrame)
         {
             Debug.Log("Forzando desconexión local...");
             NetworkManager.Singleton.Shutdown();
-        }
+        }*/
     }
 
     void MoveCharacter()
@@ -225,5 +241,60 @@ public class PlayerController : NetworkBehaviour
     public void MoveSpeed()
     {
         moveSpeed = continuousSpeed;
+    }
+
+    public void EnterSpectatorMode()
+    {
+
+        Debug.Log("[PlayerController] Entering Spectator Mode");
+
+        onExplorationState = false;
+        _moveInput = Vector2.zero;
+        moveSpeed = 0;
+
+        if(_playerInput != null) _playerInput.enabled = false;
+
+        if (explorationState != null && explorationState.action != null) explorationState.action.Disable();
+
+        if (jumpAction != null) jumpAction.Disable();
+
+        if (_characterController != null) _characterController.enabled = false;
+
+        foreach (var collider in GetComponentsInChildren<Collider>(true))
+        {
+            collider.enabled = false;
+        }
+
+        foreach (var renderer in GetComponentsInChildren<Renderer>(true))
+        {
+            renderer.enabled = false;
+        }
+
+        if (IsOwner && spectatorUI != null)
+        {
+            spectatorUI.Show();
+        }
+
+        if (IsOwner && spectatorController != null)
+        {
+            spectatorController.BeginSpectating(cameraController, spectatorUI);
+        }
+    }
+
+    public void ExitSpectatorModeForGameOver()
+    {
+        if (!IsOwner) return;
+
+        if (spectatorController != null)
+        {
+            spectatorController.StopSpectating();
+        }
+
+        if (spectatorUI != null)
+        {
+            spectatorUI.Hide();
+        }
+
+        Debug.Log("[PlayerController] Espectador cerrado por GameOver.");
     }
 }
