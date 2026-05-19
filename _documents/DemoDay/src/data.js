@@ -1330,7 +1330,7 @@ const TICKETS = [
         id: 'TBR-057',
         title: 'Polish NPCs ambientales — pájaros/luciérnagas que cruzan el mapa',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: 'Barrera', status: 'todo',
+        assignee: 'Barrera', status: 'done',
         summary:
             'Para dar vida al mapa sin tocar gameplay, agregar NPCs pasivos puramente visuales: bandadas de pájaros (sprites o quads texturizados) que cruzan el cielo cada 20-40s en path lineal, y luciérnagas (point lights pequeños + sprite billboard) flotando lentamente en zonas bajas. Sin colisión, sin red (solo cliente local), sin lógica de juego. Deterministas no — pueden variar entre clientes.',
         acceptance: [
