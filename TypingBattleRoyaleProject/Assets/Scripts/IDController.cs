@@ -81,7 +81,7 @@ public class IDController : NetworkBehaviour
         }
         
         playerName.OnValueChanged += (oldV, newV) => { 
-            Debug.Log($"<color=orange>[JorSalasDEV - Sync]</color> El jugador {OwnerClientId} actualizó su nombre de {oldV} a: {newV}");
+            Debug.Log($"<color=orange>[Sync]</color> El jugador {OwnerClientId} actualizó su nombre de {oldV} a: {newV}");
             UpdateLabel(); 
         };
         
@@ -121,7 +121,7 @@ public class IDController : NetworkBehaviour
     {
         string currentName = playerName.Value.ToString();
         
-        Debug.Log($"<color=cyan>[JorSalasDEV - SYNC]</color> El jugador {OwnerClientId} intentará ponerse el nombre: '{currentName}'");
+        Debug.Log($"<color=cyan>[SYNC]</color> El jugador {OwnerClientId} intentará ponerse el nombre: '{currentName}'");
 
         if (myEnemyLabel != null)
         {
@@ -134,7 +134,7 @@ public class IDController : NetworkBehaviour
         }
         else
         {
-            Debug.LogError($"<color=red>[JorSalasDEV - ERROR]</color> ¡La variable myEnemyLabel no está asignada en el Inspector del jugador {OwnerClientId}!");
+            Debug.LogError($"<color=red>[ERROR]</color> ¡La variable myEnemyLabel no está asignada en el Inspector del jugador {OwnerClientId}!");
         }
     }
 
