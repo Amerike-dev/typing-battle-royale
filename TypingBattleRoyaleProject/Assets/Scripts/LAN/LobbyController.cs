@@ -53,15 +53,11 @@ public class LobbyController : NetworkBehaviour
     
     private void Update()
     {
-        // Ya NO revisamos si es Host o Cliente. El contador corre siempre que estemos inactivos.
-
-        // Si detectamos movimiento de mouse, clic, o cualquier tecla/botón...
         if ((Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) ||
             (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame) ||
             (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0) ||
             (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame))
         {
-            // ...reiniciamos el reloj de los 30s
             if (AttractModeController.Instance != null)
             {
                 AttractModeController.Instance.ResetIdleTimer();

@@ -17,16 +17,16 @@ public class AttractModeController : MonoBehaviour
         UnloadingDemo 
     }
 
-    [Header("Configuración General")]
+    [Header("General configuration")]
     [SerializeField] private float timeToTriggerDemo = 30f;
-    [SerializeField] private string demoSceneName = "DemoScene";
+    [SerializeField] private string demoSceneName = "AttractMode";
     
-    [Header("UI y Transiciones (Fade)")]
-    [SerializeField] private Image fadeImage; // Imagen negra que cubre toda la pantalla
+    [Header("UI and Fade")]
+    [SerializeField] private Image fadeImage;
     [SerializeField] private float fadeSpeed = 2f;
-    [SerializeField] private GameObject lobbyCanvas; // El contenedor de toda tu UI del lobby
+    [SerializeField] private GameObject lobbyCanvas;
 
-    [Header("Estado Actual (Solo lectura)")]
+    [Header("State")]
     public AttractState currentState = AttractState.WaitingInLobby;
     private float idleTimer = 0f;
     private AsyncOperation asyncOperation;
@@ -39,9 +39,7 @@ public class AttractModeController : MonoBehaviour
             return;
         }
         Instance = this;
-        // Ojo: Ya NO es DontDestroyOnLoad. Este script vive y muere en el Lobby.
         
-        // Asegurarnos de que el fade empiece transparente
         if (fadeImage != null)
         {
             SetFadeAlpha(0f);
@@ -59,14 +57,13 @@ public class AttractModeController : MonoBehaviour
                 {
                     Debug.Log("Iniciando Demo Mode...");
                     currentState = AttractState.FadingToDemo;
-                    fadeImage.raycastTarget = true; // Bloquea clics durante el fade
+                    fadeImage.raycastTarget = true;
                 }
                 break;
 
             case AttractState.FadingToDemo:
-                if (ProcessFade(1f)) // Fundido a negro
+                if (ProcessFade(1f))
                 {
-                    // Iniciar carga aditiva (encima del lobby)
                     asyncOperation = SceneManager.LoadSceneAsync(demoSceneName, LoadSceneMode.Additive);
                     currentState = AttractState.LoadingDemo;
                 }
@@ -75,18 +72,16 @@ public class AttractModeController : MonoBehaviour
             case AttractState.LoadingDemo:
                 if (asyncOperation != null && asyncOperation.isDone)
                 {
-                    // Ocultamos la UI del Lobby para que no se empalme con el demo
                     if (lobbyCanvas != null) lobbyCanvas.SetActive(false);
                     currentState = AttractState.PlayingDemo;
                 }
                 break;
 
             case AttractState.PlayingDemo:
-                if (ProcessFade(0f)) // Fundido a transparente (mostrar la demo)
+                if (ProcessFade(0f))
                 {
-                    fadeImage.raycastTarget = false; // Permitimos que la UI del demo funcione si hubiera
-
-                    // Escuchar CUALQUIER tecla para abortar
+                    fadeImage.raycastTarget = false;
+                    
                     if (AnyInputDetected())
                     {
                         Debug.Log("Abortando Demo...");
@@ -97,9 +92,8 @@ public class AttractModeController : MonoBehaviour
                 break;
 
             case AttractState.FadingToLobby:
-                if (ProcessFade(1f)) // Fundido a negro otra vez
+                if (ProcessFade(1f))
                 {
-                    // Iniciar descarga de la demo
                     asyncOperation = SceneManager.UnloadSceneAsync(demoSceneName);
                     currentState = AttractState.UnloadingDemo;
                 }
@@ -108,16 +102,14 @@ public class AttractModeController : MonoBehaviour
             case AttractState.UnloadingDemo:
                 if (asyncOperation != null && asyncOperation.isDone)
                 {
-                    // Prendemos la UI del Lobby de nuevo
                     if (lobbyCanvas != null) lobbyCanvas.SetActive(true);
                     
-                    idleTimer = 0f; // Reiniciamos reloj
+                    idleTimer = 0f;
                     currentState = AttractState.WaitingInLobby;
                 }
                 break;
         }
-
-        // Si regresamos al Lobby, fundimos a transparente
+        
         if (currentState == AttractState.WaitingInLobby)
         {
             if (ProcessFade(0f)) fadeImage.raycastTarget = false;
@@ -126,13 +118,9 @@ public class AttractModeController : MonoBehaviour
 
     public void ResetIdleTimer()
     {
-        if (currentState == AttractState.WaitingInLobby)
-        {
-            idleTimer = 0f;
-        }
+        if (currentState == AttractState.WaitingInLobby) idleTimer = 0f;
     }
-
-    // Retorna true cuando el fade llega a su objetivo (0 o 1)
+    
     private bool ProcessFade(float targetAlpha)
     {
         if (fadeImage == null) return true;
