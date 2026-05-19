@@ -174,12 +174,12 @@ public class PlayerController : NetworkBehaviour
 
         if (onExplorationState) MoveCharacter();
 
-        // para pruebas de desconexion
+        /* para pruebas de desconexion
         if (IsOwner && Keyboard.current.pKey.wasPressedThisFrame)
         {
             Debug.Log("Forzando desconexión local...");
             NetworkManager.Singleton.Shutdown();
-        }
+        }*/
     }
 
     void MoveCharacter()

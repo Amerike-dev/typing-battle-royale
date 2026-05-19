@@ -416,7 +416,7 @@ const TICKETS = [
         id: 'TBR-019',
         title: 'Limpieza: escenas y código huérfano',
         type: 'tech', priority: 'low', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Eliminar/archivar 12 escenas no referenciadas y stubs nunca llamados (SpellCaster, partes de TargetSystem si TBR-003 las reescribe, MusicController si se reemplaza por TBR-013).',
         acceptance: [
@@ -718,7 +718,7 @@ const TICKETS = [
         id: 'TBR-033',
         title: 'Custom player name en LobbyScene',
         type: 'feature', priority: 'medium', effort: 'S',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Añadir input "Tu nombre" en LobbyScene, persistente en PlayerPrefs. Propagar como NetworkVariable<FixedString64Bytes> en NetworkPlayerController y mostrar en EnemyLabel y leaderboard final.',
         acceptance: [

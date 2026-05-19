@@ -78,12 +78,6 @@ public class GameplayManager : NetworkBehaviour
             Destroy(gameObject);
             return;
         }
-
-        /*var monolithControllers = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
-        foreach(var mc in monolithControllers)
-        {
-            Monolith.Add(mc.gameObject);
-        }*/
     }
 
     private void Start()
@@ -120,8 +114,6 @@ public class GameplayManager : NetworkBehaviour
                 _targetSystem,
                 _spellBookUI);
         }
-
-        //SetupSpawns();
     }
 
     public void RegisterLocalPlayer(PlayerController player)

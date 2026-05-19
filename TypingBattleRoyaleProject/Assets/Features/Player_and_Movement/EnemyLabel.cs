@@ -5,17 +5,11 @@ public class EnemyLabel : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _label;
 
-    private Transform _cameraTransform;
-
-    private void Start()
-    {
-        _cameraTransform = Camera.main.transform;
-
-    }
+    [SerializeField] private Transform _cameraTransform;
 
     private void Update()
     {
-        transform.LookAt(_cameraTransform);
+        transform.rotation = _cameraTransform.rotation;
     }
 
     public void SetLabel(string playerId)
