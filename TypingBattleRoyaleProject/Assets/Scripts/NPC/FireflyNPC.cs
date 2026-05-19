@@ -7,9 +7,7 @@ public class FireflyNPC : MonoBehaviour
     public float moveSpeed = 0.4f;
     public float lightRange = 2f;
 
-    SpriteRenderer sr;
     Light pointLight;
-    Camera cam;
 
     Vector3 centerPos;
     float seedX;
@@ -19,9 +17,7 @@ public class FireflyNPC : MonoBehaviour
 
     void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
         pointLight = GetComponentInChildren<Light>();
-        cam = Camera.main;
     }
 
     public void Activate(BoxCollider area)
@@ -40,8 +36,6 @@ public class FireflyNPC : MonoBehaviour
         seedZ = Random.Range(0f, 100f);
 
         pulseSpeed = Random.Range(0.5f, 1.5f);
-
-        sr.color = WotKBrand.GatorOrange;
 
         pointLight.range = lightRange;
         pointLight.color = WotKBrand.GatorOrange;
@@ -65,13 +59,7 @@ public class FireflyNPC : MonoBehaviour
             1f,
             (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f);
 
-        Color c = sr.color;
-        c.a = pulse;
-        sr.color = c;
-
         pointLight.intensity = pulse;
 
-        if (cam != null)
-            transform.forward = cam.transform.forward;
     }
 }
