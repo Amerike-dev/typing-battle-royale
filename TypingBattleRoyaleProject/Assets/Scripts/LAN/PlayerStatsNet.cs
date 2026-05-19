@@ -35,7 +35,13 @@ public class PlayerStatsNet : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
     );
-    
+
+    public NetworkVariable<bool> isSpectating = new(
+        false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
     public NetworkVariable<float> wPM = new(
         0f,
         NetworkVariableReadPermission.Everyone,
@@ -63,6 +69,7 @@ public class PlayerStatsNet : NetworkBehaviour
             currentLifes.Value = maxLives;
             killCount.Value = 0;
             isAlive.Value = true;
+            isSpectating.Value = false;
         }
 
         currentHP.OnValueChanged += HandleHPChanged;
@@ -106,7 +113,11 @@ public class PlayerStatsNet : NetworkBehaviour
 
         if (newValue <= 0)
         {
-            if (IsServer) isAlive.Value = false; 
+            if (IsServer) 
+            {
+                isAlive.Value = false;
+                isSpectating.Value = true;
+            }
             
             OnAllLifeLost?.Invoke();
         }
@@ -140,6 +151,9 @@ public class PlayerStatsNet : NetworkBehaviour
             currentLifes.Value = 0;
             currentHP.Value = 0;
             isAlive.Value = false;
+            isSpectating.Value = true;
+
+            EnterSpectatorModeClientRpc();
 
             if (IsServer) AwardKillTo(killerId);
         }
@@ -171,5 +185,22 @@ public class PlayerStatsNet : NetworkBehaviour
             else
                 Debug.LogWarning("No se encontro RespawnController o PlayerController local.");
         }
+    }
+
+    [ClientRpc]
+    private void EnterSpectatorModeClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+
+        PlayerController controller = GetComponent<PlayerController>();
+
+        if(controller != null)
+        {
+            controller.EnterSpectatorMode();
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] No se encontro PlayerController local para entrar en modo espectador.");
+        }
+
     }
 }

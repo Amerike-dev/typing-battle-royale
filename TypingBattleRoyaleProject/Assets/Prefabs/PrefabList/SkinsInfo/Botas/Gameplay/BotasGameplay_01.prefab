@@ -155,6 +155,9 @@ MonoBehaviour:
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
   isMine: 0
+  spectatorOffset: {x: 0, y: 2.2, z: -4}
+  spectatorFollowSpeed: 10
+  spectatorLookSpeed: 12
 --- !u!1 &4617432536888207369
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,6 +215,7 @@ GameObject:
   - component: {fileID: 6570788340928155694}
   - component: {fileID: 1796556603285625119}
   - component: {fileID: 7901015738979342725}
+  - component: {fileID: 3678058147437680242}
   m_Layer: 0
   m_Name: BotasGameplay_01
   m_TagString: Untagged
@@ -407,6 +411,8 @@ MonoBehaviour:
       m_Action: Jump
       m_Flags: 0
     m_Flags: 0
+  spectatorUI: {fileID: 0}
+  spectatorController: {fileID: 0}
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 0
   stats: {fileID: 6795158935235160031}
@@ -622,6 +628,11 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
+  isSpectating:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   wPM:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -721,6 +732,21 @@ MonoBehaviour:
   _markerOffset: {x: 0, y: 2.2, z: 0}
   _retargetInterval: 0.25
   target: {fileID: 0}
+--- !u!114 &3678058147437680242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025732026901377866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356bbf5df1d20704d9e46a33fecc4864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpectatorController
+  ShowTopMostFoldoutHeaderGroup: 1
+  cameraController: {fileID: 9158168436735624119}
+  spectatorUI: {fileID: 0}
 --- !u!1 &6239036583666950682
 GameObject:
   m_ObjectHideFlags: 0
