@@ -760,7 +760,7 @@ const TICKETS = [
         id: 'TBR-035',
         title: 'Modo demo / attract mode para pitch presencial',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: "Jorge", status: 'todo',
+        assignee: "Jorge", status: 'done',
         summary:
             'Si nadie toca controles en LobbyScene durante 30s, arranca una partida demo con bots IA básicos: se mueven, casean spells, mueren y respawnean. Cualquier tecla aborta el demo y vuelve al lobby.',
         acceptance: [

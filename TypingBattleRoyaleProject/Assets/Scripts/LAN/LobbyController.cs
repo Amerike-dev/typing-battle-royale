@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class LobbyController : NetworkBehaviour
 {
@@ -48,6 +49,20 @@ public class LobbyController : NetworkBehaviour
 
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedLocal;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectedLocal;
+    }
+    
+    private void Update()
+    {
+        if ((Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) ||
+            (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame) ||
+            (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0) ||
+            (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame))
+        {
+            if (AttractModeController.Instance != null)
+            {
+                AttractModeController.Instance.ResetIdleTimer();
+            }
+        }
     }
 
     public override void OnNetworkSpawn()
