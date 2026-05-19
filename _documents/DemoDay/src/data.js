@@ -781,7 +781,7 @@ const TICKETS = [
         id: 'TBR-036',
         title: 'Performance pass — target 60fps consistentes',
         type: 'tech', priority: 'medium', effort: 'M',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'Profiling con Unity Profiler tras integrar VFX (TBR-023) y shader (TBR-024). Identificar batching breaks, GC allocs en bucle, draw calls excesivos. Asegurar pooling activo. Target: 60fps en hardware modesto.',
         acceptance: [
