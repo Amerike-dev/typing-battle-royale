@@ -1,5 +1,6 @@
 using TMPro;
 using Unity.Netcode;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,14 +13,8 @@ public class HUDController : MonoBehaviour
     public GameObject[] lifeImages;
 
     public PlayerStatsNet localStats;
+    private Coroutine _findPlayerStatsCoroutine;
 
-    private void Update()
-    {
-        // Busca continuamente al jugador local hasta que se encuentre.
-        if (localStats == null) {
-            FindLocalPlayerStats();
-        }
-    }
     private void OnEnable()
     {
         if (GameManager.Instance != null && GameManager.Instance.gameTimer != null)
@@ -27,7 +22,12 @@ public class HUDController : MonoBehaviour
             GameManager.Instance.gameTimer.OnSecondElapsed += UpdateTimerUI;
         }
 
+        if (localStats == null)
+        {
+            _findPlayerStatsCoroutine = StartCoroutine(FindLocalPlayerStatsRoutine());
+        }
     }
+
     private void OnDisable()
     {
         UnsubscribeFromStats();
@@ -36,27 +36,33 @@ public class HUDController : MonoBehaviour
         {
             GameManager.Instance.gameTimer.OnSecondElapsed -= UpdateTimerUI;
         }
+
+        if (_findPlayerStatsCoroutine != null)
+        {
+            StopCoroutine(_findPlayerStatsCoroutine);
+            _findPlayerStatsCoroutine = null;
+        }
     }
 
-    private void FindLocalPlayerStats()
+    private IEnumerator FindLocalPlayerStatsRoutine()
     {
-        // Asegurarse de que el NetworkManager está listo y el cliente local tiene un PlayerObject.
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient || NetworkManager.Singleton.LocalClient.PlayerObject == null)
+        var wait = new WaitForSeconds(0.5f);
+        while (localStats == null)
         {
-            return; // Aún no está listo, se intentará en el próximo frame.
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsClient && NetworkManager.Singleton.LocalClient.PlayerObject != null)
+            {
+                localStats = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerStatsNet>();
+
+                if (localStats != null)
+                {
+                    Debug.Log("HUDController encontró las estadísticas del jugador local y se suscribe a los eventos.");
+                    SubscribeToStats();
+                    RefreshAllUI();
+                    yield break; 
+                }
+            }
+            yield return wait;
         }
-
-        localStats = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerStatsNet>();
-
-        if (localStats == null)
-        {
-            // El componente puede no estar listo todavía.
-            return;
-        }
-
-        Debug.Log("HUDController encontró las estadísticas del jugador local y se suscribe a los eventos.");
-        SubscribeToStats();
-        RefreshAllUI();
     }
 
     private void SubscribeToStats()
