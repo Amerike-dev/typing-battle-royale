@@ -20,6 +20,14 @@ public class CameraController : MonoBehaviour
     
     public bool isMine = false;
 
+    [Header("Spectator")]
+    [SerializeField] private Vector3 spectatorOffset = new Vector3(0f, 2.2f, -4f);
+    [SerializeField] private float spectatorFollowSpeed = 10f;
+    [SerializeField] private float spectatorLookSpeed = 12f;
+
+    private Transform _spectatorTarget;
+    private bool _isSpectatorCamera;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -38,6 +46,12 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (_isSpectatorCamera)
+        {
+            SpectatorFollow();
+            return;
+        }
+
         if (playerBody == null) return;
 
         ActiveForState();
@@ -116,5 +130,48 @@ public class CameraController : MonoBehaviour
     {
         _battleTarget = null;
         _hasBattleTarget = false;
+    }
+
+    public void SetSpectatorTarget(Transform target)
+    {
+        _spectatorTarget = target;
+        _isSpectatorCamera = target != null;
+
+        OnCamaraMove = false;
+        ClearBattleTarget();
+
+        Debug.Log($"[CameraController] Spectator target: {(target != null ? target.name : "null")}");
+    }
+
+    public void ClearSpectatorTarget()
+    {
+        _spectatorTarget = null;
+        _isSpectatorCamera = false;
+    }
+
+    private void SpectatorFollow()
+    {
+        if (_spectatorTarget == null) return;
+
+        Vector3 desiredPosition = _spectatorTarget.position
+                                    + _spectatorTarget.TransformDirection(spectatorOffset);
+
+        transform.position = Vector3.Lerp(
+            transform.position,
+            desiredPosition,
+            spectatorFollowSpeed * Time.deltaTime
+        );
+
+        Vector3 directionToTarget = _spectatorTarget.position + Vector3.up * 1.5f - transform.position;
+
+        if (directionToTarget.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget, Vector3.up);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            spectatorLookSpeed * Time.deltaTime
+        );
     }
 }
