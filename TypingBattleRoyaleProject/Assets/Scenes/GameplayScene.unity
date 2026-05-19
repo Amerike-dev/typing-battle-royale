@@ -21207,7 +21207,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b709154d9a723a47b901b0fa098b516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
-  pools: []
+  pools:
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+    expandable: 0
+    maxSize: 0
 --- !u!4 &1686300508
 Transform:
   m_ObjectHideFlags: 0
