@@ -824,7 +824,7 @@ const TICKETS = [
         id: 'TBR-038',
         title: 'Modal de selección de nivel en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Jorge', status: 'todo',
         summary:
             'Al pulsar E (TBR-037), abrir modal con 3 botones que muestran los 3 niveles del elemento del monolito (ej. agua: Nivel 1 / 2 / 3). Mouse hover destaca; click selecciona y dispara TBR-039. ESC cancela sin efecto.',
         acceptance: [
