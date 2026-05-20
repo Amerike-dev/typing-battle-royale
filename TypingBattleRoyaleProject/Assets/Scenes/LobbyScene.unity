@@ -2047,6 +2047,7 @@ GameObject:
   - component: {fileID: 1003322599}
   - component: {fileID: 1003322598}
   - component: {fileID: 1003322597}
+  - component: {fileID: 1003322600}
   m_Layer: 0
   m_Name: HostButton
   m_TagString: Untagged
@@ -2168,6 +2169,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1003322595}
   m_CullTransparentMesh: 1
+--- !u!114 &1003322600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003322595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1003322596}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1104361888
 GameObject:
   m_ObjectHideFlags: 0
@@ -3222,6 +3238,7 @@ GameObject:
   - component: {fileID: 1723243641}
   - component: {fileID: 1723243640}
   - component: {fileID: 1723243639}
+  - component: {fileID: 1723243642}
   m_Layer: 0
   m_Name: JoinButton
   m_TagString: Untagged
@@ -3331,6 +3348,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723243637}
   m_CullTransparentMesh: 1
+--- !u!114 &1723243642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723243637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1723243638}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1742786481
 GameObject:
   m_ObjectHideFlags: 0
@@ -4051,6 +4083,7 @@ GameObject:
   - component: {fileID: 2026167087}
   - component: {fileID: 2026167086}
   - component: {fileID: 2026167088}
+  - component: {fileID: 2026167089}
   m_Layer: 0
   m_Name: StartButton
   m_TagString: Untagged
@@ -4160,6 +4193,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2026167089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026167084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 2026167085}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &2080480059
 GameObject:
   m_ObjectHideFlags: 0

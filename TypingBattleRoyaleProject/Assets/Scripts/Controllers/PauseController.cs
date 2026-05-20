@@ -1,9 +1,10 @@
+using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Windows;
-using UnityEngine.SceneManagement;
-using Unity.Netcode;
 
 public class PauseController : MonoBehaviour
 {
@@ -21,12 +22,18 @@ public class PauseController : MonoBehaviour
 
     [SerializeField]private bool isPaused = false;
 
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _hidePos;
+    [SerializeField] Vector2 _showPos;
+    [SerializeField] float _time = 0.2f;
+    Coroutine _pauseCoroutine;
+
     private void Awake()
     {
         if (_resumeButton != null)
             _resumeButton.onClick.AddListener(ResumeGame);
-
-
     }
 
     private void Start()
@@ -34,17 +41,13 @@ public class PauseController : MonoBehaviour
         isPaused = false;
         if (_menuContent != null)
             _menuContent.SetActive(isPaused);
-
     }
 
     private void Update()
     {
-
-
             if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
             TogglePause();
-        
     }
 
     public void TogglePause()
@@ -67,31 +70,31 @@ public class PauseController : MonoBehaviour
         TogglePause();
         Debug.Log("Juego en pausa");
         isPaused = true;
+        
         Debug.Log(isPaused);
 
         if (_menuContent != null && isPaused)
         {
-            _menuContent.SetActive(isPaused);
+            UIMove(_hidePos);
+            UIAnimator.FadeOut(_canvasGroup, _time);
+            //_menuContent.SetActive(isPaused);
             Debug.Log("Me activo Menu");
         }
 
-
         Debug.Log("Juego en pausa");
         AudioListener.pause = true;
-
-
     }
-
-   
-
     public void ResumeGame()
     {
         isPaused = false;
         
-
         if (_menuContent != null && !isPaused)
-            _menuContent.SetActive(isPaused);
+        {
+            UIAnimator.FadeIn(_canvasGroup, _time);
+            UIMove(_showPos);
 
+            //_menuContent.SetActive(isPaused);
+        }
     }
 
     private bool IsGameOverActive()
@@ -127,5 +130,17 @@ public class PauseController : MonoBehaviour
         SceneManager.LoadScene("LobbyScene");
     }
 
-    
+    public void UIMove(Vector2 target)
+    {
+        if (_pauseCoroutine != null)
+        {
+            StopCoroutine(_pauseCoroutine);
+        }
+        _pauseCoroutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
+    }
+    public IEnumerator ChangeMode()
+    {
+        yield return new WaitForSeconds(_time);
+        _menuContent.SetActive(true);
+    }
 }
