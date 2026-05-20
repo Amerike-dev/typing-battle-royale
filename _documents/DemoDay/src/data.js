@@ -740,7 +740,7 @@ const TICKETS = [
         id: 'TBR-034',
         title: 'Pantalla de stats finales del jugador',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: 'Barrera', status: 'todo',
+        assignee: 'Ches', status: 'todo',
         summary:
             'Después del podio, pantalla personal con: kills, daño infligido/recibido, hechizos casteados, WPM medio, accuracy media, hechizo más usado, tiempo más rápido de cast.',
         acceptance: [
