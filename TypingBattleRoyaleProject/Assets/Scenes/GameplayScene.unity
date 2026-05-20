@@ -10300,6 +10300,7 @@ GameObject:
   - component: {fileID: 206602362}
   - component: {fileID: 206602361}
   - component: {fileID: 206602360}
+  - component: {fileID: 206602363}
   m_Layer: 5
   m_Name: BotonReanudar
   m_TagString: Untagged
@@ -10370,7 +10371,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206602361}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1917997797}
+        m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &206602361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10409,6 +10422,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206602358}
   m_CullTransparentMesh: 1
+--- !u!114 &206602363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206602358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 206602359}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &208915949
 GameObject:
   m_ObjectHideFlags: 0
@@ -11110,6 +11138,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 380630369}
+  - component: {fileID: 380630370}
   m_Layer: 5
   m_Name: ButtonHost
   m_TagString: Untagged
@@ -11138,6 +11167,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &380630370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380630368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 380630369}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &384223406
 GameObject:
   m_ObjectHideFlags: 0
@@ -21595,6 +21639,7 @@ GameObject:
   - component: {fileID: 1672546992}
   - component: {fileID: 1672546994}
   - component: {fileID: 1672546993}
+  - component: {fileID: 1672546995}
   m_Layer: 5
   m_Name: PausaText
   m_TagString: Untagged
@@ -21721,6 +21766,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672546991}
   m_CullTransparentMesh: 1
+--- !u!114 &1672546995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672546991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1672546992}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1686300506
 GameObject:
   m_ObjectHideFlags: 0
@@ -27696,8 +27756,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 52}
+  m_SizeDelta: {x: 0, y: -4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1942957264
 CanvasGroup:
@@ -27727,6 +27787,11 @@ MonoBehaviour:
   _statsText: {fileID: 2059454375}
   _playAgainButton: {fileID: 2124240026}
   _mainMenuButton: {fileID: 1101363179}
+  _panelUI: {fileID: 1942957263}
+  _canvasGroup: {fileID: 1942957264}
+  _hidePos: {x: 0, y: -50}
+  _showPos: {x: 0, y: 0}
+  _time: 0.2
 --- !u!1 &1951700201
 GameObject:
   m_ObjectHideFlags: 0

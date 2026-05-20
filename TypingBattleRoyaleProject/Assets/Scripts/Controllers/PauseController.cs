@@ -34,6 +34,7 @@ public class PauseController : MonoBehaviour
     {
         if (_resumeButton != null)
             _resumeButton.onClick.AddListener(ResumeGame);
+        _menuContent.SetActive(false);
     }
 
     private void Start()
@@ -43,7 +44,24 @@ public class PauseController : MonoBehaviour
             _menuContent.SetActive(isPaused);
     }
 
-    private void Update()
+    private void OnEnable()
+    {
+        _aPause.action.started += OnPauseChange; //ctx => OnPausa();
+        _aPause.action.Enable();
+
+        _buttonHost.SetActive(NetworkManager.Singleton.IsServer);
+    }
+    private void OnDisable()
+    {
+        _aPause.action.started -= OnPauseChange; //ctx => OnPausa();
+        _aPause.action.Disable();
+    }
+    private void OnPauseChange(InputAction.CallbackContext ctx) => OnPausa();
+    public void SceneMenu()
+    {
+        SceneManager.LoadScene("LobbyScene");
+    }
+    /*private void Update()
     {
             if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
@@ -58,14 +76,16 @@ public class PauseController : MonoBehaviour
         if (isPaused)
             ResumeGame();
             
-    }
+    }*/
     public void OnPausa()
     {
         var state = GameplayManager.Instance.stateMachine.currentState;
 
         if(state is GameOverState || state is WaitingState) return;
 
-        if (_gameplayManager != null && _gameplayManager.stateMachine != null)
+        if (isPaused) ResumeGame();
+        else PauseGame();
+        /*if (_gameplayManager != null && _gameplayManager.stateMachine != null)
 
         TogglePause();
         Debug.Log("Juego en pausa");
@@ -82,6 +102,18 @@ public class PauseController : MonoBehaviour
         }
 
         Debug.Log("Juego en pausa");
+        AudioListener.pause = true;*/
+    }
+    public void PauseGame()
+    {
+        isPaused = true;
+        _menuContent.SetActive(true);
+        if (_menuContent != null && isPaused)
+        {
+            UIMove(_showPos);
+            UIAnimator.FadeOut(_canvasGroup, _time);
+            Debug.Log("Me activo Menu");
+        }
         AudioListener.pause = true;
     }
     public void ResumeGame()
@@ -90,46 +122,31 @@ public class PauseController : MonoBehaviour
         
         if (_menuContent != null && !isPaused)
         {
+            UIMove(_hidePos);
             UIAnimator.FadeIn(_canvasGroup, _time);
-            UIMove(_showPos);
-
-            //_menuContent.SetActive(isPaused);
         }
+        AudioListener.pause= false;
+
+        if(_menuContent!=null)
+            StopCoroutine(_pauseCoroutine);
+        _pauseCoroutine=StartCoroutine(ChangeMode());
     }
 
-    private bool IsGameOverActive()
+    /*private bool IsGameOverActive()
     {
         if (_gameplayManager == null || _gameplayManager.stateMachine == null)
             return false;
 
         return _gameplayManager.stateMachine.currentState is GameOverState;
-    }
+    }*/
 
     private void OnDestroy()
     {
         if (_resumeButton != null)
             _resumeButton.onClick.RemoveListener(ResumeGame);
-
     }
-
-    private void OnEnable()
-    {
-        _aPause.action.started += ctx => OnPausa();
-        _aPause.action.Enable();
-
-        _buttonHost.SetActive(NetworkManager.Singleton.IsServer);
-    }
-    private void OnDisable()
-    {
-        _aPause.action.started -= ctx => OnPausa();
-        _aPause.action.Disable();
-    }
-
-    public void SceneMenu()
-    {
-        SceneManager.LoadScene("LobbyScene");
-    }
-
+    
+    
     public void UIMove(Vector2 target)
     {
         if (_pauseCoroutine != null)
@@ -141,6 +158,6 @@ public class PauseController : MonoBehaviour
     public IEnumerator ChangeMode()
     {
         yield return new WaitForSeconds(_time);
-        _menuContent.SetActive(true);
+        _menuContent.SetActive(false);
     }
 }

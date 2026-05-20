@@ -11,6 +11,14 @@ public class EndGameUI : MonoBehaviour
     [SerializeField] private Button _playAgainButton;
     [SerializeField] private Button _mainMenuButton;
 
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _hidePos;
+    [SerializeField] Vector2 _showPos;
+    [SerializeField] float _time = 0.2f;
+    Coroutine _animationCoroutine;
+
     private void Awake()
     {
         if (_playAgainButton != null)
@@ -20,6 +28,10 @@ public class EndGameUI : MonoBehaviour
             _mainMenuButton.onClick.AddListener(() => SceneLoader.LoadScene("LobbyScene"));
 
         gameObject.SetActive(false);
+    }
+    private void OnEnable()
+    {
+        ShowAnimation();
     }
 
     public void Populate(string winnerId, List<PlayerStatsNet> players)
@@ -57,5 +69,18 @@ public class EndGameUI : MonoBehaviour
             sb.AppendLine($"{displayId} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
         return sb.ToString();
+    }
+
+    private void ShowAnimation()
+    {
+        _panelUI.anchoredPosition = _hidePos;
+        _canvasGroup.alpha = 0f;
+
+        if (_animationCoroutine != null)
+            StopCoroutine(_animationCoroutine);
+
+        _animationCoroutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, _showPos, _time));
+
+        UIAnimator.FadeIn(_canvasGroup, _time);
     }
 }
