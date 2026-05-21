@@ -35,6 +35,7 @@ public class MonolithView : NetworkBehaviour
         if (newValue)
         {
             PlayUnlockVFX();
+            AudioManager.Instance?.PlaySFX("sfx_monolith_unlock");
         }
     }
 

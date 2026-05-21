@@ -28,6 +28,8 @@ public static class SceneLoader
         SceneManager.LoadScene(sceneName);
 
         yield return ScreenFader.FadeIn(0.3f);
+
+        AudioManager.Instance?.ChangeMusic(GetMusicForScene(sceneName), 0.5f);
     }
 
     private static bool SceneExists(string sceneName)
@@ -41,5 +43,17 @@ public static class SceneLoader
                 return true;
         }
         return false;
+    }
+
+    private static string GetMusicForScene(string sceneName)
+    {
+        return sceneName switch
+        {
+        "MainMenu"  => "music_main_menu",
+        "Lobby"     => "music_lobby",
+        "Gameplay"  => "music_exploration",
+        "GameOver"  => "music_game_over",
+        _           => "music_default"
+        };
     }
 }

@@ -9,6 +9,6 @@ public class AudioDataBase : ScriptableObject
 
     public AudioEntry GetEntry(string name)
     {
-        return list.FirstOrDefault(entry => entry != null && entry.name == name);
+        return list.FirstOrDefault(entry => entry != null && entry.id == name);
     }
 }

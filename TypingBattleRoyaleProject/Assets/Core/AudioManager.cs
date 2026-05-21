@@ -32,12 +32,15 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(string id)
     {
+        Debug.Log($"<color=cyan>[AUDIO] PlaySFX: {id}</color>"); // ► TEMPORAL
         var entry = _db.GetEntry(id);
 
         if(entry == null)
         {
-            Debug.LogWarning($"[AUDIO] SFX missing: {id}");
-            return;
+#if UNITY_EDITOR
+        Debug.LogWarning($"<color=orange>[AUDIO] SFX missing: {id}</color>");
+#endif
+        return;
         }
 
         var scr = GetFreeSource();
@@ -93,7 +96,9 @@ public class AudioManager : MonoBehaviour
         var entry = _db.GetEntry(id);
         if (entry == null || entry.clip == null)
         {
-            Debug.LogWarning($"[AUDIO] Music entry '{id}' not found");
+            #if UNITY_EDITOR
+        Debug.LogWarning($"[AUDIO] SFX missing: {id}");
+#endif
             return;
         }
 
