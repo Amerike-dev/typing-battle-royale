@@ -25,6 +25,7 @@ public class PlayState : GameState
             _gameTimer.OnTimeUp += manager.HandleTimeUp;
             _timerCoroutine = manager.StartCoroutine(_gameTimer.CountTime());
         }
+        AudioManager.Instance?.ChangeMusic("music_combat", 0.5f);
         
         Debug.Log("[PlayState] Enter");
     }
@@ -43,6 +44,7 @@ public class PlayState : GameState
         
         if (_gameTimer != null) _gameTimer.OnTimeUp -= manager.HandleTimeUp;
         
+        AudioManager.Instance?.ChangeMusic("music_exploration", 0.5f);
         Debug.Log("[PlayState] Exit");
     }
 }

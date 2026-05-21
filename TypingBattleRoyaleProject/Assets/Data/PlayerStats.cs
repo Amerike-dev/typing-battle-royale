@@ -45,6 +45,7 @@ public class PlayerStats
     {
         _currentHP -= damage;
         OnDamageTaken?.Invoke();
+        AudioManager.Instance?.PlaySFX("sfx_damage");
         if (_currentHP <= 0)
             LoseLife();
             
@@ -55,6 +56,7 @@ public class PlayerStats
         _currentLifes--;
         _isAlive = _currentLifes > 0;
         OnLifeLost?.Invoke();
+        AudioManager.Instance?.PlaySFX("sfx_death");
         if (!isAlive)
             OnAllLifeLost?.Invoke();
         else

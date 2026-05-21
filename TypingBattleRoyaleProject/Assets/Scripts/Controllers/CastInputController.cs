@@ -295,6 +295,8 @@ public class CastInputController : MonoBehaviour
 
         ApplyDamageToLockedTarget();
 
+        AudioManager.Instance?.PlaySFX($"sfx_spell_cast_{currentSpell.spellName.ToLower()}");
+
         OnSpellCast?.Invoke(currentSpell);
 
         FadeTo(0f, () =>
