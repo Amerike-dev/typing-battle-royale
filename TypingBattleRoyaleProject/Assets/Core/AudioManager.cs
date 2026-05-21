@@ -32,7 +32,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(string id)
     {
-        Debug.Log($"<color=cyan>[AUDIO] PlaySFX: {id}</color>"); // ► TEMPORAL
+        Debug.Log($"<color=cyan>[AUDIO] PlaySFX: {id}</color>");
         var entry = _db.GetEntry(id);
 
         if(entry == null)
