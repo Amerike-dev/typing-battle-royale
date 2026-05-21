@@ -64,8 +64,6 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged += HandleHPChanged;
         currentLifes.OnValueChanged += HandleLivesChanged;
         killCount.OnValueChanged += HandleKillCountChanged;
-
-        if (IsServer) TargetSystem.OnLookDead += HandleGlobalDamageReceived;
     }
 
     public override void OnNetworkDespawn()
@@ -73,22 +71,12 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged -= HandleHPChanged;
         currentLifes.OnValueChanged -= HandleLivesChanged;
         killCount.OnValueChanged -= HandleKillCountChanged;
-
-        if (IsServer) TargetSystem.OnLookDead -= HandleGlobalDamageReceived;
     }
 
-    private void HandleGlobalDamageReceived(string targetID, float damage, ulong attackerId)
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void TakeDamageServerRpc(float damage, ulong attackerId)
     {
-        if (!IsServer) return;
-
-        Debug.Log($"[PlayerStatsNet] Evento recibido. this.ID={ID}, targetID={targetID}, damage={damage}, attackerId={attackerId}");
-
-
-        if (this.ID == targetID)
-        {
-            Debug.Log($"[PlayerStatsNet] ID coincide. Aplicando daño a {ID}");
-            TakeDamage(damage, attackerId);
-        }
+        TakeDamage(damage, attackerId);
     }
 
     private void HandleHPChanged(float oldValue, float newValue)
@@ -117,14 +105,14 @@ public class PlayerStatsNet : NetworkBehaviour
         if (newValue > oldValue) OnEnemyKilled?.Invoke();
     }
 
-    public void TakeDamage(float damage, ulong attackerId = 0)
+    public void TakeDamage(float damage, ulong attackerId = ulong.MaxValue)
     {
         if (!IsServer || !isAlive.Value) return;
 
         damageTaken.Value += damage;
         currentHP.Value -= damage;
 
-        if (attackerId != 0 && attackerId != OwnerClientId && NetworkManager.Singleton.ConnectedClients.TryGetValue(attackerId, out var attackerClient))
+        if (attackerId != ulong.MaxValue && attackerId != OwnerClientId && NetworkManager.Singleton.ConnectedClients.TryGetValue(attackerId, out var attackerClient))
         {
             if (attackerClient.PlayerObject != null && attackerClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var attackerStats))
             {
@@ -158,6 +146,8 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleDeath(ulong killerId)
     {
+        if (IsServer) AwardKillTo(killerId);
+
         if (currentLifes.Value > 1)
         {
             currentLifes.Value--;
@@ -172,14 +162,12 @@ public class PlayerStatsNet : NetworkBehaviour
             isSpectating.Value = true;
 
             EnterSpectatorModeClientRpc();
-
-            if (IsServer) AwardKillTo(killerId);
         }
     }
 
     private void AwardKillTo(ulong killerId)
     {
-        if (killerId == OwnerClientId || killerId == 0) return;
+        if (killerId == OwnerClientId || killerId == ulong.MaxValue) return;
 
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(killerId, out var killerClient))
         {

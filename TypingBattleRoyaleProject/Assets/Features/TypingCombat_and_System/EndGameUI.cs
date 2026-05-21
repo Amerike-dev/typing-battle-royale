@@ -22,7 +22,7 @@ public class EndGameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _psDamageDealtText;
     [SerializeField] private TextMeshProUGUI _psDamageTakenText;
     [SerializeField] private TextMeshProUGUI _psSpellsCastText;
-    [SerializeField] private TextMeshProUGUI _psAvgWPMText;
+    [SerializeField] private TextMeshProUGUI _psAvgWordsPerMinuteText;
     [SerializeField] private TextMeshProUGUI _psAvgAccuracyText;
     [SerializeField] private TextMeshProUGUI _psBestSpellText;
     [SerializeField] private TextMeshProUGUI _psFastestCastText;
@@ -40,9 +40,6 @@ public class EndGameUI : MonoBehaviour
 
     public void Populate(string winnerId, List<PlayerStatsNet> players)
     {
-        if (_winnerText != null)
-            _winnerText.text = winnerId;
-
         if (_statsText != null)
             _statsText.text = BuildStats(players);
 
@@ -56,22 +53,22 @@ public class EndGameUI : MonoBehaviour
             _personalStatsContainer.SetActive(true);
 
         DOTween.To(() => 0, x => _psKillsText.text = x.ToString(), localPlayerStats.killCount.Value, 1.5f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0f, x => _psDamageDealtText.text = x.ToString("F0"), localPlayerStats.damageDealt.Value, 1.5f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0f, x => _psDamageTakenText.text = x.ToString("F0"), localPlayerStats.damageTaken.Value, 1.5f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0, x => _psSpellsCastText.text = x.ToString(), localPlayerStats.spellsCast.Value, 1.5f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
-        DOTween.To(() => 0f, x => _psAvgWPMText.text = x.ToString("F1"), localPlayerStats.avgWpm, 1.5f)
-            .SetEase(Ease.OutCubic);
+        DOTween.To(() => 0f, x => _psAvgWordsPerMinuteText.text = x.ToString("F1"), localPlayerStats.avgWpm, 1.5f)
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0f, x => _psAvgAccuracyText.text = x.ToString("F1") + "%", localPlayerStats.avgAccuracy, 1.5f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic).SetUpdate(true);
 
         string bestSpell = "None";
         if (localPlayerStats.spellUsageCount.Count > 0)

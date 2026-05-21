@@ -283,15 +283,22 @@ public class CastInputController : MonoBehaviour
         _completed = true;
         _casting = false;
 
-        //_typingStats.timeElapsed = _timeElapsed;
         float elapsedSeconds = Time.time - _castStartTime;
         float elapsedMinutes = Mathf.Max(0.001f, elapsedSeconds / 60f);
         
         wordsPerMinute = (_totalKeysPressed / 5f) / elapsedMinutes; 
         _typingStats.hits = Mathf.Max(0, (spellText != null ? spellText.Length : 0) - incorrectInput);
         _typingStats.totalKeystrokes = _totalKeysPressed;
-        //wordsPerMinute = _typingStats.GetWPM();
         accuracy = _typingStats.GetAccuracy();
+
+        if(NetworkManager.Singleton != null && NetworkManager.Singleton.LocalClient != null && NetworkManager.Singleton.LocalClient.PlayerObject != null)
+        {
+            if(NetworkManager.Singleton.LocalClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var localStats))
+            {
+                string nameOfSpell = currentSpell != null ? currentSpell.spellName : "Unknown Spell";
+                localStats.RegisterLocalSpellCast(nameOfSpell, elapsedSeconds, accuracy, wordsPerMinute);
+            }
+        }
 
         ApplyDamageToLockedTarget();
 
@@ -318,7 +325,7 @@ public class CastInputController : MonoBehaviour
 
         ulong attackerId = NetworkManager.Singleton != null
             ? NetworkManager.Singleton.LocalClientId
-            : 0;
+            : ulong.MaxValue;
 
         Debug.Log($"[CastInputController] Spell completado. Aplicando daño={damage}, attackerId={attackerId}, spell={currentSpell.spellName}");
 
@@ -345,6 +352,9 @@ public class CastInputController : MonoBehaviour
         var gm = GameplayManager.Instance;
         if (gm == null || gm.stateMachine == null) return;
         if (gm.explorationState == null) return;
+        
+        if (gm.stateMachine.currentState == gm.gameOverState) return;
+
         if (gm.PlayerController != null) gm.PlayerController.onExplorationState = true;
         gm.stateMachine.ChangeState(gm.explorationState);
     }
