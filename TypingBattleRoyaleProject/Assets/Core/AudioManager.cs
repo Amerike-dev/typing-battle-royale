@@ -32,12 +32,15 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(string id)
     {
+        Debug.Log($"<color=cyan>[AUDIO] PlaySFX: {id}</color>");
         var entry = _db.GetEntry(id);
 
         if(entry == null)
         {
-            Debug.LogWarning($"[AUDIO] SFX missing: {id}");
-            return;
+#if UNITY_EDITOR
+        Debug.LogWarning($"<color=orange>[AUDIO] SFX missing: {id}</color>");
+#endif
+        return;
         }
 
         var scr = GetFreeSource();
@@ -93,12 +96,41 @@ public class AudioManager : MonoBehaviour
         var entry = _db.GetEntry(id);
         if (entry == null || entry.clip == null)
         {
-            Debug.LogWarning($"[AUDIO] Music entry '{id}' not found");
+            #if UNITY_EDITOR
+        Debug.LogWarning($"[AUDIO] SFX missing: {id}");
+#endif
             return;
         }
 
         float targetVolume = entry.volume * _musicVolume * _masterVolume;
         StartCoroutine(_music.CrossfadeTo(_musicSource, entry.clip, duration, targetVolume));
+    }
+
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        string musicId = scene.name switch
+        {
+            "LobbyScene"      => "music_lobby",
+            "GameplayScene"   => "music_exploration",
+            "CharacterSelect" => "music_main_menu",
+            _                 => null 
+        };
+        if(musicId != null)
+        {
+            ChangeMusic(musicId, 0.5f);
+
+        }
+
     }
 }
 

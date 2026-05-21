@@ -28,6 +28,7 @@ public static class SceneLoader
         SceneManager.LoadScene(sceneName);
 
         yield return ScreenFader.FadeIn(0.3f);
+
     }
 
     private static bool SceneExists(string sceneName)
@@ -42,4 +43,5 @@ public static class SceneLoader
         }
         return false;
     }
+
 }
