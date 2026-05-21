@@ -105,5 +105,32 @@ public class AudioManager : MonoBehaviour
         float targetVolume = entry.volume * _musicVolume * _masterVolume;
         StartCoroutine(_music.CrossfadeTo(_musicSource, entry.clip, duration, targetVolume));
     }
+
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        string musicId = scene.name switch
+        {
+            "LobbyScene"      => "music_lobby",
+            "GameplayScene"   => "music_exploration",
+            "CharacterSelect" => "music_main_menu",
+            _                 => null 
+        };
+        if(musicId != null)
+        {
+            ChangeMusic(musicId, 0.5f);
+
+        }
+
+    }
 }
 
