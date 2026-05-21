@@ -140,7 +140,36 @@ public class CameraController : MonoBehaviour
         OnCamaraMove = false;
         ClearBattleTarget();
 
+        if (_isSpectatorCamera) transform.SetParent(null);
+
         Debug.Log($"[CameraController] Spectator target: {(target != null ? target.name : "null")}");
+    }
+
+    public void FollowSpectate(Transform target)
+    {
+        if (target == null)
+        {
+            Debug.LogWarning("[CameraController] FollowSpectate recibio un target null.");
+            return;
+        }
+
+        SetSpectatorTarget(target);
+    }
+
+    public void RestoreLocal()
+    {
+        ClearSpectatorTarget();
+
+        OnCamaraMove = true;
+
+        if (playerBody != null)
+        {
+            transform.SetParent(playerBody);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+        }
+
+        Debug.Log("[CameraController] Camara restaurada al jugador local.");
     }
 
     public void ClearSpectatorTarget()

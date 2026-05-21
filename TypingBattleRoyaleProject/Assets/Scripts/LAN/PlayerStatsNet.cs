@@ -2,12 +2,16 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 using Unity.Collections;
+using System.Collections;
 
 public class PlayerStatsNet : NetworkBehaviour
 {
     [Header("Config")]
     [SerializeField] private float maxHP = 100f;
     [SerializeField] private int maxLives = 3;
+
+    [Header("Death / Respawn")]
+    [SerializeField] private int respawnSeconds = 3;
 
     public float MaxHP => maxHP;
     public int MaxLives => maxLives;
@@ -57,9 +61,24 @@ public class PlayerStatsNet : NetworkBehaviour
     public string ID => networkPlayerID.Value.ToString();
 
     public Action OnLifeLost;
+    public Action<ulong> OnLifeLostWithKiller;
     public Action OnAllLifeLost;
     public Action OnDamageTaken;
     public Action OnEnemyKilled;
+
+    private ulong lastDamageFromClientId;
+
+    private Renderer[] _renderers;
+    private CharacterController _characterController;
+    private PlayerController _playerController;
+    private Coroutine _deathSequenceCoroutine;
+
+    private void Awake()
+    {
+        _renderers = GetComponentsInChildren<Renderer>(true);
+        _characterController = GetComponent<CharacterController>();
+        _playerController = GetComponent<PlayerController>();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -109,7 +128,11 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        if (newValue < oldValue) OnLifeLost?.Invoke();
+        if (newValue < oldValue)
+        {
+            OnLifeLost?.Invoke();
+            OnLifeLostWithKiller?.Invoke(lastDamageFromClientId);
+        }
 
         if (newValue <= 0)
         {
@@ -132,19 +155,28 @@ public class PlayerStatsNet : NetworkBehaviour
     {
         if (!IsServer || !isAlive.Value) return;
 
+        lastDamageFromClientId = attackerId;
+
         Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
+
         currentHP.Value -= damage;
 
-        if (currentHP.Value <= 0) HandleDeath(attackerId);
+        if (currentHP.Value <= 0) HandleDeath(lastDamageFromClientId);
     }
 
     private void HandleDeath(ulong killerId)
     {
+        lastDamageFromClientId = killerId;
+
+        if (killerId != OwnerClientId && killerId != 0) AwardKillTo(killerId);
+
         if (currentLifes.Value > 1)
         {
             currentLifes.Value--;
-            currentHP.Value = maxHP;
-            RespawnOwnerClientRpc();
+            currentHP.Value = 0;
+            isAlive.Value = false;
+
+            BeginDeathSequenceOwnerClientRpc(killerId, currentLifes.Value);
         }
         else
         {
@@ -154,8 +186,6 @@ public class PlayerStatsNet : NetworkBehaviour
             isSpectating.Value = true;
 
             EnterSpectatorModeClientRpc();
-
-            if (IsServer) AwardKillTo(killerId);
         }
     }
 
@@ -171,7 +201,7 @@ public class PlayerStatsNet : NetworkBehaviour
             }
         }
     }
-
+    /*
     [ClientRpc]
     private void RespawnOwnerClientRpc(ClientRpcParams clientRpcParams = default)
     {
@@ -185,7 +215,7 @@ public class PlayerStatsNet : NetworkBehaviour
             else
                 Debug.LogWarning("No se encontro RespawnController o PlayerController local.");
         }
-    }
+    }*/
 
     [ClientRpc]
     private void EnterSpectatorModeClientRpc(ClientRpcParams clientRpcParams = default)
@@ -203,4 +233,312 @@ public class PlayerStatsNet : NetworkBehaviour
         }
 
     }
+
+    [ClientRpc]
+    private void BeginDeathSequenceOwnerClientRpc(ulong killerId, int remainingLives, ClientRpcParams clientRpcParams = default)
+    {
+        if (!IsOwner) return;
+
+        if (_deathSequenceCoroutine != null) StopCoroutine(_deathSequenceCoroutine);
+
+        _deathSequenceCoroutine = StartCoroutine(DeathSequenceRoutine(killerId, remainingLives));
+    }
+
+    private IEnumerator DeathSequenceRoutine(ulong killerId, int remainingLives)
+    {
+        SetTemporaryDeathStats(true);
+
+        Debug.Log($"[Death Sequence] KillerId={killerId}, RemainingLives={remainingLives}");
+
+        HUDController hud = FindFirstObjectByType<HUDController>();
+
+        string killerName = GetPlayerNameByClientId(killerId);
+
+        if (hud != null)
+        {
+            hud.ShowDeathUI(killerName, respawnSeconds, remainingLives);
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerStatsNet] No se encontro HUDController para mostrar DeathUI.");
+        }
+
+        CameraController cameraController = GetLocalCameraController();
+
+        if (cameraController != null)
+        {
+            Transform killerTransform = GetPlayerTransformByClientId(killerId);
+
+            if (killerTransform != null)
+            {
+                cameraController.FollowSpectate(killerTransform);
+            }
+            else
+            {
+                Debug.LogWarning($"[PlayerStatsNet] No se encontro Transform del killer con ClientId={killerId}.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerStatsNet] No se encontro CameraController para seguir al killer.");
+        }
+
+        ulong currentSpectatedClientId = killerId;
+
+        for (int secondsLeft = respawnSeconds; secondsLeft > 0; secondsLeft--)
+        {
+            if (hud != null) hud.UpdateDeathCountdown(secondsLeft);
+
+            currentSpectatedClientId = UpdateSpectateTargetIfNeeded(
+                currentSpectatedClientId,
+                cameraController
+            );
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (hud != null) hud.UpdateDeathCountdown(0);
+
+        RequestRespawnServerRpc();
+    }
+
+    [ServerRpc]
+    private void RequestRespawnServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        if (!IsServer) return;
+
+        if (currentLifes.Value <= 0)
+        {
+            Debug.Log("[PlayerStatsNet] No se puede respawnear: no quedan vidas");
+            return;
+        }
+
+        RespawnController respawnController = FindFirstObjectByType<RespawnController>();
+
+        if (respawnController == null)
+        {
+            Debug.LogWarning("[PlayerStatsNet] No se encontro RespawnController en la escena.");
+            return;
+        }
+
+        respawnController.RespawnPlayerServer(this);
+    }
+
+    [ServerRpc]
+    public void RequestFallRespawnServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        if (!IsServer) return;
+
+        if (!isAlive.Value)
+        {
+            Debug.Log("[PlayerStatsNet] No se respawnea por caida por que el jugador no esta vivo.");
+            return;
+        }
+
+        RespawnController respawnController = FindFirstObjectByType<RespawnController>();
+
+        if (respawnController == null)
+        {
+            Debug.Log("[PlayerStatsNet] No se encontro RespawnController para caida.");
+            return;
+        }
+
+        respawnController.RespawnPlayerFromFallServer(this);
+    }
+
+    public void FinishServerRespawn()
+    {
+        if (!IsServer) return;
+
+        currentHP.Value = maxHP;
+        isAlive.Value = true;
+        isSpectating.Value = false;
+
+        FinishRespawnOwnerClientRPC();
+    }
+
+    [ClientRpc]
+    private void FinishRespawnOwnerClientRPC(ClientRpcParams clientRpcParams = default)
+    {
+        if (!IsOwner) return;
+
+        RestoreAfterTemporaryDeath();
+
+        _deathSequenceCoroutine = null;
+
+        Debug.Log("[PlayerStatsNet] Respawn terminando.");
+    }
+
+    private string GetPlayerNameByClientId(ulong clientId)
+    {
+        if (clientId == OwnerClientId)
+        {
+            return "Yo";
+        }
+
+        if (NetworkManager.Singleton == null)
+        {
+            return $"Jugador {clientId}";
+        }
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null)
+            {
+                PlayerStatsNet stats = client.PlayerObject.GetComponent<PlayerStatsNet>();
+
+                if (stats != null && !string.IsNullOrWhiteSpace(stats.ID))
+                {
+                    return stats.ID;
+                }
+            }
+        }
+
+        return $"Jugador {clientId}";
+    }
+
+    private Transform GetPlayerTransformByClientId(ulong clientId)
+    {
+        if (NetworkManager.Singleton == null) return null;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null) return client.PlayerObject.transform;
+        }
+
+        return null;
+    }
+
+    private void SetTemporaryDeathStats(bool isDeadTemporarily)
+    {
+        if (_renderers != null)
+        {
+            foreach (Renderer renderer in _renderers)
+            {
+                if (renderer != null) renderer.enabled = !isDeadTemporarily;
+            }
+        }
+
+        if (_characterController != null) _characterController.enabled = !isDeadTemporarily;
+
+        if (_playerController != null) _playerController.enabled =!isDeadTemporarily;
+
+        Debug.Log($"[PlayerStatsNet] Temporary death state = {isDeadTemporarily}");
+    }
+
+    private void RestoreAfterTemporaryDeath()
+    {
+        SetTemporaryDeathStats(false);
+
+        HUDController hud = FindFirstObjectByType<HUDController>();
+
+        if (hud != null) hud.HideDeathUI();
+
+        CameraController cameraController = FindFirstObjectByType<CameraController>();
+
+        if (cameraController != null) cameraController.RestoreLocal();
+
+        Debug.Log("[PlayerStatsNet] Restaurado despues de su muerte.");
+    }
+
+    private bool IsClientAlive(ulong clientId)
+    {
+        if (NetworkManager.Singleton == null) return false;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null)
+            {
+                PlayerStatsNet stats = client.PlayerObject.GetComponent<PlayerStatsNet>();
+
+                if (stats != null) return stats.isAlive.Value;
+            }
+        }
+
+        return false;
+    }
+
+    private Transform GetAnotherAlivePlayerTransform(ulong excludedClientId, out ulong foundClientId)
+    {
+        foundClientId = ulong.MaxValue;
+
+        if (NetworkManager.Singleton == null) return null;
+
+        foreach (var clientPair in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong clientId = clientPair.Key;
+
+            if (clientId == OwnerClientId) continue;
+            if (clientId == excludedClientId) continue;
+
+            NetworkObject playerObject = clientPair.Value.PlayerObject;
+
+            if (playerObject == null) continue;
+
+            PlayerStatsNet stats = playerObject.GetComponent<PlayerStatsNet>();
+
+            if (stats == null) continue;
+
+            if (stats.isAlive.Value)
+            {
+                foundClientId = clientId;
+                return playerObject.transform;
+            }
+        }
+
+        return null;
+    }
+
+    private ulong UpdateSpectateTargetIfNeeded(ulong currentSpectatedClientId, CameraController cameraController)
+    {
+        if (cameraController == null) return currentSpectatedClientId;
+
+        if (IsClientAlive(currentSpectatedClientId)) return currentSpectatedClientId;
+
+        ulong newClientId;
+        Transform newTarget = GetAnotherAlivePlayerTransform(currentSpectatedClientId, out newClientId);
+
+        if (newTarget != null)
+        {
+        cameraController.FollowSpectate(newTarget);
+        Debug.Log($"[PlayerStatsNet] Killer murió. Cámara cambió a {newTarget.name}.");
+        return newClientId;
+        }
+
+        Debug.Log("[PlayerStatsNet] Target de spectate murio y no se encontro otro jugador vivo.");
+        return currentSpectatedClientId;
+    }
+
+    private CameraController GetLocalCameraController()
+    {
+        CameraController[] cameras = FindObjectsByType<CameraController>(FindObjectsSortMode.None);
+
+        foreach (CameraController cam in cameras)
+        {
+            if (cam != null && cam.isMine)
+            {
+                return cam;
+            }
+        }
+
+        return FindFirstObjectByType<CameraController>();
+    }
+
+    [ClientRpc]
+    public void ForceMoveOwnerClientRPC(Vector3 targetPosition, ClientRpcParams clientRpcParams = default)
+    {
+        if (!IsOwner) return;
+
+        CharacterController characterController = GetComponent<CharacterController>();
+
+        if (characterController != null) characterController.enabled = false;
+        
+        transform.position = targetPosition;
+
+        if (characterController != null) characterController.enabled = true;
+
+        Debug.Log("[PlayerStatsNet] Cliente Reposicionado por caida {targetPosition}");
+    }
+
+
 }
