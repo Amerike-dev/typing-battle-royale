@@ -62,9 +62,9 @@ public class RespawnController : MonoBehaviour
             return;
         }
 
-        MovePlayerToSpawn(stats);
+        Vector3 targetPosition = MovePlayerToSpawn(stats);
 
-        stats.FinishServerRespawn();
+        stats.FinishServerRespawn(targetPosition);
 
         Debug.Log($"[RespawnController] Respawn por combate de {stats.ID} en spawn index {selectedIndex}");
     }
@@ -87,7 +87,7 @@ public class RespawnController : MonoBehaviour
 
         Vector3 targetPosition = MovePlayerToSpawn(stats);
 
-        stats.ForceMoveOwnerClientRPC(targetPosition);
+        stats.ForceMoveOwnerClientRpc(targetPosition);
 
         Debug.Log($"[RespawnController] Respawn por caída de {stats.ID} en spawn index {selectedIndex}");
     }

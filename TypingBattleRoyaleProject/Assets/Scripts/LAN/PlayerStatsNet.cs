@@ -346,7 +346,7 @@ public class PlayerStatsNet : NetworkBehaviour
         respawnController.RespawnPlayerFromFallServer(this);
     }
 
-    public void FinishServerRespawn()
+    public void FinishServerRespawn(Vector3 respawnPosition)
     {
         if (!IsServer) return;
 
@@ -354,11 +354,12 @@ public class PlayerStatsNet : NetworkBehaviour
         isAlive.Value = true;
         isSpectating.Value = false;
 
-        FinishRespawnOwnerClientRPC();
+        ForceMoveOwnerClientRpc(respawnPosition);
+        FinishRespawnOwnerClientRpc();
     }
 
     [ClientRpc]
-    private void FinishRespawnOwnerClientRPC(ClientRpcParams clientRpcParams = default)
+    private void FinishRespawnOwnerClientRpc(ClientRpcParams clientRpcParams = default)
     {
         if (!IsOwner) return;
 
@@ -434,9 +435,16 @@ public class PlayerStatsNet : NetworkBehaviour
 
         if (hud != null) hud.HideDeathUI();
 
-        CameraController cameraController = FindFirstObjectByType<CameraController>();
+        CameraController cameraController = GetLocalCameraController();
 
-        if (cameraController != null) cameraController.RestoreLocal();
+        if (cameraController != null)
+        {
+            cameraController.RestoreLocal();
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerStatsNet] No se encontro CameraController.");
+        }
 
         Debug.Log("[PlayerStatsNet] Restaurado despues de su muerte.");
     }
@@ -525,7 +533,7 @@ public class PlayerStatsNet : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void ForceMoveOwnerClientRPC(Vector3 targetPosition, ClientRpcParams clientRpcParams = default)
+    public void ForceMoveOwnerClientRpc(Vector3 targetPosition, ClientRpcParams clientRpcParams = default)
     {
         if (!IsOwner) return;
 

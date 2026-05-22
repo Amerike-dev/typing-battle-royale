@@ -15,6 +15,11 @@ public class CameraController : MonoBehaviour
     private float _xRotation = 0f;
     private Vector2 _lookInput;
 
+    private Transform _originalParent;
+    private Vector3 _originalLocalPosition;
+    private Quaternion _originalLocalRotation;
+    private bool _hasOriginalTransform;
+
     private Transform _battleTarget;
     private bool _hasBattleTarget;
     
@@ -32,6 +37,11 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        _originalParent = transform.parent;
+        _originalLocalPosition = transform.localPosition;
+        _originalLocalRotation = transform.localRotation;
+        _hasOriginalTransform = true;
     }
 
     void OnEnable()
@@ -162,11 +172,25 @@ public class CameraController : MonoBehaviour
 
         OnCamaraMove = true;
 
-        if (playerBody != null)
+        if (_hasOriginalTransform)
+        {
+            transform.SetParent(_originalParent);
+            transform.localPosition = _originalLocalPosition;
+            transform.localRotation = _originalLocalRotation;
+
+            _xRotation = transform.localEulerAngles.x;
+
+            if (_xRotation > 180f)
+            {
+                _xRotation -= 360f;
+            }
+        }
+        else if (playerBody != null)
         {
             transform.SetParent(playerBody);
             transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+            transform.localRotation = Quaternion.identity;
+            _xRotation = 0f;
         }
 
         Debug.Log("[CameraController] Camara restaurada al jugador local.");
