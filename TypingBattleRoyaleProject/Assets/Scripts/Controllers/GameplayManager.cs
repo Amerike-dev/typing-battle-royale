@@ -342,6 +342,12 @@ public class GameplayManager : NetworkBehaviour
     {
         if (!IsServer) return; 
         
+        StartCoroutine(DelayedGameOver(winnerID));
+    }
+
+    private System.Collections.IEnumerator DelayedGameOver(string winnerID)
+    {
+        yield return new WaitForSeconds(0.5f);
         EndGameClientRpc(winnerID);
     }
 

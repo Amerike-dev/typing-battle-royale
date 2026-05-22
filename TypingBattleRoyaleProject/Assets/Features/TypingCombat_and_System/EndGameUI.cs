@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
@@ -52,7 +53,7 @@ public class EndGameUI : MonoBehaviour
         if (_personalStatsContainer != null) 
             _personalStatsContainer.SetActive(true);
 
-        DOTween.To(() => 0, x => _psKillsText.text = x.ToString(), localPlayerStats.killCount.Value, 1.5f)
+        DOTween.To(() => 0f, x => _psKillsText.text = x.ToString("F0"), localPlayerStats.killCount.Value, 1.5f)
             .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0f, x => _psDamageDealtText.text = x.ToString("F0"), localPlayerStats.damageDealt.Value, 1.5f)
@@ -61,7 +62,7 @@ public class EndGameUI : MonoBehaviour
         DOTween.To(() => 0f, x => _psDamageTakenText.text = x.ToString("F0"), localPlayerStats.damageTaken.Value, 1.5f)
             .SetEase(Ease.OutCubic).SetUpdate(true);
 
-        DOTween.To(() => 0, x => _psSpellsCastText.text = x.ToString(), localPlayerStats.spellsCast.Value, 1.5f)
+        DOTween.To(() => 0f, x => _psSpellsCastText.text = x.ToString("F0"), localPlayerStats.spellsCast.Value, 1.5f)
             .SetEase(Ease.OutCubic).SetUpdate(true);
 
         DOTween.To(() => 0f, x => _psAvgWordsPerMinuteText.text = x.ToString("F1"), localPlayerStats.avgWpm, 1.5f)
@@ -78,6 +79,11 @@ public class EndGameUI : MonoBehaviour
         _psBestSpellText.text = bestSpell;
 
         _psFastestCastText.text = localPlayerStats.fastestCastSeconds == float.MaxValue ? "N/A" : $"{localPlayerStats.fastestCastSeconds:F2}s";
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("LobbyScene");
     }
 
     private string BuildStats(List<PlayerStatsNet> players)
