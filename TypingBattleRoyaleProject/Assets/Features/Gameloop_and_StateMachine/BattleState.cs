@@ -191,6 +191,8 @@ public class BattleState : IGameState
     {
         var gm = GameplayManager.Instance;
         if (gm == null || gm.stateMachine == null) return;
+        
+        if (gm.stateMachine.currentState == gm.gameOverState) return;
 
         _playerController.onExplorationState = true;
         gm.stateMachine.ChangeState(gm.explorationState);
