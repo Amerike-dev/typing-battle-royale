@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 public class TargetSystem : MonoBehaviour
 {
-    public static event Action<string, float, ulong> OnLookDead;
-
     [Header("Target Setting")]
     [SerializeField] private float _defaultMaxRadius = 4f;
 
@@ -288,7 +286,7 @@ public class TargetSystem : MonoBehaviour
 
         Debug.Log($"[TargetSystem] Invocando daño. targetID={targetID}, damage={damage}, attackerId={attackerId}");
 
-        OnLookDead?.Invoke(targetID, damage, attackerId);
+        targetStats.TakeDamageServerRpc(damage, attackerId);
     }
 
     public void SetSource(Transform source)
