@@ -90,6 +90,10 @@ public class HUDController : MonoBehaviour
 
     private void OnLivesChanged(int oldValue, int newValue)
     {
+            if (newValue < oldValue)
+            {
+                AudioManager.Instance?.PlaySFX("sfx_death");
+            }
         UpdateLives(newValue);
     }
 
