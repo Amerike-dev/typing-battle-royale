@@ -201,21 +201,6 @@ public class PlayerStatsNet : NetworkBehaviour
             }
         }
     }
-    /*
-    [ClientRpc]
-    private void RespawnOwnerClientRpc(ClientRpcParams clientRpcParams = default)
-    {
-        if (IsOwner)
-        {
-            RespawnController respawn = FindFirstObjectByType<RespawnController>();
-            PlayerController controller = GetComponent<PlayerController>();
-
-            if (respawn != null && controller != null)
-                respawn.RespawnPlayer(controller);
-            else
-                Debug.LogWarning("No se encontro RespawnController o PlayerController local.");
-        }
-    }*/
 
     [ClientRpc]
     private void EnterSpectatorModeClientRpc(ClientRpcParams clientRpcParams = default)
