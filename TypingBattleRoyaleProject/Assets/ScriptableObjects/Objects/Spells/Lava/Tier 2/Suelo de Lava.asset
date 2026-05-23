@@ -15,11 +15,14 @@ MonoBehaviour:
   spellName: Suelo de Lava
   runeString: piso del infierno casero feroz
   elementType: 10
+  tier: 1
+  archetype: 0
   description: "En un \xE1rea alrededor del caster invoca lava a nivel del suelo
     que hace da\xF1o medio por segundo a los jugadores que lo esten pisando, menos
     al caster"
   spellTypes: 
   damage: 25
+  cooldown: 0
   debuff: 0
   range: 15
   speed: 0

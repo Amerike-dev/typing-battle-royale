@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Vuelo
   runeString: alas de iguana voladora
   elementType: 0
+  tier: 1
+  archetype: 0
   description: Te permite volar por 15 segundos.
   spellTypes: 0300000001000000
   damage: 0
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 0

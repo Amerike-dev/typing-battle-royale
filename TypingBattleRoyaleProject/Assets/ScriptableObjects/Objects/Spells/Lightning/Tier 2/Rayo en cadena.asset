@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Rayo en cadena
   runeString: ondazo electrico colectivo del cableado
   elementType: 0
+  tier: 1
+  archetype: 0
   description: "Dispara un rayo en linea recta que hace 3 instancias de da\xF1o repartidas
     entre los enemigos m\xE1s cercanos"
   spellTypes: 04000000
   damage: 50
+  cooldown: 0
   debuff: 0
   range: 20
   speed: 0

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.InputSystem;
 
 public class PlayerInteractorView : MonoBehaviour
@@ -27,21 +26,9 @@ public class PlayerInteractorView : MonoBehaviour
 
     private void RefreshMonolithList()
     {
-        var found = FindObjectsByType<MonolithView>(
-            FindObjectsInactive.Include,
-            FindObjectsSortMode.None
-        );
-
-        foreach (var monolith in found)
-        {
-            if (!registeredMonoliths.Contains(monolith))
-            {
-                registeredMonoliths.Add(monolith);
-                Debug.Log($"[PlayerInteractor] Monolito encontrado: {monolith.name} | Total: {registeredMonoliths.Count}");
-            }
-        }
-
-        registeredMonoliths.RemoveAll(m => m == null);
+        registeredMonoliths.Clear();
+        registeredMonoliths.AddRange(MonolithView.AllMonoliths);
+        registeredMonoliths.RemoveAll(m => m == null); 
     }
 
     public void NearMonolithCheck()

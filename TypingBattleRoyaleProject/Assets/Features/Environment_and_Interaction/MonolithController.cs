@@ -17,7 +17,6 @@ public class MonolithController : NetworkBehaviour
     
     [Header("Datos Elementos")]
     public List<Spell> allSpells = new List<Spell>();
-    public List<SpellData> allSpellData = new List<SpellData>();
 
     [Header("Configuración de Hundimiento")]
     public float sinkDepth = 5f;
@@ -95,29 +94,25 @@ public class MonolithController : NetworkBehaviour
 
         Debug.Log($"[Monolito] Elemento Principal Elegido: {targetElement}");
         System.Array allTiers = System.Enum.GetValues(typeof(SpellTiers));
-
+        
         foreach (SpellTiers currentTier in allTiers)
         {
-            List<SpellData> spellsInThisTier = new List<SpellData>();
+            List<Spell> spellsInThisTier = new List<Spell>();
             
-            foreach (SpellData sData in allSpellData)
+            foreach (Spell spell in allSpells)
             {
-                if (sData == null) continue;
-
-                if (sData.elementType == targetElement && sData.spellTier == currentTier) spellsInThisTier.Add(sData);
+                if (spell == null) continue;
+                
+                if (spell.elementType == targetElement && spell.tier == currentTier) spellsInThisTier.Add(spell);
             }
             
             if (spellsInThisTier.Count > 0)
             {
                 int randomSpellIndex = Random.Range(0, spellsInThisTier.Count);
-                SpellData selectedSpellData = spellsInThisTier[randomSpellIndex];
-                Spell matchingSpell = allSpells.Find(s => s.elementType == selectedSpellData.elementType /* Agrega aquí más condiciones si necesitas vincularlos exacto */);
+                Spell selectedSpell = spellsInThisTier[randomSpellIndex];
                 
-                if (matchingSpell != null)
-                {
-                    spells.Add(matchingSpell);
-                    Debug.Log($"[Monolito] Agregado - Tier: {currentTier} | Hechizo: {selectedSpellData.runeString}");
-                }
+                spells.Add(selectedSpell);
+                Debug.Log($"[Monolito] Agregado - Tier: {currentTier} | Hechizo: {selectedSpell.runeString}");
             }
             else
             {

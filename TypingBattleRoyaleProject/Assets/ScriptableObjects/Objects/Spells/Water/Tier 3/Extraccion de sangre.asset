@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Extraccion de sangre
   runeString: sancion vampirica del martes trece maldito
   elementType: 2
+  tier: 2
+  archetype: 0
   description: "Si el objetivo tiene m\xE1s de una vida restante, robale una"
   spellTypes: 0300000004000000
   damage: 0
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 0

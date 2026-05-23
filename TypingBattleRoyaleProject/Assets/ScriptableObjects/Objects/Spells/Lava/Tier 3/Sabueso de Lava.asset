@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Suelo de lava
   runeString: perro chamuscado del taquero infernal poderoso
   elementType: 10
+  tier: 2
+  archetype: 0
   description: "Invoca un sabueso que corre hacia el enemigo m\xE1s cercano y al
     colisionar con el hace da\xF1o en invoca \"suelo de lava\" en el punto de impacto"
   spellTypes: 02000000
   damage: 50
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 0

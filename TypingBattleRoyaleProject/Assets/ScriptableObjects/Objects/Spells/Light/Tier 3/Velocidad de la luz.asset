@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Velocidad de la luz
   runeString: corre mas rapido que el correcaminos endemoniado
   elementType: 8
+  tier: 2
+  archetype: 0
   description: "Lanza un proyectil r\xE1pido y te teletransporta al punto de impacto"
   spellTypes: 0000000001000000
   damage: 0
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 200

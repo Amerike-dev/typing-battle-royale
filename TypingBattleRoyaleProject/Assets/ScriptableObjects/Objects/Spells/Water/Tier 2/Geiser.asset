@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Geiser
   runeString: manguerazo del jardinero peleonero
   elementType: 2
+  tier: 1
+  archetype: 0
   description: "Invoca un geiser en los pies de un enemigo haciendole da\xF1o medio
     y lo lanza al aire"
   spellTypes: 020000000600000001000000
   damage: 50
+  cooldown: 0
   debuff: 0
   range: 20
   speed: 0
