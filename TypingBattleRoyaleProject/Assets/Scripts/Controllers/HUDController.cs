@@ -12,6 +12,8 @@ public class HUDController : MonoBehaviour
     public Slider healthUI;
     public GameObject[] lifeImages;
 
+    public DeathUI deathUI;
+
     public PlayerStatsNet localStats;
     private Coroutine _findPlayerStatsCoroutine;
 
@@ -142,6 +144,34 @@ public class HUDController : MonoBehaviour
         if (timerText != null)
         {
             timerText.text = $"{GameManager.Instance.gameTimer.MinutesRemaining:D2}:{GameManager.Instance.gameTimer.SecondsRemaining:D2}";
+        }
+    }
+
+    public void ShowDeathUI(string killerName, int respawnSeconds, int remainingLives)
+    {
+        if (deathUI != null)
+        {
+            deathUI.Show(killerName, respawnSeconds, remainingLives);
+        }
+        else
+        {
+            Debug.LogWarning("[HUDController] No hay DeathUI asignado");
+        }
+    }
+
+    public void UpdateDeathCountdown(int seconds)
+    {
+        if (deathUI != null)
+        {
+            deathUI.SetCountdown(seconds);
+        }
+    }
+
+    public void HideDeathUI()
+    {
+        if (deathUI != null)
+        {
+            deathUI.Hide();
         }
     }
 }

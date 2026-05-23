@@ -37,7 +37,18 @@ public class GameOverState : GameState
             }
         }
 
-        if (manager.EndGameCanvas != null) manager.EndGameCanvas.alpha = 1f;
+        if (manager.EndGameCanvas != null)
+        {
+            manager.EndGameCanvas.gameObject.SetActive(true);
+            manager.EndGameCanvas.alpha = 1f;
+            manager.EndGameCanvas.interactable = true;
+            manager.EndGameCanvas.blocksRaycasts = true;
+        }
+
+        if (manager.EndGameUI != null)
+        {
+            manager.EndGameUI.gameObject.SetActive(true);
+        }
 
         if (manager.WinnerText != null)
         {
@@ -62,6 +73,10 @@ public class GameOverState : GameState
             }
         }
         manager.EndGameUI?.Populate(_winnerID, players);
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         Time.timeScale = 0f;
     }
 

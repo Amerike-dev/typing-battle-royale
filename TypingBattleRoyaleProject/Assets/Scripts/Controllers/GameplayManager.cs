@@ -342,6 +342,12 @@ public class GameplayManager : NetworkBehaviour
     {
         if (!IsServer) return; 
         
+        StartCoroutine(DelayedGameOver(winnerID));
+    }
+
+    private System.Collections.IEnumerator DelayedGameOver(string winnerID)
+    {
+        yield return new WaitForSeconds(0.5f);
         EndGameClientRpc(winnerID);
     }
 
@@ -352,6 +358,15 @@ public class GameplayManager : NetworkBehaviour
         {
             gameOverState.SetWinnerID(winnerID);
             stateMachine.ChangeState(gameOverState);
+
+            if (NetworkManager.Singleton.LocalClient != null && 
+                NetworkManager.Singleton.LocalClient.PlayerObject != null)
+            {
+                if (NetworkManager.Singleton.LocalClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var localStats))
+                {
+                    EndGameUI.PopulatePersonalStats(localStats);
+                }
+            }
         }
     }
     

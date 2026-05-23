@@ -182,7 +182,7 @@ const TICKETS = [
         id: 'TBR-008',
         title: 'UI de muerte + cámara espectadora del asesino + respawn por vidas',
         type: 'feature', priority: 'high', effort: 'L',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Flan', status: 'done',
         summary:
             'Al morir mostrar overlay de muerte (con cuenta regresiva al respawn y vidas restantes), cámara sigue al jugador que mató al local hasta que el contador termine, luego respawn en spawn point libre. Si no quedan vidas, deriva a TBR-009.',
         acceptance: [
@@ -740,7 +740,7 @@ const TICKETS = [
         id: 'TBR-034',
         title: 'Pantalla de stats finales del jugador',
         type: 'feature', priority: 'low', effort: 'S',
-        assignee: 'Ches', status: 'todo',
+        assignee: 'Ches', status: 'done',
         summary:
             'Después del podio, pantalla personal con: kills, daño infligido/recibido, hechizos casteados, WPM medio, accuracy media, hechizo más usado, tiempo más rápido de cast.',
         acceptance: [
