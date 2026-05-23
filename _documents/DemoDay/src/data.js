@@ -1422,7 +1422,7 @@ const TICKETS = [
         id: 'TBR-060',
         title: 'Implementar maqueta Isla 3 en GameplayScene',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Juan', status: 'todo',
+        assignee: 'Juan', status: 'done',
         summary:
             'Integrar el modelo de la Isla 3 (tercer bioma) entregado por los artistas. Mismo pipeline que TBR-058. Validar transiciones con las islas adyacentes.',
         acceptance: [
