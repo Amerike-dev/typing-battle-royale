@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MonolithSpawn : NetworkBehaviour
 {
@@ -12,7 +14,15 @@ public class MonolithSpawn : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        Debug.Log("[MonolithSpawn] Host listo en la escena. Spawneando monolitos.");
+        Debug.Log("[MonolithSpawn] Host iniciando red. Esperando estabilización...");
+        StartCoroutine(SpawnWithDelayRoutine());
+    }
+
+    private IEnumerator SpawnWithDelayRoutine()
+    {
+        yield return new WaitForSeconds(0.5f); 
+        
+        Debug.Log("[MonolithSpawn] Red estable. Spawneando monolitos.");
         SpawnMonolith();
     }
 
@@ -26,8 +36,6 @@ public class MonolithSpawn : NetworkBehaviour
             int randomIndex = Random.Range(0, availablePoints.Count);
             Transform selectedPoint = availablePoints[randomIndex];
             availablePoints.RemoveAt(randomIndex);
-
-            // Instanciamos el objeto de forma local
             GameObject monolith = Instantiate(monolithPrefab, selectedPoint.position, selectedPoint.rotation);
 
             var networkObject = monolith.GetComponent<NetworkObject>();
@@ -38,14 +46,12 @@ public class MonolithSpawn : NetworkBehaviour
                 return;
             }
 
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(monolith, this.gameObject.scene);
             networkObject.Spawn(true);
-            
-            // 2. ¡NUEVO! Inicializamos los hechizos de este monolito específico
             var controller = monolith.GetComponent<MonolithController>();
+            
             if (controller != null)
-            {
                 controller.ServerInitialize();
-            }
 
             Debug.Log($"[MonolithSpawn] Spawneado {monolith.name}");
         }

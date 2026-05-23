@@ -56,18 +56,11 @@ public class MonolithController : NetworkBehaviour
 
     public void RemoveSpellData(Spell spellName)
     {
-        if (!IsServer) return; // Solo el host gestiona los hechizos de la red
+        if (!IsServer) return;
 
-        if (spells.Contains(spellName))
-        {
-            spells.Remove(spellName);
-        }
-
-        // Si ya no quedan hechizos en el monolito, iniciamos el final
-        if (spells.Count == 0)
-        {
-            TriggerSinkEffectClientRpc();
-        }
+        if (spells.Contains(spellName)) spells.Remove(spellName);
+        
+        if (spells.Count == 0) TriggerSinkEffectClientRpc();
     }
     Elements GetMappedElement(Elements original)
     {
@@ -94,48 +87,30 @@ public class MonolithController : NetworkBehaviour
 
     public void PopulateSpells()
     {
-        // 1. Limpiamos la lista actual para empezar frescos
         spells.Clear();
-
-        // 2. Elegimos el Elemento Principal al azar
-        // Obtenemos todos los elementos posibles de tu enum 'Elements'
         System.Array allElements = System.Enum.GetValues(typeof(Elements));
-        int randomElementIndex = Random.Range(1, allElements.Length); // Empieza en 1 si el 0 es "Ninguno"
+        int randomElementIndex = Random.Range(1, allElements.Length);
         Elements targetElement = (Elements)allElements.GetValue(randomElementIndex);
-
-        // Si sigues usando tu función de mapeo (ej. Wind -> Thunder), la aplicamos aquí:
         targetElement = GetMappedElement(targetElement);
 
         Debug.Log($"[Monolito] Elemento Principal Elegido: {targetElement}");
-
-        // 3. Iteramos automáticamente por TODOS los Tiers que existan en tu enum 'SpellTiers'
-        // ¡Esto lo hace 100% escalable! Si agregas un Tier 4 mañana, esto lo detecta solo.
         System.Array allTiers = System.Enum.GetValues(typeof(SpellTiers));
 
         foreach (SpellTiers currentTier in allTiers)
         {
-            // Creamos la "cubeta" para este Tier en específico
             List<SpellData> spellsInThisTier = new List<SpellData>();
-
-            // Filtramos nuestra base de datos buscando hechizos que cumplan las dos condiciones
+            
             foreach (SpellData sData in allSpellData)
             {
-                if (sData == null) continue; // Seguro de vida contra espacios vacíos en el Inspector
+                if (sData == null) continue;
 
-                if (sData.elementType == targetElement && sData.spellTier == currentTier)
-                {
-                    spellsInThisTier.Add(sData);
-                }
+                if (sData.elementType == targetElement && sData.spellTier == currentTier) spellsInThisTier.Add(sData);
             }
-
-            // 4. Si la cubeta tiene hechizos, sacamos UNO al azar
+            
             if (spellsInThisTier.Count > 0)
             {
                 int randomSpellIndex = Random.Range(0, spellsInThisTier.Count);
                 SpellData selectedSpellData = spellsInThisTier[randomSpellIndex];
-                
-                // NOTA: Tu lista 'spells' espera un objeto tipo 'Spell'. 
-                // Aquí buscamos el 'Spell' correspondiente en 'allSpells' que coincida con este 'SpellData'
                 Spell matchingSpell = allSpells.Find(s => s.elementType == selectedSpellData.elementType /* Agrega aquí más condiciones si necesitas vincularlos exacto */);
                 
                 if (matchingSpell != null)
@@ -146,7 +121,6 @@ public class MonolithController : NetworkBehaviour
             }
             else
             {
-                // Si aún no han creado hechizos para este Tier y Elemento, no crashea, solo avisa.
                 Debug.LogWarning($"[Monolito] No hay hechizos de {targetElement} en el Tier {currentTier}. Saltando...");
             }
         }
@@ -155,11 +129,8 @@ public class MonolithController : NetworkBehaviour
     [ClientRpc]
     private void TriggerSinkEffectClientRpc()
     {
-        // 1. Quitamos interacciones
         var col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
-
-        // 2. Iniciamos la animación local
         StartCoroutine(SinkRoutine());
     }
 
@@ -177,11 +148,7 @@ public class MonolithController : NetworkBehaviour
         }
 
         transform.position = targetPosition;
-
-        // 3. El Host destruye el objeto de la red al terminar
-        if (IsServer)
-        {
-            GetComponent<NetworkObject>().Despawn(true);
-        }
+        
+        if (IsServer) GetComponent<NetworkObject>().Despawn(true);
     }
 }
