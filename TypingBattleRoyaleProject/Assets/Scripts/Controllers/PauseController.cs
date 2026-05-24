@@ -61,48 +61,16 @@ public class PauseController : MonoBehaviour
     {
         SceneManager.LoadScene("LobbyScene");
     }
-    /*private void Update()
-    {
-            if (_gameplayManager != null && _gameplayManager.stateMachine != null)
-
-            TogglePause();
-    }
-
-    public void TogglePause()
-    {
-        if (IsGameOverActive())
-           return;
-
-        if (isPaused)
-            ResumeGame();
-            
-    }*/
     public void OnPausa()
     {
         var state = GameplayManager.Instance.stateMachine.currentState;
 
-        if(state is GameOverState || state is WaitingState) return;
+        if(state is GameOverState || state is WaitingState || state is BattleState) return;
+
+        if(state is GameOverState) ResumeGame();
 
         if (isPaused) ResumeGame();
         else PauseGame();
-        /*if (_gameplayManager != null && _gameplayManager.stateMachine != null)
-
-        TogglePause();
-        Debug.Log("Juego en pausa");
-        isPaused = true;
-        
-        Debug.Log(isPaused);
-
-        if (_menuContent != null && isPaused)
-        {
-            UIMove(_hidePos);
-            UIAnimator.FadeOut(_canvasGroup, _time);
-            //_menuContent.SetActive(isPaused);
-            Debug.Log("Me activo Menu");
-        }
-
-        Debug.Log("Juego en pausa");
-        AudioListener.pause = true;*/
     }
     public void PauseGame()
     {
@@ -111,7 +79,7 @@ public class PauseController : MonoBehaviour
         if (_menuContent != null && isPaused)
         {
             UIMove(_showPos);
-            UIAnimator.FadeOut(_canvasGroup, _time);
+            UIAnimator.FadeIn(_canvasGroup, _time);
             Debug.Log("Me activo Menu");
         }
         AudioListener.pause = true;
@@ -119,11 +87,10 @@ public class PauseController : MonoBehaviour
     public void ResumeGame()
     {
         isPaused = false;
-        
         if (_menuContent != null && !isPaused)
         {
             UIMove(_hidePos);
-            UIAnimator.FadeIn(_canvasGroup, _time);
+            UIAnimator.FadeOut(_canvasGroup, _time);
         }
         AudioListener.pause= false;
 
@@ -131,14 +98,6 @@ public class PauseController : MonoBehaviour
             StopCoroutine(_pauseCoroutine);
         _pauseCoroutine=StartCoroutine(ChangeMode());
     }
-
-    /*private bool IsGameOverActive()
-    {
-        if (_gameplayManager == null || _gameplayManager.stateMachine == null)
-            return false;
-
-        return _gameplayManager.stateMachine.currentState is GameOverState;
-    }*/
 
     private void OnDestroy()
     {

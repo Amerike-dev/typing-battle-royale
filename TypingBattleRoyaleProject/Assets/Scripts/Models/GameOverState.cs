@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class GameOverState : GameState
 
     public override void Enter()
     {
+        Debug.Log("GameOver");
         List<PlayerStatsNet> players = new List<PlayerStatsNet>();
 
         if (NetworkManager.Singleton != null)
@@ -40,7 +42,7 @@ public class GameOverState : GameState
         if (manager.EndGameCanvas != null)
         {
             manager.EndGameCanvas.gameObject.SetActive(true);
-            manager.EndGameCanvas.alpha = 1f;
+            UIAnimator.FadeIn(manager.EndGameCanvas,1f);
             manager.EndGameCanvas.interactable = true;
             manager.EndGameCanvas.blocksRaycasts = true;
         }

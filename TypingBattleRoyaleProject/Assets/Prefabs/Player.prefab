@@ -714,6 +714,9 @@ MonoBehaviour:
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 0
   isMine: 0
+  spectatorOffset: {x: 0, y: 2.2, z: -4}
+  spectatorFollowSpeed: 10
+  spectatorLookSpeed: 12
 --- !u!1 &2482189523147153423
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1066,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -2.45, y: 0}
+  m_AnchoredPosition: {x: -2.4499998, y: 0}
   m_SizeDelta: {x: 3.487, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1216554963664150026
@@ -1334,6 +1337,9 @@ MonoBehaviour:
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnCamaraMove: 1
   isMine: 0
+  spectatorOffset: {x: 0, y: 2.2, z: -4}
+  spectatorFollowSpeed: 10
+  spectatorLookSpeed: 12
 --- !u!1 &4993070895236498224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,7 +1432,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 134.25
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1808,6 +1814,8 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  spectatorUI: {fileID: 0}
+  spectatorController: {fileID: 0}
   playerAnimatorView: {fileID: -2689246101718839236}
   onExplorationState: 1
   stats: {fileID: 0}
@@ -1912,6 +1920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyLabel
   _label: {fileID: 0}
+  _cameraTransform: {fileID: 0}
 --- !u!95 &5493427378232170685
 Animator:
   serializedVersion: 7
@@ -1974,6 +1983,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   maxHP: 100
   maxLives: 3
+  respawnSeconds: 3
   currentHP:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -1994,6 +2004,11 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
+  isSpectating:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   wPM:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -2037,6 +2052,24 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  damageDealt:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  damageTaken:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  spellsCast:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  avgWpm: 0
+  avgAccuracy: 0
+  fastestCastSeconds: 0
 --- !u!114 &-922158416777610449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2226,7 +2259,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 424.31583, y: 284.50006}
+  m_AnchoredPosition: {x: 424.31586, y: 284.50006}
   m_SizeDelta: {x: 1511.3689, y: 569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8231479202173166166
@@ -7629,6 +7662,7 @@ MonoBehaviour:
   - {fileID: 5158057849910287712}
   - {fileID: 8891034364919194991}
   - {fileID: 7979627327810979313}
+  deathUI: {fileID: 0}
   localStats: {fileID: 0}
 --- !u!1 &8163381350000824545
 GameObject:
