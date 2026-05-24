@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Apocalipsis
   runeString: fin del mundo cuajado en chinampas calientes
   elementType: 10
+  tier: 2
+  archetype: 0
   description: Haz que caigan meteoritos en un area alrededor del caster, los meteoritos
     invocan "suelo de lava" donde impactan"
   spellTypes: 0000000002000000
   damage: 10
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 0

@@ -10730,7 +10730,7 @@ GameObject:
   m_Component:
   - component: {fileID: 209160414}
   - component: {fileID: 209160412}
-  - component: {fileID: 209160413}
+  - component: {fileID: 209160415}
   m_Layer: 0
   m_Name: MonolithSpawn
   m_TagString: Untagged
@@ -10763,7 +10763,22 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &209160413
+--- !u!4 &209160414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209160411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 219588222}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &209160415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10778,26 +10793,16 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   monolithPrefab: {fileID: 5687778378914436356, guid: 39dae918d0252064fb190fd6ab2abf14, type: 3}
   spawnMonolithPoints:
-  - {fileID: 1115999447}
-  - {fileID: 1629871609}
-  initialMonoliths: 2
-  gameplaySceneName: GameplayScene
-  gameplayManager: {fileID: 1753686371}
---- !u!4 &209160414
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 209160411}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.96904, y: 0.5, z: -2.69941}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 219588222}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  - {fileID: 2050380317}
+  - {fileID: 1278848023}
+  - {fileID: 1535358352}
+  - {fileID: 2102510607}
+  - {fileID: 1276073668}
+  - {fileID: 265494471}
+  - {fileID: 778113714}
+  - {fileID: 1682613417}
+  - {fileID: 1403131817}
+  initialMonoliths: 9
 --- !u!1 &212487910
 GameObject:
   m_ObjectHideFlags: 0
@@ -11039,6 +11044,7 @@ Transform:
   - {fileID: 1054458755}
   - {fileID: 209160414}
   - {fileID: 1753686370}
+  - {fileID: 1360158815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &265494470
@@ -22898,12 +22904,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360158813}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 79.85241, y: 1.6, z: 2.40329}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 219588222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1381709318
 GameObject:
@@ -31159,7 +31165,7 @@ GameObject:
   - component: {fileID: 1917997798}
   - component: {fileID: 1917997797}
   m_Layer: 0
-  m_Name: Pause
+  m_Name: PauseController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32109,7 +32115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2046282071}
   m_Layer: 0
-  m_Name: Spawnpoint
+  m_Name: PlayersSpawnpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149193,12 +149199,19 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 931269394}
+  - {fileID: 1105336618}
   - {fileID: 1085142478}
+  - {fileID: 677631001}
   - {fileID: 219588222}
+  - {fileID: 1146987481}
+  - {fileID: 1965473013}
+  - {fileID: 1686300508}
+  - {fileID: 208915951}
+  - {fileID: 921502835}
+  - {fileID: 1917997798}
   - {fileID: 41085744}
   - {fileID: 2046282071}
   - {fileID: 1692022444}
-  - {fileID: 1105336618}
   - {fileID: 1907415509}
   - {fileID: 684670889}
   - {fileID: 986391955}
@@ -149210,19 +149223,11 @@ SceneRoots:
   - {fileID: 1761095714}
   - {fileID: 952337608}
   - {fileID: 1477314910}
-  - {fileID: 1146987481}
-  - {fileID: 1917997798}
-  - {fileID: 1965473013}
   - {fileID: 639144506841055648}
   - {fileID: 615939242}
-  - {fileID: 1360158815}
   - {fileID: 5533852157299767355}
-  - {fileID: 1686300508}
   - {fileID: 1978147777}
   - {fileID: 1294047954}
-  - {fileID: 208915951}
-  - {fileID: 921502835}
   - {fileID: 1605278073}
-  - {fileID: 677631001}
   - {fileID: 1233926081}
   - {fileID: 1967823649}

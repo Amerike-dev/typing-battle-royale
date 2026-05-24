@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Tridente
   runeString: trinche del rey neptuno cabron
   elementType: 2
+  tier: 1
+  archetype: 0
   description: "Equipa un tridente de 1 uso, lo puedes lanzar como proyectil, al
     impactar hace da\xF1o alto y atrae al enemigo hacia ti"
   spellTypes: 0000000007000000
   damage: 80
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 50

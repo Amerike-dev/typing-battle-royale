@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Pilar de llamas
   runeString: columna eterna del comalero divino
   elementType: 1
+  tier: 1
+  archetype: 0
   description: "Lanza un proyectil que al impactar crea un pilar de fuego que hace
     da\xF1o alto"
   spellTypes: 
   damage: 100
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 30

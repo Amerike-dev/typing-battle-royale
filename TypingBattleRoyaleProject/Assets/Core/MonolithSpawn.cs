@@ -1,41 +1,28 @@
 using System.Collections.Generic;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class MonolithSpawn : NetworkBehaviour
 {
     public GameObject monolithPrefab;
     public List<Transform> spawnMonolithPoints = new List<Transform>();
-    public int initialMonoliths = 4;
-
-    public string gameplaySceneName = "GameplayScene";
-    public GameplayManager gameplayManager;
+    public int initialMonoliths = 9;
 
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
 
-        NetworkManager.SceneManager.OnLoadEventCompleted += OnLoadEventCompleted;
+        Debug.Log("[MonolithSpawn] Host iniciando red. Esperando estabilización...");
+        StartCoroutine(SpawnWithDelayRoutine());
     }
 
-    public override void OnNetworkDespawn()
+    private IEnumerator SpawnWithDelayRoutine()
     {
-        if (!IsServer) return;
-        NetworkManager.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
-    }
-
-    private void OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode,
-        List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
-    {
-        if (sceneName != gameplaySceneName) return;
-
-        NetworkManager.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
-
-        if (clientsTimedOut.Count > 0)
-            Debug.LogWarning($"[MonolithSpawn] {clientsTimedOut.Count} clientes no cargaron a tiempo");
-
-        Debug.Log($"[MonolithSpawn] Todos los clientes listos. Spawneando monolitos.");
+        yield return new WaitForSeconds(0.5f); 
+        
+        Debug.Log("[MonolithSpawn] Red estable. Spawneando monolitos.");
         SpawnMonolith();
     }
 
@@ -43,29 +30,30 @@ public class MonolithSpawn : NetworkBehaviour
     {
         List<Transform> availablePoints = new List<Transform>(spawnMonolithPoints);
         int amountToSpawn = Mathf.Min(initialMonoliths, availablePoints.Count);
-        Scene targetScene = SceneManager.GetSceneByName(gameplaySceneName);
 
         for (int i = 0; i < amountToSpawn; i++)
         {
             int randomIndex = Random.Range(0, availablePoints.Count);
             Transform selectedPoint = availablePoints[randomIndex];
             availablePoints.RemoveAt(randomIndex);
-
             GameObject monolith = Instantiate(monolithPrefab, selectedPoint.position, selectedPoint.rotation);
-
-            if (targetScene.IsValid())
-                SceneManager.MoveGameObjectToScene(monolith, targetScene);
 
             var networkObject = monolith.GetComponent<NetworkObject>();
             if (networkObject == null)
             {
-                Debug.LogError("[MonolithSpawn] Prefab sin NetworkObject");
+                Debug.LogError("[MonolithSpawn] ¡Tu prefab no tiene el componente NetworkObject!");
                 Destroy(monolith);
                 return;
             }
 
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(monolith, this.gameObject.scene);
             networkObject.Spawn(true);
-            Debug.Log($"[MonolithSpawn] Spawneado {monolith.name} en escena:{monolith.scene.name}");
+            var controller = monolith.GetComponent<MonolithController>();
+            
+            if (controller != null)
+                controller.ServerInitialize();
+
+            Debug.Log($"[MonolithSpawn] Spawneado {monolith.name}");
         }
     }
 }

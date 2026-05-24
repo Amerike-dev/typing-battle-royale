@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Spray de veneno
   runeString: pesticida espesa de la madrina mala
   elementType: 5
+  tier: 1
+  archetype: 0
   description: Envenena en un cono enfrente de ti
   spellTypes: 0600000004000000
   damage: 3
+  cooldown: 0
   debuff: 4
   range: 30
   speed: 0

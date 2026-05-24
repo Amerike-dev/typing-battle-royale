@@ -1,8 +1,10 @@
-using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MonolithController : MonoBehaviour
+public class MonolithController : NetworkBehaviour
 {
     [Header("Intanciar monolito")]
     public MonolithData data;
@@ -13,10 +15,13 @@ public class MonolithController : MonoBehaviour
     [Header("Revision monolito")]
     public List<string> idPlayers = new List<string>();
     public List<Spell> spells = new List<Spell>();
+    
     [Header("Datos Elementos")]
     public List<Spell> allSpells = new List<Spell>();
-    public List<SpellData> allSpellData = new List<SpellData>();
 
+    [Header("Configuración de Hundimiento")]
+    public float sinkDepth = 5f;
+    public float sinkDuration = 2f;
 
     void Awake()
     {
@@ -25,6 +30,8 @@ public class MonolithController : MonoBehaviour
 
     public void ServerInitialize()
     {
+        if (!IsServer) return; 
+        
         PopulateSpells();
     }
 
@@ -49,10 +56,11 @@ public class MonolithController : MonoBehaviour
 
     public void RemoveSpellData(Spell spellName)
     {
-        for (int i = 0; i < spells.Count; i++)
-        {
-            spells.Remove(spellName);
-        }
+        if (!IsServer) return;
+
+        if (spells.Contains(spellName)) spells.Remove(spellName);
+        
+        if (spells.Count == 0) TriggerSinkEffectClientRpc();
     }
     Elements GetMappedElement(Elements original)
     {
@@ -80,36 +88,62 @@ public class MonolithController : MonoBehaviour
     public void PopulateSpells()
     {
         spells.Clear();
+        System.Array allElements = System.Enum.GetValues(typeof(Elements));
+        int randomElementIndex = Random.Range(1, allElements.Length);
+        Elements targetElement = (Elements)allElements.GetValue(randomElementIndex);
+        targetElement = GetMappedElement(targetElement);
 
-        int randomIndex = Random.Range(1, System.Enum.GetValues(typeof(Elements)).Length);
-        Elements randomElement = (Elements)randomIndex;
-
-        for (int i = 0; i < allSpells.Count; i++)
+        System.Array allTiers = System.Enum.GetValues(typeof(SpellTiers));
+        
+        foreach (SpellTiers currentTier in allTiers)
         {
-            if (allSpells[i].elementType == randomElement)
+            List<Spell> availableSpells = new List<Spell>(allSpells);
+            
+            List<Spell> spellsInThisTier = availableSpells
+                .Where(s => s != null && s.tier == currentTier)
+                .ToList();
+            
+            List<Spell> perfectMatch = spellsInThisTier.Where(s => s.elementType == targetElement).ToList();
+            
+            if (perfectMatch.Count > 0)
             {
-                spells.Add(allSpells[i]);
+                spells.Add(perfectMatch[Random.Range(0, perfectMatch.Count)]);
+            }
+            else if (spellsInThisTier.Count > 0)
+            {
+                spells.Add(spellsInThisTier[Random.Range(0, spellsInThisTier.Count)]);
+            }
+            else
+            {
+                if (allSpells.Count > 0)
+                    spells.Add(allSpells[Random.Range(0, allSpells.Count)]);
             }
         }
+    }
+    
+    [ClientRpc]
+    private void TriggerSinkEffectClientRpc()
+    {
+        var col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+        StartCoroutine(SinkRoutine());
+    }
 
-        for (int i = 0; i < spells.Count; i++)
+    private IEnumerator SinkRoutine()
+    {
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + (Vector3.down * sinkDepth);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < sinkDuration)
         {
-            Spell currentSpell = spells[i];
-
-            Elements mappedElement = GetMappedElement(currentSpell.elementType);
-
-            int randomTier = Random.Range(0, System.Enum.GetValues(typeof(SpellTiers)).Length);
-            SpellTiers selectedTier = (SpellTiers)randomTier;
-
-            for (int j = 0; j < allSpellData.Count; j++)
-            {
-                SpellData data = allSpellData[j];
-
-                if (data.elementType == mappedElement && data.spellTier == selectedTier)
-                {
-                    Debug.Log("Elemento " + randomElement + "  Spell " + data.runeString + "Tier" + selectedTier);
-                }
-            }
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / sinkDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
+
+        transform.position = targetPosition;
+        
+        if (IsServer) GetComponent<NetworkObject>().Despawn(true);
     }
 }

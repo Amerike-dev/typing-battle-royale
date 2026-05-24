@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Fenix
   runeString: ave inmortal renacida en tequila bravo de jalisco
   elementType: 1
+  tier: 2
+  archetype: 0
   description: "Invoca un ave fenix que viaja hacia delante y hace da\xF1o alto a
     todos los enemigos en el area"
   spellTypes: 0000000006000000
   damage: 100
+  cooldown: 0
   debuff: 0
   range: 50
   speed: 20
