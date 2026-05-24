@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -92,31 +93,30 @@ public class MonolithController : NetworkBehaviour
         Elements targetElement = (Elements)allElements.GetValue(randomElementIndex);
         targetElement = GetMappedElement(targetElement);
 
-        Debug.Log($"[Monolito] Elemento Principal Elegido: {targetElement}");
         System.Array allTiers = System.Enum.GetValues(typeof(SpellTiers));
         
         foreach (SpellTiers currentTier in allTiers)
         {
-            List<Spell> spellsInThisTier = new List<Spell>();
+            List<Spell> availableSpells = new List<Spell>(allSpells);
             
-            foreach (Spell spell in allSpells)
+            List<Spell> spellsInThisTier = availableSpells
+                .Where(s => s != null && s.tier == currentTier)
+                .ToList();
+            
+            List<Spell> perfectMatch = spellsInThisTier.Where(s => s.elementType == targetElement).ToList();
+            
+            if (perfectMatch.Count > 0)
             {
-                if (spell == null) continue;
-                
-                if (spell.elementType == targetElement && spell.tier == currentTier) spellsInThisTier.Add(spell);
+                spells.Add(perfectMatch[Random.Range(0, perfectMatch.Count)]);
             }
-            
-            if (spellsInThisTier.Count > 0)
+            else if (spellsInThisTier.Count > 0)
             {
-                int randomSpellIndex = Random.Range(0, spellsInThisTier.Count);
-                Spell selectedSpell = spellsInThisTier[randomSpellIndex];
-                
-                spells.Add(selectedSpell);
-                Debug.Log($"[Monolito] Agregado - Tier: {currentTier} | Hechizo: {selectedSpell.runeString}");
+                spells.Add(spellsInThisTier[Random.Range(0, spellsInThisTier.Count)]);
             }
             else
             {
-                Debug.LogWarning($"[Monolito] No hay hechizos de {targetElement} en el Tier {currentTier}. Saltando...");
+                if (allSpells.Count > 0)
+                    spells.Add(allSpells[Random.Range(0, allSpells.Count)]);
             }
         }
     }
