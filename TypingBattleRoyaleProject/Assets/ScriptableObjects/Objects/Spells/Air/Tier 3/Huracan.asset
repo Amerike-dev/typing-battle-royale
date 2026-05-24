@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: "Hurac\xE1n"
   runeString: danza furiosa de la mama bien enojada
   elementType: 0
+  tier: 2
+  archetype: 0
   description: "invoca un hurac\xE1n enorme que hace da\xF1o en los bordes pero no
     en el centro"
   spellTypes: 0600000002000000
   damage: 10
+  cooldown: 0
   debuff: 0
   range: 60
   speed: 0

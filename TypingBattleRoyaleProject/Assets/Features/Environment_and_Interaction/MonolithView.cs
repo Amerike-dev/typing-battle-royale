@@ -1,19 +1,25 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
+using System.Collections.Generic;
+using System;
 
 public class MonolithView : NetworkBehaviour
 {
+    public static List<MonolithView> AllMonoliths = new List<MonolithView>();
+    
     [SerializeField] private MonolithData monolithData;
     [SerializeField] private ParticleSystem unlockVFX;
     private Renderer monolithRenderer;
     public NetworkVariable<bool> IsExhausted = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
-    public System.Action<SpellData> OnMonolithUnlocked;
+    public Action<SpellData> OnMonolithUnlocked;
 
     public int Level => monolithData != null ? monolithData.Level : 0;
 
     public override void OnNetworkSpawn()
     {
+        if (!AllMonoliths.Contains(this)) AllMonoliths.Add(this);
+        
         monolithRenderer = GetComponent<Renderer>();
 
         Debug.Log($"[MonolithView] OnNetworkSpawn — IsServer:{IsServer} IsClient:{IsClient} | {gameObject.name} | escena:{gameObject.scene.name}");
@@ -27,6 +33,8 @@ public class MonolithView : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        if (AllMonoliths.Contains(this)) AllMonoliths.Remove(this);
+        
         IsExhausted.OnValueChanged -= OnExhaustedChanged;
     }
 

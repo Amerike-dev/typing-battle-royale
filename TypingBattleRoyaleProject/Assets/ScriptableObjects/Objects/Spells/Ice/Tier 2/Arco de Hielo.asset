@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Arco de hielo
   runeString: flecha congelada del oxxo nocturno
   elementType: 9
+  tier: 1
+  archetype: 0
   description: Equipa un arco de hielo de un solo uso que dispara un proyectil de
     alta velocidad que al impactar congela a un enemigo
   spellTypes: 0000000004000000
   damage: 20
+  cooldown: 0
   debuff: 2
   range: 0
   speed: 150

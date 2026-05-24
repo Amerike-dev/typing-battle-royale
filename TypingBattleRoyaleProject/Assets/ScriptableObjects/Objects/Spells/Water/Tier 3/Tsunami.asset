@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Tsunami
   runeString: ola gigante que arrasa todito veracruz playero
   elementType: 2
+  tier: 2
+  archetype: 0
   description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
   spellTypes: 0000000004000000
   damage: 80
+  cooldown: 0
   debuff: 1
   range: 0
   speed: 0
