@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using Unity.Collections;
 
 public class MonolithController : NetworkBehaviour
 {
@@ -22,10 +23,13 @@ public class MonolithController : NetworkBehaviour
     [Header("Configuración de Hundimiento")]
     public float sinkDepth = 5f;
     public float sinkDuration = 2f;
+    
+    public NetworkList<FixedString64Bytes> syncedSpellNames;
 
     void Awake()
     {
         data = new MonolithData(id, level, runeChallenge);
+        syncedSpellNames = new NetworkList<FixedString64Bytes>();
     }
 
     public void ServerInitialize()
@@ -118,6 +122,11 @@ public class MonolithController : NetworkBehaviour
                 if (allSpells.Count > 0)
                     spells.Add(allSpells[Random.Range(0, allSpells.Count)]);
             }
+        }
+        
+        foreach(var spell in spells)
+        {
+            syncedSpellNames.Add(spell.spellName);
         }
     }
     

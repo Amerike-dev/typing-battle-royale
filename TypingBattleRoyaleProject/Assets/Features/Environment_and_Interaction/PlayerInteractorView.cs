@@ -23,6 +23,18 @@ public class PlayerInteractorView : MonoBehaviour
     {
         StartCoroutine(CheckMonolith());
     }
+    
+    void Update()
+    {
+        if (Keyboard.current.eKey.wasPressedThisFrame && NearMonolith != null)
+        {
+            var controller = NearMonolith.GetComponent<MonolithController>();
+            var player = GetComponent<PlayerController>();
+        
+            if (controller != null && player != null)
+                MonolithLevelSelectUI.Instance.Show(controller, player);
+        }
+    }
 
     private void RefreshMonolithList()
     {
