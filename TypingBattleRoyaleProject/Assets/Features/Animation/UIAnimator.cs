@@ -8,11 +8,11 @@ public static class UIAnimator
     {
         canvasUI.alpha = 0; 
         canvasUI.gameObject.SetActive(true);
-        canvasUI.DOFade(1, time);
+        canvasUI.DOFade(1, time).SetUpdate(true);
     }
     public static void FadeOut(CanvasGroup canvasUI, float time)
     {
-        canvasUI.DOFade(0, time).OnComplete(() => canvasUI.gameObject.SetActive(false));
+        canvasUI.DOFade(0, time).OnComplete(() => canvasUI.gameObject.SetActive(false)).SetUpdate(true);
     }
     //Referencia de como se tiene que utilizar en la clase MonoBihaviour.
     //Si se utiliza en con algun metodo Fade enonces comparte el "float time"
@@ -35,7 +35,7 @@ public static class UIAnimator
         while (time < duration)
         {
             canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, time / duration);
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime;
 
             yield return null;
         }

@@ -39,18 +39,20 @@ public class GameOverState : GameState
             }
         }
 
-        if (manager.EndGameCanvas != null)
-        {
-            manager.EndGameCanvas.gameObject.SetActive(true);
-            UIAnimator.FadeIn(manager.EndGameCanvas,1f);
-            manager.EndGameCanvas.interactable = true;
-            manager.EndGameCanvas.blocksRaycasts = true;
-        }
-
         if (manager.EndGameUI != null)
         {
             manager.EndGameUI.gameObject.SetActive(true);
         }
+
+        if (manager.EndGameCanvas != null)
+        {
+            /*manager.EndGameCanvas.gameObject.SetActive(true);
+            UIAnimator.FadeIn(manager.EndGameCanvas,1f);*/
+            manager.EndGameCanvas.interactable = true;
+            manager.EndGameCanvas.blocksRaycasts = true;
+        }
+
+        manager.EndGameUI.Show();
 
         if (manager.WinnerText != null)
         {

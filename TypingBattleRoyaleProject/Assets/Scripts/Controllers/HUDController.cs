@@ -20,10 +20,14 @@ public class HUDController : MonoBehaviour
     [Header("UIanimation")]
     [SerializeField] RectTransform _panelUI;
     [SerializeField] CanvasGroup _canvasGroup;
-    [SerializeField] Vector2 _hidePos;
-    [SerializeField] Vector2 _showPos;
+    [SerializeField] Vector2 _hidePos=new Vector2(0,50);
+    [SerializeField] Vector2 _showPos=new Vector2(0,0);
     [SerializeField] float _time = 0.2f;
+    [SerializeField] bool _isActiveHUD;
+    private Coroutine _moveRoutine;
+    private Coroutine _hideRoutine;
     Coroutine _explorationCoroutine;
+
 
     private void OnEnable()
     {
@@ -36,7 +40,6 @@ public class HUDController : MonoBehaviour
         {
             _findPlayerStatsCoroutine = StartCoroutine(FindLocalPlayerStatsRoutine());
         }
-        Show();
     }
 
     private void OnDisable()
@@ -53,7 +56,6 @@ public class HUDController : MonoBehaviour
             StopCoroutine(_findPlayerStatsCoroutine);
             _findPlayerStatsCoroutine = null;
         }
-        Hide();
     }
 
     private IEnumerator FindLocalPlayerStatsRoutine()
@@ -186,11 +188,15 @@ public class HUDController : MonoBehaviour
     }
     public void Hide()
     {
-        UIMove(_showPos);
+        if (!_isActiveHUD) return;
+        _isActiveHUD = false;
+        UIMove(_hidePos);
         UIAnimator.FadeOut(_canvasGroup, _time);
     }
     public void Show()
     {
+        if(_isActiveHUD) return;
+        _isActiveHUD = true;
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
     }
