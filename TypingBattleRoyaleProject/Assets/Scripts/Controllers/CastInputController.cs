@@ -47,6 +47,15 @@ public class CastInputController : MonoBehaviour
 
     private float _castStartTime;
 
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] TextMeshProUGUI _playerAcuracity;
+    [SerializeField] TextMeshProUGUI _playerWPM;
+    [SerializeField] Vector2 _hidePos;
+    [SerializeField] Vector2 _showPos;
+    [SerializeField] float _time = 0.2f;
+    Coroutine _castCoroutine;
     private void OnEnable()
     {
         ResolveReferences();
@@ -409,5 +418,10 @@ public class CastInputController : MonoBehaviour
         uiCanvasGroup.alpha = target;
         _fadeRoutine = null;
         onComplete?.Invoke();
+    }
+    public void UIstats(PlayerStatsNet localPlayerStats)
+    {
+        _playerAcuracity.text=localPlayerStats.avgAccuracy.ToString();
+        _playerWPM.text=localPlayerStats.wPM.ToString();
     }
 }
