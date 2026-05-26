@@ -20,7 +20,7 @@ public class GameOverState : GameState
 
     public override void Enter()
     {
-        Debug.Log("GameOver");
+        manager.PauseController._menuContent.SetActive(false);
         List<PlayerStatsNet> players = new List<PlayerStatsNet>();
 
         if (NetworkManager.Singleton != null)
@@ -46,8 +46,6 @@ public class GameOverState : GameState
 
         if (manager.EndGameCanvas != null)
         {
-            /*manager.EndGameCanvas.gameObject.SetActive(true);
-            UIAnimator.FadeIn(manager.EndGameCanvas,1f);*/
             manager.EndGameCanvas.interactable = true;
             manager.EndGameCanvas.blocksRaycasts = true;
         }

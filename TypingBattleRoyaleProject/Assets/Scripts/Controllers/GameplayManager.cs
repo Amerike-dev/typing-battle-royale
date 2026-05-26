@@ -25,6 +25,7 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
     [SerializeField] private SpellBookUI _spellBookUI;
+    [SerializeField] private PauseController _pauseController;
 
     [Header("Spell UI (escena)")]
     [SerializeField] private CanvasGroup _spellUICanvasGroup;
@@ -53,6 +54,7 @@ public class GameplayManager : NetworkBehaviour
     public CanvasGroup EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
     public SpellBookUI SpellBookUI => _spellBookUI;
+    public PauseController PauseController => _pauseController;
 
     [Header("Estados")]
     public StateMachine stateMachine;

@@ -9,7 +9,7 @@ using UnityEngine.Windows;
 public class PauseController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject _menuContent;
+    [SerializeField] public GameObject _menuContent;
     [SerializeField] private GameplayManager _gameplayManager;
     public string sceneMenu;
 
