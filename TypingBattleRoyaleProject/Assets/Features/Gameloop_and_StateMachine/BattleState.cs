@@ -34,7 +34,7 @@ public class BattleState : IGameState
 
         Debug.Log($"[BattleState] _targetSystem asignado: {_targetSystem != null}");
 
-        if (_animatorView != null) _animatorView.TriggerCasting();
+        //if (_animatorView != null) _animatorView.TriggerCasting();
 
         var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
 
@@ -104,7 +104,7 @@ public class BattleState : IGameState
     {
         if (_castInput != null) _castInput.enabled = false;
         _playerController.MoveSpeed();
-        if (_animatorView != null) _animatorView.StopCasting();
+        //if (_animatorView != null) _animatorView.StopCasting();
 
         var camera = _cameraController != null ? _cameraController : _playerController.cameraController;
         if (camera != null)
