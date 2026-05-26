@@ -34,7 +34,7 @@ public class MonolithSpellButton : MonoBehaviour
         _button.onClick.AddListener(() => _onClickAction?.Invoke());
     }
 
-    public void Setup(Spell spell, Action onClick)
+    public void Setup(Spell spell, bool yaDesbloqueado, Action onClick)
     {
         if (spell == null) return;
         
@@ -50,8 +50,24 @@ public class MonolithSpellButton : MonoBehaviour
         }
 
         UpdateElementAndTier(spell.elementType, spell.tier);
-    
         _onClickAction = onClick;
+        SetButtonState(yaDesbloqueado);
+    }
+
+    private void SetButtonState(bool isUnlocked)
+    {
+        _button.interactable = !isUnlocked; 
+        Color targetColor = isUnlocked ? new Color(0.2f, 0.2f, 0.2f, 1f) : Color.white;
+        if (spellNameText != null) spellNameText.color = targetColor;
+        if (tierText != null) tierText.color = targetColor;
+
+        for (int i = 0; i < tierElementIcons.Length; i++)
+        {
+            if (tierElementIcons[i] != null)
+            {
+                tierElementIcons[i].color = targetColor;
+            }
+        }
     }
 
     private void UpdateElementAndTier(Elements elementType, SpellTiers tier)

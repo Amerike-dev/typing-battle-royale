@@ -47,18 +47,18 @@ public class MonolithLevelSelectUI : MonoBehaviour
             
                 if (spell != null)
                 {
-                    spellButtons[i].gameObject.SetActive(true); // Aseguramos que se vea
-                    spellButtons[i].Setup(spell, () => SelectSpell(spell));
+                    spellButtons[i].gameObject.SetActive(true);
+                    bool yaDesbloqueado = false;
+                    spellButtons[i].Setup(spell, yaDesbloqueado, () => SelectSpell(spell));
                 }
                 else
                 {
                     Debug.LogError($"[UI] No encontré el hechizo '{nameToFind}' en allSpells.");
-                    spellButtons[i].Clear(); // Lo limpiamos si hubo error
+                    spellButtons[i].Clear();
                 }
             }
             else 
             {
-                // 3. LIMPIEZA: Si sobran botones, los limpiamos/apagamos para que no queden datos viejos
                 spellButtons[i].Clear();
             }
         }
