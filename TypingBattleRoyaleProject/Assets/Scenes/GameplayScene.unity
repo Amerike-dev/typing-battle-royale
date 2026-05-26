@@ -26607,9 +26607,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
   pools:
-  - tag: 
-    prefab: {fileID: 0}
-    size: 0
+  - tag: VFX_Projectile
+    prefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+    size: 3
+    expandable: 0
+    maxSize: 0
+  - tag: VFX_Beam
+    prefab: {fileID: 3373193124174655773, guid: 10fcc4cccc043934997914f40b21a3e6, type: 3}
+    size: 3
     expandable: 0
     maxSize: 0
 --- !u!4 &1686300508
