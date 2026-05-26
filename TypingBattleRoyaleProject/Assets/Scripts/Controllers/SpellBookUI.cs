@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,6 +22,16 @@ public class SpellBookUI : MonoBehaviour
 
     public event Action<SpellData> OnSpellConfirmed;
     public event Action OnSelectionCancelled;
+
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _hidePos=new Vector2(50,0);
+    [SerializeField] Vector2 _showPos=new Vector2(0,0);
+    [SerializeField] float _time = 0.2f;
+    private Coroutine _moveRoutine;
+    private Coroutine _hideRoutine;
+    Coroutine _spellBookCoroutine;
 
     void Awake()
     {
@@ -96,7 +107,14 @@ public class SpellBookUI : MonoBehaviour
 
     public void Show(IReadOnlyList<SpellData> spells)
     {
+        if (_hideRoutine != null)
+        {
+            StopCoroutine(_hideRoutine);
+            _hideRoutine = null;
+        }
         gameObject.SetActive(true);
+        UIMove(_showPos);
+        UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
         selectedIndex = 0;
         Refresh(spells ?? new List<SpellData>(), 0);
@@ -104,7 +122,10 @@ public class SpellBookUI : MonoBehaviour
 
     public void Hide()
     {
-        gameObject.SetActive(false);
+        UIMove(_hidePos);
+        UIAnimator.FadeOut(_canvasGroup, _time);
+        if (_hideRoutine != null) StopCoroutine(_hideRoutine);
+        _hideRoutine = StartCoroutine(ChangeMode());
     }
 
     public void Refresh(IReadOnlyList<SpellData> spells, int page)
@@ -265,5 +286,20 @@ public class SpellBookUI : MonoBehaviour
 
             images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
         }
+    }
+
+    public void UIMove(Vector2 target)
+    {
+        if (_moveRoutine != null)
+        {
+            StopCoroutine(_moveRoutine);
+        }
+        _moveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
+    }
+    public IEnumerator ChangeMode()
+    {
+        yield return new WaitForSeconds(_time);
+        gameObject.SetActive(false);
+        _hideRoutine = null;
     }
 }

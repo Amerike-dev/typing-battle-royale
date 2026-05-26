@@ -16,13 +16,16 @@ public class GameplayManager : NetworkBehaviour
     [SerializeField] private CastInputController _castInputController;
     [SerializeField] private PlayerAnimatorView _playerAnimatorView;
     [SerializeField] private TargetSystem _targetSystem;
+    [SerializeField] private HUDController _hudController;
 
     [Header("UI references")]
     [SerializeField] private TextMeshProUGUI _countdownText;
+    [SerializeField] public CanvasGroup _countDownCanvasGroup;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private CanvasGroup _endGameCanvas;
     [SerializeField] private EndGameUI _endGameUI;
     [SerializeField] private SpellBookUI _spellBookUI;
+    [SerializeField] private PauseController _pauseController;
 
     [Header("Spell UI (escena)")]
     [SerializeField] private CanvasGroup _spellUICanvasGroup;
@@ -45,11 +48,13 @@ public class GameplayManager : NetworkBehaviour
     public CastInputController CastInputController => _castInputController;
     public PlayerAnimatorView PlayerAnimatorView => _playerAnimatorView;
     public TargetSystem TargetSystem => _targetSystem;
+    public HUDController HUDController => _hudController;
     public TextMeshProUGUI CountdownText => _countdownText;
     public TextMeshProUGUI WinnerText => _winnerText;
     public CanvasGroup EndGameCanvas => _endGameCanvas;
     public EndGameUI EndGameUI => _endGameUI;
     public SpellBookUI SpellBookUI => _spellBookUI;
+    public PauseController PauseController => _pauseController;
 
     [Header("Estados")]
     public StateMachine stateMachine;

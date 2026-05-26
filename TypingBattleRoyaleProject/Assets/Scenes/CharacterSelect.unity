@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 197768435}
   - component: {fileID: 197768434}
   - component: {fileID: 197768433}
+  - component: {fileID: 197768436}
   m_Layer: 5
   m_Name: LeftButton
   m_TagString: Untagged
@@ -327,6 +328,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197768431}
   m_CullTransparentMesh: 1
+--- !u!114 &197768436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197768431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 197768432}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &261149925
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +756,7 @@ GameObject:
   - component: {fileID: 488711247}
   - component: {fileID: 488711246}
   - component: {fileID: 488711245}
+  - component: {fileID: 488711248}
   m_Layer: 5
   m_Name: FinishButton
   m_TagString: Untagged
@@ -861,6 +878,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488711243}
   m_CullTransparentMesh: 1
+--- !u!114 &488711248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488711243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 488711244}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &527528518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,6 +1042,7 @@ GameObject:
   - component: {fileID: 608686838}
   - component: {fileID: 608686837}
   - component: {fileID: 608686836}
+  - component: {fileID: 608686839}
   m_Layer: 5
   m_Name: RightButton
   m_TagString: Untagged
@@ -1131,6 +1164,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608686834}
   m_CullTransparentMesh: 1
+--- !u!114 &608686839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608686834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 608686835}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &789973082
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,6 +2680,7 @@ GameObject:
   - component: {fileID: 1339682309}
   - component: {fileID: 1339682308}
   - component: {fileID: 1339682307}
+  - component: {fileID: 1339682310}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -2753,6 +2802,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339682305}
   m_CullTransparentMesh: 1
+--- !u!114 &1339682310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339682305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1339682306}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1348172778
 GameObject:
   m_ObjectHideFlags: 0
@@ -2765,6 +2829,7 @@ GameObject:
   - component: {fileID: 1348172782}
   - component: {fileID: 1348172781}
   - component: {fileID: 1348172780}
+  - component: {fileID: 1348172783}
   m_Layer: 5
   m_Name: DownButton
   m_TagString: Untagged
@@ -2886,6 +2951,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348172778}
   m_CullTransparentMesh: 1
+--- !u!114 &1348172783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348172778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1348172779}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1378949054
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,6 +3265,7 @@ GameObject:
   - component: {fileID: 1535609786}
   - component: {fileID: 1535609785}
   - component: {fileID: 1535609784}
+  - component: {fileID: 1535609787}
   m_Layer: 5
   m_Name: UpButton
   m_TagString: Untagged
@@ -3306,6 +3387,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1535609782}
   m_CullTransparentMesh: 1
+--- !u!114 &1535609787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535609782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1535609783}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1671941238
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,6 +3568,7 @@ GameObject:
   - component: {fileID: 1747578198}
   - component: {fileID: 1747578197}
   - component: {fileID: 1747578196}
+  - component: {fileID: 1747578200}
   m_Layer: 5
   m_Name: ConfirmButton
   m_TagString: Untagged
@@ -3593,6 +3690,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 40}
   m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1747578200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747578195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b848c1847b5b9c40aae40d2df6f8967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverUI
+  targetUI: {fileID: 1747578199}
+  hoverScale: 1.05
+  duration: 0.1
 --- !u!1 &1750740340
 GameObject:
   m_ObjectHideFlags: 0

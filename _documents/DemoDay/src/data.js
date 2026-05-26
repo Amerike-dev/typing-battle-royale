@@ -571,7 +571,7 @@ const TICKETS = [
         id: 'TBR-026',
         title: 'Animaciones de UI (tweens y micro-interacciones)',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'Polish UX: fade-in/out de paneles, slide del HUD al iniciar partida, pop del countdown 3-2-1-Lucha, pulse en target lockeado, hover con scale 1.05 en botones, transición de selección en SpellBookUI. Usar DOTween (free) o LeanTween.',
         acceptance: [

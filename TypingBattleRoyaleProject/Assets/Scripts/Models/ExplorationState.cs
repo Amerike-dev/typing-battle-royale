@@ -15,6 +15,7 @@ public class ExplorationState : IGameState
 
     public void Enter()
     {
+        _gameplayManager.HUDController.Show();
         var camera = cameraController != null ? cameraController : (_gameplayManager.PlayerController != null ? _gameplayManager.PlayerController.cameraController : null);
         if (camera != null)
         {
@@ -45,6 +46,7 @@ public class ExplorationState : IGameState
 
     public void Exit()
     {
+        _gameplayManager.HUDController.Hide();
         var camera = cameraController != null ? cameraController : (_gameplayManager.PlayerController != null ? _gameplayManager.PlayerController.cameraController : null);
         if (camera != null) camera.OnCamaraMove = false;
 
