@@ -30,6 +30,19 @@ public class MonolithController : NetworkBehaviour
     {
         data = new MonolithData(id, level, runeChallenge);
         syncedSpellNames = new NetworkList<FixedString64Bytes>();
+
+        if (allSpells == null || allSpells.Count == 0)
+        {
+            allSpells = Resources.LoadAll<Spell>("Spells").ToList();
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer) return;
+
+        // Solo el servidor genera los hechizos aleatorios al nacer en la red
+        PopulateSpells();
     }
 
     public void ServerInitialize()
