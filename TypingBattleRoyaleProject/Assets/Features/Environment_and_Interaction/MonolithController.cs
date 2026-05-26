@@ -45,12 +45,12 @@ public class MonolithController : NetworkBehaviour
         PopulateSpells();
     }
 
-    public void ServerInitialize()
+    /*public void ServerInitialize()
     {
         if (!IsServer) return; 
         
         PopulateSpells();
-    }
+    }*/
 
     public void AddIdPlayer(string id)
     {

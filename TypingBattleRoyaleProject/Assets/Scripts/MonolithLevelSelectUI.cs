@@ -36,15 +36,31 @@ public class MonolithLevelSelectUI : MonoBehaviour
 
         int count = Mathf.Min(monolith.syncedSpellNames.Count, spellButtons.Length);
     
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < spellButtons.Length; i++)
         {
-            string nameToFind = monolith.syncedSpellNames[i].ToString();
-            Spell spell = monolith.allSpells.FirstOrDefault(s => s != null && s.spellName == nameToFind);
-        
-            if (spell != null)
-                spellButtons[i].Setup(spell, () => SelectSpell(spell));
-            else
-                Debug.LogError($"[UI] No encontré el hechizo '{nameToFind}' en la lista allSpells.");
+            if (i < count) 
+            {
+                // 2. EL BUG INVISIBLE: Hay que limpiar los caracteres nulos que deja Netcode
+                string nameToFind = monolith.syncedSpellNames[i].ToString().Trim('\0');
+                
+                Spell spell = monolith.allSpells.FirstOrDefault(s => s != null && s.spellName == nameToFind);
+            
+                if (spell != null)
+                {
+                    spellButtons[i].gameObject.SetActive(true); // Aseguramos que se vea
+                    spellButtons[i].Setup(spell, () => SelectSpell(spell));
+                }
+                else
+                {
+                    Debug.LogError($"[UI] No encontré el hechizo '{nameToFind}' en allSpells.");
+                    spellButtons[i].Clear(); // Lo limpiamos si hubo error
+                }
+            }
+            else 
+            {
+                // 3. LIMPIEZA: Si sobran botones, los limpiamos/apagamos para que no queden datos viejos
+                spellButtons[i].Clear();
+            }
         }
 
         Cursor.lockState = CursorLockMode.None;
