@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Centre_Isle
+  m_Name: "SM_Ca\xF1on_Isle"
   m_Shader: {fileID: 4800000, guid: 79648c4598b71fc44b86f7fa9a26732b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,14 +24,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fc11dddb5c25e7e43bce2e321e73c086, type: 3}
+        m_Texture: {fileID: 2800000, guid: d91758e496bcb394e98f7d45f15f2de0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Intensity: 0.5
-    - _StepAmount: 6.33
+    - _Intensity: 0.1
+    - _StepAmount: 5
     m_Colors:
-    - _BaseColor: {r: 0.3613582, g: 0.4900548, b: 0.9496855, a: 1}
+    - _BaseColor: {r: 0.5528109, g: 0.527392, b: 0.84276724, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
