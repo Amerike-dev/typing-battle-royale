@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using Unity.Collections;
 
 public class MonolithController : NetworkBehaviour
 {
@@ -22,18 +23,34 @@ public class MonolithController : NetworkBehaviour
     [Header("Configuración de Hundimiento")]
     public float sinkDepth = 5f;
     public float sinkDuration = 2f;
+    
+    public NetworkList<FixedString64Bytes> syncedSpellNames;
 
     void Awake()
     {
         data = new MonolithData(id, level, runeChallenge);
+        syncedSpellNames = new NetworkList<FixedString64Bytes>();
+
+        if (allSpells == null || allSpells.Count == 0)
+        {
+            allSpells = Resources.LoadAll<Spell>("Spells").ToList();
+        }
     }
 
-    public void ServerInitialize()
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer) return;
+
+        // Solo el servidor genera los hechizos aleatorios al nacer en la red
+        PopulateSpells();
+    }
+
+    /*public void ServerInitialize()
     {
         if (!IsServer) return; 
         
         PopulateSpells();
-    }
+    }*/
 
     public void AddIdPlayer(string id)
     {
@@ -118,6 +135,11 @@ public class MonolithController : NetworkBehaviour
                 if (allSpells.Count > 0)
                     spells.Add(allSpells[Random.Range(0, allSpells.Count)]);
             }
+        }
+        
+        foreach(var spell in spells)
+        {
+            syncedSpellNames.Add(spell.spellName);
         }
     }
     
