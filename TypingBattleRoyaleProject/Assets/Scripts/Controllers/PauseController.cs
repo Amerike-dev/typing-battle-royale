@@ -63,6 +63,12 @@ public class PauseController : MonoBehaviour
     }
     public void OnPausa()
     {
+        if (MonolithLevelSelectUI.Instance != null && MonolithLevelSelectUI.Instance.myCanvas.enabled)
+        {
+            Debug.Log("[PauseController] El monolito está abierto, bloqueando pausa.");
+            return;
+        }
+        
         var state = GameplayManager.Instance.stateMachine.currentState;
 
         if(state is GameOverState || state is WaitingState || state is BattleState) return;

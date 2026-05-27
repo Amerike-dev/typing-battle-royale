@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class PlayerInteractorView : MonoBehaviour
 {
@@ -30,19 +31,21 @@ public class PlayerInteractorView : MonoBehaviour
         
         if (player == null || !player.IsOwner) return; 
 
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null)
+            {
+                return;
+            }
+        }
+        
         if (Keyboard.current.eKey.wasPressedThisFrame && NearMonolith != null)
         {
             var controller = NearMonolith.GetComponent<MonolithController>();
-            var view = NearMonolith.GetComponent<MonolithView>();
         
-            if (controller != null)
+            if (controller != null && player != null)
             {
-                // 1. Abrimos la UI localmente pasándole los datos correctos
                 MonolithLevelSelectUI.Instance.Show(controller, player);
-
-                // 2. (OPCIONAL PERO RECOMENDADO) Le avisamos al servidor que interactuamos
-                // Si tienes lógica en el servidor para evitar que 2 personas toquen el mismo monolito,
-                // deberías llamar a view.TryInteract(...) aquí.
             }
         }
     }

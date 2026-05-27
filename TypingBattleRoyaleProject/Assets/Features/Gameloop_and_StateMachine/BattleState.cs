@@ -57,7 +57,7 @@ public class BattleState : IGameState
             camera.SetBattleTarget(t);
         }
 
-        IReadOnlyList<SpellData> inventorySpells = null;
+        IReadOnlyList<Spell> inventorySpells = null;
         if (_playerController.inventory != null)
         {
             inventorySpells = _playerController.inventory.GetUnlockedSpells();
@@ -144,7 +144,7 @@ public class BattleState : IGameState
         _castInput.enabled = true;
     }
 
-    private void HandleSpellConfirmed(SpellData spell)
+    private void HandleSpellConfirmed(Spell spell)
     {
         if (_castInput == null) return;
 
@@ -160,22 +160,8 @@ public class BattleState : IGameState
         }
         else
         {
-            Spell mapped = null;
-            if (SpellCatalog.Instance != null)
-            {
-                mapped = SpellCatalog.Instance.GetByRune(spell.runeString);
-            }
-            if (mapped == null) mapped = _castInput.defaultSpell;
-
-            if (mapped != null)
-            {
-                _castInput.currentSpell = mapped;
-                _castInput.spellText = mapped.runeString;
-            }
-            else
-            {
-                _castInput.spellText = spell.runeString;
-            }
+            _castInput.currentSpell = spell;
+            _castInput.spellText = spell.runeString;
         }
 
         if (string.IsNullOrEmpty(_castInput.spellText))

@@ -3,30 +3,38 @@ using System.Linq;
 
 public class PlayerInventory
 {
-    private List<SpellData> _spells;
+    private List<Spell> _spells;
+    private PlayerController _owner;
 
-    public PlayerInventory()
+    public PlayerInventory(PlayerController owner)
     {
-        _spells = new List<SpellData>();
+        _spells = new List<Spell>();
+        _owner = owner;
     }
 
-    public void AddSpell(SpellData newSpell)
+    public void AddSpell(Spell newSpell)
     {
         if (newSpell == null) return;
 
         if (!_spells.Contains(newSpell))
         {
             _spells.Add(newSpell);
+            _owner.UpdateDebugList(_spells);
         }
     }
+    
+    public bool HasSpell(string spellName)
+    {
+        return _spells.Any(s => s.spellName == spellName);
+    }
 
-    public IReadOnlyList<SpellData> GetUnlockedSpells()
+    public IReadOnlyList<Spell> GetUnlockedSpells()
     {
         return _spells.AsReadOnly();
     }
 
-    public IEnumerable<SpellData> GetSpellsByTier(SpellTiers tier)
+    public IEnumerable<Spell> GetSpellsByTier(SpellTiers tier)
     {
-        return _spells.Where(spell => spell.spellTier == tier);
+        return _spells.Where(spell => spell.tier == tier);
     }
 }

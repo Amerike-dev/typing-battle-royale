@@ -847,7 +847,7 @@ const TICKETS = [
         id: 'TBR-039',
         title: 'Typing challenge de desbloqueo de hechizo en monolito',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Jorge', status: 'todo',
+        assignee: 'Jorge', status: 'done',
         summary:
             'Una vez seleccionado el nivel (TBR-038), mostrar el rune text del SpellData. Bloquear movimiento (PlayerController.NullMoveSpeed). El jugador tipea sin error; un solo error reinicia el char actual (no penaliza). Al completar exitoso, agregar SpellData al PlayerInventory y marcar el monolito como exhausted (TBR-016). ESC cancela.',
         acceptance: [

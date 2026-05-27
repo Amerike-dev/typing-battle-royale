@@ -14,13 +14,13 @@ public class SpellBookUI : MonoBehaviour
 
     public int spellsPerPage = 3;
 
-    private IReadOnlyList<SpellData> currentSpells;
+    private IReadOnlyList<Spell> currentSpells;
     private int currentPage = 0;
     private int selectedIndex = 0;
 
     public SpellTiers playerTier = SpellTiers.TierOne;
 
-    public event Action<SpellData> OnSpellConfirmed;
+    public event Action<Spell> OnSpellConfirmed;
     public event Action OnSelectionCancelled;
 
     [Header("UIanimation")]
@@ -105,7 +105,7 @@ public class SpellBookUI : MonoBehaviour
         }
     }
 
-    public void Show(IReadOnlyList<SpellData> spells)
+    public void Show(IReadOnlyList<Spell> spells)
     {
         if (_hideRoutine != null)
         {
@@ -117,7 +117,7 @@ public class SpellBookUI : MonoBehaviour
         UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
         selectedIndex = 0;
-        Refresh(spells ?? new List<SpellData>(), 0);
+        Refresh(spells ?? new List<Spell>(), 0);
     }
 
     public void Hide()
@@ -128,7 +128,7 @@ public class SpellBookUI : MonoBehaviour
         _hideRoutine = StartCoroutine(ChangeMode());
     }
 
-    public void Refresh(IReadOnlyList<SpellData> spells, int page)
+    public void Refresh(IReadOnlyList<Spell> spells, int page)
     {
         currentSpells = spells;
         currentPage = Mathf.Max(0, page);
@@ -144,11 +144,11 @@ public class SpellBookUI : MonoBehaviour
 
             if (spellIndex < spellCount)
             {
-                SpellData spell = spells[spellIndex];
+                Spell spell = spells[spellIndex];
 
-                texts[i].text = spell.runeString + " " + spell.spellTier.ToString();
+                texts[i].text = spell.runeString + " " + spell.tier.ToString();
 
-                if ((int)spell.spellTier > (int)playerTier)
+                if ((int)spell.tier > (int)playerTier)
                 {
                     images[i].color = Color.gray;
                 }
@@ -247,10 +247,10 @@ public class SpellBookUI : MonoBehaviour
         int spellIndex = currentPage * spellsPerPage + selectedIndex;
         if (spellIndex < 0 || spellIndex >= spellCount) return;
 
-        SpellData chosen = currentSpells[spellIndex];
+        Spell chosen = currentSpells[spellIndex];
         if (chosen == null) return;
 
-        if ((int)chosen.spellTier > (int)playerTier) return;
+        if ((int)chosen.tier > (int)playerTier) return;
 
         OnSpellConfirmed?.Invoke(chosen);
     }
@@ -276,9 +276,9 @@ public class SpellBookUI : MonoBehaviour
                 continue;
             }
 
-            SpellData spell = currentSpells[spellIndex];
+            Spell spell = currentSpells[spellIndex];
 
-            if ((int)spell.spellTier > (int)playerTier)
+            if ((int)spell.tier > (int)playerTier)
             {
                 images[i].color = Color.gray;
                 continue;
