@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Vuelo
   runeString: alas de iguana voladora
-  elementType: 0
+  elementType: 4
   tier: 1
   archetype: 0
   description: Te permite volar por 15 segundos.
@@ -32,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}

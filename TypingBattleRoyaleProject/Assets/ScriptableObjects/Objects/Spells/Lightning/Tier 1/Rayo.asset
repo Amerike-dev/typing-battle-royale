@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Rayo
   runeString: chispazo de enchufe
   elementType: 0
+  tier: 0
+  archetype: 0
   description: "Haz da\xF1o bajo e infalible instantanemente a un enemigo."
   spellTypes: 04000000
   damage: 10
+  cooldown: 0
   debuff: 0
   range: 20
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}

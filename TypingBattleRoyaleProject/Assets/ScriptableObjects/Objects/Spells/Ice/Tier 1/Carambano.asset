@@ -15,18 +15,22 @@ MonoBehaviour:
   spellName: Carambano
   runeString: paleta helada
   elementType: 9
+  tier: 0
+  archetype: 0
   description: "Invoca un pico de hielo en los pies del oponente seleccionado, haciendo
     da\xF1o y aplicando realintizaci\xF3n."
   spellTypes: 04000000
   damage: 10
+  cooldown: 0
   debuff: 1
   range: 20
   speed: 20
   uses: 0
   duration: 0
+  particleLifeDuration: 0
   loop: 1
   startSpeed: 2
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3338f1f88c13d854b8745951c1c1db20, type: 2}

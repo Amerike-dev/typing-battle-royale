@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Cuvierta rocosa
   runeString: caparazon tortuga
   elementType: 3
+  tier: 0
+  archetype: 0
   description: Crea una pared enfrente de ti que bloquea hechizos
   spellTypes: 02000000
   damage: 0
+  cooldown: 0
   debuff: 0
   range: 0
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}

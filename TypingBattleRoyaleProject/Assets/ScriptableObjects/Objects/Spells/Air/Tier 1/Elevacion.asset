@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Elevacion
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: "Elevaci\xF3n"
-  runeString: alas de gallina
+  spellName: Velocidad de viento
+  runeString: celeritas
   elementType: 4
   tier: 0
   archetype: 3
-  description: "Te hace elevarte una distanc\xEDa media"
+  description: buff
   spellTypes: 03000000
   damage: 5
   cooldown: 0

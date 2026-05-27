@@ -15,16 +15,22 @@ MonoBehaviour:
   spellName: Lanzamiento de rocas
   runeString: tira piedra
   elementType: 3
+  tier: 0
+  archetype: 0
   description: "Invoca varias rocas peque\xF1as para hacer da\xF1o en un cono enfrente
     de ti."
   spellTypes: 06000000
   damage: 15
+  cooldown: 0
+  debuff: 0
   range: 7
   speed: 100
+  uses: 0
   duration: 0
+  particleLifeDuration: 0
   loop: 1
   startSpeed: 2
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}

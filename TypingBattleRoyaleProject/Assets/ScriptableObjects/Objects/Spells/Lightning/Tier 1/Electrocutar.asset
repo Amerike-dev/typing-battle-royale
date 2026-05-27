@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Electrocutar
   runeString: toques del cable
   elementType: 6
+  tier: 0
+  archetype: 0
   description: "Hace da\xF1o alto a muy corta distancia"
   spellTypes: 06000000
   damage: 80
+  cooldown: 0
   debuff: 0
   range: 5
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}

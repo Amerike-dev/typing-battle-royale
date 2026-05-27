@@ -34,4 +34,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}
