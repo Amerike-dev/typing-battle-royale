@@ -26,6 +26,21 @@ public class LobbyController : NetworkBehaviour
     [Range(2, 8)]
     [SerializeField] private int _maxPlayers = 4;
 
+    private const string HostButtonIdleText = "Crear Partida";
+    private const string HostButtonActiveText = "Creada:";
+    private const float HostButtonLabelXIdle = 140f;
+    private const float HostButtonLabelXActive = 86f;
+    private const float HostButtonLabelWidthActive = 110f;
+
+    [Header("Hosted IP display")]
+    [SerializeField] private float _hostedIpFontSize = 24f;
+
+    private TextMeshProUGUI _hostButtonLabel;
+    private ColorBlock _hostButtonColorsIdle;
+    private ColorBlock _hostButtonColorsActive;
+    private float _hostButtonLabelWidthIdle;
+    private bool _isHosting;
+
     private void Awake()
     {
         connectedPlayers = new NetworkList<ulong>();
@@ -33,7 +48,17 @@ public class LobbyController : NetworkBehaviour
 
     private void Start()
     {
-        if (hostButton != null) hostButton.onClick.AddListener(OnHostButtonClicked);
+        if (hostButton != null)
+        {
+            hostButton.onClick.AddListener(OnHostButtonClicked);
+            _hostButtonLabel = hostButton.GetComponentInChildren<TextMeshProUGUI>(true);
+            _hostButtonColorsIdle = hostButton.colors;
+            _hostButtonColorsActive = _hostButtonColorsIdle;
+            _hostButtonColorsActive.normalColor = _hostButtonColorsIdle.pressedColor;
+            _hostButtonColorsActive.highlightedColor = _hostButtonColorsIdle.pressedColor;
+            _hostButtonColorsActive.selectedColor = _hostButtonColorsIdle.pressedColor;
+            if (_hostButtonLabel != null) _hostButtonLabelWidthIdle = _hostButtonLabel.rectTransform.sizeDelta.x;
+        }
 
         if (joinButton != null) joinButton.onClick.AddListener(OnJoinButtonClicked);
 
@@ -45,7 +70,9 @@ public class LobbyController : NetworkBehaviour
 
         string localIp = GetLocalIPAdress();
 
-        if(ipInputField != null && string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = localIp;
+        if (ipInputField != null && string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = localIp;
+
+        ApplyHostButtonVisualState(false);
 
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedLocal;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectedLocal;
@@ -80,9 +107,15 @@ public class LobbyController : NetworkBehaviour
 
     private void OnHostButtonClicked()
     {
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        if (_isHosting)
         {
-            lobbyUI.ShowStatusMessage("El servidor ya está iniciado.", true);
+            StopHosting();
+            return;
+        }
+
+        if (NetworkManager.Singleton.IsClient)
+        {
+            lobbyUI.ShowStatusMessage("Ya estás conectado como cliente.", true);
             return;
         }
 
@@ -100,11 +133,57 @@ public class LobbyController : NetworkBehaviour
 
         if (success)
         {
+            ApplyHostButtonVisualState(true);
             lobbyUI.ShowStatusMessage("Host iniciado. Esperando jugadores");
         }
         else
         {
             lobbyUI.ShowStatusMessage("Error al iniciar el HOST", true);
+        }
+    }
+
+    private void StopHosting()
+    {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        if (_startMatchButton != null) _startMatchButton.gameObject.SetActive(false);
+
+        ApplyHostButtonVisualState(false);
+        lobbyUI.ShowStatusMessage("Host detenido.");
+    }
+
+    private void ApplyHostButtonVisualState(bool hosting)
+    {
+        _isHosting = hosting;
+
+        if (hostButton != null) hostButton.colors = hosting ? _hostButtonColorsActive : _hostButtonColorsIdle;
+
+        if (_hostButtonLabel != null)
+        {
+            _hostButtonLabel.text = hosting ? HostButtonActiveText : HostButtonIdleText;
+
+            var rt = _hostButtonLabel.rectTransform;
+            Vector2 pos = rt.anchoredPosition;
+            pos.x = hosting ? HostButtonLabelXActive : HostButtonLabelXIdle;
+            rt.anchoredPosition = pos;
+
+            Vector2 size = rt.sizeDelta;
+            size.x = hosting ? HostButtonLabelWidthActive : _hostButtonLabelWidthIdle;
+            rt.sizeDelta = size;
+        }
+
+        if (ipInputField != null)
+        {
+            ipInputField.gameObject.SetActive(hosting);
+
+            if (hosting && ipInputField.textComponent != null)
+            {
+                ipInputField.textComponent.color = Color.white;
+                ipInputField.textComponent.fontSize = _hostedIpFontSize;
+            }
         }
     }
 

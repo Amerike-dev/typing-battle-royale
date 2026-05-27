@@ -112,7 +112,10 @@ public class SpellBookUI : MonoBehaviour
             StopCoroutine(_hideRoutine);
             _hideRoutine = null;
         }
+
+        if (_canvasGroup != null) _canvasGroup.gameObject.SetActive(true);
         gameObject.SetActive(true);
+
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
@@ -122,6 +125,8 @@ public class SpellBookUI : MonoBehaviour
 
     public void Hide()
     {
+        if (!gameObject.activeInHierarchy) return;
+
         UIMove(_hidePos);
         UIAnimator.FadeOut(_canvasGroup, _time);
         if (_hideRoutine != null) StopCoroutine(_hideRoutine);
@@ -293,7 +298,15 @@ public class SpellBookUI : MonoBehaviour
         if (_moveRoutine != null)
         {
             StopCoroutine(_moveRoutine);
+            _moveRoutine = null;
         }
+
+        if (!gameObject.activeInHierarchy)
+        {
+            if (_panelUI != null) _panelUI.anchoredPosition = target;
+            return;
+        }
+
         _moveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
     }
     public IEnumerator ChangeMode()
