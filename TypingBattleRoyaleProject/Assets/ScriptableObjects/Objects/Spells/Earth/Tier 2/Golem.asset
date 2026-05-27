@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Golem
   runeString: albanil de barro recio
-  elementType: 0
+  elementType: 3
   tier: 1
   archetype: 2
   description: Genera un golem de tierra que se mueve lento y ataca a tus oponentes

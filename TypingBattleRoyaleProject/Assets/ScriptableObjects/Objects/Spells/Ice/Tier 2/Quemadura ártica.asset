@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Quemadura Artica
   runeString: frio quemante de la ex despechada
-  elementType: 0
+  elementType: 9
   tier: 1
   archetype: 4
   description: "Realiza un ataque en un area a muy corta distancia que hace da\xF1o
