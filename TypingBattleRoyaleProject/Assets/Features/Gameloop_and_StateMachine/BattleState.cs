@@ -66,6 +66,8 @@ public class BattleState : IGameState
         if (_spellBookUI != null)
         {
             if (_castInput != null) _castInput.enabled = false;
+            _spellBookUI.OnSpellConfirmed -= HandleSpellConfirmed;
+            _spellBookUI.OnSelectionCancelled -= HandleSelectionCancelled;
             _spellBookUI.OnSpellConfirmed += HandleSpellConfirmed;
             _spellBookUI.OnSelectionCancelled += HandleSelectionCancelled;
             _spellBookUI.Show(inventorySpells);

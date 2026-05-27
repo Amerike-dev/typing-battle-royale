@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: 
   runeString: temblor de la abuela bailando cumbia desbocada
-  elementType: 0
+  elementType: 3
   tier: 2
   archetype: 6
   description: 

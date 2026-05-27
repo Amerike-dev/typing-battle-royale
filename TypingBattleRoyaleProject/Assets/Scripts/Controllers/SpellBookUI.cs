@@ -112,7 +112,10 @@ public class SpellBookUI : MonoBehaviour
             StopCoroutine(_hideRoutine);
             _hideRoutine = null;
         }
+
+        if (_canvasGroup != null) _canvasGroup.gameObject.SetActive(true);
         gameObject.SetActive(true);
+
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
@@ -122,6 +125,8 @@ public class SpellBookUI : MonoBehaviour
 
     public void Hide()
     {
+        if (!gameObject.activeInHierarchy) return;
+
         UIMove(_hidePos);
         UIAnimator.FadeOut(_canvasGroup, _time);
         if (_hideRoutine != null) StopCoroutine(_hideRoutine);
@@ -159,7 +164,7 @@ public class SpellBookUI : MonoBehaviour
             }
             else
             {
-                texts[i].text = spellCount == 0 && i == 0 ? "Sin hechizos — usa default" : "—";
+                texts[i].text = "—";
                 images[i].color = new Color(1f, 1f, 1f, 0.25f);
             }
         }
@@ -197,14 +202,16 @@ public class SpellBookUI : MonoBehaviour
         float scroll = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
         bool pageUp = Keyboard.current != null && Keyboard.current.pageUpKey.wasPressedThisFrame;
         bool pageDown = Keyboard.current != null && Keyboard.current.pageDownKey.wasPressedThisFrame;
+        bool leftArrow = Keyboard.current != null && Keyboard.current.leftArrowKey.wasPressedThisFrame;
+        bool rightArrow = Keyboard.current != null && Keyboard.current.rightArrowKey.wasPressedThisFrame;
 
-        if (scroll > 0f || pageUp)
+        if (scroll > 0f || pageUp || leftArrow)
         {
             currentPage = Mathf.Max(0, currentPage - 1);
             selectedIndex = 0;
             Refresh(currentSpells, currentPage);
         }
-        else if (scroll < 0f || pageDown)
+        else if (scroll < 0f || pageDown || rightArrow)
         {
             currentPage = Mathf.Min(currentPage + 1, maxPage);
             selectedIndex = 0;
@@ -238,11 +245,7 @@ public class SpellBookUI : MonoBehaviour
     {
         int spellCount = currentSpells != null ? currentSpells.Count : 0;
 
-        if (spellCount == 0 && selectedIndex == 0)
-        {
-            OnSpellConfirmed?.Invoke(null);
-            return;
-        }
+        if (spellCount == 0) return;
 
         int spellIndex = currentPage * spellsPerPage + selectedIndex;
         if (spellIndex < 0 || spellIndex >= spellCount) return;
@@ -265,14 +268,7 @@ public class SpellBookUI : MonoBehaviour
 
             if (spellIndex >= spellCount)
             {
-                if (spellCount == 0 && i == 0)
-                {
-                    images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
-                }
-                else
-                {
-                    images[i].color = new Color(1f, 1f, 1f, 0.25f);
-                }
+                images[i].color = new Color(1f, 1f, 1f, 0.25f);
                 continue;
             }
 
@@ -293,7 +289,15 @@ public class SpellBookUI : MonoBehaviour
         if (_moveRoutine != null)
         {
             StopCoroutine(_moveRoutine);
+            _moveRoutine = null;
         }
+
+        if (!gameObject.activeInHierarchy)
+        {
+            if (_panelUI != null) _panelUI.anchoredPosition = target;
+            return;
+        }
+
         _moveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
     }
     public IEnumerator ChangeMode()

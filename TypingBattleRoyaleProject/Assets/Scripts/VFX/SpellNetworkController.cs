@@ -15,6 +15,9 @@ public class SpellNetworkController : NetworkBehaviour
     [Header("Origen del cast")]
     public Transform castOrigin;
 
+    [Tooltip("Distancia hacia adelante a la que nace el proyectil/beam, para que no choque con el CharacterController del caster.")]
+    public float spawnForwardOffset = 1.5f;
+
     private CastInputController _caster;
     private PlayerAnimatorView _animatorView;
     private TargetSystem _targetSystem;
@@ -28,7 +31,11 @@ public class SpellNetworkController : NetworkBehaviour
         _animatorView = GetComponent<PlayerAnimatorView>();
         _targetSystem = GetComponent<TargetSystem>();
         Debug.Log($"[TBR-004][SPAWN] TargetSystem encontrado={_targetSystem != null}");
-        if (_caster != null) _caster.OnSpellCast += HandleLocalSpellCast;
+        if (_caster != null)
+        {
+            _caster.OnSpellCast -= HandleLocalSpellCast;
+            _caster.OnSpellCast += HandleLocalSpellCast;
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -174,6 +181,12 @@ public class SpellNetworkController : NetworkBehaviour
             case SpellTypes.Debuff:
                 SpawnBuffDebuff(spell, casterTransform);
                 break;
+            case SpellTypes.Movility:
+                SpawnBuffDebuff(spell, casterTransform);
+                break;
+            case SpellTypes.Weapon:
+                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform);
+                break;
             case SpellTypes.Projectile:
             default:
                 SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform);
@@ -195,19 +208,22 @@ public class SpellNetworkController : NetworkBehaviour
 
     void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId, Transform targetTransform)
     {
-        var rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
+        Vector3 dir = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.forward;
+        var rot = Quaternion.LookRotation(dir);
+        Vector3 spawnPos = origin + dir * spawnForwardOffset;
+
         GameObject go = null;
         if (spell.vfxProjectile != null)
         {
-            go =Instantiate(spell.vfxProjectile, origin, rot);
+            go = Instantiate(spell.vfxProjectile, spawnPos, rot);
         }
         else
         {
-            go = SpawnFromPoolOrInstantiate("VFX_Projectile", projectileVfxPrefab, origin, rot);
+            go = SpawnFromPoolOrInstantiate("VFX_Projectile", projectileVfxPrefab, spawnPos, rot);
         }
         if (go == null) return;
-        var vfx = go.GetComponent<ProjectileVFX>(); // El daño se calcula en el servidor y se pasa aquí
-        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer, targetTransform); // IsServer asegura que el daño solo se aplique en el servidor
+        var vfx = go.GetComponent<ProjectileVFX>();
+        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer, targetTransform);
     }
 
     void SpawnAOE(Spell spell, Vector3 origin)
@@ -229,8 +245,10 @@ public class SpellNetworkController : NetworkBehaviour
 
     void SpawnBeam(Spell spell, Vector3 origin, Vector3 direction, Transform casterTransform)
     {
-        var rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
-        var go = SpawnFromPoolOrInstantiate("VFX_Beam", beamVfxPrefab, origin, rot);
+        Vector3 dir = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.forward;
+        var rot = Quaternion.LookRotation(dir);
+        Vector3 spawnPos = origin + dir * spawnForwardOffset;
+        var go = SpawnFromPoolOrInstantiate("VFX_Beam", beamVfxPrefab, spawnPos, rot);
         if (go == null) return;
         var vfx = go.GetComponent<BeamVFX>();
         if (vfx == null) return;

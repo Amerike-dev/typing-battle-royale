@@ -46,14 +46,17 @@ public class ProjectileVFX : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (_isServerCopy && _damage > 0f)
+        var otherStats = other.GetComponent<PlayerStatsNet>();
+        if (otherStats == null) otherStats = other.GetComponentInParent<PlayerStatsNet>();
+
+        if (otherStats != null && otherStats.OwnerClientId == _ownerId) return;
+
+        if (_isServerCopy && _damage > 0f && otherStats != null)
         {
-            var targetStats = other.GetComponent<PlayerStatsNet>();
-            if (targetStats != null && targetStats.OwnerClientId != _ownerId)
-            {
-                targetStats.TakeDamage(_damage, _ownerId);
-            }
+            otherStats.TakeDamage(_damage, _ownerId);
         }
+
+        SpawnHitVFX();
         Despawn();
     }
 
