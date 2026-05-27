@@ -16,12 +16,18 @@ public class SpellNetworkController : NetworkBehaviour
     public Transform castOrigin;
 
     private CastInputController _caster;
+    private PlayerAnimatorView _animatorView;
+    private TargetSystem _targetSystem;
     private readonly Dictionary<int, float> _lastCastTimes = new();
+    private static readonly Dictionary<ulong, Dictionary<int, float>> _serverLastCastTimes = new();
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
         _caster = GetComponent<CastInputController>();
+        _animatorView = GetComponent<PlayerAnimatorView>();
+        _targetSystem = GetComponent<TargetSystem>();
+        Debug.Log($"[TBR-004][SPAWN] TargetSystem encontrado={_targetSystem != null}");
         if (_caster != null) _caster.OnSpellCast += HandleLocalSpellCast;
     }
 
@@ -34,6 +40,8 @@ public class SpellNetworkController : NetworkBehaviour
     void HandleLocalSpellCast(Spell spell)
     {
         if (!IsOwner || spell == null || _caster == null) return;
+
+        Debug.Log($"[SpellNetworkController] HandleLocalSpellCast recibio spell: {spell.spellName}");
 
         var catalog = SpellCatalog.Instance;
         if (catalog == null)
@@ -58,30 +66,95 @@ public class SpellNetworkController : NetworkBehaviour
         }
         _lastCastTimes[id] = Time.time;
 
+        Debug.Log($"[TBR-004][LOCAL] Cooldown local aprobado. spellId={id}, spell={spell.spellName}");
+
+        if (_animatorView != null)
+        {
+            Debug.Log("[TBR-004][LOCAL] Disparando animacion Casting.");
+            _animatorView.TriggerCasting();
+        }
+        else
+        {
+            Debug.LogWarning("[TBR-004][LOCAL] No hay PlayerAnimatorView.");
+        }
+
         Transform origin = castOrigin != null ? castOrigin : transform;
+
+        ulong targetNetworkObjectId = 0;
+        bool hasTarget = false;
+
+        Transform currentTarget = GetCurrentTarget();
+
+        Debug.Log($"[TBR-004][TARGET CHECK] TargetSystem existe={_targetSystem != null}");
+
+        if (currentTarget != null)
+        {
+            NetworkObject targetNetObj = currentTarget.GetComponent<NetworkObject>();
+
+            if (targetNetObj == null) targetNetObj = currentTarget.GetComponentInParent<NetworkObject>();
+
+            Debug.Log($"[TBR-004][TARGET CHECK] Target tiene NetworkObject={targetNetObj != null}");
+
+            if (targetNetObj != null)
+            {
+                targetNetworkObjectId = targetNetObj.NetworkObjectId;
+                hasTarget = true;
+
+                Debug.Log($"[TBR-004][TARGET CHECK] Target Ok. targetNetworkObjectId={targetNetworkObjectId}");
+            }
+        }
+        else
+        {
+            Debug.Log($"[TBR-004][TARGET CHECK] No hay target valido para mandar al ServerRpc.");
+        }
+
+        Debug.Log($"[TBR-004][LOCAL] Enviando CastSpellServerRpc. spellId={id}, hasTarget={hasTarget}, targetId={targetNetworkObjectId}, accuracy={_caster.accuracy}");
+
         // La precisión se obtiene del CastInputController, que la calcula antes de disparar el evento.
-        CastSpellServerRpc(id, origin.position, origin.forward, _caster.accuracy);
+        CastSpellServerRpc(id, origin.position, origin.forward, _caster.accuracy, targetNetworkObjectId, hasTarget);
     }
 
     [ServerRpc]
-    void CastSpellServerRpc(int spellId, Vector3 origin, Vector3 direction, float accuracy, ServerRpcParams rpcParams = default)
+    void CastSpellServerRpc(int spellId, Vector3 origin, Vector3 direction, float accuracy, ulong targetNetworkObjectId, bool hasTarget, ServerRpcParams rpcParams = default)
     {
         var spell = SpellCatalog.Instance.Get(spellId);
         if (spell == null) return;
 
-        float damageMultiplier = TypingStats.GetDamageBonusMultiplier(accuracy); // Usamos el método estático
+        ulong casterClientId = rpcParams.Receive.SenderClientId;
+
+        Debug.Log($"[TBR-004][SERVER] Recibi cast. caster={casterClientId}, spellId={spellId}, spell={spell.spellName}, accurancy={accuracy}, hasTarget={hasTarget}");
+
+        if (!CanCastServer(casterClientId, spellId, spell.cooldown))
+        {
+            Debug.Log($"[SERVER] Cliente {casterClientId} intento castear '{spell.spellName}' en cooldown.");
+            return;
+        }
+
+        RegisterCastServer(casterClientId, spellId);
+
+        float damageMultiplier = accuracy < 30f
+            ? 0f
+            : TypingStats.GetDamageBonusMultiplier(accuracy);
+        
         float finalDamage = spell.damage * damageMultiplier;
 
-        PlaySpellVFXClientRpc(spellId, origin, direction, rpcParams.Receive.SenderClientId, finalDamage);
+        Debug.Log($"[SERVER] Spells='{spell.spellName}', Accuracy={accuracy}, Multiplier={damageMultiplier}, Damage={finalDamage}");
+
+        PlaySpellVFXClientRpc(spellId, origin, direction, casterClientId, finalDamage, targetNetworkObjectId, hasTarget);
     }
 
     [ClientRpc]
-    void PlaySpellVFXClientRpc(int spellId, Vector3 origin, Vector3 direction, ulong casterClientId, float damage)
+    void PlaySpellVFXClientRpc(int spellId, Vector3 origin, Vector3 direction, ulong casterClientId, float damage, ulong targetNetworkObjectId, bool hasTarget)
     {
         var spell = SpellCatalog.Instance != null ? SpellCatalog.Instance.Get(spellId) : null;
         if (spell == null) return;
 
+        Debug.Log($"[TBR-004][CLIENT VFX] Reproduciendo VFX. spell={spell.spellName}, caster={casterClientId}, hasTarget={hasTarget}, targetId={targetNetworkObjectId}, damage={damage}");
+
         Transform casterTransform = ResolveCasterTransform(casterClientId);
+        Transform targetTransform = hasTarget ? ResolveNetworkObjectTransform(targetNetworkObjectId) : null;
+
+        SpawnCastVFX(spell, origin, casterTransform);
 
         switch (spell.archetype)
         {
@@ -103,7 +176,7 @@ public class SpellNetworkController : NetworkBehaviour
                 break;
             case SpellTypes.Projectile:
             default:
-                SpawnProjectile(spell, origin, direction, damage, casterClientId);
+                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform);
                 break;
         }
     }
@@ -120,13 +193,21 @@ public class SpellNetworkController : NetworkBehaviour
         return go;
     }
 
-    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId)
+    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId, Transform targetTransform)
     {
         var rot = direction.sqrMagnitude > 0f ? Quaternion.LookRotation(direction) : Quaternion.identity;
-        var go = SpawnFromPoolOrInstantiate("VFX_Projectile", projectileVfxPrefab, origin, rot);
+        GameObject go = null;
+        if (spell.vfxProjectile != null)
+        {
+            go =Instantiate(spell.vfxProjectile, origin, rot);
+        }
+        else
+        {
+            go = SpawnFromPoolOrInstantiate("VFX_Projectile", projectileVfxPrefab, origin, rot);
+        }
         if (go == null) return;
         var vfx = go.GetComponent<ProjectileVFX>(); // El daño se calcula en el servidor y se pasa aquí
-        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer); // IsServer asegura que el daño solo se aplique en el servidor
+        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer, targetTransform); // IsServer asegura que el daño solo se aplique en el servidor
     }
 
     void SpawnAOE(Spell spell, Vector3 origin)
@@ -186,5 +267,84 @@ public class SpellNetworkController : NetworkBehaviour
                 return no.transform;
         }
         return null;
+    }
+
+    static Transform ResolveNetworkObjectTransform(ulong NetworkObjectId)
+    {
+        var nm = NetworkManager.Singleton;
+
+        if (nm == null || nm.SpawnManager == null) return null;
+
+        if(nm.SpawnManager.SpawnedObjects.TryGetValue(NetworkObjectId, out NetworkObject netObj)) return netObj != null ? netObj.transform : null;
+
+        return null;
+    }
+
+    void SpawnCastVFX(Spell spell, Vector3 Origin, Transform casterTransform)
+    {
+        if (spell == null || spell.vfxCast == null) return;
+
+        Vector3 spawnPos = Origin;
+        Quaternion spawnRot = Quaternion.identity;
+
+        if (casterTransform != null)
+        {
+            SpellNetworkController casterSpellController = casterTransform.GetComponent<SpellNetworkController>();
+
+            if (casterSpellController != null && casterSpellController.castOrigin != null)
+            {
+                spawnPos = casterSpellController.castOrigin.position;
+                spawnRot = casterSpellController.castOrigin.rotation;
+            }
+            else
+            {
+                spawnPos = casterTransform.position + casterTransform.forward * 0.8f + Vector3.up * 1.2f;
+                spawnRot = casterTransform.rotation;
+            }
+        }
+
+        GameObject go = Instantiate(spell.vfxCast, spawnPos, spawnRot);
+
+        SpellVFXBinder binder = go.GetComponent<SpellVFXBinder>();
+
+        if (binder != null) binder.Bind(spell);
+    }
+
+    private Transform GetCurrentTarget()
+    {
+        if (_targetSystem != null && _targetSystem.CurrentTarget != null)
+        {
+            Debug.Log($"[TBR-004][TARGET SOURCE] Target desde _targetSystem local: {_targetSystem.CurrentTarget.name}");
+            return _targetSystem.CurrentTarget;
+        }
+
+        if (GameplayManager.Instance != null && GameplayManager.Instance.TargetSystem != null && GameplayManager.Instance.TargetSystem.CurrentTarget != null)
+        {
+            Debug.Log($"[TBR-004][TARGET SOURCE] Target desde GameplayManager.TargetSystem: {GameplayManager.Instance.TargetSystem.CurrentTarget.name}");
+            return GameplayManager.Instance.TargetSystem.CurrentTarget;
+        }
+
+        Debug.LogWarning("[TBR-004][TARGET SOURCE] No se encontro Currenttarget en ningun lugar.");
+        return null;
+    }
+
+    private bool CanCastServer(ulong casterClientId, int  spellId, float cooldown)
+    {
+        if (!_serverLastCastTimes.TryGetValue(casterClientId, out Dictionary<int, float> playerCooldowns)) return true;
+
+        if (!playerCooldowns.TryGetValue(spellId, out float lastCastTime)) return true;
+
+        return Time.time >= lastCastTime + cooldown;
+    }
+
+    private void RegisterCastServer(ulong casterClientId, int spellId)
+    {
+        if (!_serverLastCastTimes.TryGetValue(casterClientId, out Dictionary<int, float> playerCooldowns))
+        {
+            playerCooldowns = new Dictionary<int, float>();
+            _serverLastCastTimes[casterClientId] = playerCooldowns;
+        }
+
+        playerCooldowns[spellId] = Time.time;
     }
 }
