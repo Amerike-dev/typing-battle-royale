@@ -25,12 +25,14 @@ public class MonolithController : NetworkBehaviour
     public float sinkDuration = 2f;
     
     public NetworkList<FixedString64Bytes> syncedSpellNames;
+    public NetworkList<bool> syncedSpellClaimed;
 
     void Awake()
     {
         data = new MonolithData(id, level, runeChallenge);
         syncedSpellNames = new NetworkList<FixedString64Bytes>();
-
+        syncedSpellClaimed = new NetworkList<bool>();
+        
         if (allSpells == null || allSpells.Count == 0)
         {
             allSpells = Resources.LoadAll<Spell>("Spells").ToList();
@@ -41,16 +43,8 @@ public class MonolithController : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        // Solo el servidor genera los hechizos aleatorios al nacer en la red
         PopulateSpells();
     }
-
-    /*public void ServerInitialize()
-    {
-        if (!IsServer) return; 
-        
-        PopulateSpells();
-    }*/
 
     public void AddIdPlayer(string id)
     {
@@ -140,7 +134,23 @@ public class MonolithController : NetworkBehaviour
         foreach(var spell in spells)
         {
             syncedSpellNames.Add(spell.spellName);
+            syncedSpellClaimed.Add(false);
         }
+    }
+    
+    public void MarkSpellAsClaimed(int index)
+    {
+        if (!IsServer) return;
+
+        syncedSpellClaimed[index] = true;
+        bool allClaimed = true;
+        
+        for (int i = 0; i < syncedSpellClaimed.Count; i++)
+        {
+            if (!syncedSpellClaimed[i]) allClaimed = false;
+        }
+        
+        if (allClaimed) TriggerSinkEffectClientRpc();
     }
     
     [ClientRpc]

@@ -34,7 +34,7 @@ public class MonolithSpellButton : MonoBehaviour
         _button.onClick.AddListener(() => _onClickAction?.Invoke());
     }
 
-    public void Setup(Spell spell, bool yaDesbloqueado, Action onClick)
+    public void Setup(Spell spell, int state, Action onClick)
     {
         if (spell == null) return;
         
@@ -43,30 +43,42 @@ public class MonolithSpellButton : MonoBehaviour
             spellNameText.text = spell.spellName;
             spellNameText.ForceMeshUpdate();
         }
-
-        if (tierText != null)
-        {
-            tierText.text = spell.tier.ToString();
-        }
+        if (tierText != null) tierText.text = spell.tier.ToString();
 
         UpdateElementAndTier(spell.elementType, spell.tier);
         _onClickAction = onClick;
-        SetButtonState(yaDesbloqueado);
+        
+        SetButtonState(state);
     }
 
-    private void SetButtonState(bool isUnlocked)
+    private void SetButtonState(int state)
     {
-        _button.interactable = !isUnlocked; 
-        Color targetColor = isUnlocked ? new Color(0.2f, 0.2f, 0.2f, 1f) : Color.white;
-        if (spellNameText != null) spellNameText.color = targetColor;
+        _button.interactable = (state == 0);
+
+        Color targetColor = Color.white;
+        string textOverride = null;
+
+        if (state == 1)
+        {
+            targetColor = new Color(0.2f, 0.2f, 0.2f, 1f); 
+        }
+        else if (state == 2)
+        {
+            targetColor = new Color(1f, 0.8f, 0f, 1f);
+            textOverride = "Spell ya desbloqueado";
+        }
+
+        if (spellNameText != null) 
+        {
+            spellNameText.color = targetColor;
+            if (textOverride != null) spellNameText.text = textOverride;
+        }
+        
         if (tierText != null) tierText.color = targetColor;
 
         for (int i = 0; i < tierElementIcons.Length; i++)
         {
-            if (tierElementIcons[i] != null)
-            {
-                tierElementIcons[i].color = targetColor;
-            }
+            if (tierElementIcons[i] != null) tierElementIcons[i].color = targetColor;
         }
     }
 
