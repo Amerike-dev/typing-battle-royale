@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: tabazo ancestral del mezquite milenario sediento
   elementType: 5
   tier: 2
-  archetype: 0
+  archetype: 8
   description: "Invoca un pilar de madera del suelo que viaja horizontalmente y hace
     da\xF1o alto a un enemigo"
   spellTypes: 0200000006000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: a496024c7e8affc4eb3305881dbf10a3, type: 2}

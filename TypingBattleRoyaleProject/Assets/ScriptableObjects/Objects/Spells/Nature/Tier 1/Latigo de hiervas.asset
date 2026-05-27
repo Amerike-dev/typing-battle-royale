@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Latigo de hiervas
   runeString: fuetazo yerbabuena
   elementType: 5
+  tier: 0
+  archetype: 7
   description: "Equipa un latigo de 3 usos que hace bajo da\xF1o en un rango peque\xF1o."
   spellTypes: 0700000006000000
   damage: 10
+  cooldown: 0
   debuff: 0
   range: 7
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: a496024c7e8affc4eb3305881dbf10a3, type: 2}

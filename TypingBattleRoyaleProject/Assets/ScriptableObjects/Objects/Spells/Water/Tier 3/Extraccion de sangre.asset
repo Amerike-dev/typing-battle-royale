@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: sancion vampirica del martes trece maldito
   elementType: 2
   tier: 2
-  archetype: 0
+  archetype: 4
   description: "Si el objetivo tiene m\xE1s de una vida restante, robale una"
   spellTypes: 0300000004000000
   damage: 0
@@ -32,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3ec9ef8efa3b4d94c9a676a98c6d5a51, type: 2}

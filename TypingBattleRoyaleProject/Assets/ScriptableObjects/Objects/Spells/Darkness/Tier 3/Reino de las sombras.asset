@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: tinieblas del armario abandonado del abuelo
   elementType: 7
   tier: 2
-  archetype: 0
+  archetype: 6
   description: "En una gran delante del personaje, extiende tu sombra para hacerle
     una instancia de da\xF1o a todos los enemigos y realentizarlos"
   spellTypes: 0600000004000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3ad0c12f3cfa5234b957d29d7825b8a1, type: 2}

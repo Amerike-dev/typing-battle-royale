@@ -15,9 +15,12 @@ MonoBehaviour:
   spellName: Anillo de fuego
   runeString: rosca del diablo
   elementType: 1
+  tier: 0
+  archetype: 6
   description: Crea un anillo de fuego en un area alrededor de ti
   spellTypes: 0200000006000000
   damage: 5
+  cooldown: 0
   debuff: 0
   range: 20
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

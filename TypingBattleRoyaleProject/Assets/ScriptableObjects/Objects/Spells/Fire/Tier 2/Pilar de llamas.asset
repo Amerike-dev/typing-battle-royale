@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: columna eterna del comalero divino
   elementType: 1
   tier: 1
-  archetype: 0
+  archetype: 2
   description: "Lanza un proyectil que al impactar crea un pilar de fuego que hace
     da\xF1o alto"
   spellTypes: 
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

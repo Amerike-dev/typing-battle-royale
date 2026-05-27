@@ -29448,12 +29448,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
   pools:
   - tag: VFX_Projectile
-    prefab: {fileID: 4446181267632156193, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
+    prefab: {fileID: 969333590225502338, guid: 2e877f3aa2d67f243b022a761f4e462a, type: 3}
     size: 3
     expandable: 0
     maxSize: 0
   - tag: VFX_Beam
     prefab: {fileID: 3373193124174655773, guid: 10fcc4cccc043934997914f40b21a3e6, type: 3}
+    size: 3
+    expandable: 0
+    maxSize: 0
+  - tag: VFX_Aura
+    prefab: {fileID: 8033246739180432661, guid: 2545d47b2a3f00847824b3c455b2a5be, type: 3}
+    size: 3
+    expandable: 0
+    maxSize: 0
+  - tag: VFX_AOE
+    prefab: {fileID: 3373193124174655773, guid: 10fcc4cccc043934997914f40b21a3e6, type: 3}
+    size: 3
+    expandable: 0
+    maxSize: 0
+  - tag: VFX_Buff
+    prefab: {fileID: 5726262866697712036, guid: 0d5288684fb33e945b8412b12ab3d00e, type: 3}
+    size: 3
+    expandable: 0
+    maxSize: 0
+  - tag: VFX_Summon
+    prefab: {fileID: 7042373930314842309, guid: 98b680075591c4642862a8cdf7be1ed3, type: 3}
     size: 3
     expandable: 0
     maxSize: 0

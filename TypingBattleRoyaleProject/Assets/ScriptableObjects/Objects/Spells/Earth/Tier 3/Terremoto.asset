@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: temblor de la abuela bailando cumbia desbocada
   elementType: 0
   tier: 2
-  archetype: 0
+  archetype: 6
   description: 
   spellTypes: 
   damage: 0
@@ -32,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}

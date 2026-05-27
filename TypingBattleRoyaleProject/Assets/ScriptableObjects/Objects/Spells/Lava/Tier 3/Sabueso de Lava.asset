@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: perro chamuscado del taquero infernal poderoso
   elementType: 10
   tier: 2
-  archetype: 0
+  archetype: 2
   description: "Invoca un sabueso que corre hacia el enemigo m\xE1s cercano y al
     colisionar con el hace da\xF1o en invoca \"suelo de lava\" en el punto de impacto"
   spellTypes: 02000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: c94ac2358a0c0ca42be6c4cd5f658dc0, type: 2}

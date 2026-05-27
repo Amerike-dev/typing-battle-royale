@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: flecha congelada del oxxo nocturno
   elementType: 9
   tier: 1
-  archetype: 0
+  archetype: 7
   description: Equipa un arco de hielo de un solo uso que dispara un proyectil de
     alta velocidad que al impactar congela a un enemigo
   spellTypes: 0000000004000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3338f1f88c13d854b8745951c1c1db20, type: 2}

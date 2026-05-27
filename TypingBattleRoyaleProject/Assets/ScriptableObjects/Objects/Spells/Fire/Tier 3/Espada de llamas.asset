@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: machete encendido de pancho villa enojado
   elementType: 0
   tier: 2
-  archetype: 0
+  archetype: 7
   description: "Equipa una espada de fuego de 5 usos que al usarla hace un ataque
     de poco rango que hace da\xF1o medio e invoca un proyectil que viaja hacia delante
     y hace da\xF1o bajo"
@@ -34,4 +34,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

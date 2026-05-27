@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: enredadera traicionera de la jungla ancestral perdida
   elementType: 5
   tier: 2
-  archetype: 0
+  archetype: 6
   description: En un area circular alrededor del caster enraiza a todos los enemigos
     y los envenena
   spellTypes: 060000000400000004000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: a496024c7e8affc4eb3305881dbf10a3, type: 2}

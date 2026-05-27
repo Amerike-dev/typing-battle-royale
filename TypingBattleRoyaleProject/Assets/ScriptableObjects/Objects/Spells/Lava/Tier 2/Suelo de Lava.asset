@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: piso del infierno casero feroz
   elementType: 10
   tier: 1
-  archetype: 0
+  archetype: 6
   description: "En un \xE1rea alrededor del caster invoca lava a nivel del suelo
     que hace da\xF1o medio por segundo a los jugadores que lo esten pisando, menos
     al caster"
@@ -34,4 +34,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: c94ac2358a0c0ca42be6c4cd5f658dc0, type: 2}
