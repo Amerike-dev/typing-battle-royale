@@ -1180,7 +1180,7 @@ const TICKETS = [
         id: 'TBR-052',
         title: 'Polish UI Typing — caja de runas + feedback de tecleo on-brand',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'La UI de typing actual muestra el spellText como texto plano. Rediseñarla como una "caja de runas" centrada en pantalla durante BattleState: el spellText completo visible en gris claro, las letras ya tecleadas en GatorOrange con leve glow, la letra activa (next) en RojoLotti con pulso, las erróneas en rojo apagado con shake corto. Barra de accuracy/WPM debajo en estilo brand. Indicador de cast progress estilo "rune circle" alrededor del player.',
         acceptance: [
@@ -1210,7 +1210,7 @@ const TICKETS = [
         id: 'TBR-053',
         title: 'Polish UI Exploration State — minimapa, crosshair y HUD ambient',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'En ExplorationState (TBR-043) la UI es casi nula. Diseñar un HUD ambient on-brand: barra de vida ornamentada (esquina sup-izq) estilo "tinta sobre pergamino", contador de vidas como pequeños iconos de gota-de-mana, mini compass/heading en la sup-der, contador de monolitos visitados, prompts contextuales ("Pulsa TAB para combate" cerca de enemigos, "Pulsa E para interactuar" cerca de monolitos). Estética calmada con paleta fría (VibrantViolet dominante).',
         acceptance: [
@@ -1240,7 +1240,7 @@ const TICKETS = [
         id: 'TBR-054',
         title: 'Polish UI Pausa — panel modal grimorio + sliders on-brand',
         type: 'feature', priority: 'medium', effort: 'M',
-        assignee: 'Angel', status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'El menú de pausa (TBR-001) hoy es funcional pero un panel gris. Rediseñarlo como un "tomo abierto" central: fondo del juego con blur+darken (CanvasGroup 0→0.7), panel central con frame ornamental, título "PAUSA" en display font, botones Reanudar/Volver al Lobby con estilo brand, sliders de volumen Master/Music/SFX con knob personalizado y fill en RojoLotti, footer con créditos cortos del estudio. Mantener funcionalidad existente.',
         acceptance: [
