@@ -91,7 +91,7 @@ const TICKETS = [
         id: 'TBR-004',
         title: 'Animaciones de cast + integración VFX-daño (la red de VFX ya existe)',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: 'Flan', status: 'todo',
+        assignee: 'Flan', status: 'done',
         summary:
             'La red de VFX ya está implementada (SpellNetworkController con ServerRpc + ClientRpc + SpellCatalog + ProjectileVFX). Falta: (1) animación de cast del Animator del player cuando se dispare el evento, (2) feedback de "sin objetivo en rango" cuando target=null, (3) integración con accuracy multiplier — ver TBR-048 para el daño server-side y cooldown. Este ticket cubre solo la capa visual/animación cliente.',
         acceptance: [
