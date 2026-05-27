@@ -6,7 +6,7 @@ using System.Linq;
 public class MonolithLevelSelectUI : MonoBehaviour
 {
     public static MonolithLevelSelectUI Instance;
-    [SerializeField] private Canvas myCanvas;
+    public Canvas myCanvas;
     [SerializeField] private MonolithSpellButton[] spellButtons;
 
     private PlayerController _localPlayer;
@@ -20,13 +20,14 @@ public class MonolithLevelSelectUI : MonoBehaviour
 
     void Update()
     {
-        if (myCanvas.enabled && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (MonolithTypingChallenge.Instance != null && MonolithTypingChallenge.Instance.myCanvas.enabled) return;
+        
+        if (!myCanvas.enabled) return;
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             Hide();
-            return;
         }
-
-        if (!myCanvas.enabled) return;
     }
 
     public void Show(MonolithController monolith, PlayerController player)
@@ -40,20 +41,24 @@ public class MonolithLevelSelectUI : MonoBehaviour
         {
             if (i < count) 
             {
-                // 2. EL BUG INVISIBLE: Hay que limpiar los caracteres nulos que deja Netcode
                 string nameToFind = monolith.syncedSpellNames[i].ToString().Trim('\0');
-                
                 Spell spell = monolith.allSpells.FirstOrDefault(s => s != null && s.spellName == nameToFind);
             
                 if (spell != null)
                 {
                     spellButtons[i].gameObject.SetActive(true);
-                    bool yaDesbloqueado = false;
-                    spellButtons[i].Setup(spell, yaDesbloqueado, () => SelectSpell(spell));
+                    bool isClaimedByOthers = monolith.syncedSpellClaimed[i];
+                    bool alreadyInInventory = _localPlayer.inventory != null && _localPlayer.inventory.HasSpell(nameToFind);
+
+                    int buttonState = 0;
+                    if (alreadyInInventory) buttonState = 2;
+                    else if (isClaimedByOthers) buttonState = 1;
+                    
+                    int indexToPass = i;
+                    spellButtons[i].Setup(spell, buttonState, () => SelectSpell(monolith, spell, indexToPass));
                 }
                 else
                 {
-                    Debug.LogError($"[UI] No encontré el hechizo '{nameToFind}' en allSpells.");
                     spellButtons[i].Clear();
                 }
             }
@@ -67,11 +72,11 @@ public class MonolithLevelSelectUI : MonoBehaviour
         Cursor.visible = true;
         myCanvas.enabled = true;
     }
-
-    private void SelectSpell(Spell spell)
+    
+    private void SelectSpell(MonolithController monolith, Spell spell, int index)
     {
         Hide();
-        Debug.Log($"Seleccionaste: {spell.spellName}");
+        MonolithTypingChallenge.Instance.Begin(monolith, spell, index, _localPlayer);
     }
 
     private void Hide()
