@@ -11,6 +11,7 @@ public class HUDController : MonoBehaviour
     public TextMeshProUGUI timerText;
     public Slider healthUI;
     public GameObject[] lifeImages;
+    public TextMeshProUGUI lifeText;
 
     public DeathUI deathUI;
 
@@ -140,6 +141,7 @@ public class HUDController : MonoBehaviour
         for (int i = 0; i < lifeImages.Length; i++)
         {
             lifeImages[i].SetActive(i < currentLives);
+            lifeText.text=currentLives.ToString();
         }
     }
 
