@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: caparazon tortuga
   elementType: 3
   tier: 0
-  archetype: 0
+  archetype: 3
   description: Crea una pared enfrente de ti que bloquea hechizos
   spellTypes: 02000000
   damage: 0

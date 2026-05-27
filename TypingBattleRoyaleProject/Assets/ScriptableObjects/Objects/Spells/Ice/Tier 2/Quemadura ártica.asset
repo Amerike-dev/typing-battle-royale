@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: frio quemante de la ex despechada
   elementType: 0
   tier: 1
-  archetype: 0
+  archetype: 4
   description: "Realiza un ataque en un area a muy corta distancia que hace da\xF1o
     alto"
   spellTypes: 06000000

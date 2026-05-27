@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Shurikens de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Shurikens de viento
+  spellName: AOE de viento
   runeString: estrellas filosas de la chamba ninja maldita
   elementType: 4
   tier: 2
-  archetype: 0
+  archetype: 7
   description: "Equipa 5 shurikens de viento que hacen 50 de da\xF1o cada una, en
     un impacto directo en invocan \"neblina\" en el punto de impacto"
   spellTypes: 070000000000000002000000

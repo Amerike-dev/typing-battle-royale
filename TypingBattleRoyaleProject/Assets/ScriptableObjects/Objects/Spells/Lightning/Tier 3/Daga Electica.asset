@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: punal del cortocircuito que sacude bocho
   elementType: 6
   tier: 2
-  archetype: 0
+  archetype: 7
   description: "Equipa una daga de 3 usos que al usarla haras un dash de distancia
     media y si colisionas con un enemigo le haras da\xF1o alto"
   spellTypes: 0700000001000000

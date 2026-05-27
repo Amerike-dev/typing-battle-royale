@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: tridente de zeus en su version mexicana
   elementType: 0
   tier: 2
-  archetype: 0
+  archetype: 6
   description: "lanza un proyectil, despues de un tiempo, en el punto de impacto
     cae un rayo gigantesco que hace da\xF1o alto"
   spellTypes: 0000000006000000

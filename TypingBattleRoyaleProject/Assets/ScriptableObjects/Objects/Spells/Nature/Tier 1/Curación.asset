@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: remedio abuelita
   elementType: 5
   tier: 0
-  archetype: 0
+  archetype: 3
   description: Curate 50 de vida
   spellTypes: 03000000
   damage: 0

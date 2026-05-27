@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: trago bendito
   elementType: 2
   tier: 0
-  archetype: 0
+  archetype: 4
   description: Robale poca vida al oponente
   spellTypes: 0300000004000000
   damage: 10

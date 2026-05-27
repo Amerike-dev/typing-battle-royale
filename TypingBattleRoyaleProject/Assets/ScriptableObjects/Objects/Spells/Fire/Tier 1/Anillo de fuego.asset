@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: rosca del diablo
   elementType: 1
   tier: 0
-  archetype: 0
+  archetype: 6
   description: Crea un anillo de fuego en un area alrededor de ti
   spellTypes: 0200000006000000
   damage: 5

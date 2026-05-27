@@ -16,8 +16,8 @@ MonoBehaviour:
   runeString: nebula obruitur
   elementType: 4
   tier: 1
-  archetype: 6
-  description: "Lanza un c\xFAmulo de neblina que al impactar en un terreno genera
+  archetype: 5
+  description: "Invoca un c\xFAmulo de neblina que al impactar en un terreno genera
     una neblina en un area, el caster puede ver a lon enemigos dento de ella"
   spellTypes: 0000000002000000
   damage: 35

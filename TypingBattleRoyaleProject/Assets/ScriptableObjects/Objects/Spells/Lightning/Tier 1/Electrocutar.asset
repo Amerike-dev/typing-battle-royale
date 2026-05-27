@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Electrocutar
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Electrocutar
+  spellName: Bola Electrica
   runeString: toques del cable
   elementType: 6
   tier: 0

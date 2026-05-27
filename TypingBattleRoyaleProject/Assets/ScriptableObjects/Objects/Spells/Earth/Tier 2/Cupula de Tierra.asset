@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: domo del aguacatero gigante
   elementType: 0
   tier: 1
-  archetype: 0
+  archetype: 2
   description: 
   spellTypes: 
   damage: 0

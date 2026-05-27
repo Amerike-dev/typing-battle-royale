@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: raspado que sube
   elementType: 9
   tier: 0
-  archetype: 0
+  archetype: 2
   description: "Invoca una escalera de hielo, el caster tiene m\xE1s velocidad de
     movimiento sobre la estructura"
   spellTypes: 0200000001000000

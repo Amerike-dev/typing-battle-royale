@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: carcel helada del freezer maldito patron
   elementType: 9
   tier: 2
-  archetype: 0
+  archetype: 4
   description: "Congela al enemigo seleccionado el doble de la duraci\xF3n normal"
   spellTypes: 04000000
   damage: 0

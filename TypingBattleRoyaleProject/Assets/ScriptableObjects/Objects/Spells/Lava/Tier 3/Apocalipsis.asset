@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: fin del mundo cuajado en chinampas calientes
   elementType: 10
   tier: 2
-  archetype: 0
+  archetype: 6
   description: Haz que caigan meteoritos en un area alrededor del caster, los meteoritos
     invocan "suelo de lava" donde impactan"
   spellTypes: 0000000002000000

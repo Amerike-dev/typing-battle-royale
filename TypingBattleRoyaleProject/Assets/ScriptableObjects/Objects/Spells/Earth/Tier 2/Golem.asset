@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: albanil de barro recio
   elementType: 0
   tier: 1
-  archetype: 0
+  archetype: 2
   description: Genera un golem de tierra que se mueve lento y ataca a tus oponentes
   spellTypes: 02000000
   damage: 20

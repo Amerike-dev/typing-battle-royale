@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: pesticida espesa de la madrina mala
   elementType: 5
   tier: 1
-  archetype: 0
+  archetype: 6
   description: Envenena en un cono enfrente de ti
   spellTypes: 0600000004000000
   damage: 3

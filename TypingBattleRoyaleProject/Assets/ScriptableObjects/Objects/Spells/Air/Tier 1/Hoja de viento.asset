@@ -16,8 +16,8 @@ MonoBehaviour:
   runeString: ventus
   elementType: 4
   tier: 0
-  archetype: 0
-  description: Arroja un proyectil de viento
+  archetype: 5
+  description: Arroja una bola de viento
   spellTypes: 00000000
   damage: 10
   cooldown: 0

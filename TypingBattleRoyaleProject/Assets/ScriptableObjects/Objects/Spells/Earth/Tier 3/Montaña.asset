@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: despierta popocatepetl colerico ancestro
   elementType: 3
   tier: 2
-  archetype: 0
+  archetype: 2
   description: "Crea una monta\xF1a en los pies de quien castea el hechizo."
   spellTypes: 02000000
   damage: 0

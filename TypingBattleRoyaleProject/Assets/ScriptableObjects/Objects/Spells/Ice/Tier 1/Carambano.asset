@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: paleta helada
   elementType: 9
   tier: 0
-  archetype: 0
+  archetype: 2
   description: "Invoca un pico de hielo en los pies del oponente seleccionado, haciendo
     da\xF1o y aplicando realintizaci\xF3n."
   spellTypes: 04000000
