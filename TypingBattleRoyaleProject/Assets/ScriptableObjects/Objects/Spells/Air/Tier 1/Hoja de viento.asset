@@ -15,13 +15,19 @@ MonoBehaviour:
   spellName: Hoja de viento
   runeString: viento navaja
   elementType: 4
+  tier: 0
+  archetype: 3
   description: "Libera en un angulo de 360 grados una hoja de viento de corto alcance
     que hace poco da\xF1o."
-  spellTypes: 05000000
+  spellTypes: 03000000
   damage: 10
+  cooldown: 0
+  debuff: 0
   range: 1
   speed: 100
+  uses: 0
   duration: 0
+  particleLifeDuration: 0
   loop: 1
   startSpeed: 200
   startSize: 1
