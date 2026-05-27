@@ -39,7 +39,7 @@ public class ProjectileVFX : MonoBehaviour
                 targetStats.TakeDamage(_damage, _ownerId);
             }
         }
-        Despawn();
+        // Despawn();
     }
 
     void Despawn()

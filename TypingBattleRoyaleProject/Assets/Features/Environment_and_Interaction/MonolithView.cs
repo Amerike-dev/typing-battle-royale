@@ -26,8 +26,7 @@ public class MonolithView : NetworkBehaviour
 
         IsExhausted.OnValueChanged += OnExhaustedChanged;
 
-        if (IsServer)
-            GetComponent<MonolithController>().ServerInitialize();
+        //if (IsServer) GetComponent<MonolithController>().ServerInitialize();
     }
 
 
@@ -50,7 +49,7 @@ public class MonolithView : NetworkBehaviour
     public bool TryInteract(PlayerStats interactingPlayer)
     {
         if (IsExhausted.Value) { return false; }
-        ;
+
         InteractRpc();
         return true;
     }

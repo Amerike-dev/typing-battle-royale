@@ -50,8 +50,7 @@ public class MonolithSpawn : NetworkBehaviour
             networkObject.Spawn(true);
             var controller = monolith.GetComponent<MonolithController>();
             
-            if (controller != null)
-                controller.ServerInitialize();
+            //if (controller != null) controller.ServerInitialize();
 
             Debug.Log($"[MonolithSpawn] Spawneado {monolith.name}");
         }

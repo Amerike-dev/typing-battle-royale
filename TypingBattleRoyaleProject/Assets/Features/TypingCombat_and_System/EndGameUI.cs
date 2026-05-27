@@ -28,6 +28,38 @@ public class EndGameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _psBestSpellText;
     [SerializeField] private TextMeshProUGUI _psFastestCastText;
 
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _showPos = new Vector2(0, 0);
+    [SerializeField] float _time = 0.5f;
+    [SerializeField] bool _advancedStats = false;
+    private Coroutine _moveRoutine;
+
+    [SerializeField] RectTransform _headerPanelUI;
+    [SerializeField] CanvasGroup _headerCanvasGroup;
+    [SerializeField] Vector2 _headerShowPos;
+    [SerializeField] Vector2 _headerHidePos;
+    private Coroutine _headerMoveRoutine;
+
+    [SerializeField] RectTransform _basicPanelUI;
+    [SerializeField] CanvasGroup _basicCanvasGroup;
+    [SerializeField] Vector2 _basicShowPos = new Vector2(0, 0);
+    [SerializeField] Vector2 _basicHidePos = new Vector2(0, -80);
+    private Coroutine _basicMoveRoutine;
+
+    [SerializeField] RectTransform _advancedPanelUI;
+    [SerializeField] CanvasGroup _advancedCanvasGroup;
+    [SerializeField] Vector2 _advancedShowPos = new Vector2(0, 0);
+    [SerializeField] Vector2 _advancedHidePos = new Vector2(0, -80);
+    private Coroutine _advancedMoveRoutine;
+
+    [SerializeField] RectTransform _midlePanelUI;
+    [SerializeField] CanvasGroup _midleCanvasGroup;
+    [SerializeField] Vector2 _midleShowPos;
+    [SerializeField] Vector2 _midleHidePos;
+    private Coroutine _midleMoveRoutine;
+
     private void Awake()
     {
         if (_playAgainButton != null)
@@ -111,5 +143,54 @@ public class EndGameUI : MonoBehaviour
             sb.AppendLine($"{displayId} | Kills: {player.killCount.Value} | WPM: {player.wPM.Value:0.0}");
         }
         return sb.ToString();
+    }
+    public void Show()
+    {
+        UIMove(_showPos);
+        UIAnimator.FadeIn(_canvasGroup, _time);
+    }
+    public void ChangeUIStats()
+    {
+        if (_advancedStats) HideBotton();
+        else ShowBotton();
+    }
+    public void ShowBotton()
+    {
+        _advancedStats = true;
+        BasicUIMove(_basicShowPos);
+        AdvancedUIMove(_advancedShowPos);
+        UIAnimator.FadeIn(_advancedCanvasGroup, _time);
+    }
+    public void HideBotton()
+    {
+        _advancedStats = false;
+        BasicUIMove(_basicHidePos);
+        AdvancedUIMove(_advancedHidePos);
+        UIAnimator.FadeOut(_advancedCanvasGroup, _time);
+    }
+    public void UIMove(Vector2 target)
+    {
+        if (_moveRoutine != null)
+        {
+            StopCoroutine(_moveRoutine);
+        }
+        _moveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
+    }
+
+    public void BasicUIMove(Vector2 target)
+    {
+        if (_basicMoveRoutine != null)
+        {
+            StopCoroutine(_basicMoveRoutine);
+        }
+        _basicMoveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_basicPanelUI, target, _time));
+    }
+    public void AdvancedUIMove(Vector2 target)
+    {
+        if (_advancedMoveRoutine != null)
+        {
+            StopCoroutine(_advancedMoveRoutine);
+        }
+        _advancedMoveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_advancedPanelUI, target, _time));
     }
 }

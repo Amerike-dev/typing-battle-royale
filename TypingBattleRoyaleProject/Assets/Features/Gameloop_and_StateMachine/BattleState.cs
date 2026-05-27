@@ -10,6 +10,7 @@ public class BattleState : IGameState
     private CameraController _cameraController;
     private TargetSystem _targetSystem;
     private SpellBookUI _spellBookUI;
+    private GameplayManager _gameplayManager;
 
     public BattleState(
         CastInputController castInput,
@@ -17,7 +18,8 @@ public class BattleState : IGameState
         PlayerAnimatorView animatorView,
         CameraController cameraController = null,
         TargetSystem targetSystem = null,
-        SpellBookUI spellBookUI = null)
+        SpellBookUI spellBookUI = null,
+        GameplayManager gameplayManager = null)
     {
         _castInput = castInput;
         _playerController = playerController;
@@ -25,6 +27,7 @@ public class BattleState : IGameState
         _cameraController = cameraController;
         _targetSystem = targetSystem;
         _spellBookUI = spellBookUI;
+        _gameplayManager = gameplayManager;
     }
 
     void IGameState.Enter()
