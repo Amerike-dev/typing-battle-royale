@@ -92,7 +92,7 @@ public class BattleState : IGameState
 
         if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            Debug.Log("[BattleState] Tab presionado. Ejecutando Cycle.");
+            Debug.Log("[BattleState] Tecla 1 presionada. Ciclando target.");
 
             _targetSystem.Cycle();
 
@@ -107,7 +107,7 @@ public class BattleState : IGameState
 
     void IGameState.Exit()
     {
-        if (_castInput != null) _castInput.enabled = false;
+        if (_castInput != null) _castInput.CancelCastIfActive();
         _playerController.MoveSpeed();
         if (_animatorView != null) _animatorView.StopCasting();
 
