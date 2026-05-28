@@ -437,7 +437,7 @@ public static class VFXPrefabBuilder
         }
         var so = new SerializedObject(spell);
         var tierProp = so.FindProperty("tier");
-        if (tierProp != null) tierProp.enumValueIndex = (int)SpellTiers.TierOne;
+        if (tierProp != null) tierProp.enumValueIndex = (int)SpellTiers.T1;
         var archProp = so.FindProperty("archetype");
         if (archProp != null) archProp.enumValueIndex = (int)SpellTypes.Projectile;
         var matProp = so.FindProperty("materialVFX");

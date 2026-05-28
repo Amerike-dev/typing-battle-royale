@@ -139,8 +139,8 @@ public class MonolithSpellButton : MonoBehaviour
         SetButtonNormalColor(selectedColor);
 
         int targetAmount = 1; 
-        if (tier == SpellTiers.TierTwo) targetAmount = 2;
-        else if (tier == SpellTiers.TierThree) targetAmount = 3;
+        if (tier == SpellTiers.T2) targetAmount = 2;
+        else if (tier == SpellTiers.T3) targetAmount = 3;
 
         for (int i = 0; i < tierElementIcons.Length; i++)
         {

@@ -11,6 +11,8 @@ public class SpellBookUI : MonoBehaviour
     public GameObject[] slots;
     public Image[] images;
     public TMP_Text[] texts;
+    public Sprite iconSprite;
+    public TMP_FontAsset Gonserrat;
 
     public int spellsPerPage = 3;
 
@@ -18,7 +20,7 @@ public class SpellBookUI : MonoBehaviour
     private int currentPage = 0;
     private int selectedIndex = 0;
 
-    public SpellTiers playerTier = SpellTiers.TierOne;
+    public SpellTiers playerTier = SpellTiers.T1;
 
     public event Action<Spell> OnSpellConfirmed;
     public event Action OnSelectionCancelled;
@@ -63,7 +65,7 @@ public class SpellBookUI : MonoBehaviour
             layout.padding = new RectOffset(12, 12, 12, 12);
             layout.childForceExpandWidth = true;
             layout.childForceExpandHeight = false;
-            layout.childControlWidth = true;
+            layout.childControlWidth = false;
             layout.childControlHeight = false;
             layout.childAlignment = TextAnchor.UpperCenter;
         }
@@ -82,7 +84,9 @@ public class SpellBookUI : MonoBehaviour
             slotLE.preferredHeight = 56f;
 
             var slotImage = slotGO.AddComponent<Image>();
+            slotImage.sprite = iconSprite;
             slotImage.color = Color.white;
+            slotImage.rectTransform.sizeDelta = new Vector2(500, 80);
             images[i] = slotImage;
 
             GameObject textGO = new GameObject("Text", typeof(RectTransform));
@@ -96,9 +100,12 @@ public class SpellBookUI : MonoBehaviour
 
             var tmp = textGO.AddComponent<TextMeshProUGUI>();
             tmp.text = "—";
-            tmp.fontSize = 24f;
+            tmp.font = Gonserrat;
+            tmp.UpdateFontAsset();
+            tmp.ForceMeshUpdate();
+            tmp.fontSize = 20f;
             tmp.color = Color.black;
-            tmp.alignment = TextAlignmentOptions.Left;
+            tmp.alignment = TextAlignmentOptions.Center;
             texts[i] = tmp;
 
             slots[i] = slotGO;
