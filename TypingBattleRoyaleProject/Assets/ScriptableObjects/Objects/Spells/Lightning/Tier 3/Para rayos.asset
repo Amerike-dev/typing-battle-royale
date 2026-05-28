@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Para rayos
   runeString: tridente de zeus en su version mexicana
-  elementType: 0
+  elementType: 6
   tier: 2
-  archetype: 0
+  archetype: 6
   description: "lanza un proyectil, despues de un tiempo, en el punto de impacto
     cae un rayo gigantesco que hace da\xF1o alto"
   spellTypes: 0000000006000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}

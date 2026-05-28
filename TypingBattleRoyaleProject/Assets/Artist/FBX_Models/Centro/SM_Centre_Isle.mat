@@ -30,8 +30,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _Intensity: 0.5
-    - _StepAmount: 2
+    - _StepAmount: 6.33
     m_Colors:
-    - _BaseColor: {r: 0.46057317, g: 0.54595405, b: 0.8490566, a: 1}
+    - _BaseColor: {r: 0.3613582, g: 0.4900548, b: 0.9496855, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

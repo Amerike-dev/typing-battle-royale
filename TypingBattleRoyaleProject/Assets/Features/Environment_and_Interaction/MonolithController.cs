@@ -7,6 +7,13 @@ using Unity.Collections;
 
 public class MonolithController : NetworkBehaviour
 {
+    public static readonly Elements[] PlayableElements = new[]
+    {
+        Elements.Fire, Elements.Water, Elements.Earth, Elements.Wind,
+        Elements.Nature, Elements.Thunder, Elements.Ice, Elements.Lava
+    };
+    private static readonly HashSet<Elements> PlayableElementsSet = new HashSet<Elements>(PlayableElements);
+
     [Header("Intanciar monolito")]
     public MonolithData data;
     public string id;
@@ -16,21 +23,25 @@ public class MonolithController : NetworkBehaviour
     [Header("Revision monolito")]
     public List<string> idPlayers = new List<string>();
     public List<Spell> spells = new List<Spell>();
-    
+
     [Header("Datos Elementos")]
     public List<Spell> allSpells = new List<Spell>();
+
+    [HideInInspector] public Elements forcedTargetElement = Elements.None;
 
     [Header("Configuración de Hundimiento")]
     public float sinkDepth = 5f;
     public float sinkDuration = 2f;
-    
+
     public NetworkList<FixedString64Bytes> syncedSpellNames;
+    public NetworkList<bool> syncedSpellClaimed;
 
     void Awake()
     {
         data = new MonolithData(id, level, runeChallenge);
         syncedSpellNames = new NetworkList<FixedString64Bytes>();
-
+        syncedSpellClaimed = new NetworkList<bool>();
+        
         if (allSpells == null || allSpells.Count == 0)
         {
             allSpells = Resources.LoadAll<Spell>("Spells").ToList();
@@ -41,16 +52,8 @@ public class MonolithController : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        // Solo el servidor genera los hechizos aleatorios al nacer en la red
         PopulateSpells();
     }
-
-    /*public void ServerInitialize()
-    {
-        if (!IsServer) return; 
-        
-        PopulateSpells();
-    }*/
 
     public void AddIdPlayer(string id)
     {
@@ -79,49 +82,28 @@ public class MonolithController : NetworkBehaviour
         
         if (spells.Count == 0) TriggerSinkEffectClientRpc();
     }
-    Elements GetMappedElement(Elements original)
-    {
-
-        switch (original)
-        {
-            case Elements.Wind:
-                return Elements.Thunder;
-
-            case Elements.Water:
-                return Elements.Water;
-
-            case Elements.Earth:
-                return Elements.Fire;
-
-            case Elements.Nature:
-                return Elements.Thunder;
-
-            default:
-                return original;
-        }
-
-    }
-
     public void PopulateSpells()
     {
         spells.Clear();
-        System.Array allElements = System.Enum.GetValues(typeof(Elements));
-        int randomElementIndex = Random.Range(1, allElements.Length);
-        Elements targetElement = (Elements)allElements.GetValue(randomElementIndex);
-        targetElement = GetMappedElement(targetElement);
+
+        Elements targetElement = forcedTargetElement != Elements.None
+            ? forcedTargetElement
+            : PlayableElements[Random.Range(0, PlayableElements.Length)];
+
+        List<Spell> playablePool = allSpells
+            .Where(s => s != null && PlayableElementsSet.Contains(s.elementType))
+            .ToList();
 
         System.Array allTiers = System.Enum.GetValues(typeof(SpellTiers));
-        
+
         foreach (SpellTiers currentTier in allTiers)
         {
-            List<Spell> availableSpells = new List<Spell>(allSpells);
-            
-            List<Spell> spellsInThisTier = availableSpells
-                .Where(s => s != null && s.tier == currentTier)
+            List<Spell> spellsInThisTier = playablePool
+                .Where(s => s.tier == currentTier)
                 .ToList();
-            
+
             List<Spell> perfectMatch = spellsInThisTier.Where(s => s.elementType == targetElement).ToList();
-            
+
             if (perfectMatch.Count > 0)
             {
                 spells.Add(perfectMatch[Random.Range(0, perfectMatch.Count)]);
@@ -132,15 +114,31 @@ public class MonolithController : NetworkBehaviour
             }
             else
             {
-                if (allSpells.Count > 0)
-                    spells.Add(allSpells[Random.Range(0, allSpells.Count)]);
+                if (playablePool.Count > 0)
+                    spells.Add(playablePool[Random.Range(0, playablePool.Count)]);
             }
         }
-        
-        foreach(var spell in spells)
+
+        foreach (var spell in spells)
         {
             syncedSpellNames.Add(spell.spellName);
+            syncedSpellClaimed.Add(false);
         }
+    }
+    
+    public void MarkSpellAsClaimed(int index)
+    {
+        if (!IsServer) return;
+
+        syncedSpellClaimed[index] = true;
+        bool allClaimed = true;
+        
+        for (int i = 0; i < syncedSpellClaimed.Count; i++)
+        {
+            if (!syncedSpellClaimed[i]) allClaimed = false;
+        }
+        
+        if (allClaimed) TriggerSinkEffectClientRpc();
     }
     
     [ClientRpc]

@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: corre mas rapido que el correcaminos endemoniado
   elementType: 8
   tier: 2
-  archetype: 0
+  archetype: 3
   description: "Lanza un proyectil r\xE1pido y te teletransporta al punto de impacto"
   spellTypes: 0000000001000000
   damage: 0
@@ -32,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 91dad70e1bf0bc44c9197b7a70dd62d8, type: 2}

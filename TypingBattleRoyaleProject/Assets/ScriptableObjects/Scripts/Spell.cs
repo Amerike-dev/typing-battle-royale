@@ -25,6 +25,10 @@ public class Spell : ScriptableObject
     public float speed;
     public int uses;
     public float duration;
+    [Header("VFX Prefabs")]
+    public GameObject vfxCast;
+    public GameObject vfxProjectile;
+    public GameObject vfxHit;
     [Header("SFX")]
     public float particleLifeDuration;
     public bool loop = true;

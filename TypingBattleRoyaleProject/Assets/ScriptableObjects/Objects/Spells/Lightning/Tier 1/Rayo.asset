@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Rayo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Rayo
+  spellName: Velocidad Electrica
   runeString: chispazo de enchufe
-  elementType: 0
+  elementType: 6
+  tier: 0
+  archetype: 3
   description: "Haz da\xF1o bajo e infalible instantanemente a un enemigo."
   spellTypes: 04000000
   damage: 10
+  cooldown: 0
   debuff: 0
   range: 20
   speed: 0
@@ -29,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}

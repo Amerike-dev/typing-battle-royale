@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: ahuehuete sagrado del parque mexica
   elementType: 5
   tier: 1
-  archetype: 0
+  archetype: 2
   description: Invoca un arbol que cura periodicamente
   spellTypes: 020000000300000005000000
   damage: 0
@@ -32,4 +32,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: a496024c7e8affc4eb3305881dbf10a3, type: 2}

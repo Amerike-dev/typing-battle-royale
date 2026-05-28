@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Rayo en cadena
   runeString: ondazo electrico colectivo del cableado
-  elementType: 0
+  elementType: 6
   tier: 1
-  archetype: 0
+  archetype: 8
   description: "Dispara un rayo en linea recta que hace 3 instancias de da\xF1o repartidas
     entre los enemigos m\xE1s cercanos"
   spellTypes: 04000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}

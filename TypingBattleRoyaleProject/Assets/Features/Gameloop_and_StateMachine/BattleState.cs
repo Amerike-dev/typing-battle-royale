@@ -10,6 +10,7 @@ public class BattleState : IGameState
     private CameraController _cameraController;
     private TargetSystem _targetSystem;
     private SpellBookUI _spellBookUI;
+    private GameplayManager _gameplayManager;
 
     public BattleState(
         CastInputController castInput,
@@ -17,7 +18,8 @@ public class BattleState : IGameState
         PlayerAnimatorView animatorView,
         CameraController cameraController = null,
         TargetSystem targetSystem = null,
-        SpellBookUI spellBookUI = null)
+        SpellBookUI spellBookUI = null,
+        GameplayManager gameplayManager = null)
     {
         _castInput = castInput;
         _playerController = playerController;
@@ -25,6 +27,7 @@ public class BattleState : IGameState
         _cameraController = cameraController;
         _targetSystem = targetSystem;
         _spellBookUI = spellBookUI;
+        _gameplayManager = gameplayManager;
     }
 
     void IGameState.Enter()
@@ -54,7 +57,7 @@ public class BattleState : IGameState
             camera.SetBattleTarget(t);
         }
 
-        IReadOnlyList<SpellData> inventorySpells = null;
+        IReadOnlyList<Spell> inventorySpells = null;
         if (_playerController.inventory != null)
         {
             inventorySpells = _playerController.inventory.GetUnlockedSpells();
@@ -63,6 +66,8 @@ public class BattleState : IGameState
         if (_spellBookUI != null)
         {
             if (_castInput != null) _castInput.enabled = false;
+            _spellBookUI.OnSpellConfirmed -= HandleSpellConfirmed;
+            _spellBookUI.OnSelectionCancelled -= HandleSelectionCancelled;
             _spellBookUI.OnSpellConfirmed += HandleSpellConfirmed;
             _spellBookUI.OnSelectionCancelled += HandleSelectionCancelled;
             _spellBookUI.Show(inventorySpells);
@@ -141,7 +146,7 @@ public class BattleState : IGameState
         _castInput.enabled = true;
     }
 
-    private void HandleSpellConfirmed(SpellData spell)
+    private void HandleSpellConfirmed(Spell spell)
     {
         if (_castInput == null) return;
 
@@ -157,22 +162,8 @@ public class BattleState : IGameState
         }
         else
         {
-            Spell mapped = null;
-            if (SpellCatalog.Instance != null)
-            {
-                mapped = SpellCatalog.Instance.GetByRune(spell.runeString);
-            }
-            if (mapped == null) mapped = _castInput.defaultSpell;
-
-            if (mapped != null)
-            {
-                _castInput.currentSpell = mapped;
-                _castInput.spellText = mapped.runeString;
-            }
-            else
-            {
-                _castInput.spellText = spell.runeString;
-            }
+            _castInput.currentSpell = spell;
+            _castInput.spellText = spell.runeString;
         }
 
         if (string.IsNullOrEmpty(_castInput.spellText))

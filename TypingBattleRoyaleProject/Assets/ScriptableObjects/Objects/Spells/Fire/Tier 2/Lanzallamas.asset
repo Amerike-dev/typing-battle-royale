@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Lanzallamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: 
+  spellName: Lanzallamas
   runeString: barbacoa instantanea del comal vecinal
-  elementType: 0
+  elementType: 1
   tier: 1
-  archetype: 0
+  archetype: 8
   description: 
   spellTypes: 
-  damage: 0
-  cooldown: 0
+  damage: 20
+  cooldown: 10
   debuff: 0
-  range: 0
-  speed: 0
+  range: 4
+  speed: 2
   uses: 0
   duration: 0
-  particleLifeDuration: 0
+  particleLifeDuration: 5
   loop: 1
   startSpeed: 2
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

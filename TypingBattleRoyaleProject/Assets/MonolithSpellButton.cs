@@ -34,7 +34,7 @@ public class MonolithSpellButton : MonoBehaviour
         _button.onClick.AddListener(() => _onClickAction?.Invoke());
     }
 
-    public void Setup(Spell spell, bool yaDesbloqueado, Action onClick)
+    public void Setup(Spell spell, int state, Action onClick)
     {
         if (spell == null) return;
         
@@ -43,52 +43,100 @@ public class MonolithSpellButton : MonoBehaviour
             spellNameText.text = spell.spellName;
             spellNameText.ForceMeshUpdate();
         }
-
-        if (tierText != null)
-        {
-            tierText.text = spell.tier.ToString();
-        }
+        if (tierText != null) tierText.text = spell.tier.ToString();
 
         UpdateElementAndTier(spell.elementType, spell.tier);
         _onClickAction = onClick;
-        SetButtonState(yaDesbloqueado);
+        
+        SetButtonState(state);
     }
 
-    private void SetButtonState(bool isUnlocked)
+    private void SetButtonState(int state)
     {
-        _button.interactable = !isUnlocked; 
-        Color targetColor = isUnlocked ? new Color(0.2f, 0.2f, 0.2f, 1f) : Color.white;
-        if (spellNameText != null) spellNameText.color = targetColor;
+        _button.interactable = (state == 0);
+
+        Color targetColor = Color.white;
+        string textOverride = null;
+
+        if (state == 1)
+        {
+            targetColor = new Color(0.2f, 0.2f, 0.2f, 1f); 
+        }
+        else if (state == 2)
+        {
+            targetColor = new Color(1f, 0.8f, 0f, 1f);
+            textOverride = "Spell ya desbloqueado";
+        }
+
+        if (spellNameText != null) 
+        {
+            spellNameText.color = targetColor;
+            if (textOverride != null) spellNameText.text = textOverride;
+        }
+        
         if (tierText != null) tierText.color = targetColor;
 
         for (int i = 0; i < tierElementIcons.Length; i++)
         {
-            if (tierElementIcons[i] != null)
-            {
-                tierElementIcons[i].color = targetColor;
-            }
+            if (tierElementIcons[i] != null) tierElementIcons[i].color = targetColor;
         }
     }
 
     private void UpdateElementAndTier(Elements elementType, SpellTiers tier)
     {
         Sprite selectedSprite = defaultIcon;
+        Color selectedColor = Color.white;
 
         switch (elementType)
         {
-            case Elements.Fire: selectedSprite = fireIcon; break;
-            case Elements.Water: selectedSprite = waterIcon; break;
-            case Elements.Earth: selectedSprite = earthIcon; break;
-            case Elements.Wind: selectedSprite = windIcon; break;
-            case Elements.Nature: selectedSprite = natureIcon; break;
-            case Elements.Thunder: selectedSprite = thunderIcon; break;
-            case Elements.Dark: selectedSprite = darkIcon; break;
-            case Elements.Light: selectedSprite = lightIcon; break;
-            case Elements.Ice: selectedSprite = iceIcon; break;
-            case Elements.Lava: selectedSprite = lavaIcon; break;
+            case Elements.Fire: 
+                selectedSprite = fireIcon;
+                selectedColor = Color.red; 
+                break;
+            case Elements.Water: 
+                selectedSprite = waterIcon; 
+                selectedColor = Color.blue;
+                break;
+            case Elements.Earth: 
+                selectedSprite = earthIcon;
+                selectedColor = new Color(0.45f, 0.25f, 0.1f, 1f); 
+                break;
+            case Elements.Wind: 
+                selectedSprite = windIcon;
+                selectedColor = new Color(0.6f, 1f, 0.8f, 1f); 
+                break;
+            case Elements.Nature: 
+                selectedSprite = natureIcon;
+                selectedColor = Color.green;
+                break;
+            case Elements.Thunder: 
+                selectedSprite = thunderIcon;
+                selectedColor = Color.yellow;
+                break;
+            case Elements.Dark: 
+                selectedSprite = darkIcon;
+                selectedColor = new Color(0.15f, 0.1f, 0.25f, 1f); 
+                break;
+            case Elements.Light: 
+                selectedSprite = lightIcon;
+                selectedColor = new Color(1f, 0.95f, 0.6f, 1f);
+                break;
+            case Elements.Ice: 
+                selectedSprite = iceIcon;
+                selectedColor = Color.cyan; 
+                break;
+            case Elements.Lava: 
+                selectedSprite = lavaIcon;
+                selectedColor = new Color(1f, 0.35f, 0f, 1f); 
+                break;
             case Elements.None:
-            default: selectedSprite = defaultIcon; break;
+            default: 
+                selectedSprite = defaultIcon;
+                selectedColor = Color.white;
+                break;
         }
+
+        SetButtonNormalColor(selectedColor);
 
         int targetAmount = 1; 
         if (tier == SpellTiers.TierTwo) targetAmount = 2;
@@ -102,6 +150,20 @@ public class MonolithSpellButton : MonoBehaviour
                 tierElementIcons[i].gameObject.SetActive(i < targetAmount);
             }
         }
+    }
+
+    private void SetButtonNormalColor(Color newColor)
+    {
+        if (_button == null) return;
+
+        ColorBlock colors = _button.colors;
+
+        colors.normalColor = newColor;
+        colors.highlightedColor = newColor;
+        colors.selectedColor = newColor;
+
+        _button.colors = colors;
+
     }
 
     public void Clear()

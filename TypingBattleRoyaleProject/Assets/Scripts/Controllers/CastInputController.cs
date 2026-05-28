@@ -56,6 +56,7 @@ public class CastInputController : MonoBehaviour
 
         if (_cast != null && _cast.action != null)
         {
+            _cast.action.started -= EvaluateAccuracy;
             _cast.action.started += EvaluateAccuracy;
         }
 

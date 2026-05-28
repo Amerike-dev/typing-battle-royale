@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,14 +14,24 @@ public class SpellBookUI : MonoBehaviour
 
     public int spellsPerPage = 3;
 
-    private IReadOnlyList<SpellData> currentSpells;
+    private IReadOnlyList<Spell> currentSpells;
     private int currentPage = 0;
     private int selectedIndex = 0;
 
     public SpellTiers playerTier = SpellTiers.TierOne;
 
-    public event Action<SpellData> OnSpellConfirmed;
+    public event Action<Spell> OnSpellConfirmed;
     public event Action OnSelectionCancelled;
+
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _hidePos=new Vector2(50,0);
+    [SerializeField] Vector2 _showPos=new Vector2(0,0);
+    [SerializeField] float _time = 0.2f;
+    private Coroutine _moveRoutine;
+    private Coroutine _hideRoutine;
+    Coroutine _spellBookCoroutine;
 
     void Awake()
     {
@@ -94,20 +105,35 @@ public class SpellBookUI : MonoBehaviour
         }
     }
 
-    public void Show(IReadOnlyList<SpellData> spells)
+    public void Show(IReadOnlyList<Spell> spells)
     {
+        if (_hideRoutine != null)
+        {
+            StopCoroutine(_hideRoutine);
+            _hideRoutine = null;
+        }
+
+        if (_canvasGroup != null) _canvasGroup.gameObject.SetActive(true);
         gameObject.SetActive(true);
+
+        UIMove(_showPos);
+        UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
         selectedIndex = 0;
-        Refresh(spells ?? new List<SpellData>(), 0);
+        Refresh(spells ?? new List<Spell>(), 0);
     }
 
     public void Hide()
     {
-        gameObject.SetActive(false);
+        if (!gameObject.activeInHierarchy) return;
+
+        UIMove(_hidePos);
+        UIAnimator.FadeOut(_canvasGroup, _time);
+        if (_hideRoutine != null) StopCoroutine(_hideRoutine);
+        _hideRoutine = StartCoroutine(ChangeMode());
     }
 
-    public void Refresh(IReadOnlyList<SpellData> spells, int page)
+    public void Refresh(IReadOnlyList<Spell> spells, int page)
     {
         currentSpells = spells;
         currentPage = Mathf.Max(0, page);
@@ -123,11 +149,11 @@ public class SpellBookUI : MonoBehaviour
 
             if (spellIndex < spellCount)
             {
-                SpellData spell = spells[spellIndex];
+                Spell spell = spells[spellIndex];
 
-                texts[i].text = spell.runeString + " " + spell.spellTier.ToString();
+                texts[i].text = spell.runeString + " " + spell.tier.ToString();
 
-                if ((int)spell.spellTier > (int)playerTier)
+                if ((int)spell.tier > (int)playerTier)
                 {
                     images[i].color = Color.gray;
                 }
@@ -138,7 +164,7 @@ public class SpellBookUI : MonoBehaviour
             }
             else
             {
-                texts[i].text = spellCount == 0 && i == 0 ? "Sin hechizos — usa default" : "—";
+                texts[i].text = "—";
                 images[i].color = new Color(1f, 1f, 1f, 0.25f);
             }
         }
@@ -176,14 +202,16 @@ public class SpellBookUI : MonoBehaviour
         float scroll = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
         bool pageUp = Keyboard.current != null && Keyboard.current.pageUpKey.wasPressedThisFrame;
         bool pageDown = Keyboard.current != null && Keyboard.current.pageDownKey.wasPressedThisFrame;
+        bool leftArrow = Keyboard.current != null && Keyboard.current.leftArrowKey.wasPressedThisFrame;
+        bool rightArrow = Keyboard.current != null && Keyboard.current.rightArrowKey.wasPressedThisFrame;
 
-        if (scroll > 0f || pageUp)
+        if (scroll > 0f || pageUp || leftArrow)
         {
             currentPage = Mathf.Max(0, currentPage - 1);
             selectedIndex = 0;
             Refresh(currentSpells, currentPage);
         }
-        else if (scroll < 0f || pageDown)
+        else if (scroll < 0f || pageDown || rightArrow)
         {
             currentPage = Mathf.Min(currentPage + 1, maxPage);
             selectedIndex = 0;
@@ -217,19 +245,15 @@ public class SpellBookUI : MonoBehaviour
     {
         int spellCount = currentSpells != null ? currentSpells.Count : 0;
 
-        if (spellCount == 0 && selectedIndex == 0)
-        {
-            OnSpellConfirmed?.Invoke(null);
-            return;
-        }
+        if (spellCount == 0) return;
 
         int spellIndex = currentPage * spellsPerPage + selectedIndex;
         if (spellIndex < 0 || spellIndex >= spellCount) return;
 
-        SpellData chosen = currentSpells[spellIndex];
+        Spell chosen = currentSpells[spellIndex];
         if (chosen == null) return;
 
-        if ((int)chosen.spellTier > (int)playerTier) return;
+        if ((int)chosen.tier > (int)playerTier) return;
 
         OnSpellConfirmed?.Invoke(chosen);
     }
@@ -244,20 +268,13 @@ public class SpellBookUI : MonoBehaviour
 
             if (spellIndex >= spellCount)
             {
-                if (spellCount == 0 && i == 0)
-                {
-                    images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
-                }
-                else
-                {
-                    images[i].color = new Color(1f, 1f, 1f, 0.25f);
-                }
+                images[i].color = new Color(1f, 1f, 1f, 0.25f);
                 continue;
             }
 
-            SpellData spell = currentSpells[spellIndex];
+            Spell spell = currentSpells[spellIndex];
 
-            if ((int)spell.spellTier > (int)playerTier)
+            if ((int)spell.tier > (int)playerTier)
             {
                 images[i].color = Color.gray;
                 continue;
@@ -265,5 +282,28 @@ public class SpellBookUI : MonoBehaviour
 
             images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
         }
+    }
+
+    public void UIMove(Vector2 target)
+    {
+        if (_moveRoutine != null)
+        {
+            StopCoroutine(_moveRoutine);
+            _moveRoutine = null;
+        }
+
+        if (!gameObject.activeInHierarchy)
+        {
+            if (_panelUI != null) _panelUI.anchoredPosition = target;
+            return;
+        }
+
+        _moveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
+    }
+    public IEnumerator ChangeMode()
+    {
+        yield return new WaitForSeconds(_time);
+        gameObject.SetActive(false);
+        _hideRoutine = null;
     }
 }

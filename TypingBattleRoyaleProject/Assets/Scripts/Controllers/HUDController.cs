@@ -11,11 +11,24 @@ public class HUDController : MonoBehaviour
     public TextMeshProUGUI timerText;
     public Slider healthUI;
     public GameObject[] lifeImages;
+    public TextMeshProUGUI lifeText;
 
     public DeathUI deathUI;
 
     public PlayerStatsNet localStats;
     private Coroutine _findPlayerStatsCoroutine;
+
+    [Header("UIanimation")]
+    [SerializeField] RectTransform _panelUI;
+    [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Vector2 _hidePos=new Vector2(0,50);
+    [SerializeField] Vector2 _showPos=new Vector2(0,0);
+    [SerializeField] float _time = 0.2f;
+    [SerializeField] bool _isActiveHUD;
+    private Coroutine _moveRoutine;
+    private Coroutine _hideRoutine;
+    Coroutine _explorationCoroutine;
+
 
     private void OnEnable()
     {
@@ -128,6 +141,7 @@ public class HUDController : MonoBehaviour
         for (int i = 0; i < lifeImages.Length; i++)
         {
             lifeImages[i].SetActive(i < currentLives);
+            lifeText.text=currentLives.ToString();
         }
     }
 
@@ -173,5 +187,27 @@ public class HUDController : MonoBehaviour
         {
             deathUI.Hide();
         }
+    }
+    public void Hide()
+    {
+        if (!_isActiveHUD) return;
+        _isActiveHUD = false;
+        UIMove(_hidePos);
+        UIAnimator.FadeOut(_canvasGroup, _time);
+    }
+    public void Show()
+    {
+        if(_isActiveHUD) return;
+        _isActiveHUD = true;
+        UIMove(_showPos);
+        UIAnimator.FadeIn(_canvasGroup, _time);
+    }
+    public void UIMove(Vector2 target)
+    {
+        if (_explorationCoroutine != null)
+        {
+            StopCoroutine(_explorationCoroutine);
+        }
+        _explorationCoroutine = StartCoroutine(UIAnimator.PanelUIMove(_panelUI, target, _time));
     }
 }

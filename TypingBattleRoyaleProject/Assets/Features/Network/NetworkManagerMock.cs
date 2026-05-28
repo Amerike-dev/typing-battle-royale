@@ -9,6 +9,7 @@ public class NetworkManagerMock : MonoBehaviour
     public int playerAmount = 2;
 
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private PlayerController _player;
     
 
     private Color _localPlayerColor = Color.blue;
@@ -63,7 +64,7 @@ public class NetworkManagerMock : MonoBehaviour
 
             string id = PlayerIDGenerator.GenerateID();
             PlayerStats generatedStats = new PlayerStats(id);
-            PlayerInventory generatedInventory = new PlayerInventory();
+            PlayerInventory generatedInventory = new PlayerInventory(_player);
 
             PlayerController playerController = tempPlayer.GetComponent<PlayerController>();
             playerController.inventory = generatedInventory;

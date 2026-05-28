@@ -72,6 +72,20 @@ public class IDController : NetworkBehaviour
             Update3DModel();
         };
 
+        already.OnValueChanged += (oldV, newV) => {
+            Debug.Log($"<color=green>[READY]</color> Player {OwnerClientId} listo: {newV}");
+
+            if (SelectController.Instance != null)
+            {
+                SelectController.Instance.ShowReadyUI(OwnerClientId, newV);
+
+                if (IsServer) SelectController.Instance.CheckAllPlayersReady();
+            }
+        };
+
+        if (already.Value && SelectController.Instance != null)
+            SelectController.Instance.ShowReadyUI(OwnerClientId, true);
+
         if (canvasLabelGO != null)
         {
             if (!IsOwner)
@@ -120,22 +134,13 @@ public class IDController : NetworkBehaviour
     private void UpdateLabel()
     {
         string currentName = playerName.Value.ToString();
-        
+
         Debug.Log($"<color=cyan>[SYNC]</color> El jugador {OwnerClientId} intentará ponerse el nombre: '{currentName}'");
 
-        if (myEnemyLabel != null)
-        {
-            myEnemyLabel.SetLabel(currentName);
-            
-            if (!IsOwner)
-                myEnemyLabel.gameObject.SetActive(true);
-            else 
-                myEnemyLabel.gameObject.SetActive(false); 
-        }
-        else
-        {
-            Debug.LogError($"<color=red>[ERROR]</color> ¡La variable myEnemyLabel no está asignada en el Inspector del jugador {OwnerClientId}!");
-        }
+        if (myEnemyLabel == null) return;
+
+        myEnemyLabel.SetLabel(currentName);
+        myEnemyLabel.gameObject.SetActive(!IsOwner);
     }
 
     [ClientRpc]

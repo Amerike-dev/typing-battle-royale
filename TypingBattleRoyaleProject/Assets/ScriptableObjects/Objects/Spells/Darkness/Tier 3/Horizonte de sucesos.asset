@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: voragine inevitable de la tia siniestra
   elementType: 7
   tier: 2
-  archetype: 0
+  archetype: 6
   description: Invoca un agujero negro que va creciendo exponencialmente, atrae constantemente
     a los enemigos y si alguno toca el centro muere instantaneamente perdiendo todas
     sus vidas.
@@ -34,4 +34,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3ad0c12f3cfa5234b957d29d7825b8a1, type: 2}

@@ -1,9 +1,9 @@
 using System;
-using NUnit.Framework;
-using TMPro.Examples;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -25,6 +25,9 @@ public class PlayerController : NetworkBehaviour
 
     [Header("Other")]
     public PlayerAnimatorView playerAnimatorView;
+    
+    [Header("Debug")]
+    [SerializeField] private List<string> debugUnlockedSpells = new List<string>();
 
     public bool onExplorationState;
     public PlayerStatsNet stats;
@@ -165,7 +168,16 @@ public class PlayerController : NetworkBehaviour
     void Awake()
     {
         onExplorationState = true;
-        if (inventory == null) inventory = new PlayerInventory();
+        if (inventory == null) inventory = new PlayerInventory(this);
+    }
+    
+    public void UpdateDebugList(List<Spell> currentSpells)
+    {
+        debugUnlockedSpells.Clear();
+        foreach (var spell in currentSpells)
+        {
+            debugUnlockedSpells.Add(spell.spellName);
+        }
     }
 
     void Update()
@@ -237,11 +249,21 @@ public class PlayerController : NetworkBehaviour
     public void NullMoveSpeed()
     {
         moveSpeed = 0;
+        
+        if (jumpAction != null && jumpAction.enabled) 
+        {
+            jumpAction.Disable();
+        }
     }
 
     public void MoveSpeed()
     {
         moveSpeed = continuousSpeed;
+        
+        if (jumpAction != null && !jumpAction.enabled) 
+        {
+            jumpAction.Enable();
+        }
     }
 
     public void EnterSpectatorMode()
@@ -297,5 +319,45 @@ public class PlayerController : NetworkBehaviour
         }
 
         Debug.Log("[PlayerController] Espectador cerrado por GameOver.");
+    }
+    
+    [ServerRpc]
+    public void ClaimMonolithSpellServerRpc(ulong monolithId, int spellIndex, string spellName, ServerRpcParams rpcParams = default)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(monolithId, out var obj))
+        {
+            var monolith = obj.GetComponent<MonolithController>();
+            
+            if (!monolith.syncedSpellClaimed[spellIndex])
+            {
+                monolith.MarkSpellAsClaimed(spellIndex);
+                UnlockSpellClientRpc(spellName, rpcParams.Receive.SenderClientId);
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void UnlockSpellClientRpc(string spellName, ulong ownerId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != ownerId) return;
+
+        var monoliths = FindObjectsByType<MonolithController>(FindObjectsSortMode.None);
+        Spell foundSpell = null;
+
+        foreach (var m in monoliths)
+        {
+            foundSpell = m.allSpells.FirstOrDefault(s => s != null && s.spellName == spellName);
+            if (foundSpell != null) break;
+        }
+
+        if (foundSpell != null)
+        {
+            inventory.AddSpell(foundSpell);
+            Debug.Log($"<color=green>¡Éxito!</color> Hechizo {foundSpell.spellName} agregado al inventario desde el monolito.");
+        }
+        else
+        {
+            Debug.LogError($"[ERROR] No pudimos encontrar el hechizo {spellName} en NINGÚN monolito de la escena. ¡Revisa que el nombre coincida exactamente!");
+        }
     }
 }

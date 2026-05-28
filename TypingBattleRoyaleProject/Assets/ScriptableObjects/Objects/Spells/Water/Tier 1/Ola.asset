@@ -15,10 +15,13 @@ MonoBehaviour:
   spellName: Ola
   runeString: chapuzon
   elementType: 2
+  tier: 0
+  archetype: 0
   description: "Invoca una ola que viaja en linea recta a travez del suelo para hacer
     da\xF1o bajo y realentizar."
   spellTypes: 
   damage: 15
+  cooldown: 0
   debuff: 1
   range: 20
   speed: 10
@@ -30,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 3ec9ef8efa3b4d94c9a676a98c6d5a51, type: 2}

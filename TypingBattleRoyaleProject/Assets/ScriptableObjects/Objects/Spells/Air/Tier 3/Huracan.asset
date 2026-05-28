@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Huracan
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: "Hurac\xE1n"
+  spellName: Laser de Viento
   runeString: danza furiosa de la mama bien enojada
-  elementType: 0
+  elementType: 4
   tier: 2
-  archetype: 0
+  archetype: 8
   description: "invoca un hurac\xE1n enorme que hace da\xF1o en los bordes pero no
     en el centro"
   spellTypes: 0600000002000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}

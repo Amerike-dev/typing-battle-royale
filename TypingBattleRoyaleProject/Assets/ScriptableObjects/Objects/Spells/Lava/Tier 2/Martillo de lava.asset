@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: marro derretido del herrero compa
   elementType: 10
   tier: 1
-  archetype: 0
+  archetype: 7
   description: "Equipa un Martillo de 2 usos, hace da\xF1o medio en un area grande
     a corta distancia "
   spellTypes: 0700000006000000
@@ -33,4 +33,4 @@ MonoBehaviour:
   startSize: 1
   emissionRate: 50
   shapeRadius: 2
-  materialVFX: {fileID: 0}
+  materialVFX: {fileID: 2100000, guid: c94ac2358a0c0ca42be6c4cd5f658dc0, type: 2}
