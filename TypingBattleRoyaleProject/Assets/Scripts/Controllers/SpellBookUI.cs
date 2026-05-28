@@ -10,7 +10,6 @@ public class SpellBookUI : MonoBehaviour
 {
     public GameObject[] slots;
     public Image[] images;
-    public Image[] typeImages;
     public TMP_Text[] texts;
     public Sprite iconSprite;
     public TMP_FontAsset Gonserrat;
@@ -74,7 +73,6 @@ public class SpellBookUI : MonoBehaviour
         int count = spellsPerPage > 0 ? spellsPerPage : 3;
         slots = new GameObject[count];
         images = new Image[count];
-        typeImages = new Image[count];
         texts = new TMP_Text[count];
 
         for (int i = 0; i < count; i++)
@@ -90,17 +88,6 @@ public class SpellBookUI : MonoBehaviour
             slotImage.color = Color.white;
             slotImage.rectTransform.sizeDelta = new Vector2(500, 80);
             images[i] = slotImage;
-
-            GameObject slotTypeGO = new GameObject("TypeElement");
-            slotTypeGO.transform.SetParent(slotGO.transform, false);
-
-            var TypeElement= slotTypeGO.AddComponent<Image>();
-            //TypeElement.sprite = i;
-
-            var rectType=slotTypeGO.AddComponent<RectTransform>();
-            rectType.sizeDelta = new Vector2(100, 100);
-            rectType.anchoredPosition = new Vector2(-700,0);
-
 
             GameObject textGO = new GameObject("Text", typeof(RectTransform));
             textGO.transform.SetParent(slotGO.transform, false);
