@@ -81,7 +81,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _StepAmount: 5
+    - _StepAmount: 4
     - _Surface: 0
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1

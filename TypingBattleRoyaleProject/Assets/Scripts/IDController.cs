@@ -8,6 +8,14 @@ public class IDController : NetworkBehaviour
 {
     [Header("3D Models configuration")]
     [SerializeField] private SkinInfo[] arraySkins;
+
+    [Header("3D Model spawn tuning")]
+    [Tooltip("Escala aplicada al modelo 3D después de instanciarlo.")]
+    [SerializeField] private Vector3 _modelScale = Vector3.one;
+    [Tooltip("Offset adicional sumado a la posición del spawn point (en world space).")]
+    [SerializeField] private Vector3 _modelPositionOffset = Vector3.zero;
+    [Tooltip("Si está activo, usa el offset legacy: empuja el modelo 1 unidad hacia la cámara (solo aplica cuando no hay spawn point asignado en SelectController).")]
+    [SerializeField] private bool _useLegacyCameraOffset = true;
     
     public NetworkVariable<int> skinIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> colorIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -72,6 +80,20 @@ public class IDController : NetworkBehaviour
             Update3DModel();
         };
 
+        already.OnValueChanged += (oldV, newV) => {
+            Debug.Log($"<color=green>[READY]</color> Player {OwnerClientId} listo: {newV}");
+
+            if (SelectController.Instance != null)
+            {
+                SelectController.Instance.ShowReadyUI(OwnerClientId, newV);
+
+                if (IsServer) SelectController.Instance.CheckAllPlayersReady();
+            }
+        };
+
+        if (already.Value && SelectController.Instance != null)
+            SelectController.Instance.ShowReadyUI(OwnerClientId, true);
+
         if (canvasLabelGO != null)
         {
             if (!IsOwner)
@@ -80,9 +102,12 @@ public class IDController : NetworkBehaviour
                 canvasLabelGO.SetActive(false);
         }
         
-        playerName.OnValueChanged += (oldV, newV) => { 
+        playerName.OnValueChanged += (oldV, newV) => {
             Debug.Log($"<color=orange>[Sync]</color> El jugador {OwnerClientId} actualizó su nombre de {oldV} a: {newV}");
-            UpdateLabel(); 
+            UpdateLabel();
+
+            if (already.Value && SelectController.Instance != null)
+                SelectController.Instance.ShowReadyUI(OwnerClientId, true);
         };
         
         Update3DModel();
@@ -103,17 +128,35 @@ public class IDController : NetworkBehaviour
     public void Update3DModel()
     {
         if (SelectController.Instance == null) return;
-        if (OwnerClientId >= (ulong)SelectController.Instance.wizardDisplayGO.Length) return;
 
         if (visualModel != null) Destroy(visualModel);
-        
-        Transform transformImage = SelectController.Instance.wizardDisplayGO[OwnerClientId].transform;
-        Vector3 worldPosition = transformImage.position;
+
+        Vector3 spawnPosition;
+        Quaternion spawnRotation;
+        Vector3 spawnScale;
+        Transform spawnPoint = SelectController.Instance.GetModelSpawnPoint(OwnerClientId);
+
+        if (spawnPoint != null)
+        {
+            spawnPosition = spawnPoint.position + _modelPositionOffset;
+            spawnRotation = spawnPoint.rotation;
+            spawnScale = Vector3.Scale(spawnPoint.lossyScale, _modelScale);
+        }
+        else
+        {
+            if (OwnerClientId >= (ulong)SelectController.Instance.wizardDisplayGO.Length) return;
+            Transform transformImage = SelectController.Instance.wizardDisplayGO[OwnerClientId].transform;
+            spawnPosition = transformImage.position + _modelPositionOffset;
+            spawnRotation = Quaternion.identity;
+            spawnScale = _modelScale;
+
+            if (_useLegacyCameraOffset && Camera.main != null)
+                spawnPosition += Camera.main.transform.forward * -1f;
+        }
 
         GameObject prefab = arraySkins[skinIndex.Value].models[colorIndex.Value];
-        visualModel = Instantiate(prefab, worldPosition, Quaternion.identity);
-        visualModel.transform.position += Camera.main.transform.forward * -1f; 
-        visualModel.transform.localScale = new Vector3(1, 1, 1); 
+        visualModel = Instantiate(prefab, spawnPosition, spawnRotation);
+        visualModel.transform.localScale = spawnScale;
         UpdateLabel();
     }
     
@@ -144,6 +187,11 @@ public class IDController : NetworkBehaviour
         if (IsOwner)
         {
             Debug.Log($"<color=yellow>Player {OwnerClientId} desconectado.</color>");
+        }
+
+        if (SelectController.Instance != null)
+        {
+            SelectController.Instance.RefreshSlotVisibility(OwnerClientId);
         }
     }
 
