@@ -31,7 +31,7 @@ public static class UIAnimator
     public static IEnumerator PanelUIMove(RectTransform canvasGrupUI, Vector2 target, float time)
     {
         Vector2 startPos = canvasGrupUI.anchoredPosition;
-        float duration = 0.3f;
+        float duration = 0f;
         while (time < duration)
         {
             canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, time / duration);
@@ -40,5 +40,18 @@ public static class UIAnimator
             yield return null;
         }
         canvasGrupUI.anchoredPosition = target;
+    }
+    public static IEnumerator HeightUIChange(RectTransform rectTransform,float target,float time)
+    {
+        float startHeight = rectTransform.sizeDelta.y;
+        float duration = 0f;
+        while (duration < time)
+        {
+            float currentHeight = Mathf.Lerp(startHeight, target, time / duration);
+            rectTransform.sizeDelta= new Vector2(rectTransform.sizeDelta.x, currentHeight);
+            time += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, target);
     }
 }
