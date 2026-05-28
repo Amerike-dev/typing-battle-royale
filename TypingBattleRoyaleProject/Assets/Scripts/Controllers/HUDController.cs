@@ -1,6 +1,7 @@
 using TMPro;
 using Unity.Netcode;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -193,14 +194,30 @@ public class HUDController : MonoBehaviour
         if (!_isActiveHUD) return;
         _isActiveHUD = false;
         UIMove(_hidePos);
-        UIAnimator.FadeOut(_canvasGroup, _time);
+
+        if (_canvasGroup == null) return;
+
+        _canvasGroup.DOKill();
+        _canvasGroup.DOFade(0f, _time)
+            .SetUpdate(true)
+            .OnComplete(() =>
+            {
+                if (_isActiveHUD) return;
+                if (_canvasGroup == null) return;
+                _canvasGroup.gameObject.SetActive(false);
+            });
     }
     public void Show()
     {
-        if(_isActiveHUD) return;
+        if (_isActiveHUD) return;
         _isActiveHUD = true;
         UIMove(_showPos);
-        UIAnimator.FadeIn(_canvasGroup, _time);
+
+        if (_canvasGroup == null) return;
+
+        _canvasGroup.DOKill();
+        _canvasGroup.gameObject.SetActive(true);
+        _canvasGroup.DOFade(1f, _time).SetUpdate(true);
     }
     public void UIMove(Vector2 target)
     {
