@@ -19,14 +19,8 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
-    private StateMachine stateMachine;
-    private ExplorationState explorationState;
-    
-    public CameraController camaraController;
-    public GameplayManager gameplayManager;
-    public InGameTimer gameTimer;
 
-    
+    public InGameTimer gameTimer;
 
     private void Awake()
     {
@@ -37,23 +31,16 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
-        
-        DontDestroyOnLoad(gameObject);
 
-        explorationState = new ExplorationState(camaraController, gameplayManager);
-        stateMachine = new StateMachine(explorationState, 1.0f);
-        stateMachine.ChangeState(explorationState);
+        if (transform.parent != null)
+        {
+            transform.SetParent(null);
+        }
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
         StartCoroutine(gameTimer.CountTime());
-    }
-    private void Update()
-    {
-        if (stateMachine != null)
-        {
-            stateMachine.Update();
-        }
     }
 }

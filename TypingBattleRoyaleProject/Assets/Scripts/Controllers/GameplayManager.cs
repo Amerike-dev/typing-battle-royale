@@ -88,12 +88,24 @@ public class GameplayManager : NetworkBehaviour
     private void Start()
     {
         InitializeStates();
-        if (explorationState != null)
-        {
-            stateMachine.ChangeState(explorationState);
-        }
-        
+        HideCombatUIInitially();
+
         if(IsServer) SpawnPlayers();
+    }
+
+    private void HideCombatUIInitially()
+    {
+        if (_spellUICanvasGroup != null)
+        {
+            _spellUICanvasGroup.alpha = 0f;
+            _spellUICanvasGroup.interactable = false;
+            _spellUICanvasGroup.blocksRaycasts = false;
+        }
+
+        if (_spellBookUI != null && _spellBookUI.gameObject.activeSelf)
+        {
+            _spellBookUI.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -107,18 +119,6 @@ public class GameplayManager : NetworkBehaviour
         playState = new PlayState(this);
         gameOverState = new GameOverState(this, "");
         stateMachine = new StateMachine(waitingState, 0f);
-
-        if (_playerController != null)
-        {
-            explorationState = new ExplorationState(_playerController.cameraController, this);
-            battleState = new BattleState(
-                _castInputController,
-                _playerController,
-                _playerAnimatorView,
-                _playerController.cameraController,
-                _targetSystem,
-                _spellBookUI);
-        }
     }
 
     public void RegisterLocalPlayer(PlayerController player)
