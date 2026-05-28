@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14b3ded72d8675e4ea1c17b77e8f0f2a, type: 3}
-  m_Name: sfx_spell_cast_fireball
+  m_Name: sfx_spell_cast_carambano
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
-  id: sfx_spell_cast_fireball
+  id: sfx_spell_cast_carambano
   clip: {fileID: 0}
   volume: 0.7
   pitch: 1
-  loop: 0
+  loop: 1
   randomizePitch: 0
