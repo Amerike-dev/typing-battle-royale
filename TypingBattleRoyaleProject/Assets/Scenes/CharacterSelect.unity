@@ -2228,7 +2228,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Esperando
+  m_text: Listo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -2365,7 +2365,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Esperando
+  m_text: Listo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -2756,6 +2756,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1809680162}
+        m_TargetAssemblyTypeName: SelectController, Assembly-CSharp
+        m_MethodName: OKClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3814,7 +3826,12 @@ MonoBehaviour:
   - {fileID: 331385701}
   - {fileID: 21623649}
   - {fileID: 1221975846}
-  startButton: {fileID: 1747578195}
+  startButton: {fileID: 1747578196}
+  readyTexts:
+  - {fileID: 1248718482}
+  - {fileID: 1899275017}
+  - {fileID: 1313345197}
+  - {fileID: 1831546055}
   arrowsPanel: {fileID: 261149925}
 --- !u!4 &1809680163
 Transform:
@@ -4152,7 +4169,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Esperando
+  m_text: Listo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -4447,7 +4464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Esperando
+  m_text: Listo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}

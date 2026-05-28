@@ -72,6 +72,20 @@ public class IDController : NetworkBehaviour
             Update3DModel();
         };
 
+        already.OnValueChanged += (oldV, newV) => {
+            Debug.Log($"<color=green>[READY]</color> Player {OwnerClientId} listo: {newV}");
+
+            if (SelectController.Instance != null)
+            {
+                SelectController.Instance.ShowReadyUI(OwnerClientId, newV);
+
+                if (IsServer) SelectController.Instance.CheckAllPlayersReady();
+            }
+        };
+
+        if (already.Value && SelectController.Instance != null)
+            SelectController.Instance.ShowReadyUI(OwnerClientId, true);
+
         if (canvasLabelGO != null)
         {
             if (!IsOwner)
