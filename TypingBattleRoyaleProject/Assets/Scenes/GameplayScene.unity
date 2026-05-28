@@ -11588,6 +11588,7 @@ MonoBehaviour:
   - {fileID: 1682613417}
   - {fileID: 1403131817}
   initialMonoliths: 9
+  islandClusterRadius: 25
 --- !u!1 &212487910
 GameObject:
   m_ObjectHideFlags: 0
@@ -26974,6 +26975,8 @@ MonoBehaviour:
   slots: []
   images: []
   texts: []
+  iconSprite: {fileID: 21300000, guid: 20d52d6cf50195e4199b1337c574fdc1, type: 3}
+  Gonserrat: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
   spellsPerPage: 3
   playerTier: 0
   _panelUI: {fileID: 1663015638}
