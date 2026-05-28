@@ -58,6 +58,17 @@ public class LobbyController : NetworkBehaviour
     [Header("Hosted IP display")]
     [SerializeField] private float _hostedIpFontSize = 24f;
 
+    [Header("Player count badge (visible cuando hosteás)")]
+    [SerializeField] private Sprite _playerCountSprite;
+    [SerializeField] private Vector2 _playerCountBadgeSize = new Vector2(50f, 50f);
+    [Tooltip("Anchored position absoluta del badge (en el mismo padre que el HostButton).")]
+    [SerializeField] private Vector2 _playerCountBadgePosition = new Vector2(400f, 70f);
+    [SerializeField] private Color _playerCountTextColor = Color.black;
+    [SerializeField] private float _playerCountFontSize = 20f;
+    [SerializeField] private TMP_FontAsset _playerCountFont;
+    [Tooltip("Padding superior del texto dentro del badge (px).")]
+    [SerializeField] private float _playerCountTextTopPadding = 15f;
+
     private TextMeshProUGUI _hostButtonLabel;
     private TextMeshProUGUI _joinButtonLabel;
     private ColorBlock _hostButtonColorsIdle;
@@ -79,6 +90,9 @@ public class LobbyController : NetworkBehaviour
     private bool _joinLabelDefaultAutoSize;
     private bool _joinLabelDefaultsCaptured;
 
+    private RectTransform _playerCountBadgeRoot;
+    private TextMeshProUGUI _playerCountBadgeText;
+
     private void Awake()
     {
         connectedPlayers = new NetworkList<ulong>();
@@ -90,6 +104,7 @@ public class LobbyController : NetworkBehaviour
         SetupJoinButton();
         SetupStartMatchButton();
         SetupJoinIpInput();
+        SetupPlayerCountBadge();
         SetupConfirmModal();
 
         string localIp = GetLocalIPAdress();
@@ -184,6 +199,71 @@ public class LobbyController : NetworkBehaviour
         }
 
         _joinIpInput.gameObject.SetActive(false);
+    }
+
+    private void SetupPlayerCountBadge()
+    {
+        if (hostButton == null) return;
+        if (_playerCountBadgeRoot != null) return;
+
+        RectTransform hostRt = hostButton.GetComponent<RectTransform>();
+        if (hostRt == null) return;
+
+        GameObject badge = new GameObject("HostPlayerCountBadge", typeof(RectTransform), typeof(Image));
+        badge.transform.SetParent(hostRt.parent, false);
+
+        _playerCountBadgeRoot = badge.GetComponent<RectTransform>();
+        _playerCountBadgeRoot.anchorMin = hostRt.anchorMin;
+        _playerCountBadgeRoot.anchorMax = hostRt.anchorMax;
+        _playerCountBadgeRoot.pivot = new Vector2(0.5f, 0.5f);
+        _playerCountBadgeRoot.sizeDelta = _playerCountBadgeSize;
+        _playerCountBadgeRoot.anchoredPosition = _playerCountBadgePosition;
+
+        Image img = badge.GetComponent<Image>();
+        img.sprite = _playerCountSprite;
+        img.preserveAspect = true;
+        img.color = _playerCountSprite != null ? Color.white : new Color(1f, 1f, 1f, 0f);
+        img.raycastTarget = false;
+
+        GameObject textGo = new GameObject("Count", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textGo.transform.SetParent(badge.transform, false);
+
+        RectTransform textRt = textGo.GetComponent<RectTransform>();
+        textRt.anchorMin = Vector2.zero;
+        textRt.anchorMax = Vector2.one;
+        textRt.offsetMin = Vector2.zero;
+        textRt.offsetMax = new Vector2(0f, -Mathf.Max(0f, _playerCountTextTopPadding));
+
+        _playerCountBadgeText = textGo.GetComponent<TextMeshProUGUI>();
+        _playerCountBadgeText.text = "0";
+        _playerCountBadgeText.alignment = TextAlignmentOptions.Center;
+        _playerCountBadgeText.fontSize = _playerCountFontSize;
+        _playerCountBadgeText.enableAutoSizing = false;
+        _playerCountBadgeText.raycastTarget = false;
+        _playerCountBadgeText.fontStyle = FontStyles.Bold;
+
+        TMP_FontAsset font = _playerCountFont != null ? _playerCountFont : ResolveFontFromScene();
+        if (font != null) _playerCountBadgeText.font = font;
+
+        _playerCountBadgeText.color = _playerCountTextColor;
+        _playerCountBadgeText.faceColor = _playerCountTextColor;
+        _playerCountBadgeText.ForceMeshUpdate();
+
+        badge.SetActive(false);
+    }
+
+    private void UpdatePlayerCountBadge()
+    {
+        if (_playerCountBadgeRoot == null || _playerCountBadgeText == null) return;
+        if (connectedPlayers == null) return;
+
+        bool visible = _isHosting;
+        _playerCountBadgeRoot.gameObject.SetActive(visible);
+
+        if (visible)
+        {
+            _playerCountBadgeText.text = connectedPlayers.Count.ToString();
+        }
     }
 
     private void SetupConfirmModal()
@@ -494,6 +574,8 @@ public class LobbyController : NetworkBehaviour
                 ipInputField.textComponent.fontSize = _hostedIpFontSize;
             }
         }
+
+        UpdatePlayerCountBadge();
     }
 
     private void ApplyJoinButtonVisualState(bool inputOpen)
@@ -742,6 +824,8 @@ public class LobbyController : NetworkBehaviour
             _startMatchButton.gameObject.SetActive(true);
             _startMatchButton.interactable = connectedPlayers.Count >= 2;
         }
+
+        UpdatePlayerCountBadge();
     }
 
     private void StartMatch()
