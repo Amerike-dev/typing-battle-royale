@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SM_Centre_Isle
+  m_Name: SM_Skybox
   m_Shader: {fileID: 4800000, guid: 79648c4598b71fc44b86f7fa9a26732b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,14 +24,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fc11dddb5c25e7e43bce2e321e73c086, type: 3}
+        m_Texture: {fileID: 2800000, guid: 221db633775758e41b69e9ac78db53e0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Intensity: 0.05
-    - _StepAmount: 3.5
+    - _Intensity: 1
+    - _StepAmount: 10
     m_Colors:
-    - _BaseColor: {r: 0.3613582, g: 0.4900548, b: 0.9496855, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
