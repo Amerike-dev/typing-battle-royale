@@ -88,8 +88,24 @@ public class GameplayManager : NetworkBehaviour
     private void Start()
     {
         InitializeStates();
+        HideCombatUIInitially();
 
         if(IsServer) SpawnPlayers();
+    }
+
+    private void HideCombatUIInitially()
+    {
+        if (_spellUICanvasGroup != null)
+        {
+            _spellUICanvasGroup.alpha = 0f;
+            _spellUICanvasGroup.interactable = false;
+            _spellUICanvasGroup.blocksRaycasts = false;
+        }
+
+        if (_spellBookUI != null && _spellBookUI.gameObject.activeSelf)
+        {
+            _spellBookUI.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
