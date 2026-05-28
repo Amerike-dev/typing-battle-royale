@@ -85,10 +85,14 @@ public class MonolithSpellButton : MonoBehaviour
     private void UpdateElementAndTier(Elements elementType, SpellTiers tier)
     {
         Sprite selectedSprite = defaultIcon;
+        Color selectedColor = Color.white;
 
         switch (elementType)
         {
-            case Elements.Fire: selectedSprite = fireIcon; break;
+            case Elements.Fire: 
+                selectedSprite = fireIcon;
+                selectedColor = Color.red; 
+                break;
             case Elements.Water: selectedSprite = waterIcon; break;
             case Elements.Earth: selectedSprite = earthIcon; break;
             case Elements.Wind: selectedSprite = windIcon; break;
@@ -99,8 +103,13 @@ public class MonolithSpellButton : MonoBehaviour
             case Elements.Ice: selectedSprite = iceIcon; break;
             case Elements.Lava: selectedSprite = lavaIcon; break;
             case Elements.None:
-            default: selectedSprite = defaultIcon; break;
+            default: 
+                selectedSprite = defaultIcon;
+                selectedColor = Color.white;
+                break;
         }
+
+        SetButtonNormalColor(selectedColor);
 
         int targetAmount = 1; 
         if (tier == SpellTiers.TierTwo) targetAmount = 2;
@@ -114,6 +123,14 @@ public class MonolithSpellButton : MonoBehaviour
                 tierElementIcons[i].gameObject.SetActive(i < targetAmount);
             }
         }
+    }
+
+    private void SetButtonNormalColor(Color newColor)
+    {
+        if (_button == null) return;
+
+        ColorBlock colors = _button.colors;
+
     }
 
     public void Clear()
