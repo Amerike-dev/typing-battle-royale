@@ -119600,7 +119600,7 @@ MonoBehaviour:
   isPaused: 0
   _panelUI: {fileID: 1306684419}
   _canvasGroup: {fileID: 1306684420}
-  _hidePos: {x: -150, y: 0}
+  _hidePos: {x: 0, y: -1080}
   _showPos: {x: 0, y: 0}
   _time: 0.3
 --- !u!4 &1917997798
