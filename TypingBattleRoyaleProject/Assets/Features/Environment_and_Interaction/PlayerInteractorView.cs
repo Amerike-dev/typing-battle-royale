@@ -100,8 +100,12 @@ public class PlayerInteractorView : MonoBehaviour
     {
         while (true)
         {
-            RefreshMonolithList();
-            NearMonolithCheck();
+            var player = GetComponent<PlayerController>();
+            if (player != null && player.IsOwner)
+            {
+                RefreshMonolithList();
+                NearMonolithCheck();
+            }
             yield return new WaitForSeconds(checkerMonolith);
         }
     }
