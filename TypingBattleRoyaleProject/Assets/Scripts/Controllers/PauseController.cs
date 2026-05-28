@@ -113,8 +113,10 @@ public class PauseController : MonoBehaviour
         {
             UIMove(_showPos);
             UIAnimator.FadeIn(_canvasGroup, _time);
-            Debug.Log("Me activo Menu");
         }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         AudioListener.pause = true;
     }
     public void ResumeGame()
@@ -126,7 +128,10 @@ public class PauseController : MonoBehaviour
             UIMove(_hidePos);
             UIAnimator.FadeOut(_canvasGroup, _time);
         }
-        AudioListener.pause= false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        AudioListener.pause = false;
 
         if(_closeCoroutine != null)
         {

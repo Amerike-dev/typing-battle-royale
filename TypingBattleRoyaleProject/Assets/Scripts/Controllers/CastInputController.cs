@@ -128,15 +128,6 @@ public class CastInputController : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (_completed) return;
-        if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame)
-        {
-            CancelCast();
-        }
-    }
-
     private void ResolveReferences()
     {
         if (castSpell == null) castSpell = GetComponentInChildren<TMP_InputField>(true);
@@ -335,9 +326,13 @@ public class CastInputController : MonoBehaviour
         targetSystem.ApplyDamageToCurrentTarget(damage, attackerId);
     }
 
-    private void CancelCast()
+    public void CancelCastIfActive()
     {
-        if (_completed) return;
+        if (_completed)
+        {
+            enabled = false;
+            return;
+        }
         _completed = true;
         _casting = false;
 
@@ -346,7 +341,6 @@ public class CastInputController : MonoBehaviour
         FadeTo(0f, () =>
         {
             enabled = false;
-            RequestExitBattle();
         });
     }
 

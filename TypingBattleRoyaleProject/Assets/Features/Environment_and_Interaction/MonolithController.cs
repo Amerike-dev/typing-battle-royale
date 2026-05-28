@@ -14,12 +14,6 @@ public class MonolithController : NetworkBehaviour
     };
     private static readonly HashSet<Elements> PlayableElementsSet = new HashSet<Elements>(PlayableElements);
 
-    [Header("Intanciar monolito")]
-    public MonolithData data;
-    public string id;
-    public int level;
-    public string runeChallenge;
-
     [Header("Revision monolito")]
     public List<string> idPlayers = new List<string>();
     public List<Spell> spells = new List<Spell>();
@@ -38,7 +32,6 @@ public class MonolithController : NetworkBehaviour
 
     void Awake()
     {
-        data = new MonolithData(id, level, runeChallenge);
         syncedSpellNames = new NetworkList<FixedString64Bytes>();
         syncedSpellClaimed = new NetworkList<bool>();
         
