@@ -13,7 +13,9 @@ public class MonolithSpellButton : MonoBehaviour
 
     [Header("Layout de iconos de Tier")]
     [Tooltip("Alto/ancho de cada icono en px.")]
-    [SerializeField] private float iconSize = 64f;
+    [SerializeField] private float iconSize = 96f;
+    [Tooltip("Tamaño de fuente del nombre del hechizo.")]
+    [SerializeField] private float spellNameFontSize = 36f;
     [Tooltip("Cuánto se superponen los iconos en px (se aplica como spacing negativo). Mayor = más encimados, tipo 'CCO'.")]
     [SerializeField] private float iconOverlap = 26f;
     [Tooltip("Empuje de los iconos hacia la izquierda (padding izquierdo del layout, en px).")]
@@ -215,6 +217,15 @@ public class MonolithSpellButton : MonoBehaviour
             if (ic == null) continue;
             ic.preserveAspect = true;
             ic.rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
+        }
+
+        // El texto debe quedar DELANTE de los iconos. En UGUI el orden de hermanos define el
+        // z-order (el último se dibuja encima), así que mandamos el texto al final.
+        if (spellNameText != null)
+        {
+            spellNameText.fontSize = spellNameFontSize;
+            spellNameText.enableAutoSizing = false;
+            spellNameText.transform.SetAsLastSibling();
         }
     }
 

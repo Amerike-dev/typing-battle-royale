@@ -83,6 +83,9 @@ public class IDController : NetworkBehaviour
         already.OnValueChanged += (oldV, newV) => {
             Debug.Log($"<color=green>[READY]</color> Player {OwnerClientId} listo: {newV}");
 
+            // Al marcarse "Listo", el modelo de preview hace el salto una vez (feedback visual en todos los clientes).
+            if (newV) PlayReadyJump();
+
             if (SelectController.Instance != null)
             {
                 SelectController.Instance.ShowReadyUI(OwnerClientId, newV);
@@ -190,6 +193,27 @@ public class IDController : NetworkBehaviour
         UpdateLabel();
     }
     
+    /// <summary>
+    /// Dispara una vez la animación de salto en el modelo de preview de Character Select.
+    /// El preview tiene un Animator "crudo" (sin PlayerAnimatorView), así que seteamos el trigger directo.
+    /// </summary>
+    private void PlayReadyJump()
+    {
+        if (visualModel == null) return;
+
+        Animator animator = visualModel.GetComponentInChildren<Animator>(true);
+        if (animator == null) return;
+
+        foreach (var p in animator.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Trigger && p.name == "Jump")
+            {
+                animator.SetTrigger("Jump");
+                return;
+            }
+        }
+    }
+
     private void UpdateLabel()
     {
         string currentName = playerName.Value.ToString();

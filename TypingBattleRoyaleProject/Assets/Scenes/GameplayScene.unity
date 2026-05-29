@@ -7779,6 +7779,19 @@ MonoBehaviour:
   - {fileID: 894659726}
   - {fileID: 437272486}
   - {fileID: 154882545}
+  selectSpellIcon: {fileID: -1856125226, guid: 7672fe8d0802b1e4b8bb45d15e8e0974, type: 3}
+  acceptIcon: {fileID: 21300000, guid: 54895cf0fe4cd8d4795675fd051cba75, type: 3}
+  instructionsFont: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
+  wsIconHeight: 200
+  acceptIconHeight: 110
+  instructionsFontSize: 30
+  instructionsPadding: {x: 30, y: -30}
+  instructionsRowGap: 24
+  instructionsIconTextGap: 18
+  dimColor: {r: 0, g: 0, b: 0, a: 0.5}
+  failCooldownSeconds: 15
+  reloadIcon: {fileID: 21300000, guid: fa2453b0897b7fe41aa94165f655c7d5, type: 3}
+  cooldownNoticeDuration: 2.5
 --- !u!114 &299665409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75582,6 +75595,12 @@ MonoBehaviour:
   runeDisplay: {fileID: 2038674657}
   hiddenInput: {fileID: 1780654741}
   uiController: {fileID: 1740113933}
+  successIcon: {fileID: 21300000, guid: e67808e90679940488af898891f91576, type: 3}
+  failIcon: {fileID: 21300000, guid: ecf700b0f98a9ff4d86a3b0fab792a11, type: 3}
+  feedbackFont: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
+  feedbackIconSize: 170
+  feedbackFontSize: 42
+  feedbackHoldSeconds: 1.1
 --- !u!114 &1357912787
 MonoBehaviour:
   m_ObjectHideFlags: 0

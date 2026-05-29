@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a7c4e91b8d4d3ca5e6b7c8d9e0f1a2, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  glowStrength: 1
+  glowStrength: 0.2
   fresnelStrength: 1.5
   generateParticles: 1
   emissionRate: 14

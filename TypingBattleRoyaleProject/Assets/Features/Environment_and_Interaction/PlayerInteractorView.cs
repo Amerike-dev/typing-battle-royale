@@ -55,12 +55,22 @@ public class PlayerInteractorView : MonoBehaviour
 
             if (controller != null && player != null)
             {
-                var animatorView = player.playerAnimatorView != null
-                    ? player.playerAnimatorView
-                    : player.GetComponentInChildren<PlayerAnimatorView>(true);
-                if (animatorView != null) animatorView.TriggerInteract();
+                var ui = MonolithLevelSelectUI.Instance;
 
-                MonolithLevelSelectUI.Instance.Show(controller, player);
+                // Cooldown individual por fallo: si aún corre, mostramos el aviso de recarga y no abrimos la selección.
+                if (ui != null && ui.GetRemainingCooldown(controller) > 0f)
+                {
+                    ui.ShowCooldownNotice(controller);
+                }
+                else
+                {
+                    var animatorView = player.playerAnimatorView != null
+                        ? player.playerAnimatorView
+                        : player.GetComponentInChildren<PlayerAnimatorView>(true);
+                    if (animatorView != null) animatorView.TriggerInteract();
+
+                    if (ui != null) ui.Show(controller, player);
+                }
             }
         }
     }
