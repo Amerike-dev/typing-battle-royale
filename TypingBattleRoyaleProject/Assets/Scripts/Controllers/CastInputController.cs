@@ -19,7 +19,6 @@ public class CastInputController : MonoBehaviour
 
     [Header("Spells")]
     public Spell currentSpell;
-    public Spell defaultSpell;
     public string spellText;
 
     [Header("VFX")]
@@ -60,8 +59,9 @@ public class CastInputController : MonoBehaviour
             _cast.action.started += EvaluateAccuracy;
         }
 
-        if (currentSpell == null && defaultSpell != null) currentSpell = defaultSpell;
-        if (string.IsNullOrEmpty(spellText) && currentSpell != null) spellText = currentSpell.runeString;
+        // Sin spell por defecto: si no hay spell asignada no hay texto que tipear (no se puede castear
+        // hasta obtener una de un monolito). Esto también anula cualquier spellText placeholder del prefab.
+        spellText = currentSpell != null ? currentSpell.runeString : string.Empty;
 
         if (spell != null) spell.text = spellText;
         if (uiController != null) uiController.UpdateDisplay(0, false);
@@ -294,7 +294,8 @@ public class CastInputController : MonoBehaviour
 
         ApplyDamageToLockedTarget();
 
-        AudioManager.Instance?.PlaySFX($"sfx_spell_cast_{currentSpell.spellName.ToLower()}");
+        if (currentSpell != null)
+            AudioManager.Instance?.PlaySFX($"sfx_spell_cast_{currentSpell.spellName.ToLower()}");
 
         OnSpellCast?.Invoke(currentSpell);
 

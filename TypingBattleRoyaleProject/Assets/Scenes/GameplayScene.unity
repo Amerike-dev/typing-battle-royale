@@ -2134,6 +2134,7 @@ MonoBehaviour:
   - {fileID: 1403131817}
   initialMonoliths: 9
   islandClusterRadius: 25
+  spawnHeightOffset: 2
 --- !u!1 &212487910
 GameObject:
   m_ObjectHideFlags: 0

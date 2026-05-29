@@ -183,6 +183,9 @@ public static class CharacterSetupTool
         if (pav != null) pav.playerAnimator = modelAnim;
         else log.AppendLine("  AVISO: no se encontró PlayerAnimatorView en la plantilla.");
 
+        // Ajustamos el CharacterController al modelo para que no flote (pies en el piso).
+        FitCharacterController(root, model, log);
+
         // PlayerSkin: renderers del modelo + materiales.
         var ps = root.GetComponent<PlayerSkin>();
         if (ps == null) ps = root.AddComponent<PlayerSkin>();
@@ -231,6 +234,39 @@ public static class CharacterSetupTool
             log.AppendLine($"  placeholder eliminado: {go.name}");
             Object.DestroyImmediate(go);
         }
+    }
+
+    /// <summary>
+    /// Ajusta el CharacterController del root para envolver al modelo y dejar los pies en el piso.
+    /// La base de la cápsula (center.y - height/2) coincide con la parte baja del modelo, así no flota.
+    /// </summary>
+    private static void FitCharacterController(GameObject root, GameObject model, StringBuilder log)
+    {
+        var cc = root.GetComponent<CharacterController>();
+        if (cc == null) { log.AppendLine("  AVISO: el root no tiene CharacterController."); return; }
+
+        cc.enabled = true;
+
+        Bounds b = default;
+        bool has = false;
+        foreach (var r in model.GetComponentsInChildren<Renderer>(true))
+        {
+            if (r is ParticleSystemRenderer) continue;
+            if (!has) { b = r.bounds; has = true; }
+            else b.Encapsulate(r.bounds);
+        }
+
+        if (!has) { log.AppendLine("  AVISO: sin bounds; CharacterController queda con valores por defecto."); return; }
+
+        // Bounds están en mundo; en la escena de preview el root está en el origen, pero convertimos por seguridad.
+        Vector3 localCenter = root.transform.InverseTransformPoint(b.center);
+        cc.height = Mathf.Max(0.1f, b.size.y);
+        // Usamos el lado MÁS ANGOSTO (torso) en vez del más ancho (brazos/sombrero) y un margen del 0.7.
+        float torsoExtent = Mathf.Min(b.extents.x, b.extents.z);
+        cc.radius = Mathf.Clamp(torsoExtent * 0.7f, 0.1f, cc.height * 0.5f);
+        cc.center = new Vector3(0f, localCenter.y, 0f);
+
+        log.AppendLine($"  CharacterController ajustado: height={cc.height:0.00} radius={cc.radius:0.00} centerY={cc.center.y:0.00}");
     }
 
     private static void RegisterNetworkPrefab(GameObject prefab, StringBuilder log)

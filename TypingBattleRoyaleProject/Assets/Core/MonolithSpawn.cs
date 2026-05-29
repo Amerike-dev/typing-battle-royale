@@ -15,6 +15,9 @@ public class MonolithSpawn : NetworkBehaviour
     [Tooltip("Distancia máxima entre puntos de spawn para considerarlos parte de la misma isla. Ajustar según el tamaño de las islas en la escena.")]
     public float islandClusterRadius = 25f;
 
+    [Tooltip("Altura extra (en unidades de mundo) que se suma a la posición de spawn del monolito.")]
+    public float spawnHeightOffset = 2f;
+
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
@@ -72,7 +75,8 @@ public class MonolithSpawn : NetworkBehaviour
         // (el -90° en X que lo mantiene de pie). Si solo usáramos selectedPoint.rotation
         // se descartaría la rotación del prefab y el monolito quedaría acostado.
         Quaternion spawnRotation = selectedPoint.rotation * monolithPrefab.transform.rotation;
-        GameObject monolith = Instantiate(monolithPrefab, selectedPoint.position, spawnRotation);
+        Vector3 spawnPosition = selectedPoint.position + Vector3.up * spawnHeightOffset;
+        GameObject monolith = Instantiate(monolithPrefab, spawnPosition, spawnRotation);
 
         var networkObject = monolith.GetComponent<NetworkObject>();
         if (networkObject == null)
