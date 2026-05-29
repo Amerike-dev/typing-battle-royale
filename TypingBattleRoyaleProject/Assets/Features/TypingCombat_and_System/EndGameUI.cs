@@ -36,12 +36,6 @@ public class EndGameUI : MonoBehaviour
     [SerializeField] bool _advancedStats = false;
     private Coroutine _moveRoutine;
 
-    [SerializeField] RectTransform _headerPanelUI;
-    [SerializeField] CanvasGroup _headerCanvasGroup;
-    [SerializeField] Vector2 _headerShowPos;
-    [SerializeField] Vector2 _headerHidePos;
-    private Coroutine _headerMoveRoutine;
-
     [SerializeField] RectTransform _basicPanelUI;
     [SerializeField] CanvasGroup _basicCanvasGroup;
     [SerializeField] Vector2 _basicShowPos = new Vector2(0, 0);
@@ -59,6 +53,13 @@ public class EndGameUI : MonoBehaviour
     [SerializeField] Vector2 _midleShowPos;
     [SerializeField] Vector2 _midleHidePos;
     private Coroutine _midleMoveRoutine;
+
+    [SerializeField] RectTransform _leftContainer;
+    [SerializeField] RectTransform _rightContainer;
+    [SerializeField] float _showHeight = 120f;
+    [SerializeField] float _hideHeight = 350f;
+    private Coroutine _leftContainerRoutine;
+    private Coroutine _rightContainerRoutine;
 
     private void Awake()
     {
@@ -158,14 +159,20 @@ public class EndGameUI : MonoBehaviour
     {
         _advancedStats = true;
         BasicUIMove(_basicShowPos);
+        MidleUIMove(_midleShowPos);
         AdvancedUIMove(_advancedShowPos);
+        UIChangeHeightLeft(_showHeight);
+        UIChangeHeightRight(_showHeight);
         UIAnimator.FadeIn(_advancedCanvasGroup, _time);
     }
     public void HideBotton()
     {
         _advancedStats = false;
         BasicUIMove(_basicHidePos);
+        MidleUIMove(_midleHidePos);
         AdvancedUIMove(_advancedHidePos);
+        UIChangeHeightLeft(_hideHeight);
+        UIChangeHeightRight(_hideHeight);
         UIAnimator.FadeOut(_advancedCanvasGroup, _time);
     }
     public void UIMove(Vector2 target)
@@ -185,6 +192,14 @@ public class EndGameUI : MonoBehaviour
         }
         _basicMoveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_basicPanelUI, target, _time));
     }
+    public void MidleUIMove(Vector2 target)
+    {
+        if (_midleMoveRoutine != null)
+        {
+            StopCoroutine(_midleMoveRoutine);
+        }
+        _midleMoveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_midlePanelUI, target, _time));
+    }
     public void AdvancedUIMove(Vector2 target)
     {
         if (_advancedMoveRoutine != null)
@@ -192,5 +207,21 @@ public class EndGameUI : MonoBehaviour
             StopCoroutine(_advancedMoveRoutine);
         }
         _advancedMoveRoutine = StartCoroutine(UIAnimator.PanelUIMove(_advancedPanelUI, target, _time));
+    }
+    public void UIChangeHeightLeft(float target)
+    {
+        if (_leftContainerRoutine != null)
+        {
+            StopCoroutine(_leftContainerRoutine);
+        }
+        _leftContainerRoutine = StartCoroutine(UIAnimator.HeightUIChange(_leftContainer, target, _time));
+    }
+    public void UIChangeHeightRight(float target)
+    {
+        if (_rightContainerRoutine != null)
+        {
+            StopCoroutine(_rightContainerRoutine);
+        }
+        _rightContainerRoutine = StartCoroutine(UIAnimator.HeightUIChange(_rightContainer, target, _time));
     }
 }

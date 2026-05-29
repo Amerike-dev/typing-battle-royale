@@ -31,14 +31,27 @@ public static class UIAnimator
     public static IEnumerator PanelUIMove(RectTransform canvasGrupUI, Vector2 target, float time)
     {
         Vector2 startPos = canvasGrupUI.anchoredPosition;
-        float duration = 0.3f;
-        while (time < duration)
+        float duration = 0f;
+        while (duration < time)
         {
-            canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, time / duration);
-            time += Time.unscaledDeltaTime;
+            canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, duration / time);
+            duration += Time.unscaledDeltaTime;
 
             yield return null;
         }
         canvasGrupUI.anchoredPosition = target;
+    }
+    public static IEnumerator HeightUIChange(RectTransform rectTransform,float target,float time)
+    {
+        float startHeight = rectTransform.sizeDelta.y;
+        float duration = 0f;
+        while (duration < time)
+        {
+            float currentHeight = Mathf.Lerp(startHeight, target, duration / time);
+            rectTransform.sizeDelta= new Vector2(rectTransform.sizeDelta.x, currentHeight);
+            duration += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, target);
     }
 }
