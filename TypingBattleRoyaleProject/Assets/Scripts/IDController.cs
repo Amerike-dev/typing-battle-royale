@@ -154,9 +154,18 @@ public class IDController : NetworkBehaviour
                 spawnPosition += Camera.main.transform.forward * -1f;
         }
 
-        GameObject prefab = arraySkins[skinIndex.Value].models[colorIndex.Value];
-        visualModel = Instantiate(prefab, spawnPosition, spawnRotation);
+        SkinInfo skin = arraySkins[skinIndex.Value];
+        if (skin == null || skin.previewModel == null) return;
+
+        visualModel = Instantiate(skin.previewModel, spawnPosition, spawnRotation);
         visualModel.transform.localScale = spawnScale;
+
+        if (skin.skins != null && skin.skins.Length > 0)
+        {
+            int ci = Mathf.Clamp(colorIndex.Value, 0, skin.skins.Length - 1);
+            PlayerSkin.ApplyTo(visualModel, skin.skins[ci]);
+        }
+
         UpdateLabel();
     }
     

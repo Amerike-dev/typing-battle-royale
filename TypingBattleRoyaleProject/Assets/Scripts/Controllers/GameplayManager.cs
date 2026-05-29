@@ -246,7 +246,7 @@ public class GameplayManager : NetworkBehaviour
             }
         }
 
-        GameObject prefab = arraySkins[selection.skinIndex].gameplayPrefabs[selection.colorIndex];
+        GameObject prefab = arraySkins[selection.skinIndex].gameplayPrefab;
 
         GameObject playerInstance = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
@@ -255,7 +255,11 @@ public class GameplayManager : NetworkBehaviour
         if (networkObject != null)
         {
             networkObject.SpawnAsPlayerObject(clientId);
-            
+
+            // Aplica la skin (material) elegida; se sincroniza a todos los clientes.
+            var skinApplier = playerInstance.GetComponent<PlayerSkin>();
+            if (skinApplier != null) skinApplier.ServerSetColor(selection.colorIndex);
+
             if (IsServer)
             {
                 var ps = playerInstance.GetComponent<PlayerStatsNet>();

@@ -30,6 +30,9 @@ public class MonolithController : NetworkBehaviour
     public NetworkList<FixedString64Bytes> syncedSpellNames;
     public NetworkList<bool> syncedSpellClaimed;
 
+    // Elemento del monolito sincronizado a todos los clientes (lo usa MonolithAura para el color del glow/partículas).
+    public NetworkVariable<Elements> NetworkElement = new NetworkVariable<Elements>(Elements.None);
+
     void Awake()
     {
         syncedSpellNames = new NetworkList<FixedString64Bytes>();
@@ -82,6 +85,9 @@ public class MonolithController : NetworkBehaviour
         Elements targetElement = forcedTargetElement != Elements.None
             ? forcedTargetElement
             : PlayableElements[Random.Range(0, PlayableElements.Length)];
+
+        // Publicamos el elemento para que los clientes coloreen el glow/aura (PopulateSpells corre en servidor).
+        NetworkElement.Value = targetElement;
 
         List<Spell> playablePool = allSpells
             .Where(s => s != null && PlayableElementsSet.Contains(s.elementType))

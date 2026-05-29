@@ -4662,13 +4662,24 @@ MonoBehaviour:
   joinButton: {fileID: 1723243639}
   _startMatchButton: {fileID: 2026167088}
   lobbyUI: {fileID: 1556095908}
+  _joinIpInput: {fileID: 0}
+  _nameInputTemplate: {fileID: 0}
+  _joinIpSlideDuration: 0.18
+  _joinIpSlideOffset: {x: 290, y: 0}
+  _confirmModal: {fileID: 0}
+  _modalCanvasParent: {fileID: 0}
   defaultPort: 7777
   gameScene: LoadingScreen
   _maxPlayers: 4
+  _connectedLabelScale: 0.6
   _hostedIpFontSize: 24
   _playerCountSprite: {fileID: 21300000, guid: c0a773500c35c3444bf87e0968a1fc65, type: 3}
+  _playerCountBadgeSize: {x: 50, y: 50}
+  _playerCountBadgePosition: {x: 400, y: 70}
   _playerCountTextColor: {r: 0, g: 0, b: 0, a: 1}
+  _playerCountFontSize: 20
   _playerCountFont: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
+  _playerCountTextTopPadding: 15
 --- !u!4 &1775311880
 Transform:
   m_ObjectHideFlags: 0

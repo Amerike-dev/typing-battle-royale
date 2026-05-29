@@ -217,7 +217,7 @@ RectTransform:
   m_GameObject: {fileID: 2772884382738487207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 52133989394215596}
@@ -1056,7 +1056,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IDController
   ShowTopMostFoldoutHeaderGroup: 1
-  arraySkins: []
+  arraySkins:
+  - {fileID: 11400000, guid: 998d1e9fe8520814fb793429bfb67637, type: 2}
+  - {fileID: 11400000, guid: 22025ece381a35b40833eb17b5045c4c, type: 2}
+  - {fileID: 11400000, guid: a467ae8fcc8b9c849b2c2a113c0644b3, type: 2}
+  - {fileID: 11400000, guid: f07c7b58e9e774c46be52c093235ca45, type: 2}
+  _modelScale: {x: 1, y: 1, z: 1}
+  _modelPositionOffset: {x: 0, y: 0, z: 0}
+  _useLegacyCameraOffset: 1
   skinIndex:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0

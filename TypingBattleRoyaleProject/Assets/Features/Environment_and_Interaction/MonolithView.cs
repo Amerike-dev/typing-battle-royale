@@ -19,10 +19,10 @@ public class MonolithView : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!AllMonoliths.Contains(this)) AllMonoliths.Add(this);
-        
+
         monolithRenderer = GetComponent<Renderer>();
 
-        Debug.Log($"[MonolithView] OnNetworkSpawn — IsServer:{IsServer} IsClient:{IsClient} | {gameObject.name} | escena:{gameObject.scene.name}");
+        Debug.Log($"[MONOLITH-POP] MonolithView OnNetworkSpawn -> '{gameObject.name}' pos={transform.position} | IsServer:{IsServer} IsClient:{IsClient} | AllMonoliths now has {AllMonoliths.Count} entries");
 
         IsExhausted.OnValueChanged += OnExhaustedChanged;
 
@@ -33,7 +33,9 @@ public class MonolithView : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         if (AllMonoliths.Contains(this)) AllMonoliths.Remove(this);
-        
+
+        Debug.Log($"[MONOLITH-POP] MonolithView OnNetworkDespawn -> '{gameObject.name}' | AllMonoliths now has {AllMonoliths.Count} entries");
+
         IsExhausted.OnValueChanged -= OnExhaustedChanged;
     }
 

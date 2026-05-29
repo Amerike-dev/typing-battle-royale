@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4180394864273671833}
   - component: {fileID: -7339513429800172571}
   - component: {fileID: 7244235179032168616}
+  - component: {fileID: 1837465920113344771}
   m_Layer: 0
   m_Name: Monolith
   m_TagString: Untagged
@@ -31,13 +32,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5687778378914436356}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 4.5, z: 2}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 2.78, z: -0}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &2656037322409463498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +71,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5687778378914436356}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -7159758034572423711, guid: 40c010a16677f2347b145198f7e33d0d, type: 3}
 --- !u!23 &573150419540331604
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -96,7 +97,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22223adba7fd1c48adbe8eca9dd225a, type: 2}
+  - {fileID: 2100000, guid: 136988b04e8947443bc6abf6ae796a2e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -154,9 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonolithController
   ShowTopMostFoldoutHeaderGroup: 1
-  id: 0
-  level: 0
-  runeChallenge: 0
   idPlayers: []
   spells: []
   allSpells:
@@ -208,8 +206,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0a06ef2a50d54a8489bc53cf065b9621, type: 2}
   - {fileID: 11400000, guid: 68c4ec59824fb784aa976f231aa8f083, type: 2}
   - {fileID: 11400000, guid: db716118500b13d418ef3ca360624295, type: 2}
+  forcedTargetElement: 0
   sinkDepth: 5
   sinkDuration: 2
+  syncedSpellNames:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+  syncedSpellClaimed:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
 --- !u!114 &-7339513429800172571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,3 +282,25 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1837465920113344771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687778378914436356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a7c4e91b8d4d3ca5e6b7c8d9e0f1a2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  glowStrength: 1
+  fresnelStrength: 1.5
+  generateParticles: 1
+  emissionRate: 14
+  emitRadius: 10
+  riseSpeed: 8
+  particleSize: 3
+  particleLifetime: 4
+  baseHeightOffset: 0
+  palette: []
