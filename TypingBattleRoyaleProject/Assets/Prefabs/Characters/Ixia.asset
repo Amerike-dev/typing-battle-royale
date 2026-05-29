@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75624399eb846d47966ec4bf6b1fec4, type: 3}
+  m_Name: Ixia
+  m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
+  skinName: Ixia
+  previewModel: {fileID: 320689088333645321, guid: d1b8c70cf2113d649b9094b43227cc44, type: 3}
+  gameplayPrefab: {fileID: 6406874694368422820, guid: 0bf64667ac6a56c4ca49e021f3b5ea81, type: 3}
+  skins:
+  - {fileID: 2100000, guid: b235dec987ca9b6469a9149977c7c249, type: 2}
+  - {fileID: 2100000, guid: b4f812d2d014a9c44a010bad6aad4ac1, type: 2}
+  - {fileID: 2100000, guid: 72dae62f0c4b62143af28d3c03a52911, type: 2}
+  animator: {fileID: 9100000, guid: df73777bfcbb6d442aa84f9c5a194275, type: 2}

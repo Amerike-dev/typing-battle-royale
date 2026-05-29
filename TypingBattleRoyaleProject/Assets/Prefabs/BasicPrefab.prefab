@@ -178,12 +178,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IDController
   ShowTopMostFoldoutHeaderGroup: 1
   arraySkins:
-  - {fileID: 11400000, guid: fb9fc1c07f8c0c54187c5547a0dca92e, type: 2}
-  - {fileID: 11400000, guid: afaca3788eb4e1e4e8218a55ab76d942, type: 2}
-  - {fileID: 11400000, guid: 9789dbaf4227e5d46821ae492ad8d6f9, type: 2}
-  - {fileID: 11400000, guid: bdfacfb9ec5b3b242b10aaa0aa135e57, type: 2}
-  - {fileID: 11400000, guid: 59f9be5442c00e944a423bff4a130d06, type: 2}
-  - {fileID: 11400000, guid: c770ba0013e033640bab4750998b70fb, type: 2}
+  - {fileID: 11400000, guid: 998d1e9fe8520814fb793429bfb67637, type: 2}
+  - {fileID: 11400000, guid: 22025ece381a35b40833eb17b5045c4c, type: 2}
+  - {fileID: 11400000, guid: a467ae8fcc8b9c849b2c2a113c0644b3, type: 2}
+  - {fileID: 11400000, guid: f07c7b58e9e774c46be52c093235ca45, type: 2}
+  _modelScale: {x: 1, y: 1, z: 1}
+  _modelPositionOffset: {x: 0, y: 0, z: 0}
+  _useLegacyCameraOffset: 1
   skinIndex:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -199,3 +200,77 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  playerName:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+  canvasLabelGO: {fileID: 0}
+  myEnemyLabel: {fileID: 0}

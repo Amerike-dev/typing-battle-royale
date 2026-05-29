@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75624399eb846d47966ec4bf6b1fec4, type: 3}
+  m_Name: Berry
+  m_EditorClassIdentifier: Assembly-CSharp::SkinInfo
+  skinName: Berry
+  previewModel: {fileID: 4209076806516443979, guid: 48fb159fd2a2bf34d88724acf684e065, type: 3}
+  gameplayPrefab: {fileID: 4452277382648110172, guid: 8d8f052d5b38e9342b08b3493e0f84e4, type: 3}
+  skins:
+  - {fileID: 2100000, guid: e2dc295bb8d3d0942b17256ce3513553, type: 2}
+  - {fileID: 2100000, guid: 85f33b88404b5984ab41a1f6a8a69a76, type: 2}
+  - {fileID: 2100000, guid: 663e3f9570af78941bbcab45ba493148, type: 2}
+  animator: {fileID: 9100000, guid: 74646bf9a54717e46813741d7c2da089, type: 2}

@@ -6,6 +6,10 @@ Shader "Custom/SimpleToonShader"
         _BaseColor ("Base Color", Color) = (1,1,1,1)
         _StepAmount ("Shadow Steps", Range(1, 10)) = 2
         _Intensity ("Shadow Intensity", Range(0, 1)) = 0.5
+        [HDR] _EmissionColor ("Emission Color (HDR)", Color) = (0,0,0,1)
+        _EmissionStrength ("Emission Strength", Range(0, 20)) = 0
+        _FresnelPower ("Fresnel (Rim) Power", Range(0.5, 8)) = 3
+        _FresnelStrength ("Fresnel (Rim) Strength", Range(0, 10)) = 0
     }
     SubShader
     {
@@ -34,12 +38,17 @@ Shader "Custom/SimpleToonShader"
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float3 normalWS : TEXCOORD1;
+                float3 positionWS : TEXCOORD2;
             };
 
             sampler2D _MainTex;
             float4 _BaseColor;
             float _StepAmount;
             float _Intensity;
+            half4 _EmissionColor;
+            float _EmissionStrength;
+            float _FresnelPower;
+            float _FresnelStrength;
 
             Varyings vert (Attributes input)
             {
@@ -47,6 +56,7 @@ Shader "Custom/SimpleToonShader"
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 output.uv = input.uv;
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 return output;
             }
 
@@ -56,14 +66,24 @@ Shader "Custom/SimpleToonShader"
 
                 Light mainLight = GetMainLight();
                 float3 normal = normalize(input.normalWS);
-                
+
                 float NdotL = dot(normal, mainLight.direction);
 
                 float lightStep = floor((NdotL * 0.5 + 0.5) * _StepAmount) / _StepAmount;
-                
+
                 float toonLight = lerp(_Intensity, 1.0, lightStep);
 
-                return texColor * toonLight * half4(mainLight.color, 1);
+                half3 litColor = texColor.rgb * toonLight * mainLight.color;
+
+                // Emisión base (glow controlado desde el material, alimenta el Bloom de URP)
+                half3 emission = _EmissionColor.rgb * _EmissionStrength;
+
+                // Fresnel / rim para un brillo místico en los bordes
+                float3 viewDir = normalize(GetCameraPositionWS() - input.positionWS);
+                float fresnel = pow(saturate(1.0 - dot(normal, viewDir)), _FresnelPower);
+                emission += _EmissionColor.rgb * fresnel * _FresnelStrength;
+
+                return half4(litColor + emission, texColor.a);
             }
             ENDHLSL
         }
