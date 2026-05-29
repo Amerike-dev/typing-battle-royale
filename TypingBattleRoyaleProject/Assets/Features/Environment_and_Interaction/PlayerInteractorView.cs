@@ -20,8 +20,13 @@ public class PlayerInteractorView : MonoBehaviour
 
     public bool isVisible = false;
 
+    private bool _loggedOwnerActive = false;
+    private int _lastLoggedMonolithCount = -1;
+    private GameObject _lastLoggedNear = null;
+
     private void Start()
     {
+        Debug.Log($"[MONOLITH-POP] PlayerInteractorView.Start on '{gameObject.name}' — debugPop={(debugPop != null ? "OK" : "NULL")}, proximityRange={proximityRange}, checkerInterval={checkerMonolith}s, hidePos={signalHidePos}, showPos={signalShowPos}");
         StartCoroutine(CheckMonolith());
     }
     
@@ -54,7 +59,13 @@ public class PlayerInteractorView : MonoBehaviour
     {
         registeredMonoliths.Clear();
         registeredMonoliths.AddRange(MonolithView.AllMonoliths);
-        registeredMonoliths.RemoveAll(m => m == null); 
+        registeredMonoliths.RemoveAll(m => m == null);
+
+        if (registeredMonoliths.Count != _lastLoggedMonolithCount)
+        {
+            Debug.Log($"[MONOLITH-POP] AllMonoliths count changed: {_lastLoggedMonolithCount} -> {registeredMonoliths.Count}");
+            _lastLoggedMonolithCount = registeredMonoliths.Count;
+        }
     }
 
     public void NearMonolithCheck()
@@ -62,11 +73,20 @@ public class PlayerInteractorView : MonoBehaviour
         float nearestDistance = Mathf.Infinity;
         NearMonolith = null;
 
+        float closestObserved = Mathf.Infinity;
+        string closestName = "<none>";
+
         foreach (var monolith in registeredMonoliths)
         {
             if (monolith == null) continue;
 
             float distance = Vector3.Distance(monolith.transform.position, transform.position);
+
+            if (distance < closestObserved)
+            {
+                closestObserved = distance;
+                closestName = monolith.gameObject.name;
+            }
 
             if (distance < proximityRange && distance < nearestDistance)
             {
@@ -75,12 +95,26 @@ public class PlayerInteractorView : MonoBehaviour
             }
         }
 
+        if (NearMonolith != _lastLoggedNear)
+        {
+            if (NearMonolith != null)
+            {
+                Debug.Log($"[MONOLITH-POP] NEAR -> {NearMonolith.name} @ {nearestDistance:F2} (range={proximityRange})");
+            }
+            else
+            {
+                Debug.Log($"[MONOLITH-POP] NEAR -> none. Closest in scene: {closestName} @ {closestObserved:F2} (range={proximityRange})");
+            }
+            _lastLoggedNear = NearMonolith;
+        }
+
         if (NearMonolith != null)
         {
             MonolithView = NearMonolith.GetComponent<MonolithView>();
             if (!isVisible)
             {
                 isVisible = true;
+                Debug.Log($"[MONOLITH-POP] SHOW signal -> debugPop={(debugPop != null ? "OK" : "NULL")}");
                 if (debugPop != null) debugPop.MoveSignal(signalShowPos, 1f);
             }
         }
@@ -90,6 +124,7 @@ public class PlayerInteractorView : MonoBehaviour
             if (isVisible)
             {
                 isVisible = false;
+                Debug.Log($"[MONOLITH-POP] HIDE signal -> debugPop={(debugPop != null ? "OK" : "NULL")}");
                 if (debugPop != null) debugPop.MoveSignal(signalHidePos, 0f);
             }
         }
@@ -103,6 +138,11 @@ public class PlayerInteractorView : MonoBehaviour
             var player = GetComponent<PlayerController>();
             if (player != null && player.IsOwner)
             {
+                if (!_loggedOwnerActive)
+                {
+                    Debug.Log($"[MONOLITH-POP] CheckMonolith activated for owner '{gameObject.name}'");
+                    _loggedOwnerActive = true;
+                }
                 RefreshMonolithList();
                 NearMonolithCheck();
             }
