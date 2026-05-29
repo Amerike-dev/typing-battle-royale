@@ -82,9 +82,9 @@ public class MonolithTypingChallenge : MonoBehaviour
             uiController.UpdateDisplay(_spell.runeString, hasError ? typed.Length - 1 : typed.Length, hasError);
         }
 
-        if (hasError) 
+        if (hasError)
         {
-            FailChallenge();
+            FailChallenge(byTypo: true);
             return;
         }
 
@@ -94,11 +94,19 @@ public class MonolithTypingChallenge : MonoBehaviour
         }
     }
 
-    private void FailChallenge()
+    /// <param name="byTypo">true = falló tipeando (penaliza con cooldown + feedback); false = canceló con ESC (sin penalización).</param>
+    private void FailChallenge(bool byTypo)
     {
-        Debug.Log("¡Fallaste el tipeo!");
+        Debug.Log(byTypo ? "¡Fallaste el tipeo!" : "Desafío cancelado.");
         Close();
-        ShowSpellFeedback(false);
+
+        if (byTypo)
+        {
+            ShowSpellFeedback(false);
+            // Cooldown individual: no puede reintentar ESTE monolito por unos segundos.
+            if (MonolithLevelSelectUI.Instance != null && _monolith != null)
+                MonolithLevelSelectUI.Instance.RegisterFailCooldown(_monolith);
+        }
     }
 
     private void WinChallenge()
@@ -129,7 +137,7 @@ public class MonolithTypingChallenge : MonoBehaviour
     {
         if (myCanvas.enabled && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            FailChallenge();
+            FailChallenge(byTypo: false);
         }
     }
 

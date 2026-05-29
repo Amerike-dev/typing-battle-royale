@@ -2,6 +2,8 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 
@@ -30,7 +32,21 @@ public class MonolithLevelSelectUI : MonoBehaviour
     [Tooltip("Color/opacidad del panel de fondo que cubre toda la pantalla detrás de la UI.")]
     [SerializeField] private Color dimColor = new Color(0f, 0f, 0f, 0.5f);
 
+    [Header("Cooldown por fallo (individual, por monolito)")]
+    [Tooltip("Segundos que un jugador debe esperar para reintentar un monolito tras fallar el tipeo.")]
+    [SerializeField] private float failCooldownSeconds = 15f;
+    [Tooltip("Sprite del aviso de recarga (wpm.png).")]
+    [SerializeField] private Sprite reloadIcon;
+    [Tooltip("Segundos que se muestra el aviso 'recargando' por cada vez que el jugador presiona E.")]
+    [SerializeField] private float cooldownNoticeDuration = 2.5f;
+
     private RectTransform _instructionsRoot;
+
+    // Cooldown LOCAL por monolito (key = NetworkObjectId). Solo afecta a este jugador.
+    private readonly Dictionary<ulong, float> _failCooldownUntil = new Dictionary<ulong, float>();
+    private CanvasGroup _cooldownGroup;
+    private TMP_Text _cooldownText;
+    private Coroutine _cooldownRoutine;
 
     private PlayerController _localPlayer;
     private int _selectedIndex;
@@ -234,6 +250,114 @@ public class MonolithLevelSelectUI : MonoBehaviour
 
         BuildInstructionRow("Row_Select", selectSpellIcon, wsIconHeight, "Seleccionar Hechizo", 0f, textColumnX);
         BuildInstructionRow("Row_Accept", acceptIcon, acceptIconHeight, "Aceptar", -(wsIconHeight + instructionsRowGap), textColumnX);
+    }
+
+    // ---------------- Cooldown por fallo (individual) ----------------
+
+    /// <summary>Registra el cooldown local para este monolito tras un fallo de tipeo del jugador.</summary>
+    public void RegisterFailCooldown(MonolithController monolith)
+    {
+        if (monolith == null) return;
+        _failCooldownUntil[monolith.NetworkObjectId] = Time.time + failCooldownSeconds;
+    }
+
+    /// <summary>Segundos restantes de cooldown para este monolito (0 si ya puede reintentar).</summary>
+    public float GetRemainingCooldown(MonolithController monolith)
+    {
+        if (monolith == null) return 0f;
+        if (_failCooldownUntil.TryGetValue(monolith.NetworkObjectId, out float until))
+            return Mathf.Max(0f, until - Time.time);
+        return 0f;
+    }
+
+    /// <summary>Muestra (solo localmente) el aviso "Monolito recargando..." con la cuenta regresiva.</summary>
+    public void ShowCooldownNotice(MonolithController monolith)
+    {
+        if (monolith == null) return;
+        EnsureCooldownUI();
+        if (_cooldownRoutine != null) StopCoroutine(_cooldownRoutine);
+        _cooldownRoutine = StartCoroutine(CooldownNoticeRoutine(monolith));
+    }
+
+    private IEnumerator CooldownNoticeRoutine(MonolithController monolith)
+    {
+        _cooldownGroup.gameObject.SetActive(true);
+        _cooldownGroup.alpha = 1f;
+
+        float shownFor = 0f;
+        float remaining = GetRemainingCooldown(monolith);
+        while (remaining > 0f && shownFor < cooldownNoticeDuration)
+        {
+            int secs = Mathf.CeilToInt(remaining);
+            _cooldownText.text = $"Monolito recargando...\nRegresa en {secs} segundos";
+            shownFor += Time.deltaTime;
+            yield return null;
+            remaining = GetRemainingCooldown(monolith);
+        }
+
+        float t = 0f;
+        const float fade = 0.25f;
+        float startAlpha = _cooldownGroup.alpha;
+        while (t < fade)
+        {
+            t += Time.deltaTime;
+            _cooldownGroup.alpha = Mathf.Lerp(startAlpha, 0f, t / fade);
+            yield return null;
+        }
+
+        _cooldownGroup.alpha = 0f;
+        _cooldownGroup.gameObject.SetActive(false);
+        _cooldownRoutine = null;
+    }
+
+    private void EnsureCooldownUI()
+    {
+        if (_cooldownGroup != null) return;
+
+        GameObject canvasGo = new GameObject("MonolithCooldownCanvas",
+            typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        Canvas canvas = canvasGo.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 40;
+        var scaler = canvasGo.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        GameObject panel = new GameObject("CooldownNotice", typeof(RectTransform), typeof(CanvasGroup));
+        RectTransform panelRt = panel.GetComponent<RectTransform>();
+        panelRt.SetParent(canvas.transform, false);
+        panelRt.anchorMin = panelRt.anchorMax = panelRt.pivot = new Vector2(0.5f, 0.5f);
+        panelRt.anchoredPosition = new Vector2(0f, 120f);
+        _cooldownGroup = panel.GetComponent<CanvasGroup>();
+
+        float iconH = 140f;
+        float iconW = IconWidth(reloadIcon, iconH);
+        GameObject iconGo = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        RectTransform iconRt = iconGo.GetComponent<RectTransform>();
+        iconRt.SetParent(panelRt, false);
+        iconRt.anchorMin = iconRt.anchorMax = iconRt.pivot = new Vector2(0.5f, 0.5f);
+        iconRt.sizeDelta = new Vector2(iconW, iconH);
+        iconRt.anchoredPosition = new Vector2(0f, iconH * 0.5f + 20f);
+        Image img = iconGo.GetComponent<Image>();
+        img.sprite = reloadIcon;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+
+        GameObject txtGo = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer));
+        RectTransform txtRt = txtGo.GetComponent<RectTransform>();
+        txtRt.SetParent(panelRt, false);
+        txtRt.anchorMin = txtRt.anchorMax = txtRt.pivot = new Vector2(0.5f, 0.5f);
+        txtRt.sizeDelta = new Vector2(760f, 130f);
+        txtRt.anchoredPosition = new Vector2(0f, -40f);
+        _cooldownText = txtGo.AddComponent<TextMeshProUGUI>();
+        if (instructionsFont != null) _cooldownText.font = instructionsFont;
+        _cooldownText.fontSize = 36f;
+        _cooldownText.color = new Color(1f, 0.85f, 0.4f);
+        _cooldownText.alignment = TextAlignmentOptions.Center;
+        _cooldownText.raycastTarget = false;
+
+        _cooldownGroup.gameObject.SetActive(false);
     }
 
     /// <summary>Ancho que tendrá un icono a una altura dada, conservando el aspecto del sprite.</summary>
