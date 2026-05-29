@@ -52,7 +52,6 @@ public class CastInputController : MonoBehaviour
     private TypingOverlay _typingOverlay;
 
     public PlayerAudio playerAudio;
-
     private TypingOverlay GetOverlay()
     {
         if (_typingOverlay == null)
