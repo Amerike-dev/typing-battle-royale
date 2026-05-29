@@ -11,6 +11,17 @@ public class MonolithSpellButton : MonoBehaviour
     [Header("Iconos que representan Elemento y Tier")]
     [SerializeField] private Image[] tierElementIcons;
 
+    [Header("Layout de iconos de Tier")]
+    [Tooltip("Alto/ancho de cada icono en px.")]
+    [SerializeField] private float iconSize = 64f;
+    [Tooltip("Cuánto se superponen los iconos en px (se aplica como spacing negativo). Mayor = más encimados, tipo 'CCO'.")]
+    [SerializeField] private float iconOverlap = 26f;
+    [Tooltip("Empuje de los iconos hacia la izquierda (padding izquierdo del layout, en px).")]
+    [SerializeField] private float iconsLeftPadding = 22f;
+    [Tooltip("Fracción del alto del botón que ocupa la franja de iconos (0-1), centrada verticalmente.")]
+    [Range(0.1f, 1f)]
+    [SerializeField] private float iconsAreaHeight = 0.8f;
+
     [Header("Iconos de Elementos")]
     [SerializeField] private Sprite fireIcon;
     [SerializeField] private Sprite waterIcon;
@@ -46,8 +57,9 @@ public class MonolithSpellButton : MonoBehaviour
         if (tierText != null) tierText.text = spell.tier.ToString();
 
         UpdateElementAndTier(spell.elementType, spell.tier);
+        ConfigureIconLayout();
         _onClickAction = onClick;
-        
+
         SetButtonState(state);
     }
 
@@ -152,15 +164,74 @@ public class MonolithSpellButton : MonoBehaviour
         }
     }
 
-    private void SetButtonNormalColor(Color newColor)
+    /// <summary>
+    /// Configura el HorizontalLayoutTier para que los iconos sean cuadrados de tamaño fijo,
+    /// se superpongan un poco (spacing negativo), queden alineados a la izquierda y ocupen
+    /// buena parte del alto del botón (franja centrada verticalmente).
+    /// </summary>
+    private void ConfigureIconLayout()
+    {
+        if (tierElementIcons == null) return;
+
+        Image first = null;
+        foreach (var ic in tierElementIcons)
+        {
+            if (ic != null) { first = ic; break; }
+        }
+        if (first == null || first.transform.parent == null) return;
+
+        Transform container = first.transform.parent;
+
+        var hlg = container.GetComponent<HorizontalLayoutGroup>();
+        if (hlg != null)
+        {
+            hlg.childControlWidth = false;
+            hlg.childControlHeight = false;
+            hlg.childForceExpandWidth = false;
+            hlg.childForceExpandHeight = false;
+            hlg.childAlignment = TextAnchor.MiddleLeft;
+            hlg.spacing = -Mathf.Abs(iconOverlap);
+
+            RectOffset pad = hlg.padding;
+            pad.left = Mathf.RoundToInt(iconsLeftPadding);
+            pad.right = 0;
+            pad.top = 0;
+            pad.bottom = 0;
+            hlg.padding = pad;
+        }
+
+        // La franja de iconos ocupa una fracción del alto del botón, centrada verticalmente.
+        if (container is RectTransform containerRt)
+        {
+            float half = Mathf.Clamp01(iconsAreaHeight) * 0.5f;
+            containerRt.anchorMin = new Vector2(containerRt.anchorMin.x, 0.5f - half);
+            containerRt.anchorMax = new Vector2(containerRt.anchorMax.x, 0.5f + half);
+            Vector2 offMin = containerRt.offsetMin; offMin.y = 0f; containerRt.offsetMin = offMin;
+            Vector2 offMax = containerRt.offsetMax; offMax.y = 0f; containerRt.offsetMax = offMax;
+        }
+
+        foreach (var ic in tierElementIcons)
+        {
+            if (ic == null) continue;
+            ic.preserveAspect = true;
+            ic.rectTransform.sizeDelta = new Vector2(iconSize, iconSize);
+        }
+    }
+
+    // Color de reposo fijo para TODOS los botones (#D4E9E9), independiente del elemento.
+    // Así contrasta con el highlight, que conserva el color del elemento.
+    private static readonly Color NormalColor = new Color(0.8313726f, 0.9137255f, 0.9137255f, 1f);
+
+    private void SetButtonNormalColor(Color elementColor)
     {
         if (_button == null) return;
 
         ColorBlock colors = _button.colors;
 
-        colors.normalColor = newColor;
-        colors.highlightedColor = newColor;
-        colors.selectedColor = newColor;
+        colors.normalColor = NormalColor;        // gris para todos
+        colors.highlightedColor = elementColor;  // color del elemento (el highlight actual) -> contrasta
+        colors.selectedColor = elementColor;
+        colors.pressedColor = elementColor;
 
         _button.colors = colors;
 

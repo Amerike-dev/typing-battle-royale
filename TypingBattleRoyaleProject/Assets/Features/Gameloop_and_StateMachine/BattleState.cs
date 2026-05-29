@@ -66,6 +66,12 @@ public class BattleState : IGameState
         if (_spellBookUI != null)
         {
             if (_castInput != null) _castInput.enabled = false;
+
+            // Reflejamos la progresión: el tier desbloqueado depende de cuántos hechizos del tier
+            // anterior haya casteado el jugador (3 T1 -> T2, 3 T2 -> T3).
+            if (_playerController.inventory != null)
+                _spellBookUI.playerTier = _playerController.inventory.UnlockedTier;
+
             _spellBookUI.OnSpellConfirmed -= HandleSpellConfirmed;
             _spellBookUI.OnSelectionCancelled -= HandleSelectionCancelled;
             _spellBookUI.OnSpellConfirmed += HandleSpellConfirmed;
@@ -75,6 +81,13 @@ public class BattleState : IGameState
         else
         {
             EnableCast();
+        }
+
+        // Contamos los casteos exitosos por tier para la progresión de desbloqueo.
+        if (_castInput != null)
+        {
+            _castInput.OnSpellCast -= HandleSpellCastForProgression;
+            _castInput.OnSpellCast += HandleSpellCastForProgression;
         }
 
         Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}");
@@ -107,6 +120,7 @@ public class BattleState : IGameState
 
     void IGameState.Exit()
     {
+        if (_castInput != null) _castInput.OnSpellCast -= HandleSpellCastForProgression;
         if (_castInput != null) _castInput.CancelCastIfActive();
         _playerController.MoveSpeed();
         if (_animatorView != null) _animatorView.StopCasting();
@@ -165,6 +179,13 @@ public class BattleState : IGameState
 
         if (_spellBookUI != null) _spellBookUI.Hide();
         _castInput.enabled = true;
+    }
+
+    private void HandleSpellCastForProgression(Spell castSpell)
+    {
+        if (castSpell == null) return;
+        if (_playerController == null || _playerController.inventory == null) return;
+        _playerController.inventory.RegisterSpellCast(castSpell.tier);
     }
 
     private void HandleSelectionCancelled()

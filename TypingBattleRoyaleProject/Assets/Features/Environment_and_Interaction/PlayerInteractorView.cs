@@ -38,7 +38,12 @@ public class PlayerInteractorView : MonoBehaviour
 
         if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
         {
-            if (EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null)
+            // Solo bloqueamos la E si hay un InputField REALMENTE enfocado (el jugador está tipeando).
+            // Antes bastaba con que el InputField estuviera 'seleccionado' en el EventSystem aunque ya
+            // no tuviera el foco (p.ej. el castSpell queda como selected tras castear): eso se tragaba
+            // la E y el popup "presionar E" no abría el monolito hasta tocar ESC/TAB.
+            var selectedInput = EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>();
+            if (selectedInput != null && selectedInput.isFocused)
             {
                 return;
             }

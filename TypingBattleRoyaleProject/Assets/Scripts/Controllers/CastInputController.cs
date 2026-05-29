@@ -113,6 +113,11 @@ public class CastInputController : MonoBehaviour
             castSpell.onValueChanged.RemoveListener(HandleValueChanged);
             castSpell.onEndEdit.RemoveListener(HandleEndEdit);
             castSpell.DeactivateInputField();
+
+            // Liberamos la selección del EventSystem si seguía apuntando a este InputField.
+            // Si no, al volver a exploración el campo queda "seleccionado" y bloquea la E del monolito.
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == castSpell.gameObject)
+                EventSystem.current.SetSelectedGameObject(null);
         }
 
         if (_cast != null && _cast.action != null)

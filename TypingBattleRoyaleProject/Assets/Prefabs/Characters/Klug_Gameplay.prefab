@@ -773,7 +773,7 @@ MonoBehaviour:
   NearMonolith: {fileID: 0}
   signalHidePos: {x: 0, y: -550}
   signalShowPos: {x: 0, y: -350}
-  proximityRange: 4
+  proximityRange: 5.2
   checkerMonolith: 0.2
   isVisible: 0
 --- !u!114 &3890682339324330297

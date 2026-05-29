@@ -119,10 +119,26 @@ public class IDController : NetworkBehaviour
         if (!IsOwner || already.Value) return;
 
         if (skinDir != 0)
+        {
             skinIndex.Value = (skinIndex.Value + skinDir + arraySkins.Length) % arraySkins.Length;
+            // Al cambiar de personaje, reencuadramos el color al rango del nuevo (puede tener menos skins).
+            colorIndex.Value = Mathf.Clamp(colorIndex.Value, 0, ColorCount() - 1);
+        }
 
         if (colorDir != 0)
-            colorIndex.Value = (colorIndex.Value + colorDir + 3) % 3;
+        {
+            int count = ColorCount();
+            colorIndex.Value = (colorIndex.Value + colorDir + count) % count;
+        }
+    }
+
+    /// <summary>Cantidad de variantes de color (materiales) del personaje actualmente seleccionado.</summary>
+    private int ColorCount()
+    {
+        if (arraySkins == null || arraySkins.Length == 0) return 1;
+        SkinInfo skin = arraySkins[skinIndex.Value];
+        if (skin == null || skin.skins == null || skin.skins.Length == 0) return 1;
+        return skin.skins.Length;
     }
 
     public void Update3DModel()
