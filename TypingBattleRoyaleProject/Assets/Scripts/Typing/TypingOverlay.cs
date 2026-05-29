@@ -1,0 +1,302 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+/// <summary>
+/// Overlay de typeo reutilizable (monolito y casteo). Crea su propio canvas ScreenSpaceOverlay de alto
+/// sorting (tapa el HUD y la escena), con un fondo full-screen, un header arriba y el hechizo pintado como
+/// una cadena de "teclas" (sprites): d6 1 = pendiente, d6_outline 1 = ya escrita. Letra por letra, con
+/// wrap por palabra. El error pinta la tecla actual en rojo y la sacude.
+///
+/// No tiene lógica de typeo: los controllers (MonolithTypingChallenge / CastInputController) llaman
+/// Show(header, texto) al empezar y UpdateProgress(index, hasError) en cada tecla.
+/// </summary>
+public class TypingOverlay : MonoBehaviour
+{
+    [SerializeField] private float keySize = 70f;
+    [SerializeField] private float keySpacing = 8f;
+    [SerializeField] private float spaceWidth = 40f;
+    [SerializeField] private float lineSpacing = 16f;
+    [SerializeField] private float maxRowWidth = 1300f;
+    [SerializeField] private int sortingOrder = 30;
+    [SerializeField] private Color bgColor = new Color(0.04f, 0.03f, 0.08f, 1f);
+    [Tooltip("Color de la letra en teclas NO escritas (pendientes).")]
+    [SerializeField] private Color pendingLetterColor = Color.black;
+    [Tooltip("Color de la letra en teclas escritas y en la actual.")]
+    [SerializeField] private Color activeLetterColor = Color.white;
+    [SerializeField] private Color pendingTint = Color.white;
+    [SerializeField] private Color typedTint = new Color(0.55f, 1f, 0.7f, 1f);
+    [SerializeField] private Color errorTint = new Color(1f, 0.35f, 0.35f, 1f);
+    [SerializeField] private float headerFontSize = 52f;
+
+    private KeycapTheme _theme;
+    private Canvas _canvas;
+    private RectTransform _root;
+    private RectTransform _keysContainer;
+    private TextMeshProUGUI _header;
+
+    private string _text = "";
+    private Image[] _keyImg;
+    private TextMeshProUGUI[] _keyLetter;
+    private Vector2[] _basePos;
+    private Color _currentColor = new Color(1f, 0.95f, 0.4f, 1f); // tinte de la tecla actual (color del elemento)
+    private Coroutine _shake;
+
+    private void EnsureBuilt()
+    {
+        if (_canvas != null) return;
+
+        _theme = Resources.Load<KeycapTheme>("KeycapTheme");
+
+        var go = new GameObject("TypingOverlayCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        go.transform.SetParent(transform, false);
+        _canvas = go.GetComponent<Canvas>();
+        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        _canvas.sortingOrder = sortingOrder;
+        var scaler = go.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        // Fondo full-screen (tapa HUD + escena).
+        var bgGo = new GameObject("Background", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var bgRt = bgGo.GetComponent<RectTransform>();
+        bgRt.SetParent(go.transform, false);
+        bgRt.anchorMin = Vector2.zero; bgRt.anchorMax = Vector2.one;
+        bgRt.offsetMin = Vector2.zero; bgRt.offsetMax = Vector2.zero;
+        var bgImg = bgGo.GetComponent<Image>();
+        bgImg.color = bgColor;
+        bgImg.raycastTarget = false; // puramente visual; no roba el foco del InputField
+
+        var rootGo = new GameObject("Content", typeof(RectTransform));
+        _root = rootGo.GetComponent<RectTransform>();
+        _root.SetParent(go.transform, false);
+        _root.anchorMin = Vector2.zero; _root.anchorMax = Vector2.one;
+        _root.offsetMin = Vector2.zero; _root.offsetMax = Vector2.zero;
+
+        // Header (arriba, fuera del área de teclas).
+        var hGo = new GameObject("Header", typeof(RectTransform), typeof(CanvasRenderer));
+        var hRt = hGo.GetComponent<RectTransform>();
+        hRt.SetParent(_root, false);
+        hRt.anchorMin = new Vector2(0.5f, 1f); hRt.anchorMax = new Vector2(0.5f, 1f); hRt.pivot = new Vector2(0.5f, 1f);
+        hRt.anchoredPosition = new Vector2(0f, -120f);
+        hRt.sizeDelta = new Vector2(1700f, 110f);
+        _header = hGo.AddComponent<TextMeshProUGUI>();
+        if (_theme != null && _theme.font != null) _header.font = _theme.font;
+        _header.fontSize = headerFontSize;
+        _header.alignment = TextAlignmentOptions.Center;
+        _header.color = Color.white;
+        _header.raycastTarget = false;
+
+        // Contenedor de teclas (centrado).
+        var kGo = new GameObject("Keys", typeof(RectTransform));
+        _keysContainer = kGo.GetComponent<RectTransform>();
+        _keysContainer.SetParent(_root, false);
+        _keysContainer.anchorMin = _keysContainer.anchorMax = _keysContainer.pivot = new Vector2(0.5f, 0.5f);
+        _keysContainer.anchoredPosition = Vector2.zero;
+
+        go.SetActive(false);
+    }
+
+    public void Show(string header, string text, Color currentColor)
+    {
+        EnsureBuilt();
+        _currentColor = currentColor;
+        _canvas.gameObject.SetActive(true);
+        if (_header != null) _header.text = header;
+        BuildKeys(text);
+        UpdateProgress(0, false);
+    }
+
+    public void Hide()
+    {
+        if (_shake != null) { StopCoroutine(_shake); _shake = null; }
+        if (_canvas != null) _canvas.gameObject.SetActive(false);
+    }
+
+    private void BuildKeys(string text)
+    {
+        _text = text ?? "";
+
+        for (int i = _keysContainer.childCount - 1; i >= 0; i--)
+            Destroy(_keysContainer.GetChild(i).gameObject);
+
+        int n = _text.Length;
+        _keyImg = new Image[n];
+        _keyLetter = new TextMeshProUGUI[n];
+        _basePos = new Vector2[n];
+
+        // Palabras: (inicio, longitud), saltando espacios.
+        var words = new List<Vector2Int>();
+        int wstart = -1;
+        for (int i = 0; i < n; i++)
+        {
+            if (_text[i] == ' ')
+            {
+                if (wstart >= 0) { words.Add(new Vector2Int(wstart, i - wstart)); wstart = -1; }
+            }
+            else if (wstart < 0) wstart = i;
+        }
+        if (wstart >= 0) words.Add(new Vector2Int(wstart, n - wstart));
+
+        float WordWidth(int len) => len * keySize + Mathf.Max(0, len - 1) * keySpacing;
+
+        // Wrap por palabra.
+        var rows = new List<List<int>>();
+        var rowWidths = new List<float>();
+        var current = new List<int>();
+        float curW = 0f;
+        for (int wi = 0; wi < words.Count; wi++)
+        {
+            float ww = WordWidth(words[wi].y);
+            float add = (current.Count > 0 ? spaceWidth : 0f) + ww;
+            if (current.Count > 0 && curW + add > maxRowWidth)
+            {
+                rows.Add(current); rowWidths.Add(curW);
+                current = new List<int>(); curW = 0f;
+                add = ww;
+            }
+            current.Add(wi);
+            curW += add;
+        }
+        if (current.Count > 0) { rows.Add(current); rowWidths.Add(curW); }
+
+        int rowCount = rows.Count;
+        float totalH = rowCount * keySize + Mathf.Max(0, rowCount - 1) * lineSpacing;
+        float topY = totalH * 0.5f - keySize * 0.5f;
+
+        for (int r = 0; r < rowCount; r++)
+        {
+            float rowW = rowWidths[r];
+            float cursorLeft = -rowW * 0.5f;
+            float y = topY - r * (keySize + lineSpacing);
+            var row = rows[r];
+
+            for (int k = 0; k < row.Count; k++)
+            {
+                if (k > 0) cursorLeft += spaceWidth; // hueco entre palabras
+                var w = words[row[k]];
+                for (int c = 0; c < w.y; c++)
+                {
+                    if (c > 0) cursorLeft += keySpacing;
+                    int idx = w.x + c;
+                    float center = cursorLeft + keySize * 0.5f;
+                    CreateKey(idx, new Vector2(center, y));
+                    cursorLeft += keySize;
+                }
+            }
+        }
+    }
+
+    private void CreateKey(int idx, Vector2 pos)
+    {
+        var go = new GameObject("Key_" + idx, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(_keysContainer, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(keySize, keySize);
+        rt.anchoredPosition = pos;
+
+        var img = go.GetComponent<Image>();
+        img.sprite = _theme != null ? _theme.filledKey : null;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        _keyImg[idx] = img;
+        _basePos[idx] = pos;
+
+        var lGo = new GameObject("L", typeof(RectTransform), typeof(CanvasRenderer));
+        var lRt = lGo.GetComponent<RectTransform>();
+        lRt.SetParent(rt, false);
+        lRt.anchorMin = Vector2.zero; lRt.anchorMax = Vector2.one;
+        lRt.offsetMin = Vector2.zero; lRt.offsetMax = Vector2.zero;
+        var tmp = lGo.AddComponent<TextMeshProUGUI>();
+        if (_theme != null && _theme.font != null) tmp.font = _theme.font;
+        tmp.text = char.ToUpper(_text[idx]).ToString();
+        tmp.fontSize = keySize * 0.5f;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.color = pendingLetterColor;
+        tmp.raycastTarget = false;
+        _keyLetter[idx] = tmp;
+    }
+
+    public void UpdateProgress(int currentIndex, bool hasError)
+    {
+        if (_keyImg == null) return;
+
+        for (int i = 0; i < _keyImg.Length; i++)
+        {
+            var img = _keyImg[i];
+            if (img == null) continue;
+
+            if (i < currentIndex)
+            {
+                if (_theme != null) img.sprite = _theme.outlineKey;
+                img.color = typedTint;
+                img.rectTransform.anchoredPosition = _basePos[i];
+                img.rectTransform.localScale = Vector3.one;
+                if (_keyLetter[i] != null) _keyLetter[i].color = activeLetterColor;
+            }
+            else if (i == currentIndex)
+            {
+                if (_theme != null) img.sprite = _theme.filledKey;
+                img.color = hasError ? errorTint : _currentColor; // color del elemento del hechizo
+                img.rectTransform.localScale = Vector3.one * 1.12f;
+                if (_keyLetter[i] != null) _keyLetter[i].color = activeLetterColor;
+            }
+            else
+            {
+                if (_theme != null) img.sprite = _theme.filledKey;
+                img.color = pendingTint;
+                img.rectTransform.anchoredPosition = _basePos[i];
+                img.rectTransform.localScale = Vector3.one;
+                if (_keyLetter[i] != null) _keyLetter[i].color = pendingLetterColor; // no escrita -> negro
+            }
+        }
+
+        if (hasError && currentIndex >= 0 && currentIndex < _keyImg.Length && _keyImg[currentIndex] != null)
+        {
+            if (_shake != null) StopCoroutine(_shake);
+            _shake = StartCoroutine(ShakeKey(currentIndex));
+        }
+    }
+
+    private IEnumerator ShakeKey(int idx)
+    {
+        var rt = _keyImg[idx].rectTransform;
+        Vector2 baseP = _basePos[idx];
+        float t = 0f;
+        const float dur = 0.35f;
+        while (t < dur && _keyImg != null && idx < _keyImg.Length && _keyImg[idx] != null)
+        {
+            t += Time.unscaledDeltaTime;
+            float damp = 1f - (t / dur);
+            float off = Mathf.Sin(t * 60f) * 10f * damp;
+            rt.anchoredPosition = baseP + new Vector2(off, 0f);
+            yield return null;
+        }
+        if (_keyImg != null && idx < _keyImg.Length && _keyImg[idx] != null)
+            rt.anchoredPosition = baseP;
+        _shake = null;
+    }
+
+    /// <summary>Color representativo de cada elemento (misma paleta que el glow del monolito).</summary>
+    public static Color ElementColor(Elements element)
+    {
+        switch (element)
+        {
+            case Elements.Fire:    return new Color(1.0f, 0.35f, 0.10f);
+            case Elements.Water:   return new Color(0.20f, 0.55f, 1.0f);
+            case Elements.Earth:   return new Color(0.55f, 0.38f, 0.18f);
+            case Elements.Wind:    return new Color(0.70f, 1.0f, 0.85f);
+            case Elements.Nature:  return new Color(0.30f, 1.0f, 0.35f);
+            case Elements.Thunder: return new Color(1.0f, 0.92f, 0.30f);
+            case Elements.Ice:     return new Color(0.60f, 0.90f, 1.0f);
+            case Elements.Lava:    return new Color(1.0f, 0.25f, 0.05f);
+            case Elements.Dark:    return new Color(0.55f, 0.15f, 0.80f);
+            case Elements.Light:   return new Color(1.0f, 0.95f, 0.80f);
+            default:               return new Color(0.35f, 0.70f, 1.0f);
+        }
+    }
+}

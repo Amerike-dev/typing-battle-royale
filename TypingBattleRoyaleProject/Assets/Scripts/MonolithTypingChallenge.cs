@@ -33,7 +33,16 @@ public class MonolithTypingChallenge : MonoBehaviour
     private int _spellIndex;
     private PlayerController _player;
 
+    private TypingOverlay _typingOverlay;
+
     private void Awake() => Instance = this;
+
+    private TypingOverlay GetOverlay()
+    {
+        if (_typingOverlay == null)
+            _typingOverlay = new GameObject("MonolithTypingOverlay").AddComponent<TypingOverlay>();
+        return _typingOverlay;
+    }
 
     private void Start()
     {
@@ -48,19 +57,20 @@ public class MonolithTypingChallenge : MonoBehaviour
         _player = player;
 
         _player.NullMoveSpeed();
-        
+        // Bloqueamos el giro de cámara y el cursor mientras se tipea (se restaura en Close).
+        if (_player.cameraController != null) _player.cameraController.OnCamaraMove = false;
+        CursorManager.HideCursor();
+
         hiddenInput.text = "";
         hiddenInput.onValueChanged.RemoveAllListeners();
         hiddenInput.onValueChanged.AddListener(OnType);
 
+        // El InputField sigue capturando (oculto); el typeo se ve en el overlay de teclas.
         myCanvas.enabled = true;
         hiddenInput.ActivateInputField();
         hiddenInput.Select();
-        
-        if (uiController != null)
-        {
-            uiController.UpdateDisplay(_spell.runeString, 0, false);
-        }
+
+        GetOverlay().Show("Escribe y desbloquea el hechizo", _spell.runeString, TypingOverlay.ElementColor(_spell.elementType));
     }
 
     private void OnType(string typed)
@@ -77,10 +87,7 @@ public class MonolithTypingChallenge : MonoBehaviour
             }
         }
         
-        if (uiController != null) 
-        {
-            uiController.UpdateDisplay(_spell.runeString, hasError ? typed.Length - 1 : typed.Length, hasError);
-        }
+        GetOverlay().UpdateProgress(hasError ? typed.Length - 1 : typed.Length, hasError);
 
         if (hasError)
         {
@@ -122,6 +129,7 @@ public class MonolithTypingChallenge : MonoBehaviour
     private void Close()
     {
         myCanvas.enabled = false;
+        if (_typingOverlay != null) _typingOverlay.Hide();
         _player.MoveSpeed();
         // Restauramos el movimiento de cámara (se desactivó al abrir la UI del monolito).
         if (_player != null && _player.cameraController != null) _player.cameraController.OnCamaraMove = true;

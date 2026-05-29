@@ -38,11 +38,13 @@ public class PlayerController : NetworkBehaviour
 
     [Header("Emotes")]
     [Tooltip("Sensibilidad del selector de la rueda al mover el mouse.")]
-    [SerializeField] private float emoteWheelSensitivity = 1.4f;
+    [SerializeField] private float emoteWheelSensitivity = 1.2f;
+    
     [Tooltip("Altura (en mundo) del emote por encima del nametag del jugador.")]
-    [SerializeField] private float emoteHeightOffset = 2.5f;
+    [SerializeField] private float emoteHeightOffset = 4.5f;
+    
     [Tooltip("Altura objetivo del emote en unidades de mundo.")]
-    [SerializeField] private float emoteWorldHeight = 0.8f;
+    [SerializeField] private float emoteWorldHeight = 0.7f;
     [Tooltip("Duración total del emote sobre el jugador.")]
     [SerializeField] private float emoteDuration = 2f;
     private EmoteSet _emoteSet;

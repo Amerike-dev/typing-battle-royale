@@ -46,6 +46,18 @@ public class CastInputController : MonoBehaviour
 
     private float _castStartTime;
 
+    [Header("Typeo por teclas (overlay)")]
+    [Tooltip("Texto del header mostrado arriba del overlay de casteo.")]
+    [SerializeField] private string castHeader = "¡Lanza el hechizo!";
+    private TypingOverlay _typingOverlay;
+
+    private TypingOverlay GetOverlay()
+    {
+        if (_typingOverlay == null)
+            _typingOverlay = new GameObject("CastTypingOverlay").AddComponent<TypingOverlay>();
+        return _typingOverlay;
+    }
+
     private void OnEnable()
     {
         ResolveReferences();
@@ -65,6 +77,10 @@ public class CastInputController : MonoBehaviour
 
         if (spell != null) spell.text = spellText;
         if (uiController != null) uiController.UpdateDisplay(0, false);
+
+        // Overlay de teclas (tapa el HUD durante el casteo). Solo si hay hechizo que tipear.
+        if (!string.IsNullOrEmpty(spellText))
+            GetOverlay().Show(castHeader, spellText, TypingOverlay.ElementColor(currentSpell != null ? currentSpell.elementType : Elements.None));
 
         if (castSpell != null)
         {
@@ -107,6 +123,8 @@ public class CastInputController : MonoBehaviour
         StopAllCoroutines();
         _fadeRoutine = null;
         _casting = false;
+
+        if (_typingOverlay != null) _typingOverlay.Hide();
 
         if (castSpell != null)
         {
@@ -242,6 +260,11 @@ public class CastInputController : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (_typingOverlay != null) Destroy(_typingOverlay.gameObject);
+    }
+
     private void HandleValueChanged(string typed)
     {
         if (_completed || string.IsNullOrEmpty(spellText)) return;
@@ -260,7 +283,7 @@ public class CastInputController : MonoBehaviour
 
         if (error) incorrectInput++;
 
-        if (uiController != null) uiController.UpdateDisplay(matched, error);
+        GetOverlay().UpdateProgress(matched, error);
 
         if (!error && length == spellText.Length && matched == spellText.Length)
         {
