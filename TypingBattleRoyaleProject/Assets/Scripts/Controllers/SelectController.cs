@@ -98,6 +98,7 @@ public class SelectController : MonoBehaviour
                     startButton.gameObject.SetActive(false);
                 }
                 SoundSelect.Instance?.PlaySelectSound();
+
             }
             else
             {
@@ -284,6 +285,7 @@ public class SelectController : MonoBehaviour
 
         if (isReady)
         {
+            AudioChango.Instance?.PlayCaracterSelect();
             TMP_Text tmp = readyTexts[clientId].GetComponent<TMP_Text>();
             if (tmp == null) tmp = readyTexts[clientId].GetComponentInChildren<TMP_Text>(true);
             if (tmp != null) tmp.text = GetPlayerName(clientId);

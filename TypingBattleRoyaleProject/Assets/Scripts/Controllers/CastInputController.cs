@@ -51,6 +51,7 @@ public class CastInputController : MonoBehaviour
     [SerializeField] private string castHeader = "¡Lanza el hechizo!";
     private TypingOverlay _typingOverlay;
 
+    public PlayerAudio playerAudio;
     private TypingOverlay GetOverlay()
     {
         if (_typingOverlay == null)
@@ -334,6 +335,8 @@ public class CastInputController : MonoBehaviour
         ApplyDamageToLockedTarget();
 
         playerAudio.ChangeSoundById("Cast");
+        if (currentSpell != null)
+            playerAudio.PlaySpellSound(currentSpell);
 
         OnSpellCast?.Invoke(currentSpell);
 
