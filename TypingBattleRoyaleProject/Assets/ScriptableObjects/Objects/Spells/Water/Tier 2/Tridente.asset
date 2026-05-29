@@ -27,6 +27,9 @@ MonoBehaviour:
   speed: 25
   uses: 0
   duration: 0
+  vfxCast: {fileID: 0}
+  vfxProjectile: {fileID: 0}
+  vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
@@ -34,3 +37,14 @@ MonoBehaviour:
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 3ec9ef8efa3b4d94c9a676a98c6d5a51, type: 2}
+  spellSound: {fileID: 8300000, guid: 8981bb2bec4ff654d9de7129a3db04d9, type: 3}
+  emitterOffset: {x: 0, y: 0, z: 0}
+  gravityModifier: 0
+  simulationSpeed: 1
+  startColorTint: {r: 1, g: 1, b: 1, a: 1}
+  startRotationDegrees: 0
+  sizeVariance: 0
+  speedVariance: 0
+  overrideShape: 0
+  shapeType: 0
+  maxParticles: 0
