@@ -913,7 +913,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 51.1, y: -193.4}
-  m_SizeDelta: {x: 52.3, y: 36.73}
+  m_SizeDelta: {x: 120, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &196732028
 MonoBehaviour:
@@ -935,7 +935,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skin
+  m_text: Apariencia
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
   m_sharedMaterial: {fileID: 6770286238208091493, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
@@ -962,7 +962,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.65
+  m_fontSize: 21.4
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1444,7 +1444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &446097012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1617,7 +1617,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player 4:'
+  m_text: 'Jugador 4:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -7004,7 +7004,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 51.1, y: -148}
-  m_SizeDelta: {x: 114.32, y: 36.73}
+  m_SizeDelta: {x: 115, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1829408178
 MonoBehaviour:
@@ -7053,7 +7053,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.4
+  m_fontSize: 22.55
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7493,7 +7493,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select your character
+  m_text: Selecciona tu Personaje
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
   m_sharedMaterial: {fileID: 6770286238208091493, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
@@ -8041,7 +8041,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player 1:'
+  m_text: 'Jugador 1:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -8178,7 +8178,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player 3:'
+  m_text: 'Jugador 3:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
@@ -8391,7 +8391,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player 2:'
+  m_text: 'Jugador 2:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
   m_sharedMaterial: {fileID: -3927495739482034433, guid: e9abf24bd20a1384d8de628fc61dbaeb, type: 2}
