@@ -196,6 +196,19 @@ public class IDController : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// El host lo dispara al pulsar "Empezar": muestra el panel de instrucciones y el contador
+    /// en todos los clientes antes de transicionar a la GameplayScene.
+    /// </summary>
+    [ClientRpc]
+    public void ShowInstructionsClientRpc(float seconds)
+    {
+        if (InstructionsPanelController.Instance != null)
+            InstructionsPanelController.Instance.Begin(seconds);
+        else
+            Debug.LogWarning("[IDController] No se encontró InstructionsPanelController en la escena.");
+    }
+
     public override void OnNetworkDespawn()
     {
         if (IsOwner)
