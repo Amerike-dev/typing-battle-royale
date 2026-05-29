@@ -157,6 +157,9 @@ public static class CharacterSetupTool
         var rootAnim = root.GetComponent<Animator>();
         if (rootAnim != null) rootAnim.runtimeAnimatorController = null;
 
+        // Quitamos el modelo placeholder que viene como HIJO en la plantilla (p.ej. "PersonajesLowPoly").
+        RemovePlaceholderModels(root, log);
+
         // Si quedó un "Model" de una ejecución previa, lo eliminamos para ser idempotentes.
         var oldModel = root.transform.Find("Model");
         if (oldModel != null) Object.DestroyImmediate(oldModel.gameObject);
@@ -197,6 +200,37 @@ public static class CharacterSetupTool
 
         log.AppendLine(saved != null ? $"  gameplay -> {path}  (renderers: {ps.renderers.Length})" : "  ERROR: no se pudo guardar el gameplay.");
         return saved;
+    }
+
+    /// <summary>
+    /// Elimina los hijos directos del root que sean modelos placeholder (tienen malla y no son UI/efectos).
+    /// No toca el hijo "Model" (nuestro modelo nuevo), ni UI/Camera/Particle/CastOrigin/SpellUIController.
+    /// </summary>
+    private static void RemovePlaceholderModels(GameObject root, StringBuilder log)
+    {
+        var toRemove = new List<GameObject>();
+        foreach (Transform child in root.transform)
+        {
+            if (child.name == "Model") continue;
+
+            bool isUiOrFx =
+                child.GetComponentInChildren<Canvas>(true) != null ||
+                child.GetComponent<ParticleSystem>() != null ||
+                child.name == "Camera" || child.name == "CastOrigin" ||
+                child.name == "SpellUIController" || child.name == "Particle" || child.name == "UI";
+
+            bool hasMesh =
+                child.GetComponentInChildren<MeshRenderer>(true) != null ||
+                child.GetComponentInChildren<SkinnedMeshRenderer>(true) != null;
+
+            if (!isUiOrFx && hasMesh) toRemove.Add(child.gameObject);
+        }
+
+        foreach (var go in toRemove)
+        {
+            log.AppendLine($"  placeholder eliminado: {go.name}");
+            Object.DestroyImmediate(go);
+        }
     }
 
     private static void RegisterNetworkPrefab(GameObject prefab, StringBuilder log)
