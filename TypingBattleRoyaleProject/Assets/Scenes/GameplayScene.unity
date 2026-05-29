@@ -7792,6 +7792,7 @@ MonoBehaviour:
   failCooldownSeconds: 15
   reloadIcon: {fileID: 21300000, guid: fa2453b0897b7fe41aa94165f655c7d5, type: 3}
   cooldownNoticeDuration: 2.5
+  cooldownFont: {fileID: 11400000, guid: caf99488d1bcecc4e82dda780d2533be, type: 2}
 --- !u!114 &299665409
 MonoBehaviour:
   m_ObjectHideFlags: 0

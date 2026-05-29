@@ -33,7 +33,31 @@ public class MonolithTypingChallenge : MonoBehaviour
     private int _spellIndex;
     private PlayerController _player;
 
+    private TypingOverlay _typingOverlay;
+
     private void Awake() => Instance = this;
+
+    private TypingOverlay GetOverlay()
+    {
+        if (_typingOverlay == null)
+            _typingOverlay = new GameObject("MonolithTypingOverlay").AddComponent<TypingOverlay>();
+        return _typingOverlay;
+    }
+
+    /// <summary>
+    /// Apaga los gráficos viejos del canvas del monolito (panel, "Concentrate", texto) excepto el
+    /// InputField oculto, que sigue capturando. El overlay de teclas los reemplaza, y como el fondo
+    /// ahora es translúcido ya no los tapa.
+    /// </summary>
+    private void HideOldMonolithVisuals()
+    {
+        if (myCanvas == null) return;
+        foreach (var g in myCanvas.GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+        {
+            if (hiddenInput != null && g.transform.IsChildOf(hiddenInput.transform)) continue;
+            g.enabled = false;
+        }
+    }
 
     private void Start()
     {
@@ -48,19 +72,22 @@ public class MonolithTypingChallenge : MonoBehaviour
         _player = player;
 
         _player.NullMoveSpeed();
-        
+        // Bloqueamos el giro de cámara y el cursor mientras se tipea (se restaura en Close).
+        if (_player.cameraController != null) _player.cameraController.OnCamaraMove = false;
+        CursorManager.HideCursor();
+
         hiddenInput.text = "";
         hiddenInput.onValueChanged.RemoveAllListeners();
         hiddenInput.onValueChanged.AddListener(OnType);
 
+        // El InputField sigue capturando (oculto); el typeo se ve en el overlay de teclas.
         myCanvas.enabled = true;
+        HideOldMonolithVisuals(); // ocultamos panel/"Concentrate"/texto viejos (el overlay los reemplaza)
         hiddenInput.ActivateInputField();
         hiddenInput.Select();
-        
-        if (uiController != null)
-        {
-            uiController.UpdateDisplay(_spell.runeString, 0, false);
-        }
+
+        // Monolito: fondo translúcido (50%) y SIN panel de texto crudo (tolerancia cero al error).
+        GetOverlay().Show("Escribe y desbloquea el hechizo", _spell.runeString, TypingOverlay.ElementColor(_spell.elementType), 0.5f, false);
     }
 
     private void OnType(string typed)
@@ -77,10 +104,7 @@ public class MonolithTypingChallenge : MonoBehaviour
             }
         }
         
-        if (uiController != null) 
-        {
-            uiController.UpdateDisplay(_spell.runeString, hasError ? typed.Length - 1 : typed.Length, hasError);
-        }
+        GetOverlay().UpdateProgress(hasError ? typed.Length - 1 : typed.Length, hasError);
 
         if (hasError)
         {
@@ -122,6 +146,7 @@ public class MonolithTypingChallenge : MonoBehaviour
     private void Close()
     {
         myCanvas.enabled = false;
+        if (_typingOverlay != null) _typingOverlay.Hide();
         _player.MoveSpeed();
         // Restauramos el movimiento de cámara (se desactivó al abrir la UI del monolito).
         if (_player != null && _player.cameraController != null) _player.cameraController.OnCamaraMove = true;
