@@ -414,7 +414,7 @@ public class SpellBookUI : MonoBehaviour
         tmp.fontSize = instructionsFontSize;
         tmp.color = Color.white;
         tmp.alignment = TextAlignmentOptions.MidlineLeft;
-        tmp.enableWordWrapping = false;
+        tmp.textWrappingMode = TextWrappingModes.NoWrap;
         tmp.raycastTarget = false;
         float w = tmp.GetPreferredValues(text).x;
         if (w <= 0f) w = text.Length * instructionsFontSize * 0.55f; // respaldo si aún no hay layout

@@ -29,8 +29,8 @@ MonoBehaviour:
   duration: 0
   particleLifeDuration: 0
   loop: 1
-  startSpeed: 2
-  startSize: 1
+  startSpeed: 1
+  startSize: 0.5
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 3338f1f88c13d854b8745951c1c1db20, type: 2}

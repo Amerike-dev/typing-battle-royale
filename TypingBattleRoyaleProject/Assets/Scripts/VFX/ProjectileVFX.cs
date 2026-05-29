@@ -3,6 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(SpellVFXBinder))]
 public class ProjectileVFX : MonoBehaviour
 {
+    [Tooltip("Segundos de 'armado' tras nacer: durante ese lapso el proyectil ignora colisiones, para no autodestruirse dentro del collider del caster o del suelo al spawnear.")]
+    [SerializeField] float armingSeconds = 0.08f;
+
     Spell _spell;
     Vector3 _direction;
     float _lifeRemaining;
@@ -10,8 +13,10 @@ public class ProjectileVFX : MonoBehaviour
     ulong _ownerId;
     float _damage;
     Transform _target;
+    Transform _casterRoot;
+    float _armUntil;
 
-    public void Launch(Spell spell, Vector3 direction, float damage = 0f, ulong ownerId = 0, bool isServerCopy = false, Transform target = null)
+    public void Launch(Spell spell, Vector3 direction, float damage = 0f, ulong ownerId = 0, bool isServerCopy = false, Transform target = null, Transform casterRoot = null)
     {
         _spell = spell;
         _direction = direction.sqrMagnitude > 0f ? direction.normalized : transform.forward;
@@ -20,6 +25,8 @@ public class ProjectileVFX : MonoBehaviour
         _ownerId = ownerId;
         _isServerCopy = isServerCopy;
         _target = target;
+        _casterRoot = casterRoot;
+        _armUntil = Time.time + Mathf.Max(0f, armingSeconds);
         GetComponent<SpellVFXBinder>().Bind(spell);
     }
 
@@ -46,10 +53,14 @@ public class ProjectileVFX : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (_spell == null) return;             // ya despawneado
+        if (Time.time < _armUntil) return;       // armado: ignora el spawn dentro del caster/suelo
+        if (IsCaster(other)) return;             // nunca chocar con quien lo lanzó (por jerarquía)
+
         var otherStats = other.GetComponent<PlayerStatsNet>();
         if (otherStats == null) otherStats = other.GetComponentInParent<PlayerStatsNet>();
 
-        if (otherStats != null && otherStats.OwnerClientId == _ownerId) return;
+        if (otherStats != null && otherStats.OwnerClientId == _ownerId) return; // respaldo por dueño
 
         if (_isServerCopy && _damage > 0f && otherStats != null)
         {
@@ -60,10 +71,19 @@ public class ProjectileVFX : MonoBehaviour
         Despawn();
     }
 
+    /// <summary>True si el collider pertenece al caster (él mismo o cualquier hijo de su jerarquía).</summary>
+    bool IsCaster(Collider other)
+    {
+        if (_casterRoot == null || other == null) return false;
+        Transform t = other.transform;
+        return t == _casterRoot || t.IsChildOf(_casterRoot);
+    }
+
     void Despawn()
     {
         _spell = null;
         _target = null;
+        _casterRoot = null;
         _damage = 0f;
         _ownerId = 0;
         _isServerCopy = false;

@@ -36,5 +36,27 @@ public class Spell : ScriptableObject
     public float startSize=1f;
     public int emissionRate = 50;
     public float shapeRadius = 2.0f;
-    public Material materialVFX; 
+    public Material materialVFX;
+
+    [Header("VFX Tuning (overrides opcionales; el valor neutro = usar el default del arquetipo)")]
+    [Tooltip("Punto de origen de la emisión, relativo al sistema de partículas (shape.position). 0,0,0 = sin desplazar.")]
+    public Vector3 emitterOffset = Vector3.zero;
+    [Tooltip("Gravedad aplicada a las partículas (main.gravityModifier). 0 = sin gravedad.")]
+    public float gravityModifier = 0f;
+    [Tooltip("Velocidad global de reproducción del efecto (main.simulationSpeed). <=0 = usar 1 (normal); 0.5 = mitad de rápido.")]
+    public float simulationSpeed = 1f;
+    [Tooltip("Tinte de color de las partículas (multiplica al material). Alpha 0 = sin tinte.")]
+    public Color startColorTint = Color.white;
+    [Tooltip("Rotación inicial de cada partícula en grados (main.startRotation). 0 = ninguna.")]
+    public float startRotationDegrees = 0f;
+    [Tooltip("Aleatoriedad del tamaño 0..1: 0 = tamaño constante; 0.3 = entre 70% y 100% del tamaño.")]
+    [Range(0f, 1f)] public float sizeVariance = 0f;
+    [Tooltip("Aleatoriedad de la velocidad inicial 0..1: 0 = constante.")]
+    [Range(0f, 1f)] public float speedVariance = 0f;
+    [Tooltip("Si está activo, fuerza la forma del emisor a 'shapeType'; si no, conserva la del arquetipo.")]
+    public bool overrideShape = false;
+    [Tooltip("Forma del emisor cuando 'overrideShape' está activo.")]
+    public ParticleSystemShapeType shapeType = ParticleSystemShapeType.Sphere;
+    [Tooltip("Tope de partículas vivas (main.maxParticles). 0 = no sobreescribir el default del arquetipo.")]
+    public int maxParticles = 0;
 }
