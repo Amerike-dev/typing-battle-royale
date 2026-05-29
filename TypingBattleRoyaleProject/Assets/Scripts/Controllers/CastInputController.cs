@@ -333,8 +333,7 @@ public class CastInputController : MonoBehaviour
 
         ApplyDamageToLockedTarget();
 
-        if (currentSpell != null)
-            AudioManager.Instance?.PlaySFX($"sfx_spell_cast_{currentSpell.spellName.ToLower()}");
+        playerAudio.ChangeSoundById("Cast");
 
         OnSpellCast?.Invoke(currentSpell);
 

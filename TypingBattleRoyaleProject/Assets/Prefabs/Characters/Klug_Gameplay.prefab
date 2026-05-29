@@ -388,6 +388,7 @@ MonoBehaviour:
   debugUnlockedSpells: []
   onExplorationState: 0
   stats: {fileID: 820300520724320627}
+  playerAudio: {fileID: -6665743005992189419}
   _playerInput: {fileID: 0}
 --- !u!114 &8928554855943717965
 MonoBehaviour:
@@ -416,6 +417,7 @@ MonoBehaviour:
   stringIndex: 0
   lastInInput: 0
   incorrectInput: 0
+  playerAudio: {fileID: -6665743005992189419}
 --- !u!114 &293070819077402283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,6 +738,7 @@ MonoBehaviour:
   avgWpm: 0
   avgAccuracy: 0
   fastestCastSeconds: 0
+  playerAudio: {fileID: -6665743005992189419}
 --- !u!114 &7090260673945462616
 MonoBehaviour:
   m_ObjectHideFlags: 0
