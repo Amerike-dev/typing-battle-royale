@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,6 +24,10 @@ public class SelectController : MonoBehaviour
     [SerializeField] private RectTransform _finishButtonRt;
     [Tooltip("Cantidad en píxeles que sube el FinishButton al dar Listo.")]
     [SerializeField] private float _finishButtonUpOffset = 60f;
+    [Tooltip("Duración (s) de la animación ease-in-out del FinishButton al dar/quitar Listo.")]
+    [SerializeField] private float _finishAnimDuration = 0.25f;
+    [Tooltip("Texto que muestra el nombre del personaje seleccionado (el que decía 'Personaje').")]
+    [SerializeField] private TMP_Text _characterNameText;
 
     [Header("ConfirmButton (host empieza la partida)")]
     [Tooltip("CanvasGroup del ConfirmButton. Pasa a alpha 1 cuando todos están listos.")]
@@ -35,6 +40,7 @@ public class SelectController : MonoBehaviour
     private bool _localFinishApplied;
     private float _finishButtonBaselineY;
     private bool _finishButtonBaselineCaptured;
+    private Coroutine _finishAnim;
 
     public Transform GetModelSpawnPoint(ulong clientId)
     {
@@ -368,43 +374,112 @@ public class SelectController : MonoBehaviour
 
     public void OKClick()
     {
-        Debug.Log("<color=yellow>1. Botón OK presionado físicamente.</color>");
-
         if (localPlayerScript == null)
         {
-            Debug.LogError("<color=red>2. ERROR: localPlayerScript está vacío.</color> El jugador local nunca se registró en el SelectController.");
+            Debug.LogError("<color=red>[SelectController] localPlayerScript está vacío.</color> El jugador local nunca se registró.");
             return;
         }
 
-        Debug.Log($"<color=yellow>3. El valor actual de 'already' es: {localPlayerScript.already.Value}</color>");
+        // Toggle: si ya estaba listo, vuelve al estado de selección (puede cambiar de personaje);
+        // si no, marca listo. 'already' tiene permiso de escritura del Owner, así que el cliente puede alternar.
+        bool newReady = !localPlayerScript.already.Value;
+        localPlayerScript.already.Value = newReady;
 
-        if (localPlayerScript.already.Value) return;
-
-        localPlayerScript.already.Value = true;
-        Debug.Log("<color=yellow>4. Se le ordenó a la variable de red cambiar a TRUE. Esperando que el servidor avise de regreso...</color>");
-
-        ApplyLocalFinishState();
+        if (newReady) ApplyLocalFinishState();
+        else RevertLocalFinishState();
     }
 
     private void ApplyLocalFinishState()
     {
         if (_localFinishApplied) return;
         _localFinishApplied = true;
+        if (!_finishButtonBaselineCaptured) CaptureFinishButtonBaseline();
+        PlayFinishAnim(_finishButtonBaselineY + _finishButtonUpOffset, 0f, makeInteractable: false);
+    }
 
-        if (_selectionGroup != null)
+    private void RevertLocalFinishState()
+    {
+        if (!_localFinishApplied) return;
+        _localFinishApplied = false;
+        if (!_finishButtonBaselineCaptured) CaptureFinishButtonBaseline();
+        PlayFinishAnim(_finishButtonBaselineY, 1f, makeInteractable: true);
+    }
+
+    private void PlayFinishAnim(float targetY, float targetAlpha, bool makeInteractable)
+    {
+        // Al ocultar, deshabilitamos la interacción de inmediato; al mostrar, se reactiva al final.
+        if (_selectionGroup != null && !makeInteractable)
         {
-            _selectionGroup.alpha = 0f;
             _selectionGroup.interactable = false;
             _selectionGroup.blocksRaycasts = false;
         }
 
+        if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+        {
+            // Sin poder animar: aplica instantáneo.
+            if (_finishButtonRt != null)
+            {
+                Vector2 p = _finishButtonRt.anchoredPosition;
+                p.y = targetY;
+                _finishButtonRt.anchoredPosition = p;
+            }
+            if (_selectionGroup != null)
+            {
+                _selectionGroup.alpha = targetAlpha;
+                _selectionGroup.interactable = makeInteractable;
+                _selectionGroup.blocksRaycasts = makeInteractable;
+            }
+            return;
+        }
+
+        if (_finishAnim != null) StopCoroutine(_finishAnim);
+        _finishAnim = StartCoroutine(AnimateFinish(targetY, targetAlpha, makeInteractable));
+    }
+
+    private IEnumerator AnimateFinish(float targetY, float targetAlpha, bool makeInteractable)
+    {
+        float startY = _finishButtonRt != null ? _finishButtonRt.anchoredPosition.y : 0f;
+        float startAlpha = _selectionGroup != null ? _selectionGroup.alpha : 1f;
+        float dur = Mathf.Max(0.0001f, _finishAnimDuration);
+        float t = 0f;
+
+        while (t < dur)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / dur)); // ease-in-out
+
+            if (_finishButtonRt != null)
+            {
+                Vector2 p = _finishButtonRt.anchoredPosition;
+                p.y = Mathf.Lerp(startY, targetY, k);
+                _finishButtonRt.anchoredPosition = p;
+            }
+            if (_selectionGroup != null)
+                _selectionGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, k);
+
+            yield return null;
+        }
+
         if (_finishButtonRt != null)
         {
-            if (!_finishButtonBaselineCaptured) CaptureFinishButtonBaseline();
-            Vector2 pos = _finishButtonRt.anchoredPosition;
-            pos.y = _finishButtonBaselineY + _finishButtonUpOffset;
-            _finishButtonRt.anchoredPosition = pos;
+            Vector2 p = _finishButtonRt.anchoredPosition;
+            p.y = targetY;
+            _finishButtonRt.anchoredPosition = p;
         }
+        if (_selectionGroup != null)
+        {
+            _selectionGroup.alpha = targetAlpha;
+            _selectionGroup.interactable = makeInteractable;
+            _selectionGroup.blocksRaycasts = makeInteractable;
+        }
+        _finishAnim = null;
+    }
+
+    /// <summary>Actualiza el texto del nombre del personaje (lo llama el IDController del jugador local).</summary>
+    public void UpdateCharacterName(string characterName)
+    {
+        if (_characterNameText != null)
+            _characterNameText.text = string.IsNullOrWhiteSpace(characterName) ? "Personaje" : characterName;
     }
 
     public void SyncPlayer(ulong ID)

@@ -32,13 +32,13 @@ public class MonolithAura : NetworkBehaviour
     [Tooltip("Partículas emitidas por segundo.")]
     public float emissionRate = 14f;
     [Tooltip("Radio del disco de emisión en la base, en unidades de mundo.")]
-    public float emitRadius = 10f;
+    public float emitRadius = 1.5f;
     [Tooltip("Velocidad de subida en unidades de mundo por segundo.")]
-    public float riseSpeed = 8f;
+    public float riseSpeed = 2.5f;
     [Tooltip("Tamaño de cada partícula en unidades de mundo.")]
-    public float particleSize = 3f;
+    public float particleSize = 0.6f;
     [Tooltip("Segundos que vive cada partícula (define cuánto sube).")]
-    public float particleLifetime = 4f;
+    public float particleLifetime = 3f;
     [Tooltip("Desplazamiento vertical del emisor respecto al pivote del monolito (mundo).")]
     public float baseHeightOffset = 0f;
 

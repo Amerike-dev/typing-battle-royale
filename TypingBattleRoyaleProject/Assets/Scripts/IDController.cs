@@ -155,6 +155,11 @@ public class IDController : NetworkBehaviour
         }
 
         SkinInfo skin = arraySkins[skinIndex.Value];
+
+        // El jugador local actualiza el texto del nombre del personaje en la UI de selección.
+        if (IsOwner && skin != null && SelectController.Instance != null)
+            SelectController.Instance.UpdateCharacterName(skin.skinName);
+
         if (skin == null || skin.previewModel == null) return;
 
         visualModel = Instantiate(skin.previewModel, spawnPosition, spawnRotation);

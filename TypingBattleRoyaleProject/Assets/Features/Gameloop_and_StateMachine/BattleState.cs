@@ -74,10 +74,10 @@ public class BattleState : IGameState
         }
         else
         {
-            ApplyDefaultSpellAndEnableCast();
+            EnableCast();
         }
 
-        Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}, defaultSpell={(_castInput != null ? _castInput.defaultSpell != null : false)}");
+        Debug.Log($"[BattleState] Enter. camera={camera != null}, ui={_spellBookUI != null}, inventoryCount={(inventorySpells != null ? inventorySpells.Count : 0)}");
 
         _playerController.RaiseEnterBattle();
     }
@@ -133,16 +133,12 @@ public class BattleState : IGameState
         _playerController.RaiseExitBattle();
     }
 
-    private void ApplyDefaultSpellAndEnableCast()
+    private void EnableCast()
     {
         if (_castInput == null) return;
 
-        if (_castInput.defaultSpell != null)
-        {
-            _castInput.currentSpell = _castInput.defaultSpell;
-            _castInput.spellText = _castInput.defaultSpell.runeString;
-        }
-
+        // Sin spell por defecto: si no hay currentSpell, no habrá texto que tipear (no se castea
+        // hasta obtener una de un monolito).
         _castInput.enabled = true;
     }
 
@@ -152,19 +148,12 @@ public class BattleState : IGameState
 
         if (spell == null)
         {
-            if (_castInput.defaultSpell == null)
-            {
-                Debug.LogWarning("[BattleState] No defaultSpell assigned and user confirmed empty slot. Cannot cast.");
-                return;
-            }
-            _castInput.currentSpell = _castInput.defaultSpell;
-            _castInput.spellText = _castInput.defaultSpell.runeString;
+            Debug.LogWarning("[BattleState] Slot vacío confirmado y sin spell. No se puede castear.");
+            return;
         }
-        else
-        {
-            _castInput.currentSpell = spell;
-            _castInput.spellText = spell.runeString;
-        }
+
+        _castInput.currentSpell = spell;
+        _castInput.spellText = spell.runeString;
 
         if (string.IsNullOrEmpty(_castInput.spellText))
         {

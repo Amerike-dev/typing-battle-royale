@@ -3477,6 +3477,8 @@ MonoBehaviour:
   _selectionGroup: {fileID: 115999042}
   _finishButtonRt: {fileID: 488711244}
   _finishButtonUpOffset: 60
+  _finishAnimDuration: 0.25
+  _characterNameText: {fileID: 1829408178}
   _confirmButtonGroup: {fileID: 1747578201}
   _disconnectedTexts:
   - {fileID: 1850617529}
