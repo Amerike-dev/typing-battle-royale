@@ -2,6 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,6 +36,21 @@ public class PlayerController : NetworkBehaviour
     public PlayerStatsNet stats;
     public PlayerInventory inventory;
 
+    [Header("Emotes")]
+    [Tooltip("Sensibilidad del selector de la rueda al mover el mouse.")]
+    [SerializeField] private float emoteWheelSensitivity = 1.4f;
+    [Tooltip("Altura (en mundo) del emote por encima del nametag del jugador.")]
+    [SerializeField] private float emoteHeightOffset = 2.5f;
+    [Tooltip("Altura objetivo del emote en unidades de mundo.")]
+    [SerializeField] private float emoteWorldHeight = 0.8f;
+    [Tooltip("Duración total del emote sobre el jugador.")]
+    [SerializeField] private float emoteDuration = 2f;
+    private EmoteSet _emoteSet;
+    private EmoteWheel _emoteWheel;
+    private bool _wheelOpen;
+    private Vector2 _wheelSelector;
+    private GameObject _activeEmote;
+
     public event Action OnEnterBattle;
     public event Action OnExitBattle;
 
@@ -61,6 +77,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        // Todos los clientes necesitan el set para mostrar los emotes de cualquier jugador.
+        _emoteSet = Resources.Load<EmoteSet>("EmoteSet");
+
         if (!IsOwner)
         {
             DisableLocalOnlyComponents();
@@ -115,6 +135,14 @@ public class PlayerController : NetworkBehaviour
             }
 
             GameplayManager.Instance.RegisterLocalPlayer(this);
+
+            // Rueda de emotes (solo el jugador local).
+            if (_emoteSet != null && _emoteSet.emotes != null && _emoteSet.emotes.Length > 0)
+            {
+                var holder = new GameObject("EmoteWheel");
+                _emoteWheel = holder.AddComponent<EmoteWheel>();
+                _emoteWheel.Build(_emoteSet);
+            }
         }
         else
         {
@@ -159,6 +187,8 @@ public class PlayerController : NetworkBehaviour
         base.OnNetworkDespawn();
         if (!IsOwner) return;
 
+        if (_emoteWheel != null) Destroy(_emoteWheel.gameObject);
+
         if (explorationState != null && explorationState.action != null)
         {
             explorationState.action.started -= ExplorationState;
@@ -185,6 +215,8 @@ public class PlayerController : NetworkBehaviour
     void Update()
     {
         if (!IsOwner) return;
+
+        HandleEmotes();
 
         if (onExplorationState) MoveCharacter();
 
@@ -369,5 +401,152 @@ public class PlayerController : NetworkBehaviour
         {
             Debug.LogError($"[ERROR] No pudimos encontrar el hechizo {spellName} en NINGÚN monolito de la escena. ¡Revisa que el nombre coincida exactamente!");
         }
+    }
+
+    // ---------------- Emotes (rueda local + emote networked sobre el player) ----------------
+
+    private void HandleEmotes()
+    {
+        if (_emoteWheel == null) return;
+        var mouse = Mouse.current;
+        if (mouse == null) return;
+
+        if (!_wheelOpen)
+        {
+            // La rueda solo se abre en exploración, manteniendo el botón central del mouse.
+            if (onExplorationState && mouse.middleButton.wasPressedThisFrame) OpenEmoteWheel();
+            return;
+        }
+
+        // Mientras se mantiene: el mouse mueve el selector (no la cámara).
+        Vector2 delta = mouse.delta.ReadValue() * emoteWheelSensitivity;
+        _wheelSelector = Vector2.ClampMagnitude(_wheelSelector + delta, 260f);
+        int index = _emoteWheel.UpdateSelector(_wheelSelector);
+
+        if (mouse.middleButton.wasReleasedThisFrame) CloseEmoteWheel(index); // suelta -> selecciona
+        else if (!onExplorationState) CloseEmoteWheel(-1);                    // cambió de estado -> cancela
+    }
+
+    private void OpenEmoteWheel()
+    {
+        _wheelOpen = true;
+        _wheelSelector = Vector2.zero;
+        _emoteWheel.Open();
+        if (cameraController != null) cameraController.OnCamaraMove = false;
+    }
+
+    private void CloseEmoteWheel(int selectedIndex)
+    {
+        _wheelOpen = false;
+        _emoteWheel.Close();
+        if (cameraController != null) cameraController.OnCamaraMove = true;
+
+        if (selectedIndex >= 0 && _emoteSet != null && _emoteSet.emotes != null && selectedIndex < _emoteSet.emotes.Length)
+            PlayEmoteServerRpc(selectedIndex);
+    }
+
+    [ServerRpc]
+    private void PlayEmoteServerRpc(int index) => PlayEmoteClientRpc(index);
+
+    [ClientRpc]
+    private void PlayEmoteClientRpc(int index) => ShowEmoteAbove(index);
+
+    /// <summary>Muestra el emote sobre el nametag de ESTE jugador en todos los clientes.</summary>
+    private void ShowEmoteAbove(int index)
+    {
+        if (_emoteSet == null || _emoteSet.emotes == null) return;
+        if (index < 0 || index >= _emoteSet.emotes.Length) return;
+
+        var emote = _emoteSet.emotes[index];
+        if (emote == null || emote.sprite == null) return;
+
+        if (_activeEmote != null) Destroy(_activeEmote);
+
+        var go = new GameObject("EmoteVisual");
+        go.transform.SetParent(transform, true);
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = emote.sprite;
+        sr.sortingOrder = 500;
+        _activeEmote = go;
+
+        StartCoroutine(EmoteVisualRoutine(go, sr, emote.anim));
+    }
+
+    private Transform GetEmoteAnchor()
+    {
+        var label = GetComponentInChildren<EnemyLabel>(true);
+        return label != null ? label.transform : transform;
+    }
+
+    private IEnumerator EmoteVisualRoutine(GameObject go, SpriteRenderer sr, EmoteAnim anim)
+    {
+        Transform anchor = GetEmoteAnchor();
+
+        // Escala base para que el sprite mida 'emoteWorldHeight' en mundo.
+        float baseScale = emoteWorldHeight;
+        if (sr.sprite != null && sr.sprite.bounds.size.y > 0.0001f)
+            baseScale = emoteWorldHeight / sr.sprite.bounds.size.y;
+
+        float t = 0f;
+        while (go != null && t < emoteDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / emoteDuration);
+
+            Vector3 basePos = (anchor != null ? anchor.position : transform.position + Vector3.up * 2f)
+                              + Vector3.up * emoteHeightOffset;
+            Vector3 animOffset = Vector3.zero;
+            float spin = 0f;
+            float scaleMul = 1f;
+            float alpha = 1f;
+
+            switch (anim)
+            {
+                case EmoteAnim.PopBounce:
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.FloatUp:
+                    animOffset = Vector3.up * Mathf.Lerp(0f, 0.6f, k);
+                    scaleMul = Pop(Mathf.Min(1f, k * 2f)) * (1f + 0.06f * Mathf.Sin(t * 8f));
+                    break;
+                case EmoteAnim.Shake:
+                    animOffset = new Vector3(Mathf.Sin(t * 38f) * 0.06f, 0f, 0f);
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.Spin:
+                    spin = Mathf.Lerp(360f, 0f, 1f - (1f - k) * (1f - k));
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.DropDown:
+                    animOffset = Vector3.up * Mathf.Lerp(0.6f, 0f, 1f - (1f - k) * (1f - k));
+                    scaleMul = Mathf.Clamp01(k * 4f);
+                    break;
+                case EmoteAnim.Fade:
+                default:
+                    alpha = Mathf.Min(1f, k * 4f);
+                    break;
+            }
+
+            if (k > 0.8f) alpha = Mathf.Min(alpha, 1f - (k - 0.8f) / 0.2f); // fade-out común
+
+            Camera cam = Camera.main;
+            go.transform.position = basePos + animOffset;
+            Quaternion face = cam != null ? cam.transform.rotation : Quaternion.identity;
+            go.transform.rotation = face * Quaternion.Euler(0f, 0f, spin);
+            go.transform.localScale = Vector3.one * (baseScale * scaleMul);
+            sr.color = new Color(1f, 1f, 1f, Mathf.Clamp01(alpha));
+
+            yield return null;
+        }
+
+        if (go != null) Destroy(go);
+        if (_activeEmote == go) _activeEmote = null;
+    }
+
+    private static float Pop(float k)
+    {
+        if (k <= 0f) return 0f;
+        if (k < 0.6f) return Mathf.Lerp(0f, 1.2f, k / 0.6f);
+        return Mathf.Lerp(1.2f, 1f, (k - 0.6f) / 0.4f);
     }
 }

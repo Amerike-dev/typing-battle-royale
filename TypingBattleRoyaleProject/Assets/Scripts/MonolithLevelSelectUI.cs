@@ -39,6 +39,8 @@ public class MonolithLevelSelectUI : MonoBehaviour
     [SerializeField] private Sprite reloadIcon;
     [Tooltip("Segundos que se muestra el aviso 'recargando' por cada vez que el jugador presiona E.")]
     [SerializeField] private float cooldownNoticeDuration = 2.5f;
+    [Tooltip("Fuente del aviso de recarga (Gontserrat Bold).")]
+    [SerializeField] private TMP_FontAsset cooldownFont;
 
     private RectTransform _instructionsRoot;
 
@@ -351,7 +353,8 @@ public class MonolithLevelSelectUI : MonoBehaviour
         txtRt.sizeDelta = new Vector2(760f, 130f);
         txtRt.anchoredPosition = new Vector2(0f, -40f);
         _cooldownText = txtGo.AddComponent<TextMeshProUGUI>();
-        if (instructionsFont != null) _cooldownText.font = instructionsFont;
+        TMP_FontAsset font = cooldownFont != null ? cooldownFont : instructionsFont;
+        if (font != null) _cooldownText.font = font;
         _cooldownText.fontSize = 36f;
         _cooldownText.color = new Color(1f, 0.85f, 0.4f);
         _cooldownText.alignment = TextAlignmentOptions.Center;
