@@ -48,13 +48,19 @@ public class PauseController : MonoBehaviour
         if (_backOptionButton != null)
             _backOptionButton.onClick.AddListener(ShowPauseMenuPanel);
 
-        _menuContent.SetActive(false);
-
         if (_pauseMainPanel != null)
             _pauseMainPanel.SetActive(true);
 
         if (_optionPanel != null)
             _optionPanel.SetActive(false);
+
+        if (_panelUI != null)
+            _panelUI.anchoredPosition = _hidePos;
+
+        if (_canvasGroup != null)
+            _canvasGroup.alpha = 0f;
+
+        _menuContent.SetActive(false);
     }
 
     private void Start()
@@ -69,7 +75,8 @@ public class PauseController : MonoBehaviour
         _aPause.action.started += OnPauseChange; //ctx => OnPausa();
         _aPause.action.Enable();
 
-        _buttonHost.SetActive(NetworkManager.Singleton.IsServer);
+        if (_buttonHost != null && NetworkManager.Singleton != null)
+            _buttonHost.SetActive(NetworkManager.Singleton.IsServer);
     }
     private void OnDisable()
     {
@@ -88,7 +95,13 @@ public class PauseController : MonoBehaviour
             Debug.Log("[PauseController] El monolito está abierto, bloqueando pausa.");
             return;
         }
-        
+
+        if (MonolithTypingChallenge.Instance != null && MonolithTypingChallenge.Instance.myCanvas.enabled)
+        {
+            Debug.Log("[PauseController] El desafío del monolito está abierto, bloqueando pausa.");
+            return;
+        }
+
         var state = GameplayManager.Instance.stateMachine.currentState;
 
         if(state is GameOverState || state is WaitingState || state is BattleState) return;
@@ -115,8 +128,11 @@ public class PauseController : MonoBehaviour
             UIAnimator.FadeIn(_canvasGroup, _time);
         }
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        CursorManager.ShowCursor();
+
+        var cam = GameplayManager.Instance?.PlayerController?.cameraController;
+        if (cam != null) cam.OnCamaraMove = false;
+
         AudioListener.pause = true;
     }
     public void ResumeGame()
@@ -129,8 +145,11 @@ public class PauseController : MonoBehaviour
             UIAnimator.FadeOut(_canvasGroup, _time);
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        CursorManager.HideCursor();
+
+        var cam = GameplayManager.Instance?.PlayerController?.cameraController;
+        if (cam != null) cam.OnCamaraMove = true;
+
         AudioListener.pause = false;
 
         if(_closeCoroutine != null)

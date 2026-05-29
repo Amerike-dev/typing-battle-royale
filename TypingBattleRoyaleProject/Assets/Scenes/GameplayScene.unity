@@ -40498,6 +40498,7 @@ GameObject:
   - component: {fileID: 731464963}
   - component: {fileID: 731464965}
   - component: {fileID: 731464964}
+  - component: {fileID: 731464970}
   m_Layer: 5
   m_Name: MenuOpciones
   m_TagString: Untagged
@@ -40513,7 +40514,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731464962}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -40557,6 +40558,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &731464970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731464962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86fe863038152fc4582c1ec133e1b939, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  masterSlider: {fileID: 1821302526}
+  musicSlider: {fileID: 2092534151}
+  sfxSlider: {fileID: 285100894}
 --- !u!222 &731464965
 CanvasRenderer:
   m_ObjectHideFlags: 0
