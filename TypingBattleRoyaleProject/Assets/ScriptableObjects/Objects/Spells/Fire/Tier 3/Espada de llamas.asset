@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Espada de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Espada de fuego
+  spellName: Espada de llamas
   runeString: machete encendido de pancho villa enojado
   elementType: 1
   tier: 2
@@ -28,6 +28,9 @@ MonoBehaviour:
   speed: 0
   uses: 5
   duration: 0
+  vfxCast: {fileID: 0}
+  vfxProjectile: {fileID: 0}
+  vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2

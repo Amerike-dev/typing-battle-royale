@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Elevacion
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Velocidad de viento
+  spellName: Elevacion
   runeString: celeritas
   elementType: 4
   tier: 0
@@ -26,6 +26,9 @@ MonoBehaviour:
   speed: 5
   uses: 0
   duration: 0
+  vfxCast: {fileID: 0}
+  vfxProjectile: {fileID: 0}
+  vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 2
