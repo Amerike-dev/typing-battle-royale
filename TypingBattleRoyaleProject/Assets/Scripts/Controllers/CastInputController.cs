@@ -51,6 +51,8 @@ public class CastInputController : MonoBehaviour
     [SerializeField] private string castHeader = "¡Lanza el hechizo!";
     private TypingOverlay _typingOverlay;
 
+    public PlayerAudio playerAudio;
+
     private TypingOverlay GetOverlay()
     {
         if (_typingOverlay == null)
