@@ -96,6 +96,8 @@ public class MonolithTypingChallenge : MonoBehaviour
     {
         myCanvas.enabled = false;
         _player.MoveSpeed();
+        // Restauramos el movimiento de cámara (se desactivó al abrir la UI del monolito).
+        if (_player != null && _player.cameraController != null) _player.cameraController.OnCamaraMove = true;
         CursorManager.HideCursor();
 
         if (UnityEngine.EventSystems.EventSystem.current != null)
