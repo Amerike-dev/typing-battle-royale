@@ -12,6 +12,8 @@ public class KeycapTheme : ScriptableObject
     public Sprite filledKey;
     [Tooltip("Tecla ya escrita — d6_outline 1.")]
     public Sprite outlineKey;
+    [Tooltip("Tecla de espacio (barra espaciadora) — espacio.png. Se dibuja cuadrada.")]
+    public Sprite spaceKey;
     [Tooltip("Fuente de las letras (Gontserrat Bold).")]
     public TMP_FontAsset font;
 }

@@ -44,6 +44,7 @@ public class TypingOverlay : MonoBehaviour
     private Image[] _keyImg;
     private TextMeshProUGUI[] _keyLetter;
     private Vector2[] _basePos;
+    private bool[] _isSpace;
     private Color _currentColor = new Color(1f, 0.95f, 0.4f, 1f); // tinte de la tecla actual (color del elemento)
     private Coroutine _shake;
 
@@ -169,39 +170,59 @@ public class TypingOverlay : MonoBehaviour
         _keyImg = new Image[n];
         _keyLetter = new TextMeshProUGUI[n];
         _basePos = new Vector2[n];
+        _isSpace = new bool[n];
 
-        // Palabras: (inicio, longitud), saltando espacios.
-        var words = new List<Vector2Int>();
-        int wstart = -1;
-        for (int i = 0; i < n; i++)
+        // Tokens: cada palabra (letras contiguas) y cada espacio se tratan como una unidad
+        // independiente. Así el espacio es una "tecla" visible (espacio.png) y, además, sirve como
+        // punto de corte para el wrap (cuando hay palabras largas no se arman renglones eternos).
+        // (isSpace, inicio, longitud)
+        var tokens = new List<(bool isSpace, int start, int len)>();
+        for (int i = 0; i < n; )
         {
             if (_text[i] == ' ')
             {
-                if (wstart >= 0) { words.Add(new Vector2Int(wstart, i - wstart)); wstart = -1; }
+                tokens.Add((true, i, 1));
+                i++;
             }
-            else if (wstart < 0) wstart = i;
+            else
+            {
+                int s = i;
+                while (i < n && _text[i] != ' ') i++;
+                tokens.Add((false, s, i - s));
+            }
         }
-        if (wstart >= 0) words.Add(new Vector2Int(wstart, n - wstart));
 
         float WordWidth(int len) => len * keySize + Mathf.Max(0, len - 1) * keySpacing;
+        float TokenWidth((bool isSpace, int start, int len) t) => t.isSpace ? keySize : WordWidth(t.len);
 
-        // Wrap por palabra.
+        // Wrap por token. Todo va separado por keySpacing (incluido el espacio); un espacio que
+        // caería al inicio de un renglón se descarta para no dejarlo colgando.
         var rows = new List<List<int>>();
         var rowWidths = new List<float>();
         var current = new List<int>();
         float curW = 0f;
-        for (int wi = 0; wi < words.Count; wi++)
+        for (int ti = 0; ti < tokens.Count; ti++)
         {
-            float ww = WordWidth(words[wi].y);
-            float add = (current.Count > 0 ? spaceWidth : 0f) + ww;
-            if (current.Count > 0 && curW + add > maxRowWidth)
+            float tw = TokenWidth(tokens[ti]);
+
+            if (current.Count == 0)
+            {
+                if (tokens[ti].isSpace) continue; // no iniciar renglón con un espacio
+                current.Add(ti); curW = tw;
+                continue;
+            }
+
+            float add = keySpacing + tw;
+            if (curW + add > maxRowWidth)
             {
                 rows.Add(current); rowWidths.Add(curW);
                 current = new List<int>(); curW = 0f;
-                add = ww;
+                if (tokens[ti].isSpace) continue; // el espacio sirvió de corte; no lo dibujamos
+                current.Add(ti); curW = tw;
+                continue;
             }
-            current.Add(wi);
-            curW += add;
+
+            current.Add(ti); curW += add;
         }
         if (current.Count > 0) { rows.Add(current); rowWidths.Add(curW); }
 
@@ -218,21 +239,31 @@ public class TypingOverlay : MonoBehaviour
 
             for (int k = 0; k < row.Count; k++)
             {
-                if (k > 0) cursorLeft += spaceWidth; // hueco entre palabras
-                var w = words[row[k]];
-                for (int c = 0; c < w.y; c++)
+                if (k > 0) cursorLeft += keySpacing;
+                var t = tokens[row[k]];
+
+                if (t.isSpace)
                 {
-                    if (c > 0) cursorLeft += keySpacing;
-                    int idx = w.x + c;
                     float center = cursorLeft + keySize * 0.5f;
-                    CreateKey(idx, new Vector2(center, y));
+                    CreateKey(t.start, new Vector2(center, y), true);
                     cursorLeft += keySize;
+                }
+                else
+                {
+                    for (int c = 0; c < t.len; c++)
+                    {
+                        if (c > 0) cursorLeft += keySpacing;
+                        int idx = t.start + c;
+                        float center = cursorLeft + keySize * 0.5f;
+                        CreateKey(idx, new Vector2(center, y), false);
+                        cursorLeft += keySize;
+                    }
                 }
             }
         }
     }
 
-    private void CreateKey(int idx, Vector2 pos)
+    private void CreateKey(int idx, Vector2 pos, bool isSpace)
     {
         var go = new GameObject("Key_" + idx, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         var rt = go.GetComponent<RectTransform>();
@@ -242,11 +273,16 @@ public class TypingOverlay : MonoBehaviour
         rt.anchoredPosition = pos;
 
         var img = go.GetComponent<Image>();
-        img.sprite = _theme != null ? _theme.filledKey : null;
-        img.preserveAspect = true;
+        if (isSpace) img.sprite = _theme != null ? _theme.spaceKey : null;
+        else img.sprite = _theme != null ? _theme.filledKey : null;
+        // La tecla de espacio se dibuja cuadrada (estiramos para corregir el "apretado" en Y del png).
+        img.preserveAspect = !isSpace;
         img.raycastTarget = false;
         _keyImg[idx] = img;
         _basePos[idx] = pos;
+        _isSpace[idx] = isSpace;
+
+        if (isSpace) return; // el espacio no lleva letra encima
 
         var lGo = new GameObject("L", typeof(RectTransform), typeof(CanvasRenderer));
         var lRt = lGo.GetComponent<RectTransform>();
@@ -272,9 +308,11 @@ public class TypingOverlay : MonoBehaviour
             var img = _keyImg[i];
             if (img == null) continue;
 
+            bool space = _isSpace != null && i < _isSpace.Length && _isSpace[i];
+
             if (i < currentIndex)
             {
-                if (_theme != null) img.sprite = _theme.outlineKey;
+                if (!space && _theme != null) img.sprite = _theme.outlineKey;
                 img.color = typedTint;
                 img.rectTransform.anchoredPosition = _basePos[i];
                 img.rectTransform.localScale = Vector3.one;
@@ -282,14 +320,14 @@ public class TypingOverlay : MonoBehaviour
             }
             else if (i == currentIndex)
             {
-                if (_theme != null) img.sprite = _theme.filledKey;
+                if (!space && _theme != null) img.sprite = _theme.filledKey;
                 img.color = hasError ? errorTint : _currentColor; // color del elemento del hechizo
                 img.rectTransform.localScale = Vector3.one * 1.12f;
                 if (_keyLetter[i] != null) _keyLetter[i].color = activeLetterColor;
             }
             else
             {
-                if (_theme != null) img.sprite = _theme.filledKey;
+                if (!space && _theme != null) img.sprite = _theme.filledKey;
                 img.color = pendingTint;
                 img.rectTransform.anchoredPosition = _basePos[i];
                 img.rectTransform.localScale = Vector3.one;

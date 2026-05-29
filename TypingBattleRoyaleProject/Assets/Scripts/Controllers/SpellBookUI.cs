@@ -35,6 +35,18 @@ public class SpellBookUI : MonoBehaviour
     private Coroutine _hideRoutine;
     Coroutine _spellBookCoroutine;
 
+    [Header("Instrucciones (controles, esquina inferior izquierda)")]
+    [SerializeField] private float selectIconHeight = 96f;   // ws_0
+    [SerializeField] private float pageIconHeight = 80f;     // ws_1 / ws_2 (A y D)
+    [SerializeField] private float confirmIconHeight = 64f;  // enterGroup
+    [SerializeField] private float instructionsFontSize = 28f;
+    [Tooltip("Separación desde la esquina inferior izquierda del canvas.")]
+    [SerializeField] private Vector2 instructionsPadding = new Vector2(40f, 40f);
+    [SerializeField] private float instructionsRowGap = 18f;
+    [SerializeField] private float instructionsIconTextGap = 16f;
+    private InstructionIcons _iconSet;
+    private GameObject _instructionsRoot;
+
     void Awake()
     {
         if (slots == null || slots.Length == 0)
@@ -123,6 +135,9 @@ public class SpellBookUI : MonoBehaviour
         if (_canvasGroup != null) _canvasGroup.gameObject.SetActive(true);
         gameObject.SetActive(true);
 
+        EnsureInstructions();
+        if (_instructionsRoot != null) _instructionsRoot.SetActive(true);
+
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
@@ -133,6 +148,8 @@ public class SpellBookUI : MonoBehaviour
     public void Hide()
     {
         if (!gameObject.activeInHierarchy) return;
+
+        if (_instructionsRoot != null) _instructionsRoot.SetActive(false);
 
         UIMove(_hidePos);
         UIAnimator.FadeOut(_canvasGroup, _time);
@@ -157,25 +174,15 @@ public class SpellBookUI : MonoBehaviour
             if (spellIndex < spellCount)
             {
                 Spell spell = spells[spellIndex];
-
                 texts[i].text = spell.runeString + " " + spell.tier.ToString();
-
-                if ((int)spell.tier > (int)playerTier)
-                {
-                    images[i].color = Color.gray;
-                }
-                else
-                {
-                    images[i].color = Color.white;
-                }
             }
             else
             {
                 texts[i].text = "—";
-                images[i].color = new Color(1f, 1f, 1f, 0.25f);
             }
         }
 
+        // El color del fondo de cada slot lo decide UpdateSelectionVisual (color del elemento).
         UpdateSelectionVisual();
     }
 
@@ -211,14 +218,16 @@ public class SpellBookUI : MonoBehaviour
         bool pageDown = Keyboard.current != null && Keyboard.current.pageDownKey.wasPressedThisFrame;
         bool leftArrow = Keyboard.current != null && Keyboard.current.leftArrowKey.wasPressedThisFrame;
         bool rightArrow = Keyboard.current != null && Keyboard.current.rightArrowKey.wasPressedThisFrame;
+        bool aKey = Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame; // ws_1
+        bool dKey = Keyboard.current != null && Keyboard.current.dKey.wasPressedThisFrame; // ws_2
 
-        if (scroll > 0f || pageUp || leftArrow)
+        if (scroll > 0f || pageUp || leftArrow || aKey)
         {
             currentPage = Mathf.Max(0, currentPage - 1);
             selectedIndex = 0;
             Refresh(currentSpells, currentPage);
         }
-        else if (scroll < 0f || pageDown || rightArrow)
+        else if (scroll < 0f || pageDown || rightArrow || dKey)
         {
             currentPage = Mathf.Min(currentPage + 1, maxPage);
             selectedIndex = 0;
@@ -275,7 +284,7 @@ public class SpellBookUI : MonoBehaviour
 
             if (spellIndex >= spellCount)
             {
-                images[i].color = new Color(1f, 1f, 1f, 0.25f);
+                images[i].color = new Color(1f, 1f, 1f, 0.12f);
                 continue;
             }
 
@@ -283,11 +292,16 @@ public class SpellBookUI : MonoBehaviour
 
             if ((int)spell.tier > (int)playerTier)
             {
-                images[i].color = Color.gray;
+                images[i].color = new Color(0.32f, 0.32f, 0.32f, 1f); // bloqueado (tier mayor)
                 continue;
             }
 
-            images[i].color = (i == selectedIndex) ? Color.yellow : Color.white;
+            // Fondo del panel = color del elemento del hechizo. El seleccionado va a color pleno;
+            // los no seleccionados, atenuados, para que el resaltado siga siendo claro.
+            Color e = TypingOverlay.ElementColor(spell.elementType);
+            images[i].color = (i == selectedIndex)
+                ? e
+                : new Color(e.r * 0.5f, e.g * 0.5f, e.b * 0.5f, 1f);
         }
     }
 
@@ -312,5 +326,108 @@ public class SpellBookUI : MonoBehaviour
         yield return new WaitForSeconds(_time);
         gameObject.SetActive(false);
         _hideRoutine = null;
+    }
+
+    // ---------------- Instrucciones de controles ----------------
+
+    /// <summary>
+    /// Crea (una sola vez) el overlay de controles en la esquina inferior izquierda del canvas:
+    /// fila 1 = ws_0 + "Selecciona hechizo"; fila 2 = A (ws_1) y D (ws_2) separadas por su propio
+    /// ancho + "Cambia de pagina"; fila 3 = enterGroup + "Confirmar". Los iconos se cargan desde el
+    /// asset SpellBookInstructions (Resources), así no hay que cablearlos en la escena.
+    /// </summary>
+    private void EnsureInstructions()
+    {
+        if (_instructionsRoot != null) return;
+
+        if (_iconSet == null) _iconSet = Resources.Load<InstructionIcons>("SpellBookInstructions");
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Transform parent = canvas != null ? canvas.transform : transform;
+
+        GameObject root = new GameObject("SpellBookInstructions", typeof(RectTransform));
+        _instructionsRoot = root;
+        RectTransform rt = root.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 0f); // esquina inferior izquierda
+        rt.anchoredPosition = instructionsPadding;
+        rt.localScale = Vector3.one;
+
+        float gap = instructionsRowGap;
+        // Apilamos de abajo hacia arriba: Confirmar (abajo), Cambia de pagina, Selecciona (arriba).
+        float yConfirm = 0f;
+        float yPage = confirmIconHeight + gap;
+        float ySelect = confirmIconHeight + gap + pageIconHeight + gap;
+
+        // Fila "Selecciona hechizo".
+        RectTransform rowSel = BuildInstrRow("Row_Select", ySelect, selectIconHeight);
+        float xSel = AddInstrIcon(rowSel, _iconSet != null ? _iconSet.selectIcon : null, selectIconHeight, 0f);
+        AddInstrLabel(rowSel, "Selecciona hechizo", xSel + instructionsIconTextGap);
+
+        // Fila "Cambia de pagina": A y D a la misma altura, separadas por su propio ancho.
+        RectTransform rowPage = BuildInstrRow("Row_Page", yPage, pageIconHeight);
+        float wA = AddInstrIcon(rowPage, _iconSet != null ? _iconSet.pageLeftIcon : null, pageIconHeight, 0f);
+        float xD = wA + wA; // hueco entre A y D = ancho de un icono
+        float wD = AddInstrIcon(rowPage, _iconSet != null ? _iconSet.pageRightIcon : null, pageIconHeight, xD);
+        AddInstrLabel(rowPage, "Cambia de pagina", xD + wD + instructionsIconTextGap);
+
+        // Fila "Confirmar".
+        RectTransform rowConf = BuildInstrRow("Row_Confirm", yConfirm, confirmIconHeight);
+        float wC = AddInstrIcon(rowConf, _iconSet != null ? _iconSet.confirmIcon : null, confirmIconHeight, 0f);
+        AddInstrLabel(rowConf, "Confirmar", wC + instructionsIconTextGap);
+    }
+
+    private RectTransform BuildInstrRow(string rowName, float y, float rowHeight)
+    {
+        GameObject row = new GameObject(rowName, typeof(RectTransform));
+        RectTransform r = row.GetComponent<RectTransform>();
+        r.SetParent(_instructionsRoot.transform, false);
+        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 0f);
+        r.anchoredPosition = new Vector2(0f, y);
+        r.sizeDelta = new Vector2(600f, rowHeight);
+        return r;
+    }
+
+    /// <summary>Coloca un icono alineado a la izquierda y centrado verticalmente. Devuelve su ancho.</summary>
+    private float AddInstrIcon(RectTransform parent, Sprite sprite, float height, float x)
+    {
+        float w = InstrIconWidth(sprite, height);
+        GameObject g = new GameObject("Icon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        RectTransform r = g.GetComponent<RectTransform>();
+        r.SetParent(parent, false);
+        r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
+        r.pivot = new Vector2(0f, 0.5f);
+        r.sizeDelta = new Vector2(w, height);
+        r.anchoredPosition = new Vector2(x, 0f);
+        Image img = g.GetComponent<Image>();
+        img.sprite = sprite;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        return w;
+    }
+
+    private void AddInstrLabel(RectTransform parent, string text, float x)
+    {
+        GameObject g = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer));
+        RectTransform r = g.GetComponent<RectTransform>();
+        r.SetParent(parent, false);
+        r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
+        r.pivot = new Vector2(0f, 0.5f);
+        r.sizeDelta = new Vector2(380f, parent.sizeDelta.y);
+        r.anchoredPosition = new Vector2(x, 0f);
+        TextMeshProUGUI tmp = g.AddComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        if (Gonserrat != null) tmp.font = Gonserrat;
+        tmp.fontSize = instructionsFontSize;
+        tmp.color = Color.white;
+        tmp.alignment = TextAlignmentOptions.MidlineLeft;
+        tmp.raycastTarget = false;
+    }
+
+    private static float InstrIconWidth(Sprite icon, float height)
+    {
+        if (icon != null && icon.rect.height > 0f)
+            return height * (icon.rect.width / icon.rect.height);
+        return height;
     }
 }
