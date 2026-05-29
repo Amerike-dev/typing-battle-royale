@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Select_Fresita
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Select
-  clip: {fileID: 8300000, guid: 0cde5a702a278fe41a66958fb8d96638, type: 3}
+  clip: {fileID: 8300000, guid: af6a24bb432e1bf4f9397d9552e1124f, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cast_Fresita
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Cast
-  clip: {fileID: 8300000, guid: f4f3c53d073deab43aa21a844cce94ae, type: 3}
+  clip: {fileID: 8300000, guid: 530ea166da523794599d3df7d88684a2, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

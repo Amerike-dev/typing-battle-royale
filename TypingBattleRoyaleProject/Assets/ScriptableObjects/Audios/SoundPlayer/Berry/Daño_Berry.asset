@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "Da\xF1o_Berry"
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Dano
-  clip: {fileID: 8300000, guid: dc8096073a8cbf443beeffd159ad1f83, type: 3}
+  clip: {fileID: 8300000, guid: 067d8c6a6516e9c4a999e8f28f796d8c, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

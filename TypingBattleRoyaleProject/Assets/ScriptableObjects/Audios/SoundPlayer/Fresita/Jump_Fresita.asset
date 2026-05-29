@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Jump_Fresita
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Jump
-  clip: {fileID: 8300000, guid: 0cde5a702a278fe41a66958fb8d96638, type: 3}
+  clip: {fileID: 8300000, guid: 5b7175cf2b1009b4f9d92e663204f8f7, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

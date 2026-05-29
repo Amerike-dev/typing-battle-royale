@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Muerte_Berry
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Muerte
-  clip: {fileID: 8300000, guid: 0cde5a702a278fe41a66958fb8d96638, type: 3}
+  clip: {fileID: 8300000, guid: b08150ed330f01a4faaba7072b6be960, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

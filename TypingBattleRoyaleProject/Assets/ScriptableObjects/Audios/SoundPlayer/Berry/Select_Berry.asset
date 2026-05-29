@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Select_Berry
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Select
-  clip: {fileID: 8300000, guid: 0cde5a702a278fe41a66958fb8d96638, type: 3}
+  clip: {fileID: 8300000, guid: 030d685fffaed5647b6d32dd89dccc17, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0

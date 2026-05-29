@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cast_Klug
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: Cast
-  clip: {fileID: 8300000, guid: f4f3c53d073deab43aa21a844cce94ae, type: 3}
+  clip: {fileID: 8300000, guid: 7ec248037cb0bbb49ad6a5e4414c0311, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0
