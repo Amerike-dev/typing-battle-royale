@@ -60,7 +60,7 @@ public class CharacterSelectController : MonoBehaviour
             // Fallback local por si no encontramos el objeto de jugador del host.
             InstructionsPanelController.Instance.Begin(duration);
         }
-
+        AudioChango.Instance.PlayGameStart();
         StartCoroutine(StartAfterInstructions(duration));
     }
 
