@@ -75,9 +75,8 @@ public class GameOverState : GameState
             }
         }
         manager.EndGameUI?.Populate(_winnerID, players);
-        
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+
+        CursorManager.ShowCursor();
 
         Time.timeScale = 0f;
     }

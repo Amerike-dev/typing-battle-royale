@@ -35,8 +35,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        CursorManager.HideCursor();
 
         _originalParent = transform.parent;
         _originalLocalPosition = transform.localPosition;

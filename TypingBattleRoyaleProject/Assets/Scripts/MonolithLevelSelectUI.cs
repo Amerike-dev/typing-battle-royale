@@ -130,8 +130,7 @@ public class MonolithLevelSelectUI : MonoBehaviour
             }
         }
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        CursorManager.ShowCursor();
         myCanvas.enabled = true;
 
         _selectedIndex = -1;
@@ -149,16 +148,15 @@ public class MonolithLevelSelectUI : MonoBehaviour
     
     private void SelectSpell(MonolithController monolith, Spell spell, int index)
     {
-        Hide();
+        myCanvas.enabled = false;
         MonolithTypingChallenge.Instance.Begin(monolith, spell, index, _localPlayer);
     }
 
     private void Hide()
     {
         myCanvas.enabled = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        
+        CursorManager.HideCursor();
+
         if (_localPlayer != null) _localPlayer.MoveSpeed();
     }
 }

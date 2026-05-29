@@ -96,7 +96,8 @@ public class MonolithTypingChallenge : MonoBehaviour
     {
         myCanvas.enabled = false;
         _player.MoveSpeed();
-        
+        CursorManager.HideCursor();
+
         if (UnityEngine.EventSystems.EventSystem.current != null)
         {
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
