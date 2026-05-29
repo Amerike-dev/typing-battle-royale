@@ -32,10 +32,10 @@ public static class UIAnimator
     {
         Vector2 startPos = canvasGrupUI.anchoredPosition;
         float duration = 0f;
-        while (time < duration)
+        while (duration < time)
         {
-            canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, time / duration);
-            time += Time.unscaledDeltaTime;
+            canvasGrupUI.anchoredPosition = Vector2.Lerp(startPos, target, duration / time);
+            duration += Time.unscaledDeltaTime;
 
             yield return null;
         }
@@ -47,9 +47,9 @@ public static class UIAnimator
         float duration = 0f;
         while (duration < time)
         {
-            float currentHeight = Mathf.Lerp(startHeight, target, time / duration);
+            float currentHeight = Mathf.Lerp(startHeight, target, duration / time);
             rectTransform.sizeDelta= new Vector2(rectTransform.sizeDelta.x, currentHeight);
-            time += Time.unscaledDeltaTime;
+            duration += Time.unscaledDeltaTime;
             yield return null;
         }
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, target);

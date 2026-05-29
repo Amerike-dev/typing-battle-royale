@@ -159,7 +159,7 @@ public class EndGameUI : MonoBehaviour
     {
         _advancedStats = true;
         BasicUIMove(_basicShowPos);
-        MidleUIMove(_midleHidePos);
+        MidleUIMove(_midleShowPos);
         AdvancedUIMove(_advancedShowPos);
         UIChangeHeightLeft(_showHeight);
         UIChangeHeightRight(_showHeight);
