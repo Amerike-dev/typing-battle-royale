@@ -46,6 +46,9 @@ public class CastInputController : MonoBehaviour
 
     private float _castStartTime;
 
+    public PlayerAudio playerAudio;
+
+
     private void OnEnable()
     {
         ResolveReferences();
@@ -294,7 +297,7 @@ public class CastInputController : MonoBehaviour
 
         ApplyDamageToLockedTarget();
 
-        PlayerAudio.Instance?.ChangeSoundById("Cast");
+        playerAudio.ChangeSoundById("Cast");
 
         OnSpellCast?.Invoke(currentSpell);
 

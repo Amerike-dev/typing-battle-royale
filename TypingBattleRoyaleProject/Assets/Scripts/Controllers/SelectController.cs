@@ -97,7 +97,7 @@ public class SelectController : MonoBehaviour
                 {
                     startButton.gameObject.SetActive(false);
                 }
-                PlayerAudio.Instance?.ChangeSoundById("Select");
+                SoundSelect.Instance?.PlaySelectSound();
             }
             else
             {

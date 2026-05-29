@@ -44,6 +44,8 @@ public class PlayerController : NetworkBehaviour
     private Vector3 _inputDirection;
     private float _jumpValue = 0.5f;
 
+    public PlayerAudio playerAudio;
+
     [SerializeField] private PlayerInput _playerInput;
     void Start()
     {
@@ -225,7 +227,7 @@ public class PlayerController : NetworkBehaviour
         if (_isGrounded && (jumpAction.ReadValue<float>() > _jumpValue))
         {
             _verticalVelocity = Mathf.Sqrt(jumpForce * -2f * -9.81f);
-            PlayerAudio.Instance?.ChangeSoundById("Jump");
+            playerAudio.ChangeSoundById("Jump");
         }
 
         _verticalVelocity += -9.81f * Time.deltaTime;

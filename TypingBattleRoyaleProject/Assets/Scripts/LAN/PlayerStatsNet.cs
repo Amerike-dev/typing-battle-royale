@@ -50,6 +50,8 @@ public class PlayerStatsNet : NetworkBehaviour
     private PlayerController _playerController;
     private Coroutine _deathSequenceCoroutine;
 
+    public PlayerAudio playerAudio;
+
     private void Awake()
     {
         _renderers = GetComponentsInChildren<Renderer>(true);
@@ -96,7 +98,7 @@ public class PlayerStatsNet : NetworkBehaviour
     public void TakeDamageServerRpc(float damage, ulong attackerId)
     {
         TakeDamage(damage, attackerId);
-        PlayerAudio.Instance?.ChangeSoundById("Dano");
+        
     }
 
     private void HandleHPChanged(float oldValue, float newValue)
@@ -138,6 +140,7 @@ public class PlayerStatsNet : NetworkBehaviour
         Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
 
         currentHP.Value -= damage;
+        playerAudio.ChangeSoundById("Dano");
 
         if (currentHP.Value <= 0) HandleDeath(lastDamageFromClientId);
         damageTaken.Value += damage;

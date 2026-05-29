@@ -389,6 +389,7 @@ MonoBehaviour:
   debugUnlockedSpells: []
   onExplorationState: 0
   stats: {fileID: 820300520724320627}
+  playerAudio: {fileID: -6665743005992189419}
   _playerInput: {fileID: 0}
 --- !u!114 &8928554855943717965
 MonoBehaviour:
@@ -417,6 +418,7 @@ MonoBehaviour:
   stringIndex: 0
   lastInInput: 0
   incorrectInput: 0
+  playerAudio: {fileID: -6665743005992189419}
 --- !u!114 &293070819077402283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -735,6 +737,7 @@ MonoBehaviour:
   avgWpm: 0
   avgAccuracy: 0
   fastestCastSeconds: 0
+  playerAudio: {fileID: -6665743005992189419}
 --- !u!114 &7090260673945462616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -884,6 +887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5dc59e1b235c55478444c623fe2fa44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAudio
+  ShowTopMostFoldoutHeaderGroup: 1
   audioSource: {fileID: 6860603053314833316}
   audioEntries:
   - {fileID: 11400000, guid: fb4e4501e1b05fb498f29891812a9aa9, type: 2}
@@ -949,7 +953,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
