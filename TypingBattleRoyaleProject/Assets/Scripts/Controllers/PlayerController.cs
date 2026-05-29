@@ -40,11 +40,13 @@ public class PlayerController : NetworkBehaviour
     [Tooltip("Sensibilidad del selector de la rueda al mover el mouse.")]
     [SerializeField] private float emoteWheelSensitivity = 1.2f;
     
-    [Tooltip("Altura (en mundo) del emote por encima del nametag del jugador.")]
-    [SerializeField] private float emoteHeightOffset = 4.5f;
-    
-    [Tooltip("Altura objetivo del emote en unidades de mundo.")]
+    [Tooltip("Hueco extra (en mundo) por encima de la cabeza del modelo. La cabeza se detecta sola desde los renderers, así que esto es solo un ajuste fino. Se limita para que nunca quede fuera de pantalla.")]
+    [SerializeField] private float emoteHeightOffset = 0.3f;
+
+    [Tooltip("Altura objetivo del emote en unidades de mundo (tamaño del sprite).")]
     [SerializeField] private float emoteWorldHeight = 0.7f;
+    [Tooltip("Distancia que sube/baja el emote durante las animaciones FloatUp/DropDown (antes estaba fija en 0.6).")]
+    [SerializeField] private float emoteRiseDistance = 0.6f;
     [Tooltip("Duración total del emote sobre el jugador.")]
     [SerializeField] private float emoteDuration = 2f;
     private EmoteSet _emoteSet;
@@ -187,6 +189,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+
+        // El emote ya no es hijo del jugador, así que lo limpiamos a mano (en todos los clientes).
+        if (_activeEmote != null) { Destroy(_activeEmote); _activeEmote = null; }
+
         if (!IsOwner) return;
 
         if (_emoteWheel != null) Destroy(_emoteWheel.gameObject);
@@ -464,8 +470,10 @@ public class PlayerController : NetworkBehaviour
 
         if (_activeEmote != null) Destroy(_activeEmote);
 
+        // NO lo emparentamos al jugador: si el modelo tiene una escala de import distinta de 1,
+        // el localScale del sprite se multiplicaría por esa escala y el emote se vería diminuto o
+        // gigante (o no se vería). En espacio de mundo seguimos al jugador desde la corrutina.
         var go = new GameObject("EmoteVisual");
-        go.transform.SetParent(transform, true);
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = emote.sprite;
         sr.sortingOrder = 500;
@@ -474,20 +482,37 @@ public class PlayerController : NetworkBehaviour
         StartCoroutine(EmoteVisualRoutine(go, sr, emote.anim));
     }
 
-    private Transform GetEmoteAnchor()
+    /// <summary>
+    /// Alto del modelo (cima de los renderers) respecto a la raíz del jugador. Independiente del
+    /// modelo: si cambias de personaje, el emote sigue quedando justo sobre la cabeza.
+    /// </summary>
+    private float ComputeHeadLocalHeight()
     {
-        var label = GetComponentInChildren<EnemyLabel>(true);
-        return label != null ? label.transform : transform;
+        var renderers = GetComponentsInChildren<Renderer>(false);
+        bool any = false;
+        Bounds b = default;
+        foreach (var r in renderers)
+        {
+            if (r == null || r is ParticleSystemRenderer) continue;
+            if (!any) { b = r.bounds; any = true; }
+            else b.Encapsulate(r.bounds);
+        }
+        if (!any) return 2f; // respaldo si aún no hay renderers
+        return Mathf.Max(0.2f, b.max.y - transform.position.y);
     }
 
     private IEnumerator EmoteVisualRoutine(GameObject go, SpriteRenderer sr, EmoteAnim anim)
     {
-        Transform anchor = GetEmoteAnchor();
+        float headLocalY = ComputeHeadLocalHeight();
+        // Ajuste fino acotado: aunque el campo serializado sea enorme, el emote no se va de pantalla.
+        float gap = Mathf.Clamp(emoteHeightOffset, -1f, 3f);
+        float rise = emoteRiseDistance;
 
-        // Escala base para que el sprite mida 'emoteWorldHeight' en mundo.
-        float baseScale = emoteWorldHeight;
+        // Escala base para que el sprite mida 'emoteWorldHeight' en mundo (con guardas para no quedar invisible).
+        float worldH = Mathf.Max(0.05f, emoteWorldHeight);
+        float baseScale = worldH;
         if (sr.sprite != null && sr.sprite.bounds.size.y > 0.0001f)
-            baseScale = emoteWorldHeight / sr.sprite.bounds.size.y;
+            baseScale = worldH / sr.sprite.bounds.size.y;
 
         float t = 0f;
         while (go != null && t < emoteDuration)
@@ -495,8 +520,11 @@ public class PlayerController : NetworkBehaviour
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / emoteDuration);
 
-            Vector3 basePos = (anchor != null ? anchor.position : transform.position + Vector3.up * 2f)
-                              + Vector3.up * emoteHeightOffset;
+            // Base = justo sobre la cabeza del modelo (detectada), centrada en el jugador.
+            Vector3 basePos = new Vector3(
+                transform.position.x,
+                transform.position.y + headLocalY + gap,
+                transform.position.z);
             Vector3 animOffset = Vector3.zero;
             float spin = 0f;
             float scaleMul = 1f;
@@ -508,7 +536,7 @@ public class PlayerController : NetworkBehaviour
                     scaleMul = Pop(k);
                     break;
                 case EmoteAnim.FloatUp:
-                    animOffset = Vector3.up * Mathf.Lerp(0f, 0.6f, k);
+                    animOffset = Vector3.up * Mathf.Lerp(0f, rise, k);
                     scaleMul = Pop(Mathf.Min(1f, k * 2f)) * (1f + 0.06f * Mathf.Sin(t * 8f));
                     break;
                 case EmoteAnim.Shake:
@@ -520,7 +548,7 @@ public class PlayerController : NetworkBehaviour
                     scaleMul = Pop(k);
                     break;
                 case EmoteAnim.DropDown:
-                    animOffset = Vector3.up * Mathf.Lerp(0.6f, 0f, 1f - (1f - k) * (1f - k));
+                    animOffset = Vector3.up * Mathf.Lerp(rise, 0f, 1f - (1f - k) * (1f - k));
                     scaleMul = Mathf.Clamp01(k * 4f);
                     break;
                 case EmoteAnim.Fade:

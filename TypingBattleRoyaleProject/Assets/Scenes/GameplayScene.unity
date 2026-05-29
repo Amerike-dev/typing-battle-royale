@@ -1456,6 +1456,7 @@ MonoBehaviour:
   - {fileID: 1343861840}
   - {fileID: 642486696}
   iconSize: 64
+  spellNameFontSize: 36
   iconOverlap: 26
   iconsLeftPadding: 22
   iconsAreaHeight: 0.8
@@ -23841,6 +23842,7 @@ MonoBehaviour:
   - {fileID: 1998727879}
   - {fileID: 324458102}
   iconSize: 64
+  spellNameFontSize: 36
   iconOverlap: 26
   iconsLeftPadding: 22
   iconsAreaHeight: 0.8
@@ -51774,6 +51776,7 @@ MonoBehaviour:
   - {fileID: 1565840719}
   - {fileID: 338048773}
   iconSize: 64
+  spellNameFontSize: 36
   iconOverlap: 26
   iconsLeftPadding: 22
   iconsAreaHeight: 0.8
@@ -76860,6 +76863,13 @@ MonoBehaviour:
   _hidePos: {x: 0, y: 0}
   _showPos: {x: 0, y: 0}
   _time: 0.2
+  selectIconHeight: 44
+  pageIconHeight: 40
+  confirmIconHeight: 40
+  instructionsFontSize: 22
+  instructionsPadding: {x: 0, y: 14}
+  instructionsGroupGap: 40
+  instructionsIconTextGap: 12
 --- !u!224 &1489365628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -93611,7 +93621,7 @@ MonoBehaviour:
     expandable: 0
     maxSize: 0
   - tag: VFX_AOE
-    prefab: {fileID: 3373193124174655773, guid: 10fcc4cccc043934997914f40b21a3e6, type: 3}
+    prefab: {fileID: 6421116825428167133, guid: bb9c180a2f93793419da4b1aa754655d, type: 3}
     size: 3
     expandable: 0
     maxSize: 0

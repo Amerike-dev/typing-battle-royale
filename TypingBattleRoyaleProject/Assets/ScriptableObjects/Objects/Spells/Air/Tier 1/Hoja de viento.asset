@@ -23,7 +23,7 @@ MonoBehaviour:
   cooldown: 0
   debuff: 0
   range: 1
-  speed: 100
+  speed: 50
   uses: 0
   duration: 0
   vfxCast: {fileID: 0}
@@ -31,8 +31,8 @@ MonoBehaviour:
   vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
-  startSpeed: 200
-  startSize: 1
+  startSpeed: 100
+  startSize: 0.5
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}

@@ -16,8 +16,8 @@ MonoBehaviour:
   elementType: 5
   duration: 0
   loop: 1
-  startSpeed: 2
-  startSize: 1
+  startSpeed: 1
+  startSize: 0.5
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 0}
