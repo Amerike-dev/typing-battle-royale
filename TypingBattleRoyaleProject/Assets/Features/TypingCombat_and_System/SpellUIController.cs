@@ -39,7 +39,10 @@ public class SpellUIController : MonoBehaviour
         if (currentIndex < originalText.Length)
         {
             if (hasError)
+            {
                 formattedText += $"<color={GetHex(incorrectColor)}>{originalText[currentIndex]}</color>";
+                PlayerAudio.Instance?.ChangeSoundById("ErrorCast");
+            }
             else
                 formattedText += originalText[currentIndex]; 
         }

@@ -225,7 +225,7 @@ public class PlayerController : NetworkBehaviour
         if (_isGrounded && (jumpAction.ReadValue<float>() > _jumpValue))
         {
             _verticalVelocity = Mathf.Sqrt(jumpForce * -2f * -9.81f);
-            AudioManager.Instance?.PlaySFX("sfx_jump");
+            PlayerAudio.Instance?.ChangeSoundById("Jump");
         }
 
         _verticalVelocity += -9.81f * Time.deltaTime;

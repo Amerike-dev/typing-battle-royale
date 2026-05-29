@@ -96,6 +96,7 @@ public class PlayerStatsNet : NetworkBehaviour
     public void TakeDamageServerRpc(float damage, ulong attackerId)
     {
         TakeDamage(damage, attackerId);
+        PlayerAudio.Instance?.ChangeSoundById("Dano");
     }
 
     private void HandleHPChanged(float oldValue, float newValue)
