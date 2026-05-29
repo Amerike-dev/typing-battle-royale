@@ -5659,7 +5659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1659596978
+  GlobalObjectIdHash: 2495541643
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5714,6 +5714,7 @@ MonoBehaviour:
   debugUnlockedSpells: []
   onExplorationState: 0
   stats: {fileID: 3083935011081440178}
+  playerAudio: {fileID: 460519624173164753}
   _playerInput: {fileID: 0}
 --- !u!114 &7656586047148381590
 MonoBehaviour:
@@ -5742,6 +5743,7 @@ MonoBehaviour:
   stringIndex: 0
   lastInInput: 0
   incorrectInput: 0
+  playerAudio: {fileID: 460519624173164753}
 --- !u!114 &263636301273088122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6062,6 +6064,7 @@ MonoBehaviour:
   avgWpm: 0
   avgAccuracy: 0
   fastestCastSeconds: 0
+  playerAudio: {fileID: 460519624173164753}
 --- !u!114 &1756445926243614157
 MonoBehaviour:
   m_ObjectHideFlags: 0
