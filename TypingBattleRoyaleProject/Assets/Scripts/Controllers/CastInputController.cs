@@ -336,6 +336,8 @@ public class CastInputController : MonoBehaviour
         ApplyDamageToLockedTarget();
 
         playerAudio.ChangeSoundById("Cast");
+        if (currentSpell != null)
+            playerAudio.PlaySpellSound(currentSpell);
 
         OnSpellCast?.Invoke(currentSpell);
 
