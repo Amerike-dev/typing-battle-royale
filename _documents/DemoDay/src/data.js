@@ -1151,7 +1151,7 @@ const TICKETS = [
         id: 'TBR-051',
         title: 'Polish UI SpellBook — rune card style + animaciones de selección',
         type: 'feature', priority: 'high', effort: 'M',
-        assignee: null, status: 'todo',
+        assignee: 'Angel', status: 'done',
         summary:
             'SpellBookUI (TBR-002) funciona pero su layout es funcional/debug: lista plana con texto. Rediseñar cada slot como una "rune card" con icono del elemento, nombre del spell en tipografía display, runeString destacada, daño/cooldown como mini-stats, y borde por tier (TierOne=VibrantViolet, TierTwo=GatorOrange, TierThree=RojoLotti). Selección con scale-up + glow del color del elemento. Paginación con flechas estilizadas. Todo siguiendo el brand book.',
         acceptance: [
