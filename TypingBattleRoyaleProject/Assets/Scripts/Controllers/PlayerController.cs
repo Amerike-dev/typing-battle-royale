@@ -66,6 +66,8 @@ public class PlayerController : NetworkBehaviour
     private Vector3 _inputDirection;
     private float _jumpValue = 0.5f;
 
+    public PlayerAudio playerAudio;
+
     [SerializeField] private PlayerInput _playerInput;
     void Start()
     {

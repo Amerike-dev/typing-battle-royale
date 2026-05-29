@@ -39,7 +39,9 @@ public class SpellUIController : MonoBehaviour
         if (currentIndex < originalText.Length)
         {
             if (hasError)
+            {
                 formattedText += $"<color={GetHex(incorrectColor)}>{originalText[currentIndex]}</color>";
+            }
             else
                 formattedText += originalText[currentIndex]; 
         }
