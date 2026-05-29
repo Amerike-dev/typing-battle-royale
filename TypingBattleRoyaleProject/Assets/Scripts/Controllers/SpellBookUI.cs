@@ -35,15 +35,16 @@ public class SpellBookUI : MonoBehaviour
     private Coroutine _hideRoutine;
     Coroutine _spellBookCoroutine;
 
-    [Header("Instrucciones (controles, esquina inferior izquierda)")]
-    [SerializeField] private float selectIconHeight = 96f;   // ws_0
-    [SerializeField] private float pageIconHeight = 80f;     // ws_1 / ws_2 (A y D)
-    [SerializeField] private float confirmIconHeight = 64f;  // enterGroup
-    [SerializeField] private float instructionsFontSize = 28f;
-    [Tooltip("Separación desde la esquina inferior izquierda del canvas.")]
-    [SerializeField] private Vector2 instructionsPadding = new Vector2(40f, 40f);
-    [SerializeField] private float instructionsRowGap = 18f;
-    [SerializeField] private float instructionsIconTextGap = 16f;
+    [Header("Instrucciones (controles, una línea arriba al centro)")]
+    [SerializeField] private float selectIconHeight = 44f;   // ws_0 (W/S)
+    [SerializeField] private float pageIconHeight = 40f;     // ws_1 / ws_2 (A y D)
+    [SerializeField] private float confirmIconHeight = 40f;  // enterGroup
+    [SerializeField] private float instructionsFontSize = 22f;
+    [Tooltip("Separación desde el borde superior del canvas (solo se usa Y).")]
+    [SerializeField] private Vector2 instructionsPadding = new Vector2(0f, 14f);
+    [Tooltip("Separación horizontal entre los tres grupos de instrucciones.")]
+    [SerializeField] private float instructionsGroupGap = 40f;
+    [SerializeField] private float instructionsIconTextGap = 12f;
     private InstructionIcons _iconSet;
     private GameObject _instructionsRoot;
 
@@ -331,10 +332,10 @@ public class SpellBookUI : MonoBehaviour
     // ---------------- Instrucciones de controles ----------------
 
     /// <summary>
-    /// Crea (una sola vez) el overlay de controles en la esquina inferior izquierda del canvas:
-    /// fila 1 = ws_0 + "Selecciona hechizo"; fila 2 = A (ws_1) y D (ws_2) separadas por su propio
-    /// ancho + "Cambia de pagina"; fila 3 = enterGroup + "Confirmar". Los iconos se cargan desde el
-    /// asset SpellBookInstructions (Resources), así no hay que cablearlos en la escena.
+    /// Crea (una sola vez) el overlay de controles en UNA sola línea horizontal, arriba al centro:
+    /// [ws_0] "Selecciona hechizo"   [A] [D] "Cambia de pagina"   [enterGroup] "Confirmar".
+    /// Los iconos se cargan desde el asset SpellBookInstructions (Resources), así no hay que
+    /// cablearlos en la escena.
     /// </summary>
     private void EnsureInstructions()
     {
@@ -349,43 +350,36 @@ public class SpellBookUI : MonoBehaviour
         _instructionsRoot = root;
         RectTransform rt = root.GetComponent<RectTransform>();
         rt.SetParent(parent, false);
-        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 0f); // esquina inferior izquierda
-        rt.anchoredPosition = instructionsPadding;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f); // arriba, al centro
+        rt.pivot = new Vector2(0f, 1f);
         rt.localScale = Vector3.one;
 
-        float gap = instructionsRowGap;
-        // Apilamos de abajo hacia arriba: Confirmar (abajo), Cambia de pagina, Selecciona (arriba).
-        float yConfirm = 0f;
-        float yPage = confirmIconHeight + gap;
-        float ySelect = confirmIconHeight + gap + pageIconHeight + gap;
+        float rowH = Mathf.Max(selectIconHeight, Mathf.Max(pageIconHeight, confirmIconHeight));
+        rt.sizeDelta = new Vector2(0f, rowH); // alto para centrar verticalmente los hijos
+        float x = 0f;
 
-        // Fila "Selecciona hechizo".
-        RectTransform rowSel = BuildInstrRow("Row_Select", ySelect, selectIconHeight);
-        float xSel = AddInstrIcon(rowSel, _iconSet != null ? _iconSet.selectIcon : null, selectIconHeight, 0f);
-        AddInstrLabel(rowSel, "Selecciona hechizo", xSel + instructionsIconTextGap);
+        // Grupo 1: Selecciona hechizo (ws_0 = W/S).
+        x += AddInstrIcon(rt, _iconSet != null ? _iconSet.selectIcon : null, selectIconHeight, x);
+        x += instructionsIconTextGap;
+        x += AddInstrLabel(rt, "Selecciona hechizo", x);
+        x += instructionsGroupGap;
 
-        // Fila "Cambia de pagina": A y D a la misma altura, separadas por su propio ancho.
-        RectTransform rowPage = BuildInstrRow("Row_Page", yPage, pageIconHeight);
-        float wA = AddInstrIcon(rowPage, _iconSet != null ? _iconSet.pageLeftIcon : null, pageIconHeight, 0f);
-        float xD = wA + wA; // hueco entre A y D = ancho de un icono
-        float wD = AddInstrIcon(rowPage, _iconSet != null ? _iconSet.pageRightIcon : null, pageIconHeight, xD);
-        AddInstrLabel(rowPage, "Cambia de pagina", xD + wD + instructionsIconTextGap);
+        // Grupo 2: Cambia de pagina (A y D separadas por el ancho de un icono).
+        float wA = AddInstrIcon(rt, _iconSet != null ? _iconSet.pageLeftIcon : null, pageIconHeight, x);
+        x += wA + wA; // A + hueco del ancho de A
+        float wD = AddInstrIcon(rt, _iconSet != null ? _iconSet.pageRightIcon : null, pageIconHeight, x);
+        x += wD + instructionsIconTextGap;
+        x += AddInstrLabel(rt, "Cambia de pagina", x);
+        x += instructionsGroupGap;
 
-        // Fila "Confirmar".
-        RectTransform rowConf = BuildInstrRow("Row_Confirm", yConfirm, confirmIconHeight);
-        float wC = AddInstrIcon(rowConf, _iconSet != null ? _iconSet.confirmIcon : null, confirmIconHeight, 0f);
-        AddInstrLabel(rowConf, "Confirmar", wC + instructionsIconTextGap);
-    }
+        // Grupo 3: Confirmar (enterGroup).
+        x += AddInstrIcon(rt, _iconSet != null ? _iconSet.confirmIcon : null, confirmIconHeight, x);
+        x += instructionsIconTextGap;
+        x += AddInstrLabel(rt, "Confirmar", x);
 
-    private RectTransform BuildInstrRow(string rowName, float y, float rowHeight)
-    {
-        GameObject row = new GameObject(rowName, typeof(RectTransform));
-        RectTransform r = row.GetComponent<RectTransform>();
-        r.SetParent(_instructionsRoot.transform, false);
-        r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 0f);
-        r.anchoredPosition = new Vector2(0f, y);
-        r.sizeDelta = new Vector2(600f, rowHeight);
-        return r;
+        // Centramos la línea completa y la pegamos arriba.
+        rt.sizeDelta = new Vector2(x, rowH);
+        rt.anchoredPosition = new Vector2(-x * 0.5f, -instructionsPadding.y);
     }
 
     /// <summary>Coloca un icono alineado a la izquierda y centrado verticalmente. Devuelve su ancho.</summary>
@@ -406,22 +400,27 @@ public class SpellBookUI : MonoBehaviour
         return w;
     }
 
-    private void AddInstrLabel(RectTransform parent, string text, float x)
+    /// <summary>Coloca una etiqueta a la izquierda, centrada verticalmente. Devuelve su ancho real.</summary>
+    private float AddInstrLabel(RectTransform parent, string text, float x)
     {
         GameObject g = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer));
         RectTransform r = g.GetComponent<RectTransform>();
         r.SetParent(parent, false);
         r.anchorMin = r.anchorMax = new Vector2(0f, 0.5f);
         r.pivot = new Vector2(0f, 0.5f);
-        r.sizeDelta = new Vector2(380f, parent.sizeDelta.y);
-        r.anchoredPosition = new Vector2(x, 0f);
         TextMeshProUGUI tmp = g.AddComponent<TextMeshProUGUI>();
         tmp.text = text;
         if (Gonserrat != null) tmp.font = Gonserrat;
         tmp.fontSize = instructionsFontSize;
         tmp.color = Color.white;
         tmp.alignment = TextAlignmentOptions.MidlineLeft;
+        tmp.enableWordWrapping = false;
         tmp.raycastTarget = false;
+        float w = tmp.GetPreferredValues(text).x;
+        if (w <= 0f) w = text.Length * instructionsFontSize * 0.55f; // respaldo si aún no hay layout
+        r.sizeDelta = new Vector2(w, instructionsFontSize * 1.4f);
+        r.anchoredPosition = new Vector2(x, 0f);
+        return w;
     }
 
     private static float InstrIconWidth(Sprite icon, float height)
