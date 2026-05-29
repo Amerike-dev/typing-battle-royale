@@ -140,7 +140,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.05, y: 0.05, z: 0.12}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4180394864273671833
 MonoBehaviour:
@@ -298,9 +298,9 @@ MonoBehaviour:
   fresnelStrength: 1.5
   generateParticles: 1
   emissionRate: 14
-  emitRadius: 10
-  riseSpeed: 8
-  particleSize: 3
-  particleLifetime: 4
+  emitRadius: 1.5
+  riseSpeed: 2.5
+  particleSize: 0.6
+  particleLifetime: 3
   baseHeightOffset: 0
   palette: []

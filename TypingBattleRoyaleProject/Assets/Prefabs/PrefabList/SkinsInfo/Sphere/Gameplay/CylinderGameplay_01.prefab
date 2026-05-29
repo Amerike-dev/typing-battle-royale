@@ -904,7 +904,6 @@ MonoBehaviour:
   uiCanvasGroup: {fileID: 0}
   fadeDuration: 0.25
   currentSpell: {fileID: 0}
-  defaultSpell: {fileID: 0}
   spellText: Banyo salvanos plis
   castOrigin: {fileID: 0}
   _cast: {fileID: 1241867819965966101, guid: ceef53c3793b21942a4547d4505cfcb5, type: 3}
