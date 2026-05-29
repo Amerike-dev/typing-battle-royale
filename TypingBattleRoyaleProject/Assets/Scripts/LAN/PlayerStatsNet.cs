@@ -48,6 +48,7 @@ public class PlayerStatsNet : NetworkBehaviour
     private Renderer[] _renderers;
     private CharacterController _characterController;
     private PlayerController _playerController;
+    private PlayerAnimatorView _animatorView;
     private Coroutine _deathSequenceCoroutine;
 
     public PlayerAudio playerAudio;
@@ -57,6 +58,7 @@ public class PlayerStatsNet : NetworkBehaviour
         _renderers = GetComponentsInChildren<Renderer>(true);
         _characterController = GetComponent<CharacterController>();
         _playerController = GetComponent<PlayerController>();
+        _animatorView = GetComponentInChildren<PlayerAnimatorView>(true);
     }
 
     public override void OnNetworkSpawn()
@@ -85,6 +87,7 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged += HandleHPChanged;
         currentLifes.OnValueChanged += HandleLivesChanged;
         killCount.OnValueChanged += HandleKillCountChanged;
+        isAlive.OnValueChanged += HandleAliveChanged;
     }
 
     public override void OnNetworkDespawn()
@@ -92,6 +95,7 @@ public class PlayerStatsNet : NetworkBehaviour
         currentHP.OnValueChanged -= HandleHPChanged;
         currentLifes.OnValueChanged -= HandleLivesChanged;
         killCount.OnValueChanged -= HandleKillCountChanged;
+        isAlive.OnValueChanged -= HandleAliveChanged;
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -104,6 +108,17 @@ public class PlayerStatsNet : NetworkBehaviour
     private void HandleHPChanged(float oldValue, float newValue)
     {
         if (newValue < oldValue) OnDamageTaken?.Invoke();
+
+        // Solo el owner dispara el trigger; el OwnerNetworkAnimator lo replica a los demás.
+        // Si la vida llega a 0 dejamos que la animación de muerte tome el control.
+        if (IsOwner && newValue < oldValue && newValue > 0f && _animatorView != null)
+            _animatorView.TriggerTakeDamage();
+    }
+
+    private void HandleAliveChanged(bool oldValue, bool newValue)
+    {
+        if (oldValue && !newValue && IsOwner && _animatorView != null)
+            _animatorView.TriggerDeath();
     }
 
     private void HandleLivesChanged(int oldValue, int newValue)

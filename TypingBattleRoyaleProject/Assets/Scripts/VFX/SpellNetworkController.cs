@@ -185,11 +185,11 @@ public class SpellNetworkController : NetworkBehaviour
                 SpawnBuffDebuff(spell, casterTransform);
                 break;
             case SpellTypes.Weapon:
-                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform);
+                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform, casterTransform);
                 break;
             case SpellTypes.Projectile:
             default:
-                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform);
+                SpawnProjectile(spell, origin, direction, damage, casterClientId, targetTransform, casterTransform);
                 break;
         }
     }
@@ -206,7 +206,7 @@ public class SpellNetworkController : NetworkBehaviour
         return go;
     }
 
-    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId, Transform targetTransform)
+    void SpawnProjectile(Spell spell, Vector3 origin, Vector3 direction, float damage, ulong casterClientId, Transform targetTransform, Transform casterTransform)
     {
         Vector3 dir = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.forward;
         var rot = Quaternion.LookRotation(dir);
@@ -223,7 +223,7 @@ public class SpellNetworkController : NetworkBehaviour
         }
         if (go == null) return;
         var vfx = go.GetComponent<ProjectileVFX>();
-        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer, targetTransform);
+        if (vfx != null) vfx.Launch(spell, direction, damage, casterClientId, IsServer, targetTransform, casterTransform);
     }
 
     void SpawnAOE(Spell spell, Vector3 origin)
@@ -268,7 +268,8 @@ public class SpellNetworkController : NetworkBehaviour
     void SpawnBuffDebuff(Spell spell, Transform target)
     {
         Vector3 pos = target != null ? target.position : transform.position;
-        var go = SpawnFromPoolOrInstantiate("VFX_BuffDebuff", buffDebuffVfxPrefab, pos, Quaternion.identity);
+        // El tag del pool en la escena es "VFX_Buff" (el prefab asignado es VFX_BuffDebuff).
+        var go = SpawnFromPoolOrInstantiate("VFX_Buff", buffDebuffVfxPrefab, pos, Quaternion.identity);
         if (go == null) return;
         var vfx = go.GetComponent<BuffDebuffVFX>();
         if (vfx != null) vfx.Launch(spell, target);

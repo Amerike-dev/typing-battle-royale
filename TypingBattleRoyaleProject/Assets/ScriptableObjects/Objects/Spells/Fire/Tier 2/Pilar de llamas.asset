@@ -24,13 +24,13 @@ MonoBehaviour:
   cooldown: 0
   debuff: 0
   range: 0
-  speed: 30
+  speed: 15
   uses: 0
   duration: 0
   particleLifeDuration: 0
   loop: 1
-  startSpeed: 2
-  startSize: 1
+  startSpeed: 1
+  startSize: 0.5
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}

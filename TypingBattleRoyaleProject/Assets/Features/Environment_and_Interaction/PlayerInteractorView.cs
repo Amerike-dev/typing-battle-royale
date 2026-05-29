@@ -38,7 +38,12 @@ public class PlayerInteractorView : MonoBehaviour
 
         if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
         {
-            if (EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null)
+            // Solo bloqueamos la E si hay un InputField REALMENTE enfocado (el jugador está tipeando).
+            // Antes bastaba con que el InputField estuviera 'seleccionado' en el EventSystem aunque ya
+            // no tuviera el foco (p.ej. el castSpell queda como selected tras castear): eso se tragaba
+            // la E y el popup "presionar E" no abría el monolito hasta tocar ESC/TAB.
+            var selectedInput = EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>();
+            if (selectedInput != null && selectedInput.isFocused)
             {
                 return;
             }
@@ -47,10 +52,25 @@ public class PlayerInteractorView : MonoBehaviour
         if (Keyboard.current.eKey.wasPressedThisFrame && NearMonolith != null)
         {
             var controller = NearMonolith.GetComponent<MonolithController>();
-        
+
             if (controller != null && player != null)
             {
-                MonolithLevelSelectUI.Instance.Show(controller, player);
+                var ui = MonolithLevelSelectUI.Instance;
+
+                // Cooldown individual por fallo: si aún corre, mostramos el aviso de recarga y no abrimos la selección.
+                if (ui != null && ui.GetRemainingCooldown(controller) > 0f)
+                {
+                    ui.ShowCooldownNotice(controller);
+                }
+                else
+                {
+                    var animatorView = player.playerAnimatorView != null
+                        ? player.playerAnimatorView
+                        : player.GetComponentInChildren<PlayerAnimatorView>(true);
+                    if (animatorView != null) animatorView.TriggerInteract();
+
+                    if (ui != null) ui.Show(controller, player);
+                }
             }
         }
     }

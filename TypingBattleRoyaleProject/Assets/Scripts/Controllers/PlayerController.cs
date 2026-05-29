@@ -2,6 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,8 @@ public class PlayerController : NetworkBehaviour
     public float moveSpeed = 5f;
     private float continuousSpeed;
     public float jumpForce = 5f;
+    [Tooltip("Multiplicador sobre la altura máxima del salto. 0.5 = 50% de la altura original.")]
+    [Range(0f, 1f)] public float jumpHeightMultiplier = 0.5f;
     private Vector2 _moveInput;
     private CharacterController _characterController;
     private bool _isGrounded;
@@ -32,6 +35,25 @@ public class PlayerController : NetworkBehaviour
     public bool onExplorationState;
     public PlayerStatsNet stats;
     public PlayerInventory inventory;
+
+    [Header("Emotes")]
+    [Tooltip("Sensibilidad del selector de la rueda al mover el mouse.")]
+    [SerializeField] private float emoteWheelSensitivity = 1.2f;
+    
+    [Tooltip("Hueco extra (en mundo) por encima de la cabeza del modelo. La cabeza se detecta sola desde los renderers, así que esto es solo un ajuste fino. Se limita para que nunca quede fuera de pantalla.")]
+    [SerializeField] private float emoteHeightOffset = 0.3f;
+
+    [Tooltip("Altura objetivo del emote en unidades de mundo (tamaño del sprite).")]
+    [SerializeField] private float emoteWorldHeight = 0.7f;
+    [Tooltip("Distancia que sube/baja el emote durante las animaciones FloatUp/DropDown (antes estaba fija en 0.6).")]
+    [SerializeField] private float emoteRiseDistance = 0.6f;
+    [Tooltip("Duración total del emote sobre el jugador.")]
+    [SerializeField] private float emoteDuration = 2f;
+    private EmoteSet _emoteSet;
+    private EmoteWheel _emoteWheel;
+    private bool _wheelOpen;
+    private Vector2 _wheelSelector;
+    private GameObject _activeEmote;
 
     public event Action OnEnterBattle;
     public event Action OnExitBattle;
@@ -61,6 +83,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        // Todos los clientes necesitan el set para mostrar los emotes de cualquier jugador.
+        _emoteSet = Resources.Load<EmoteSet>("EmoteSet");
+
         if (!IsOwner)
         {
             DisableLocalOnlyComponents();
@@ -115,6 +141,14 @@ public class PlayerController : NetworkBehaviour
             }
 
             GameplayManager.Instance.RegisterLocalPlayer(this);
+
+            // Rueda de emotes (solo el jugador local).
+            if (_emoteSet != null && _emoteSet.emotes != null && _emoteSet.emotes.Length > 0)
+            {
+                var holder = new GameObject("EmoteWheel");
+                _emoteWheel = holder.AddComponent<EmoteWheel>();
+                _emoteWheel.Build(_emoteSet);
+            }
         }
         else
         {
@@ -157,7 +191,13 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+
+        // El emote ya no es hijo del jugador, así que lo limpiamos a mano (en todos los clientes).
+        if (_activeEmote != null) { Destroy(_activeEmote); _activeEmote = null; }
+
         if (!IsOwner) return;
+
+        if (_emoteWheel != null) Destroy(_emoteWheel.gameObject);
 
         if (explorationState != null && explorationState.action != null)
         {
@@ -186,6 +226,8 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        HandleEmotes();
+
         if (onExplorationState) MoveCharacter();
 
         /* para pruebas de desconexion
@@ -211,6 +253,12 @@ public class PlayerController : NetworkBehaviour
 
         movement.y = _verticalVelocity;
         _characterController.Move(movement * Time.deltaTime);
+
+        if (playerAnimatorView != null)
+        {
+            playerAnimatorView.SetGrounded(_isGrounded);
+            playerAnimatorView.SetMovement(_x, _z);
+        }
     }
 
     public void OnMove(InputValue value)
@@ -226,8 +274,10 @@ public class PlayerController : NetworkBehaviour
         }
         if (_isGrounded && (jumpAction.ReadValue<float>() > _jumpValue))
         {
-            _verticalVelocity = Mathf.Sqrt(jumpForce * -2f * -9.81f);
-            playerAudio.ChangeSoundById("Jump");
+            // Altura máxima = jumpForce * jumpHeightMultiplier (0.5 -> 50% de la altura original).
+            _verticalVelocity = Mathf.Sqrt(jumpForce * 2f * 9.81f * jumpHeightMultiplier);
+            AudioManager.Instance?.PlaySFX("sfx_jump");
+            if (playerAnimatorView != null) playerAnimatorView.TriggerJump();
         }
 
         _verticalVelocity += -9.81f * Time.deltaTime;
@@ -361,5 +411,174 @@ public class PlayerController : NetworkBehaviour
         {
             Debug.LogError($"[ERROR] No pudimos encontrar el hechizo {spellName} en NINGÚN monolito de la escena. ¡Revisa que el nombre coincida exactamente!");
         }
+    }
+
+    // ---------------- Emotes (rueda local + emote networked sobre el player) ----------------
+
+    private void HandleEmotes()
+    {
+        if (_emoteWheel == null) return;
+        var mouse = Mouse.current;
+        if (mouse == null) return;
+
+        if (!_wheelOpen)
+        {
+            // La rueda solo se abre en exploración, manteniendo el botón central del mouse.
+            if (onExplorationState && mouse.middleButton.wasPressedThisFrame) OpenEmoteWheel();
+            return;
+        }
+
+        // Mientras se mantiene: el mouse mueve el selector (no la cámara).
+        Vector2 delta = mouse.delta.ReadValue() * emoteWheelSensitivity;
+        _wheelSelector = Vector2.ClampMagnitude(_wheelSelector + delta, 260f);
+        int index = _emoteWheel.UpdateSelector(_wheelSelector);
+
+        if (mouse.middleButton.wasReleasedThisFrame) CloseEmoteWheel(index); // suelta -> selecciona
+        else if (!onExplorationState) CloseEmoteWheel(-1);                    // cambió de estado -> cancela
+    }
+
+    private void OpenEmoteWheel()
+    {
+        _wheelOpen = true;
+        _wheelSelector = Vector2.zero;
+        _emoteWheel.Open();
+        if (cameraController != null) cameraController.OnCamaraMove = false;
+    }
+
+    private void CloseEmoteWheel(int selectedIndex)
+    {
+        _wheelOpen = false;
+        _emoteWheel.Close();
+        if (cameraController != null) cameraController.OnCamaraMove = true;
+
+        if (selectedIndex >= 0 && _emoteSet != null && _emoteSet.emotes != null && selectedIndex < _emoteSet.emotes.Length)
+            PlayEmoteServerRpc(selectedIndex);
+    }
+
+    [ServerRpc]
+    private void PlayEmoteServerRpc(int index) => PlayEmoteClientRpc(index);
+
+    [ClientRpc]
+    private void PlayEmoteClientRpc(int index) => ShowEmoteAbove(index);
+
+    /// <summary>Muestra el emote sobre el nametag de ESTE jugador en todos los clientes.</summary>
+    private void ShowEmoteAbove(int index)
+    {
+        if (_emoteSet == null || _emoteSet.emotes == null) return;
+        if (index < 0 || index >= _emoteSet.emotes.Length) return;
+
+        var emote = _emoteSet.emotes[index];
+        if (emote == null || emote.sprite == null) return;
+
+        if (_activeEmote != null) Destroy(_activeEmote);
+
+        // NO lo emparentamos al jugador: si el modelo tiene una escala de import distinta de 1,
+        // el localScale del sprite se multiplicaría por esa escala y el emote se vería diminuto o
+        // gigante (o no se vería). En espacio de mundo seguimos al jugador desde la corrutina.
+        var go = new GameObject("EmoteVisual");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = emote.sprite;
+        sr.sortingOrder = 500;
+        _activeEmote = go;
+
+        StartCoroutine(EmoteVisualRoutine(go, sr, emote.anim));
+    }
+
+    /// <summary>
+    /// Alto del modelo (cima de los renderers) respecto a la raíz del jugador. Independiente del
+    /// modelo: si cambias de personaje, el emote sigue quedando justo sobre la cabeza.
+    /// </summary>
+    private float ComputeHeadLocalHeight()
+    {
+        var renderers = GetComponentsInChildren<Renderer>(false);
+        bool any = false;
+        Bounds b = default;
+        foreach (var r in renderers)
+        {
+            if (r == null || r is ParticleSystemRenderer) continue;
+            if (!any) { b = r.bounds; any = true; }
+            else b.Encapsulate(r.bounds);
+        }
+        if (!any) return 2f; // respaldo si aún no hay renderers
+        return Mathf.Max(0.2f, b.max.y - transform.position.y);
+    }
+
+    private IEnumerator EmoteVisualRoutine(GameObject go, SpriteRenderer sr, EmoteAnim anim)
+    {
+        float headLocalY = ComputeHeadLocalHeight();
+        // Ajuste fino acotado: aunque el campo serializado sea enorme, el emote no se va de pantalla.
+        float gap = Mathf.Clamp(emoteHeightOffset, -1f, 3f);
+        float rise = emoteRiseDistance;
+
+        // Escala base para que el sprite mida 'emoteWorldHeight' en mundo (con guardas para no quedar invisible).
+        float worldH = Mathf.Max(0.05f, emoteWorldHeight);
+        float baseScale = worldH;
+        if (sr.sprite != null && sr.sprite.bounds.size.y > 0.0001f)
+            baseScale = worldH / sr.sprite.bounds.size.y;
+
+        float t = 0f;
+        while (go != null && t < emoteDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / emoteDuration);
+
+            // Base = justo sobre la cabeza del modelo (detectada), centrada en el jugador.
+            Vector3 basePos = new Vector3(
+                transform.position.x,
+                transform.position.y + headLocalY + gap,
+                transform.position.z);
+            Vector3 animOffset = Vector3.zero;
+            float spin = 0f;
+            float scaleMul = 1f;
+            float alpha = 1f;
+
+            switch (anim)
+            {
+                case EmoteAnim.PopBounce:
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.FloatUp:
+                    animOffset = Vector3.up * Mathf.Lerp(0f, rise, k);
+                    scaleMul = Pop(Mathf.Min(1f, k * 2f)) * (1f + 0.06f * Mathf.Sin(t * 8f));
+                    break;
+                case EmoteAnim.Shake:
+                    animOffset = new Vector3(Mathf.Sin(t * 38f) * 0.06f, 0f, 0f);
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.Spin:
+                    spin = Mathf.Lerp(360f, 0f, 1f - (1f - k) * (1f - k));
+                    scaleMul = Pop(k);
+                    break;
+                case EmoteAnim.DropDown:
+                    animOffset = Vector3.up * Mathf.Lerp(rise, 0f, 1f - (1f - k) * (1f - k));
+                    scaleMul = Mathf.Clamp01(k * 4f);
+                    break;
+                case EmoteAnim.Fade:
+                default:
+                    alpha = Mathf.Min(1f, k * 4f);
+                    break;
+            }
+
+            if (k > 0.8f) alpha = Mathf.Min(alpha, 1f - (k - 0.8f) / 0.2f); // fade-out común
+
+            Camera cam = Camera.main;
+            go.transform.position = basePos + animOffset;
+            Quaternion face = cam != null ? cam.transform.rotation : Quaternion.identity;
+            go.transform.rotation = face * Quaternion.Euler(0f, 0f, spin);
+            go.transform.localScale = Vector3.one * (baseScale * scaleMul);
+            sr.color = new Color(1f, 1f, 1f, Mathf.Clamp01(alpha));
+
+            yield return null;
+        }
+
+        if (go != null) Destroy(go);
+        if (_activeEmote == go) _activeEmote = null;
+    }
+
+    private static float Pop(float k)
+    {
+        if (k <= 0f) return 0f;
+        if (k < 0.6f) return Mathf.Lerp(0f, 1.2f, k / 0.6f);
+        return Mathf.Lerp(1.2f, 1f, (k - 0.6f) / 0.4f);
     }
 }

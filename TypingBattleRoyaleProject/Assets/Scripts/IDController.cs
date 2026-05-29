@@ -83,6 +83,9 @@ public class IDController : NetworkBehaviour
         already.OnValueChanged += (oldV, newV) => {
             Debug.Log($"<color=green>[READY]</color> Player {OwnerClientId} listo: {newV}");
 
+            // Al marcarse "Listo", el modelo de preview hace el salto una vez (feedback visual en todos los clientes).
+            if (newV) PlayReadyJump();
+
             if (SelectController.Instance != null)
             {
                 SelectController.Instance.ShowReadyUI(OwnerClientId, newV);
@@ -119,10 +122,26 @@ public class IDController : NetworkBehaviour
         if (!IsOwner || already.Value) return;
 
         if (skinDir != 0)
+        {
             skinIndex.Value = (skinIndex.Value + skinDir + arraySkins.Length) % arraySkins.Length;
+            // Al cambiar de personaje, reencuadramos el color al rango del nuevo (puede tener menos skins).
+            colorIndex.Value = Mathf.Clamp(colorIndex.Value, 0, ColorCount() - 1);
+        }
 
         if (colorDir != 0)
-            colorIndex.Value = (colorIndex.Value + colorDir + 3) % 3;
+        {
+            int count = ColorCount();
+            colorIndex.Value = (colorIndex.Value + colorDir + count) % count;
+        }
+    }
+
+    /// <summary>Cantidad de variantes de color (materiales) del personaje actualmente seleccionado.</summary>
+    private int ColorCount()
+    {
+        if (arraySkins == null || arraySkins.Length == 0) return 1;
+        SkinInfo skin = arraySkins[skinIndex.Value];
+        if (skin == null || skin.skins == null || skin.skins.Length == 0) return 1;
+        return skin.skins.Length;
     }
 
     public void Update3DModel()
@@ -174,6 +193,27 @@ public class IDController : NetworkBehaviour
         UpdateLabel();
     }
     
+    /// <summary>
+    /// Dispara una vez la animación de salto en el modelo de preview de Character Select.
+    /// El preview tiene un Animator "crudo" (sin PlayerAnimatorView), así que seteamos el trigger directo.
+    /// </summary>
+    private void PlayReadyJump()
+    {
+        if (visualModel == null) return;
+
+        Animator animator = visualModel.GetComponentInChildren<Animator>(true);
+        if (animator == null) return;
+
+        foreach (var p in animator.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Trigger && p.name == "Jump")
+            {
+                animator.SetTrigger("Jump");
+                return;
+            }
+        }
+    }
+
     private void UpdateLabel()
     {
         string currentName = playerName.Value.ToString();
@@ -194,6 +234,19 @@ public class IDController : NetworkBehaviour
         {
             renderer.material.color = newColor;
         }
+    }
+
+    /// <summary>
+    /// El host lo dispara al pulsar "Empezar": muestra el panel de instrucciones y el contador
+    /// en todos los clientes antes de transicionar a la GameplayScene.
+    /// </summary>
+    [ClientRpc]
+    public void ShowInstructionsClientRpc(float seconds)
+    {
+        if (InstructionsPanelController.Instance != null)
+            InstructionsPanelController.Instance.Begin(seconds);
+        else
+            Debug.LogWarning("[IDController] No se encontró InstructionsPanelController en la escena.");
     }
 
     public override void OnNetworkDespawn()

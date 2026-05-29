@@ -46,8 +46,17 @@ public class CastInputController : MonoBehaviour
 
     private float _castStartTime;
 
-    public PlayerAudio playerAudio;
+    [Header("Typeo por teclas (overlay)")]
+    [Tooltip("Texto del header mostrado arriba del overlay de casteo.")]
+    [SerializeField] private string castHeader = "¡Lanza el hechizo!";
+    private TypingOverlay _typingOverlay;
 
+    private TypingOverlay GetOverlay()
+    {
+        if (_typingOverlay == null)
+            _typingOverlay = new GameObject("CastTypingOverlay").AddComponent<TypingOverlay>();
+        return _typingOverlay;
+    }
 
     private void OnEnable()
     {
@@ -66,8 +75,12 @@ public class CastInputController : MonoBehaviour
         // hasta obtener una de un monolito). Esto también anula cualquier spellText placeholder del prefab.
         spellText = currentSpell != null ? currentSpell.runeString : string.Empty;
 
-        if (spell != null) spell.text = spellText;
-        if (uiController != null) uiController.UpdateDisplay(0, false);
+        // El texto viejo del HUD se deja vacío: ahora el typeo se ve en el overlay de teclas.
+        if (spell != null) spell.text = "";
+
+        // Invocación: SIN fondo (alpha 0) y CON panel de texto crudo (el jugador puede borrar/corregir).
+        if (!string.IsNullOrEmpty(spellText))
+            GetOverlay().Show(castHeader, spellText, TypingOverlay.ElementColor(currentSpell != null ? currentSpell.elementType : Elements.None), 0f, true);
 
         if (castSpell != null)
         {
@@ -76,7 +89,17 @@ public class CastInputController : MonoBehaviour
         }
 
         StartCoroutine(CountTimeElapsed());
-        FadeTo(1f, null);
+
+        // Ocultamos TODA la UI vieja de casteo (stats, panel, texto del InputField): el grupo queda
+        // invisible (alpha 0) pero interactable, así el InputField sigue capturando. El typeo se ve
+        // en el overlay de teclas + el panel de texto crudo.
+        if (uiCanvasGroup != null)
+        {
+            uiCanvasGroup.alpha = 0f;
+            uiCanvasGroup.interactable = true;
+            uiCanvasGroup.blocksRaycasts = true;
+        }
+
         StartCoroutine(FocusInputNextFrame());
     }
 
@@ -111,11 +134,18 @@ public class CastInputController : MonoBehaviour
         _fadeRoutine = null;
         _casting = false;
 
+        if (_typingOverlay != null) _typingOverlay.Hide();
+
         if (castSpell != null)
         {
             castSpell.onValueChanged.RemoveListener(HandleValueChanged);
             castSpell.onEndEdit.RemoveListener(HandleEndEdit);
             castSpell.DeactivateInputField();
+
+            // Liberamos la selección del EventSystem si seguía apuntando a este InputField.
+            // Si no, al volver a exploración el campo queda "seleccionado" y bloquea la E del monolito.
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == castSpell.gameObject)
+                EventSystem.current.SetSelectedGameObject(null);
         }
 
         if (_cast != null && _cast.action != null)
@@ -240,6 +270,11 @@ public class CastInputController : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (_typingOverlay != null) Destroy(_typingOverlay.gameObject);
+    }
+
     private void HandleValueChanged(string typed)
     {
         if (_completed || string.IsNullOrEmpty(spellText)) return;
@@ -258,7 +293,8 @@ public class CastInputController : MonoBehaviour
 
         if (error) incorrectInput++;
 
-        if (uiController != null) uiController.UpdateDisplay(matched, error);
+        GetOverlay().UpdateProgress(matched, error);
+        GetOverlay().UpdateTypedText(typed); // texto crudo (lo que el jugador escribió, para corregir)
 
         if (!error && length == spellText.Length && matched == spellText.Length)
         {

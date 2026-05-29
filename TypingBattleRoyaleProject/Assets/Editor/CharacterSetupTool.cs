@@ -39,7 +39,10 @@ public static class CharacterSetupTool
             name = "Berry",
             fbx = ART_DIR + "/Berry_Model.fbx",
             animator = ART_DIR + "/BerryAnimatorController.controller",
-            skins = new[] { ART_DIR + "/SM_Berry_Skin_1.mat", ART_DIR + "/SM_Berry_Skin_2.mat", ART_DIR + "/SM_Berry_Skin_3.mat" }
+            skins = new[] {
+                ART_DIR + "/SM_Berry_Skin_1.mat", ART_DIR + "/SM_Berry_Skin_2.mat", ART_DIR + "/SM_Berry_Skin_3.mat",
+                ART_DIR + "/SM_Berry_Skin_4.mat", ART_DIR + "/SM_Berry_Skin_5.mat", ART_DIR + "/SM_Berry_Skin_6.mat"
+            }
         },
         new CharDef {
             name = "Wander",

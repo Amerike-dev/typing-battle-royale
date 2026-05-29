@@ -43,7 +43,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Intensity: 0.26
     m_Colors:
     - _BaseColor: {r: 0.6679245, g: 0.06931285, b: 0.29322106, a: 1}
   m_BuildTextureStacks: []
