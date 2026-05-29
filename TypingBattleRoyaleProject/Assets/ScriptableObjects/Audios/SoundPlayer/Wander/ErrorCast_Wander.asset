@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ErrorCast_Wander
   m_EditorClassIdentifier: Assembly-CSharp::AudioEntry
   id: ErrorCast
-  clip: {fileID: 8300000, guid: 0cde5a702a278fe41a66958fb8d96638, type: 3}
+  clip: {fileID: 8300000, guid: 0c398925eb426414aa52c5c85006d1b6, type: 3}
   volume: 0.7
   pitch: 1
   loop: 0
