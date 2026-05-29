@@ -68,7 +68,11 @@ public class MonolithSpawn : NetworkBehaviour
 
     private void SpawnSingleMonolith(Transform selectedPoint, Elements targetElement)
     {
-        GameObject monolith = Instantiate(monolithPrefab, selectedPoint.position, selectedPoint.rotation);
+        // Combinamos la orientación del punto de spawn con la rotación propia del prefab
+        // (el -90° en X que lo mantiene de pie). Si solo usáramos selectedPoint.rotation
+        // se descartaría la rotación del prefab y el monolito quedaría acostado.
+        Quaternion spawnRotation = selectedPoint.rotation * monolithPrefab.transform.rotation;
+        GameObject monolith = Instantiate(monolithPrefab, selectedPoint.position, spawnRotation);
 
         var networkObject = monolith.GetComponent<NetworkObject>();
         if (networkObject == null)
