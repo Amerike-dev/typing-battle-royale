@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fedae909d4cb6a74b80004da80dbd29f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1455,6 +1455,10 @@ MonoBehaviour:
   - {fileID: 1992137039}
   - {fileID: 1343861840}
   - {fileID: 642486696}
+  iconSize: 64
+  iconOverlap: 26
+  iconsLeftPadding: 22
+  iconsAreaHeight: 0.8
   fireIcon: {fileID: 21300000, guid: 83a67d7d52deb3f49ae8f82ed128e1f4, type: 3}
   waterIcon: {fileID: 21300000, guid: 7dae1ed05010b9441ada784bde90ec7b, type: 3}
   earthIcon: {fileID: 21300000, guid: dd1581639be35d548a41f3c887674439, type: 3}
@@ -13311,7 +13315,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -23822,6 +23826,10 @@ MonoBehaviour:
   - {fileID: 170213965}
   - {fileID: 1998727879}
   - {fileID: 324458102}
+  iconSize: 64
+  iconOverlap: 26
+  iconsLeftPadding: 22
+  iconsAreaHeight: 0.8
   fireIcon: {fileID: 21300000, guid: 83a67d7d52deb3f49ae8f82ed128e1f4, type: 3}
   waterIcon: {fileID: 21300000, guid: 7dae1ed05010b9441ada784bde90ec7b, type: 3}
   earthIcon: {fileID: 21300000, guid: dd1581639be35d548a41f3c887674439, type: 3}
@@ -29715,7 +29723,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -51751,6 +51759,10 @@ MonoBehaviour:
   - {fileID: 1101499447}
   - {fileID: 1565840719}
   - {fileID: 338048773}
+  iconSize: 64
+  iconOverlap: 26
+  iconsLeftPadding: 22
+  iconsAreaHeight: 0.8
   fireIcon: {fileID: 21300000, guid: 83a67d7d52deb3f49ae8f82ed128e1f4, type: 3}
   waterIcon: {fileID: 21300000, guid: 7dae1ed05010b9441ada784bde90ec7b, type: 3}
   earthIcon: {fileID: 21300000, guid: dd1581639be35d548a41f3c887674439, type: 3}
@@ -131711,7 +131723,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
