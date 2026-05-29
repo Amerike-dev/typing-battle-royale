@@ -14,7 +14,7 @@ public class PlayerSkin : NetworkBehaviour
     [Tooltip("Renderers del modelo a los que se aplica la skin.")]
     public Renderer[] renderers;
 
-    [Tooltip("Materiales de skin indexados por colorIndex (0-2).")]
+    [Tooltip("Materiales de skin indexados por colorIndex. Debe coincidir con el array del SkinInfo del personaje.")]
     public Material[] skins;
 
     public NetworkVariable<int> colorIndex =

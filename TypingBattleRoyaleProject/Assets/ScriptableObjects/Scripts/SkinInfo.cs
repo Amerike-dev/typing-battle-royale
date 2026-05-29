@@ -11,7 +11,7 @@ public class SkinInfo : ScriptableObject
     [Tooltip("Prefab networked del jugador para Gameplay (registrado en DefaultNetworkPrefabs).")]
     public GameObject gameplayPrefab;
 
-    [Tooltip("Materiales de skin indexados por colorIndex (0-2).")]
+    [Tooltip("Materiales de skin indexados por colorIndex. La cantidad puede variar por personaje (Berry tiene 6; el resto 3).")]
     public Material[] skins;
 
     [Tooltip("Animator del personaje (idle/walk/cast).")]
