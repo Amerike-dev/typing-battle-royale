@@ -19,6 +19,8 @@ public class InstructionsPanelController : MonoBehaviour
     [Header("Referencias")]
     [Tooltip("Panel de instrucciones (Canvas/Instrucciones). Empieza oculto y se muestra al iniciar.")]
     [SerializeField] private GameObject panel;
+    [Tooltip("CanvasGroup del panel. Si está, su alpha pasa a 1 al mostrar (0 al ocultar). Si se deja vacío se busca en el panel.")]
+    [SerializeField] private CanvasGroup canvasGroup;
     [Tooltip("Texto del contador. Si se deja vacío se crea uno automáticamente dentro del panel.")]
     [SerializeField] private TMP_Text timerText;
     [Tooltip("Fuente del contador (Gontserrat-Bold). Si se deja vacío intenta tomarla de un texto del panel.")]
@@ -50,7 +52,9 @@ public class InstructionsPanelController : MonoBehaviour
         Instance = this;
 
         if (panel == null) panel = AutoFindPanel();
-        if (panel != null) panel.SetActive(false);
+        if (canvasGroup == null && panel != null) canvasGroup = panel.GetComponent<CanvasGroup>();
+
+        SetVisible(false);
     }
 
     private void OnDestroy()
@@ -62,11 +66,33 @@ public class InstructionsPanelController : MonoBehaviour
 
     public void Begin(float seconds)
     {
-        if (panel != null) panel.SetActive(true);
+        SetVisible(true);
         EnsureTimerText();
 
         if (_countdownRoutine != null) StopCoroutine(_countdownRoutine);
         _countdownRoutine = StartCoroutine(CountdownRoutine(seconds));
+    }
+
+    /// <summary>
+    /// Muestra/oculta el panel. Si hay CanvasGroup controla alpha + interactable + blocksRaycasts
+    /// (manteniendo el GameObject activo para que corran las corrutinas); si no, hace SetActive.
+    /// </summary>
+    private void SetVisible(bool visible)
+    {
+        if (panel == null) return;
+
+        if (canvasGroup != null)
+        {
+            // El panel queda activo siempre; la visibilidad la maneja el CanvasGroup.
+            panel.SetActive(true);
+            canvasGroup.alpha = visible ? 1f : 0f;
+            canvasGroup.interactable = visible;
+            canvasGroup.blocksRaycasts = visible;
+        }
+        else
+        {
+            panel.SetActive(visible);
+        }
     }
 
     private IEnumerator CountdownRoutine(float seconds)

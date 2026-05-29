@@ -89,9 +89,14 @@ public static class InstructionsPanelSetupTool
             timer.fontStyle = FontStyles.Bold;
         }
 
+        // CanvasGroup del panel (la visibilidad se maneja con su alpha).
+        var canvasGroup = panel.GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = panel.gameObject.AddComponent<CanvasGroup>();
+
         // Enlazar referencias del controller.
         var so = new SerializedObject(controller);
         SetRef(so, "panel", panel.gameObject);
+        SetRef(so, "canvasGroup", canvasGroup);
         SetRef(so, "timerText", timer);
         if (font != null) SetRef(so, "timerFont", font);
         so.ApplyModifiedPropertiesWithoutUndo();
