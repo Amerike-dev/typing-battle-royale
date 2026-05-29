@@ -47,9 +47,14 @@ public class PlayerInteractorView : MonoBehaviour
         if (Keyboard.current.eKey.wasPressedThisFrame && NearMonolith != null)
         {
             var controller = NearMonolith.GetComponent<MonolithController>();
-        
+
             if (controller != null && player != null)
             {
+                var animatorView = player.playerAnimatorView != null
+                    ? player.playerAnimatorView
+                    : player.GetComponentInChildren<PlayerAnimatorView>(true);
+                if (animatorView != null) animatorView.TriggerInteract();
+
                 MonolithLevelSelectUI.Instance.Show(controller, player);
             }
         }

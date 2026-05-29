@@ -11,6 +11,8 @@ public class PlayerController : NetworkBehaviour
     public float moveSpeed = 5f;
     private float continuousSpeed;
     public float jumpForce = 5f;
+    [Tooltip("Multiplicador sobre la altura máxima del salto. 0.5 = 50% de la altura original.")]
+    [Range(0f, 1f)] public float jumpHeightMultiplier = 0.5f;
     private Vector2 _moveInput;
     private CharacterController _characterController;
     private bool _isGrounded;
@@ -209,6 +211,12 @@ public class PlayerController : NetworkBehaviour
 
         movement.y = _verticalVelocity;
         _characterController.Move(movement * Time.deltaTime);
+
+        if (playerAnimatorView != null)
+        {
+            playerAnimatorView.SetGrounded(_isGrounded);
+            playerAnimatorView.SetMovement(_x, _z);
+        }
     }
 
     public void OnMove(InputValue value)
@@ -224,8 +232,10 @@ public class PlayerController : NetworkBehaviour
         }
         if (_isGrounded && (jumpAction.ReadValue<float>() > _jumpValue))
         {
-            _verticalVelocity = Mathf.Sqrt(jumpForce * -2f * -9.81f);
+            // Altura máxima = jumpForce * jumpHeightMultiplier (0.5 -> 50% de la altura original).
+            _verticalVelocity = Mathf.Sqrt(jumpForce * 2f * 9.81f * jumpHeightMultiplier);
             AudioManager.Instance?.PlaySFX("sfx_jump");
+            if (playerAnimatorView != null) playerAnimatorView.TriggerJump();
         }
 
         _verticalVelocity += -9.81f * Time.deltaTime;
