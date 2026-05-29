@@ -33,9 +33,12 @@ public class TypingOverlay : MonoBehaviour
 
     private KeycapTheme _theme;
     private Canvas _canvas;
+    private Image _bgImage;
     private RectTransform _root;
     private RectTransform _keysContainer;
     private TextMeshProUGUI _header;
+    private RectTransform _typedPanel;
+    private TextMeshProUGUI _typedText;
 
     private string _text = "";
     private Image[] _keyImg;
@@ -66,9 +69,9 @@ public class TypingOverlay : MonoBehaviour
         bgRt.SetParent(go.transform, false);
         bgRt.anchorMin = Vector2.zero; bgRt.anchorMax = Vector2.one;
         bgRt.offsetMin = Vector2.zero; bgRt.offsetMax = Vector2.zero;
-        var bgImg = bgGo.GetComponent<Image>();
-        bgImg.color = bgColor;
-        bgImg.raycastTarget = false; // puramente visual; no roba el foco del InputField
+        _bgImage = bgGo.GetComponent<Image>();
+        _bgImage.color = bgColor;
+        _bgImage.raycastTarget = false; // puramente visual; no roba el foco del InputField
 
         var rootGo = new GameObject("Content", typeof(RectTransform));
         _root = rootGo.GetComponent<RectTransform>();
@@ -97,17 +100,56 @@ public class TypingOverlay : MonoBehaviour
         _keysContainer.anchorMin = _keysContainer.anchorMax = _keysContainer.pivot = new Vector2(0.5f, 0.5f);
         _keysContainer.anchoredPosition = Vector2.zero;
 
+        // Panel del texto crudo tipeado (visible en casteo para poder corregir; oculto en monolito).
+        var tpGo = new GameObject("TypedPanel", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        _typedPanel = tpGo.GetComponent<RectTransform>();
+        _typedPanel.SetParent(_root, false);
+        _typedPanel.anchorMin = new Vector2(0.5f, 0f);
+        _typedPanel.anchorMax = new Vector2(0.5f, 0f);
+        _typedPanel.pivot = new Vector2(0.5f, 0f);
+        _typedPanel.anchoredPosition = new Vector2(0f, 120f);
+        _typedPanel.sizeDelta = new Vector2(950f, 96f);
+        var tpImg = tpGo.GetComponent<Image>();
+        tpImg.color = new Color(0f, 0f, 0f, 0.55f);
+        tpImg.raycastTarget = false;
+
+        var ttGo = new GameObject("TypedText", typeof(RectTransform), typeof(CanvasRenderer));
+        var ttRt = ttGo.GetComponent<RectTransform>();
+        ttRt.SetParent(_typedPanel, false);
+        ttRt.anchorMin = Vector2.zero; ttRt.anchorMax = Vector2.one;
+        ttRt.offsetMin = new Vector2(20f, 8f); ttRt.offsetMax = new Vector2(-20f, -8f);
+        _typedText = ttGo.AddComponent<TextMeshProUGUI>();
+        if (_theme != null && _theme.font != null) _typedText.font = _theme.font;
+        _typedText.fontSize = 44f;
+        _typedText.alignment = TextAlignmentOptions.Center;
+        _typedText.color = Color.white;
+        _typedText.raycastTarget = false;
+        _typedPanel.gameObject.SetActive(false);
+
         go.SetActive(false);
     }
 
-    public void Show(string header, string text, Color currentColor)
+    public void Show(string header, string text, Color currentColor, float backgroundAlpha, bool showTypedText)
     {
         EnsureBuilt();
         _currentColor = currentColor;
+        if (_bgImage != null)
+            _bgImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Clamp01(backgroundAlpha));
+        if (_typedPanel != null)
+        {
+            _typedPanel.gameObject.SetActive(showTypedText);
+            if (_typedText != null) _typedText.text = "";
+        }
         _canvas.gameObject.SetActive(true);
         if (_header != null) _header.text = header;
         BuildKeys(text);
         UpdateProgress(0, false);
+    }
+
+    /// <summary>Actualiza el panel con el texto crudo que está escribiendo el jugador (para corregir en casteo).</summary>
+    public void UpdateTypedText(string typed)
+    {
+        if (_typedText != null) _typedText.text = typed ?? "";
     }
 
     public void Hide()

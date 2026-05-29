@@ -75,12 +75,12 @@ public class CastInputController : MonoBehaviour
         // hasta obtener una de un monolito). Esto también anula cualquier spellText placeholder del prefab.
         spellText = currentSpell != null ? currentSpell.runeString : string.Empty;
 
-        if (spell != null) spell.text = spellText;
-        if (uiController != null) uiController.UpdateDisplay(0, false);
+        // El texto viejo del HUD se deja vacío: ahora el typeo se ve en el overlay de teclas.
+        if (spell != null) spell.text = "";
 
-        // Overlay de teclas (tapa el HUD durante el casteo). Solo si hay hechizo que tipear.
+        // Invocación: SIN fondo (alpha 0) y CON panel de texto crudo (el jugador puede borrar/corregir).
         if (!string.IsNullOrEmpty(spellText))
-            GetOverlay().Show(castHeader, spellText, TypingOverlay.ElementColor(currentSpell != null ? currentSpell.elementType : Elements.None));
+            GetOverlay().Show(castHeader, spellText, TypingOverlay.ElementColor(currentSpell != null ? currentSpell.elementType : Elements.None), 0f, true);
 
         if (castSpell != null)
         {
@@ -89,7 +89,17 @@ public class CastInputController : MonoBehaviour
         }
 
         StartCoroutine(CountTimeElapsed());
-        FadeTo(1f, null);
+
+        // Ocultamos TODA la UI vieja de casteo (stats, panel, texto del InputField): el grupo queda
+        // invisible (alpha 0) pero interactable, así el InputField sigue capturando. El typeo se ve
+        // en el overlay de teclas + el panel de texto crudo.
+        if (uiCanvasGroup != null)
+        {
+            uiCanvasGroup.alpha = 0f;
+            uiCanvasGroup.interactable = true;
+            uiCanvasGroup.blocksRaycasts = true;
+        }
+
         StartCoroutine(FocusInputNextFrame());
     }
 
@@ -284,6 +294,7 @@ public class CastInputController : MonoBehaviour
         if (error) incorrectInput++;
 
         GetOverlay().UpdateProgress(matched, error);
+        GetOverlay().UpdateTypedText(typed); // texto crudo (lo que el jugador escribió, para corregir)
 
         if (!error && length == spellText.Length && matched == spellText.Length)
         {

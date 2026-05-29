@@ -44,6 +44,21 @@ public class MonolithTypingChallenge : MonoBehaviour
         return _typingOverlay;
     }
 
+    /// <summary>
+    /// Apaga los gráficos viejos del canvas del monolito (panel, "Concentrate", texto) excepto el
+    /// InputField oculto, que sigue capturando. El overlay de teclas los reemplaza, y como el fondo
+    /// ahora es translúcido ya no los tapa.
+    /// </summary>
+    private void HideOldMonolithVisuals()
+    {
+        if (myCanvas == null) return;
+        foreach (var g in myCanvas.GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+        {
+            if (hiddenInput != null && g.transform.IsChildOf(hiddenInput.transform)) continue;
+            g.enabled = false;
+        }
+    }
+
     private void Start()
     {
         if (myCanvas != null) myCanvas.enabled = false;
@@ -67,10 +82,12 @@ public class MonolithTypingChallenge : MonoBehaviour
 
         // El InputField sigue capturando (oculto); el typeo se ve en el overlay de teclas.
         myCanvas.enabled = true;
+        HideOldMonolithVisuals(); // ocultamos panel/"Concentrate"/texto viejos (el overlay los reemplaza)
         hiddenInput.ActivateInputField();
         hiddenInput.Select();
 
-        GetOverlay().Show("Escribe y desbloquea el hechizo", _spell.runeString, TypingOverlay.ElementColor(_spell.elementType));
+        // Monolito: fondo translúcido (50%) y SIN panel de texto crudo (tolerancia cero al error).
+        GetOverlay().Show("Escribe y desbloquea el hechizo", _spell.runeString, TypingOverlay.ElementColor(_spell.elementType), 0.5f, false);
     }
 
     private void OnType(string typed)
