@@ -11,6 +11,12 @@ public class CastInputController : MonoBehaviour
     public event Action<Spell> OnSpellCast;
     public event Action OnCastCancelled;
 
+    // Ciclo de vida del casteo para feedback visual (runas frente a la mano, etc.).
+    // OnCastStarted se dispara al habilitarse el casteo (currentSpell ya está asignada).
+    // OnCastEnded se dispara siempre al deshabilitarse (completado, cancelado o salida forzada).
+    public event Action<Spell> OnCastStarted;
+    public event Action OnCastEnded;
+
     [Header("UI References")]
     public TMP_InputField castSpell;
     public TextMeshProUGUI spell;
@@ -102,6 +108,9 @@ public class CastInputController : MonoBehaviour
         }
 
         StartCoroutine(FocusInputNextFrame());
+
+        // Aviso de inicio de invocación (currentSpell ya quedó resuelta arriba).
+        OnCastStarted?.Invoke(currentSpell);
     }
 
     private IEnumerator FocusInputNextFrame()
@@ -134,6 +143,9 @@ public class CastInputController : MonoBehaviour
         StopAllCoroutines();
         _fadeRoutine = null;
         _casting = false;
+
+        // Fin de la invocación (completada, cancelada o salida forzada del estado de batalla).
+        OnCastEnded?.Invoke();
 
         if (_typingOverlay != null) _typingOverlay.Hide();
 
