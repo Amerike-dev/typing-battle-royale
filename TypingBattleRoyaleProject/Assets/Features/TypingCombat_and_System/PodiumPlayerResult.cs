@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class PodiumPlayerResult : MonoBehaviour
+public class PodiumPlayerResult
 {
     public string playerId;
     public string playerName;
