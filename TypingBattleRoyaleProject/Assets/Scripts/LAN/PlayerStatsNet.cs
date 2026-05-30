@@ -217,6 +217,7 @@ public class PlayerStatsNet : NetworkBehaviour
 
             EnterSpectatorModeClientRpc();
         }
+        AudioChango.Instance?.PlayPlayerDeath();
     }
 
     private void AwardKillTo(ulong killerId)

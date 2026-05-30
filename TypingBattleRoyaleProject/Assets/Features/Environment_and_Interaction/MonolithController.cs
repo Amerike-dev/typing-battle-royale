@@ -150,6 +150,7 @@ public class MonolithController : NetworkBehaviour
 
     private IEnumerator SinkRoutine()
     {
+        AudioChango.Instance.PlayMonolithDisappear();
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = startPosition + (Vector3.down * sinkDepth);
         float elapsedTime = 0f;
