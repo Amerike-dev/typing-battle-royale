@@ -276,7 +276,7 @@ public class PlayerController : NetworkBehaviour
         {
             // Altura máxima = jumpForce * jumpHeightMultiplier (0.5 -> 50% de la altura original).
             _verticalVelocity = Mathf.Sqrt(jumpForce * 2f * 9.81f * jumpHeightMultiplier);
-            AudioManager.Instance?.PlaySFX("sfx_jump");
+            playerAudio.ChangeSoundById("Jump");
             if (playerAnimatorView != null) playerAnimatorView.TriggerJump();
         }
 

@@ -37,6 +37,8 @@ public class Spell : ScriptableObject
     public int emissionRate = 50;
     public float shapeRadius = 2.0f;
     public Material materialVFX;
+    [Header("Audio")]
+    public AudioClip spellSound;
 
     [Header("VFX Tuning (overrides opcionales; el valor neutro = usar el default del arquetipo)")]
     [Tooltip("Punto de origen de la emisión, relativo al sistema de partículas (shape.position). 0,0,0 = sin desplazar.")]

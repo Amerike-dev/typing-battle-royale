@@ -5,6 +5,7 @@ public class PlayerAudio : NetworkBehaviour
 {
     public AudioSource audioSource;
     public AudioEntry[] audioEntries;
+    public AudioSource spellAudioSource;
 
     public void ChangeSound(AudioEntry audio)
     {
@@ -55,5 +56,43 @@ public class PlayerAudio : NetworkBehaviour
         }
         Debug.LogWarning($"AudioEntry '{id}' no encontrado.");
         return null;
+    }
+
+    public void PlaySpellSound(Spell spell)
+    {
+        if (spell == null || spell.spellSound == null) return;
+        if (!IsOwner) return;
+        PlaySpellLocal(spell.spellSound);
+        PlaySpellServerRpc(spell.spellName);
+    }
+
+    [ServerRpc]
+    private void PlaySpellServerRpc(string spellName)
+    {
+        PlaySpellClientRpc(spellName);
+    }
+
+    [ClientRpc]
+    private void PlaySpellClientRpc(string spellName)
+    {
+        if (IsOwner) return;
+
+        var cast = GetComponentInChildren<CastInputController>(true);
+        if (cast == null || cast.currentSpell == null) return;
+        if (cast.currentSpell.spellName != spellName) return;
+        if (cast.currentSpell.spellSound == null) return;
+
+        PlaySpellLocal(cast.currentSpell.spellSound);
+    }
+
+    private void PlaySpellLocal(AudioClip clip)
+    {
+        if (clip == null) return;
+        spellAudioSource.Stop();
+        spellAudioSource.clip = clip;
+        spellAudioSource.volume = 1f;
+        spellAudioSource.pitch = 1f;
+        spellAudioSource.loop = false;
+        spellAudioSource.Play();
     }
 }

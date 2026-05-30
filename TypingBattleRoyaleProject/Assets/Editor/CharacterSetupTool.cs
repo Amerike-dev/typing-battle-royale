@@ -115,6 +115,10 @@ public static class CharacterSetupTool
         WireIntoIDControllerPrefabs(skinInfos, log);
         WireIntoGameplayManager(skinInfos, log);
 
+        // Montar las caras (quad + CharacterFace) sobre los modelos recién generados.
+        try { CharacterFaceSetupTool.SetupAllFaces(log); }
+        catch (System.Exception e) { log.AppendLine("  AVISO: falló el montaje de caras: " + e.Message); }
+
         AssetDatabase.SaveAssets();
 
         Debug.Log("[CharacterSetup] Resultado:\n" + log);

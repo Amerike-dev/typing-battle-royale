@@ -17,6 +17,9 @@ public class PlayerAnimatorView : MonoBehaviour
     public Animator playerAnimator;
     public NetworkAnimator networkAnimator;
 
+    [Tooltip("Caras del personaje. Solo se usa para el gesto de 'fallo de hechizo' (Tristeza), que no tiene estado de animación; el resto de caras las maneja CharacterFace leyendo el Animator.")]
+    public CharacterFace face;
+
     [Tooltip("Segundos que el bool Interact permanece activo para reproducir el gesto de interacción una sola vez.")]
     [SerializeField] private float interactGestureDuration = 1f;
 
@@ -35,6 +38,16 @@ public class PlayerAnimatorView : MonoBehaviour
     {
         if (playerAnimator == null) playerAnimator = GetComponentInChildren<Animator>(true);
         if (networkAnimator == null) networkAnimator = GetComponentInChildren<NetworkAnimator>(true);
+        if (face == null) face = GetComponentInChildren<CharacterFace>(true);
+    }
+
+    /// <summary>
+    /// Muestra la cara de "fallo de hechizo" (Tristeza). Es el único gesto sin estado de
+    /// animación, así que hay que llamarlo desde la lógica de typing cuando el jugador falla.
+    /// </summary>
+    public void ShowSpellFail()
+    {
+        if (face != null) face.PlaySpellFail();
     }
 
     /// <summary>Actualiza los parámetros de locomoción (A/D -> Horizontal, W/S -> Vertical).</summary>

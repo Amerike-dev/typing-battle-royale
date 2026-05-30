@@ -36,3 +36,14 @@ MonoBehaviour:
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}
+  spellSound: {fileID: 8300000, guid: 97b54374884d3f240a16038bb8556c9b, type: 3}
+  emitterOffset: {x: 0, y: 0, z: 0}
+  gravityModifier: 0
+  simulationSpeed: 1
+  startColorTint: {r: 1, g: 1, b: 1, a: 1}
+  startRotationDegrees: 0
+  sizeVariance: 0
+  speedVariance: 0
+  overrideShape: 0
+  shapeType: 0
+  maxParticles: 0
