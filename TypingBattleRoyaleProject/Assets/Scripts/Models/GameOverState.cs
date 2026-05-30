@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameOverState : GameState
 {
@@ -20,6 +21,42 @@ public class GameOverState : GameState
 
     public override void Enter()
     {
+
+        if (manager.PauseController != null && manager.PauseController._menuContent != null)
+        manager.PauseController._menuContent.SetActive(false);
+
+        List<PlayerStatsNet> players = new List<PlayerStatsNet>();
+
+        var allStats = Object.FindObjectsByType<PlayerStatsNet>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None
+        );
+
+        players.AddRange(allStats);
+
+        if (NetworkManager.Singleton != null &&
+           NetworkManager.Singleton.LocalClient != null &&
+           NetworkManager.Singleton.LocalClient.PlayerObject != null)
+        {
+            var pc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
+
+            if (pc != null)
+            {
+                pc.ExitSpectatorModeForGameOver();
+                pc.enabled = false;
+            }
+        }
+
+        EndGameResultsData.SetResults(_winnerID, players);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("PodiumScene");
+
+        /*
         manager.PauseController._menuContent.SetActive(false);
         List<PlayerStatsNet> players = new List<PlayerStatsNet>();
 
@@ -78,7 +115,7 @@ public class GameOverState : GameState
 
         CursorManager.ShowCursor();
 
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;*/
     }
 
     public override void Update() { }
