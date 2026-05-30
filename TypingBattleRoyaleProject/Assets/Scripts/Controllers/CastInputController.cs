@@ -380,6 +380,9 @@ public class CastInputController : MonoBehaviour
 
         OnCastCancelled?.Invoke();
 
+        // Cara de "fallo de hechizo" (Tristeza): el casteo se abandonó sin completarlo.
+        GameplayManager.Instance?.PlayerAnimatorView?.ShowSpellFail();
+
         FadeTo(0f, () =>
         {
             enabled = false;
