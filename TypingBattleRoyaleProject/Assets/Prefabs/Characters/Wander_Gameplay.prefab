@@ -5570,6 +5570,7 @@ GameObject:
   - component: {fileID: -8786540121261557277}
   - component: {fileID: -5621394336683069455}
   - component: {fileID: 7900239836694033539}
+  - component: {fileID: 6068495329754213628}
   m_Layer: 0
   m_Name: Wander_Gameplay
   m_TagString: Untagged
@@ -5767,6 +5768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimatorView
   playerAnimator: {fileID: 4906282186068126555}
   networkAnimator: {fileID: 2926016329531570961}
+  face: {fileID: 0}
   interactGestureDuration: 1
 --- !u!114 &5774446793594067508
 MonoBehaviour:
@@ -6441,6 +6443,70 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6068495329754213628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5574083699815386619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220b1567927a9d243a9e51e225969325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuneCastDisplay
+  ShowTopMostFoldoutHeaderGroup: 1
+  runeAnchor: {fileID: 5366492848261686127}
+  runeLibrary: {fileID: 11400000, guid: bf8a82bd3becac140aafeb51c42410fd, type: 2}
+  runeMaterial: {fileID: 2100000, guid: ffaf4f8e43ff5a841bff2d9d0434004b, type: 2}
+  baseRuneSize: 0.02
+  baseTint: {r: 1, g: 1, b: 1, a: 1}
+  glowIntensity: 3.5
+  dimIntensity: 1
+  glowOpacity: 1
+  t2MidOpacity: 0.85
+  t2FlankOpacity: 1
+  t2DepthOffset: 0.12
+  t3Scales:
+  - 0.5
+  - 0.7
+  - 0.9
+  - 1.1
+  - 1.35
+  t3DepthStep: 0.05
+  rotationSpeed: 60
+  alternateDirection: 1
+--- !u!1 &5949794322171155861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5366492848261686127}
+  m_Layer: 0
+  m_Name: RuneAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5366492848261686127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5949794322171155861}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.873, z: 0.70899993}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8296055406009698822}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6054589923317559608
 GameObject:
   m_ObjectHideFlags: 0
@@ -11475,7 +11541,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.304, z: 0.473}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5366492848261686127}
   m_Father: {fileID: 7412303128063578571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8052265388704683854
