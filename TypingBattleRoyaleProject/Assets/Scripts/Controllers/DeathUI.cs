@@ -20,7 +20,7 @@ public class DeathUI : MonoBehaviour
     {
         if (_titleText != null)
         {
-            _titleText.text = $"Te alimino {killerName}";
+            _titleText.text = $"Te Elimino {killerName}";
         }
 
         SetCountdown(respawnSeconds);
@@ -44,7 +44,7 @@ public class DeathUI : MonoBehaviour
     {
         if (_countdownText != null)
         {
-            _countdownText.text = $"Respawn en {seconds}s";
+            _countdownText.text = $"Reaparición en {seconds}s";
         }
     }
 
