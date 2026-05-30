@@ -48,9 +48,12 @@ public class PlayerSkin : NetworkBehaviour
         Material mat = skins[Mathf.Clamp(index, 0, skins.Length - 1)];
         if (mat == null) return;
 
+        var face = GetComponentInChildren<CharacterFace>(true);
+
         foreach (var r in renderers)
         {
             if (r == null) continue;
+            if (face != null && face.IsFaceRenderer(r)) continue; // no pisamos la cara
             var mats = r.sharedMaterials;
             for (int i = 0; i < mats.Length; i++) mats[i] = mat;
             r.sharedMaterials = mats;
@@ -65,11 +68,22 @@ public class PlayerSkin : NetworkBehaviour
     {
         if (root == null || mat == null) return;
 
+        var faces = root.GetComponentsInChildren<CharacterFace>(true);
+
         foreach (var r in root.GetComponentsInChildren<Renderer>(true))
         {
+            if (IsFaceRenderer(r, faces)) continue; // la cara tiene su propio material/quad
             var mats = r.sharedMaterials;
             for (int i = 0; i < mats.Length; i++) mats[i] = mat;
             r.sharedMaterials = mats;
         }
+    }
+
+    private static bool IsFaceRenderer(Renderer r, CharacterFace[] faces)
+    {
+        if (faces == null) return false;
+        foreach (var f in faces)
+            if (f != null && f.IsFaceRenderer(r)) return true;
+        return false;
     }
 }
