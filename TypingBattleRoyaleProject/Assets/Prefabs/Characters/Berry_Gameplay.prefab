@@ -10519,7 +10519,7 @@ MonoBehaviour:
   emoteWorldHeight: 0.7
   emoteRiseDistance: 0.6
   emoteDuration: 2
-  playerAudio: {fileID: 0}
+  playerAudio: {fileID: 896207535578805253}
   _playerInput: {fileID: 0}
 --- !u!114 &1546445023495614572
 MonoBehaviour:
@@ -10549,7 +10549,7 @@ MonoBehaviour:
   lastInInput: 0
   incorrectInput: 0
   castHeader: "\xA1Lanza el hechizo!"
-  playerAudio: {fileID: 0}
+  playerAudio: {fileID: 896207535578805253}
 --- !u!114 &6626139269063476620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10871,7 +10871,7 @@ MonoBehaviour:
   avgWpm: 0
   avgAccuracy: 0
   fastestCastSeconds: 0
-  playerAudio: {fileID: 0}
+  playerAudio: {fileID: 896207535578805253}
 --- !u!114 &5973685048641901351
 MonoBehaviour:
   m_ObjectHideFlags: 0
