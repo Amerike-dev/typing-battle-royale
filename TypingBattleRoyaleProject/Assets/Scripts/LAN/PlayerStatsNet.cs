@@ -146,20 +146,34 @@ public class PlayerStatsNet : NetworkBehaviour
         if (newValue > oldValue) OnEnemyKilled?.Invoke();
     }
 
+    // --- Reducción de daño temporal (escudos tipo Cubierta rocosa). Server-authoritative. ---
+    private float _damageReductionFactor; // 0..1 (0 = sin reducción)
+    private float _damageReductionUntil;  // Time.time hasta cuando dura
+
+    /// <summary>Aplica una reducción de daño temporal en el servidor (factor 0..1, duración en segundos).</summary>
+    public void ApplyDamageReductionServer(float factor, float duration)
+    {
+        if (!IsServer) return;
+        _damageReductionFactor = Mathf.Clamp01(factor);
+        _damageReductionUntil = Time.time + Mathf.Max(0f, duration);
+    }
+
     public void TakeDamage(float damage, ulong attackerId = ulong.MaxValue)
     {
         if (!IsServer || !isAlive.Value) return;
 
         lastDamageFromClientId = attackerId;
 
+        // Reducción de daño activa (escudo). Si expiró, se ignora.
+        if (_damageReductionFactor > 0f && Time.time < _damageReductionUntil)
+            damage *= (1f - _damageReductionFactor);
+
         Debug.Log($"[STATS] TakeDamage({damage}) on {ID}");
 
+        // NOTA: antes el HP se restaba dos veces y HandleDeath se llamaba dos veces (doble daño). Corregido.
         currentHP.Value -= damage;
-        playerAudio.ChangeSoundById("Dano");
-
-        if (currentHP.Value <= 0) HandleDeath(lastDamageFromClientId);
         damageTaken.Value += damage;
-        currentHP.Value -= damage;
+        playerAudio.ChangeSoundById("Dano");
 
         if (attackerId != ulong.MaxValue && attackerId != OwnerClientId && NetworkManager.Singleton.ConnectedClients.TryGetValue(attackerId, out var attackerClient))
         {

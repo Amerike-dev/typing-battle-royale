@@ -6473,7 +6473,7 @@ MonoBehaviour:
   - 0.9
   - 1.1
   - 1.35
-  t3DepthStep: 0.05
+  t3DepthStep: 0.2
   rotationSpeed: 60
   alternateDirection: 1
 --- !u!1 &5949794322171155861
