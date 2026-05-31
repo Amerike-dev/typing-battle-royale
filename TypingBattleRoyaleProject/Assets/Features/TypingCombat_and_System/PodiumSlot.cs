@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class PodiumSlot : MonoBehaviour
 {
@@ -19,9 +20,45 @@ public class PodiumSlot : MonoBehaviour
 
     public void SetData(PodiumPlayerResult result)
     {
-        nameText.text = result.playerName;
-        killsText.text = $"Kills: {result.kills}";
-        damageText.text = $"Damage: {result.damageDealt:0}";
-        wpmText.text = $"WPM: {result.wpm:0.0}";
+        if (result == null)
+        {
+            Debug.LogWarning($"[PodiumSlot] Result llego null en {name}");
+            return;
+        }
+
+        Debug.Log($"[PodiumSlot] SetData en {name}: {result.playerName} | Kills {result.kills} | Damage: {result.damageDealt} | WPM {result.wpm}");
+
+        if (nameText != null)
+            nameText.text = result.playerName;
+
+        if (killsText != null)
+            killsText.text = $"Kills: {result.kills}";
+
+        if (damageText != null)
+            damageText.text = $"Damage: {result.damageDealt:0}";
+
+        if (wpmText != null)
+            wpmText.text = $"WPM: {result.wpm:0.0}";
+    }
+
+    public void HideStats()
+    {
+        if (statsCanvasGroup == null) return;
+
+        statsCanvasGroup.alpha = 0f;
+        statsCanvasGroup.interactable = false;
+        statsCanvasGroup.blocksRaycasts = false;
+    }
+
+    public void ShowStats(float duration = 0.4f)
+    {
+        if (statsCanvasGroup == null) return;
+
+        statsCanvasGroup
+            .DOFade(1f, duration)
+            .SetEase(Ease.OutCubic);
+
+        statsCanvasGroup.interactable = true;
+        statsCanvasGroup.blocksRaycasts = true;
     }
 }

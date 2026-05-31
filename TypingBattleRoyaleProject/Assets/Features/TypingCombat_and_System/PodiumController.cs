@@ -12,7 +12,8 @@ public class PodiumController : MonoBehaviour
     [SerializeField] private PodiumSlot thirdPlaceSlot;
 
     [Header("Player Visual")]
-    [SerializeField] private GameObject defaultPlayerVisualPrefab;
+    [SerializeField] private SkinInfo[] arraySkins;
+    [SerializeField] private GameObject fallbackPrefab;
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem confettiFirstPlace;
@@ -33,9 +34,9 @@ public class PodiumController : MonoBehaviour
 
     private void HideInitialState()
     {
-        HideSlot(firstPlaceSlot);
-        HideSlot(secondPlaceSlot);
-        HideSlot(thirdPlaceSlot);
+        PrepareSlot(firstPlaceSlot);
+        PrepareSlot(secondPlaceSlot);
+        PrepareSlot(thirdPlaceSlot);
 
         if (buttonsCanvasGroup != null)
         {
@@ -59,14 +60,14 @@ public class PodiumController : MonoBehaviour
         }
 
         if (ranked.Count >= 3)
-            yield return RevealSlot(thirdPlaceSlot, ranked[2]);
+            yield return RevealSlot(thirdPlaceSlot, ranked[2], 2);
 
         if (ranked.Count >= 2)
-            yield return RevealSlot(secondPlaceSlot, ranked[1]);
+            yield return RevealSlot(secondPlaceSlot, ranked[1], 1);
 
         if (ranked.Count >= 1)
         {
-            yield return RevealSlot(firstPlaceSlot, ranked[0]);
+            yield return RevealSlot(firstPlaceSlot, ranked[0], 0);
 
             if (confettiFirstPlace != null)
                 confettiFirstPlace.Play();
@@ -75,7 +76,7 @@ public class PodiumController : MonoBehaviour
         ShowButtons();
     }
 
-    private IEnumerator RevealSlot(PodiumSlot slot, PodiumPlayerResult result)
+    private IEnumerator RevealSlot(PodiumSlot slot, PodiumPlayerResult result, int rankIndex)
     {
         if (slot == null || result == null)
             yield break;
@@ -83,7 +84,7 @@ public class PodiumController : MonoBehaviour
         slot.gameObject.SetActive(true);
         slot.SetData(result);
 
-        SpawnPlayerVisual(slot);
+        SpawnPlayerVisual(slot, result, rankIndex);
 
         Transform pedestal = slot.Pedestal;
         Vector3 finalPosition = pedestal.localPosition;
@@ -102,33 +103,177 @@ public class PodiumController : MonoBehaviour
 
         yield return new WaitForSeconds(riseDuration * 0.7f);
 
-        if (slot.StatsCanvasGroup != null)
-        {
-            slot.StatsCanvasGroup
-                .DOFade(1f, 0.4f)
-                .SetEase(Ease.OutCubic);
-        }
+        slot.ShowStats(0.4f);
 
         yield return new WaitForSeconds(delayBetweenReveals);
     }
 
-    private void SpawnPlayerVisual(PodiumSlot slot)
+    private GameObject SpawnPlayerVisual(PodiumSlot slot, PodiumPlayerResult result, int rankIndex)
     {
-        if (defaultPlayerVisualPrefab == null || slot.PlayerSpawnPoint == null)
-            return;
+        if (slot == null || result == null) return null;
 
-        Instantiate(
-            defaultPlayerVisualPrefab,
+        if (slot.PlayerSpawnPoint == null)
+        {
+            Debug.LogWarning("[PodiumController] El slot no tiene PlayerSpawnPoint asignado.");
+            return null;
+        }
+
+        SkinInfo skin = GetSkinInfo(result.skinIndex);
+
+        GameObject prefab = null;
+
+        if (skin != null && skin.previewModel != null)
+        {
+            prefab = skin.previewModel;   
+        }
+        else
+        {
+            prefab = fallbackPrefab;    
+        }
+
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[PodiumController] No hay previewModel ni fallback para {result.playerName}.");
+            return null;
+        }
+
+        GameObject visual = Instantiate(
+            prefab,
             slot.PlayerSpawnPoint.position,
             slot.PlayerSpawnPoint.rotation,
             slot.PlayerSpawnPoint
         );
+
+        visual.transform.localPosition = Vector3.zero;
+        visual.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+        if (skin != null)
+        {
+            ApplySkinMaterial(visual, skin, result.colorIndex);
+            ApplySkinAnimator(visual, skin);
+        }
+
+        PlayRankAnimation(visual, rankIndex);
+
+        Debug.Log($"[PodiumController] Spawn de {result.playerName} | Skin {result.skinIndex} | Color {result.colorIndex}");
+
+        return visual;
     }
 
-    private void HideSlot(PodiumSlot slot)
+    private void ApplySkinMaterial(GameObject visual, SkinInfo skin, int colorIndex)
+    {
+        if (visual == null || skin == null) return;
+
+        if (skin.skins == null || skin.skins.Length == 0)
+        {
+            Debug.LogWarning($"[PodiumController] La skin {skin.skinName} no tiene materiales.");
+            return;
+        }
+
+        int safeColorIndex = Mathf.Clamp(colorIndex, 0, skin.skins.Length - 1);
+        Material material = skin.skins[safeColorIndex];
+
+        if (material == null)
+        {
+            Debug.LogWarning($"[PodiumController] Material nulo en {skin.skinName}, color {safeColorIndex}.");
+            return;
+        }
+
+        PlayerSkin.ApplyTo(visual, material);
+    }
+
+    private void ApplySkinAnimator(GameObject visual, SkinInfo skin)
+    {
+        if (visual == null || skin == null || skin.animator == null) return;
+
+        Animator animator = visual.GetComponentInChildren<Animator>(true);
+
+        if (animator == null)
+        {
+            Debug.LogWarning($"[PodiumController] El modelo {visual.name} no tiene Animator.");
+            return;
+        }
+
+        animator.runtimeAnimatorController = skin.animator;
+    }
+
+    private void PlayRankAnimation(GameObject visual, int rankIndex)
+    {
+        if (visual == null) return;
+
+        Animator animator = visual.GetComponentInChildren<Animator>(true);
+
+        if (animator == null)
+        {
+            Debug.LogWarning($"[PodiumController] El modelo {visual.name} no tiene Animator.");
+            return;
+        }
+
+        animator.applyRootMotion = false;
+
+        switch (rankIndex)
+        {
+            case 0:
+                PlayAnimatorTriggerIfExists(animator, "Jump");
+                break;
+
+            case 1:
+                animator.Play("Idle");
+                break;
+
+            case 2:
+                PlayAnimatorTriggerIfExists(animator, "Death");
+                break;
+        }
+    }
+
+    private void PlayAnimatorTriggerIfExists(Animator animator, string triggerName)
+    {
+        if (animator == null) return;
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.type == AnimatorControllerParameterType.Trigger &&
+            parameter.name == triggerName)
+            {
+                animator.SetTrigger(triggerName);
+                return;
+            }
+        }
+
+        Debug.LogWarning($"[PodiumController] El Animator no tiene trigger '{triggerName}'.");
+    }
+
+    private SkinInfo GetSkinInfo(int skinIndex)
+    {
+        if (arraySkins == null || arraySkins.Length == 0)
+        {
+            Debug.LogWarning("[PodiumController] arraySkins está vacío.");
+            return null;
+        }
+
+        if (skinIndex < 0 || skinIndex >= arraySkins.Length)
+        {
+            Debug.LogWarning($"[PodiumController] skinIndex inválido: {skinIndex}.");
+            return null;
+        }
+
+        SkinInfo skin = arraySkins[skinIndex];
+
+        if (skin == null)
+        {
+            Debug.LogWarning($"[PodiumController] SkinInfo nulo en índice {skinIndex}.");
+            return null;
+        }
+
+        return skin;
+    }
+
+    private void PrepareSlot(PodiumSlot slot)
     {
         if (slot == null) return;
 
+        slot.HideStats();
         slot.gameObject.SetActive(false);
     }
 
