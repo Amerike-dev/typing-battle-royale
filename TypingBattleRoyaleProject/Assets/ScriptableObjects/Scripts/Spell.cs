@@ -25,6 +25,21 @@ public class Spell : ScriptableObject
     [Range(0f, 1f)] public float damageReductionPercent = 0f;
     [Tooltip("Solo para arquetipo Summon: si está activo, invoca un súbdito (NetworkObject) que persigue y ataca al enemigo (p. ej. el Golem). Si está apagado, el Summon es estático/visual y, si tiene damage>0, aplica daño directo al objetivo al invocarse (p. ej. Montaña).")]
     public bool spawnsChasingMinion = false;
+    [Tooltip("Curación de HP que recibe el caster al lanzar (p. ej. Curación = 50). 0 = no cura. Funciona en cualquier arquetipo, pero pensado para Buff de soporte.")]
+    public float healAmount = 0f;
+
+    [Header("Movilidad (dash/salto del caster)")]
+    [Tooltip("Impulso hacia adelante (en la dirección de la cámara/cuerpo) al lanzar. 0 = sin dash. P. ej. Vuelo/Elevación.")]
+    public float forwardImpulse = 0f;
+    [Tooltip("Impulso vertical (salto/elevación) al lanzar. 0 = sin impulso vertical.")]
+    public float upImpulse = 0f;
+
+    [Header("Efecto de estado (debuff aplicado al objetivo)")]
+    [Tooltip("Intensidad del debuff 'debuff' aplicado al objetivo. Slow: fracción 0..1 de reducción de velocidad (0.5 = 50% más lento). Poison: daño por segundo. Freeze/Root: ignoran este valor (paran al objetivo por completo).")]
+    public float statusMagnitude = 0f;
+    [Tooltip("Duración en segundos del efecto de estado (debuff) sobre el objetivo. 0 = sin efecto de estado.")]
+    public float statusDuration = 0f;
+
     public float range;
     public float speed;
     public int uses;

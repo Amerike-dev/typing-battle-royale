@@ -24,6 +24,7 @@ MonoBehaviour:
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  upImpulse: 7
   range: 10
   speed: 2.5
   uses: 0

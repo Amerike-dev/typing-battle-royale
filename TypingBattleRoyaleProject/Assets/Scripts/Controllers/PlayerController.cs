@@ -78,6 +78,9 @@ public class PlayerController : NetworkBehaviour
         {
             _characterController = gameObject.AddComponent<CharacterController>();
         }
+
+        // Necesario para que los efectos de estado (Slow/Freeze/Root) frenen el movimiento.
+        if (stats == null) stats = GetComponent<PlayerStatsNet>();
     }
 
     public override void OnNetworkSpawn()
@@ -259,7 +262,10 @@ public class PlayerController : NetworkBehaviour
 
         Vector3 horizontalMovement = transform.right * _x + transform.forward * _z;
 
-        Vector3 movement = horizontalMovement * moveSpeed;
+        // Efectos de estado (Slow/Freeze/Root) frenan el movimiento vía el multiplicador de PlayerStatsNet.
+        float speedMul = stats != null ? stats.moveSpeedMultiplier.Value : 1f;
+
+        Vector3 movement = horizontalMovement * (moveSpeed * speedMul);
 
         movement.y = _verticalVelocity;
         _characterController.Move(movement * Time.deltaTime);
@@ -274,6 +280,32 @@ public class PlayerController : NetworkBehaviour
     public void OnMove(InputValue value)
     {
         _moveInput = value.Get<Vector2>();
+    }
+
+    /// <summary>
+    /// Aplica un impulso de movilidad (dash hacia adelante + salto) al jugador local. Lo llama el
+    /// owner cuando castea un hechizo de Movility. El dash se desliza durante unos frames vía el
+    /// CharacterController; el impulso vertical reusa el sistema de salto existente.
+    /// </summary>
+    public void ApplyMovementImpulse(float forward, float up)
+    {
+        if (!IsOwner) return;
+        if (up != 0f) _verticalVelocity = up;
+        if (forward != 0f) StartCoroutine(DashRoutine(forward));
+    }
+
+    private IEnumerator DashRoutine(float forward)
+    {
+        float duration = 0.25f;
+        float elapsed = 0f;
+        while (elapsed < duration && _characterController != null && _characterController.enabled)
+        {
+            elapsed += Time.deltaTime;
+            Vector3 dash = transform.forward * forward;
+            dash.y = _verticalVelocity;
+            _characterController.Move(dash * Time.deltaTime);
+            yield return null;
+        }
     }
 
     public void Jump()

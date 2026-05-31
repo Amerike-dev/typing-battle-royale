@@ -93,6 +93,13 @@ public class SpellNetworkController : NetworkBehaviour
             Debug.LogWarning("[TBR-004][LOCAL] No hay PlayerAnimatorView.");
         }
 
+        // Movilidad (dash/salto): es movimiento local del owner, se aplica acá mismo (no necesita el server).
+        if (spell.archetype == SpellTypes.Movility && (spell.forwardImpulse != 0f || spell.upImpulse != 0f))
+        {
+            var pc = GetComponent<PlayerController>();
+            if (pc != null) pc.ApplyMovementImpulse(spell.forwardImpulse, spell.upImpulse);
+        }
+
         Transform origin = castOrigin != null ? castOrigin : transform;
 
         ulong targetNetworkObjectId = 0;
@@ -158,17 +165,63 @@ public class SpellNetworkController : NetworkBehaviour
             Debug.Log($"[SpellNetworkController] Escudo aplicado a {casterClientId}: -{spell.damageReductionPercent * 100f}% daño por {dur}s.");
         }
 
-        // Daño directo de invocaciones estáticas (p. ej. Montaña): Summon, no-súbdito, con daño y objetivo.
-        if (spell.archetype == SpellTypes.Summon && !spell.spawnsChasingMinion && spell.damage > 0f && hasTarget &&
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var directTargetObj))
+        // Multiplicador de daño por precisión de tipeo (se aplica a TODO el daño del hechizo).
+        float damageMul = accuracy < 30f ? 0f : TypingStats.GetDamageBonusMultiplier(accuracy);
+        float finalDamage = spell.damage * damageMul;
+
+        // Curación al caster (p. ej. Curación). No depende de la precisión.
+        if (spell.healAmount > 0f &&
+            NetworkManager.Singleton.ConnectedClients.TryGetValue(casterClientId, out var healClient) &&
+            healClient.PlayerObject != null &&
+            healClient.PlayerObject.TryGetComponent<PlayerStatsNet>(out var healStats))
         {
-            var targetStats = directTargetObj.GetComponent<PlayerStatsNet>();
-            if (targetStats == null) targetStats = directTargetObj.GetComponentInParent<PlayerStatsNet>();
-            if (targetStats != null && targetStats.isAlive.Value)
-            {
-                targetStats.TakeDamage(spell.damage, casterClientId);
-                Debug.Log($"[SpellNetworkController] Daño directo de '{spell.spellName}' = {spell.damage} a {targetNetworkObjectId}.");
-            }
+            healStats.HealServer(spell.healAmount);
+        }
+
+        // Resolución de daño/estado por arquetipo (server-authoritative).
+        switch (spell.archetype)
+        {
+            case SpellTypes.AOE:
+                // Daño en radio alrededor del punto de impacto (origin). range = radio.
+                if (finalDamage > 0f || (spell.statusDuration > 0f && spell.debuff != StatusEffects.None))
+                    ApplyAreaEffect(spell, origin, spell.range > 0f ? spell.range : 5f, casterClientId, finalDamage);
+                break;
+
+            case SpellTypes.Beam:
+                // Daño en línea recta desde origin hacia direction, hasta range.
+                if (finalDamage > 0f || (spell.statusDuration > 0f && spell.debuff != StatusEffects.None))
+                    ApplyBeamEffect(spell, origin, direction, spell.range > 0f ? spell.range : 10f, casterClientId, finalDamage);
+                break;
+
+            case SpellTypes.Aura:
+                // Daño/estado en área alrededor del propio caster. range = radio.
+                {
+                    Vector3 center = ResolveCasterPositionServer(casterClientId, origin);
+                    if (finalDamage > 0f || (spell.statusDuration > 0f && spell.debuff != StatusEffects.None))
+                        ApplyAreaEffect(spell, center, spell.range > 0f ? spell.range : 4f, casterClientId, finalDamage);
+                }
+                break;
+
+            case SpellTypes.Summon:
+                // Daño directo de invocaciones estáticas con objetivo (p. ej. Montaña).
+                if (!spell.spawnsChasingMinion && finalDamage > 0f && hasTarget &&
+                    NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var directTargetObj))
+                {
+                    var ts = directTargetObj.GetComponent<PlayerStatsNet>() ?? directTargetObj.GetComponentInParent<PlayerStatsNet>();
+                    if (ts != null && ts.isAlive.Value)
+                    {
+                        ts.TakeDamage(finalDamage, casterClientId);
+                        ApplyStatusTo(ts, spell, casterClientId);
+                        Debug.Log($"[SpellNetworkController] Daño directo de '{spell.spellName}' = {finalDamage} a {targetNetworkObjectId}.");
+                    }
+                }
+                break;
+
+            case SpellTypes.Projectile:
+            case SpellTypes.Weapon:
+                // El daño/estado lo aplica el proyectil al impactar (ProjectileVFX). El estado se
+                // resuelve en el impacto si hay objetivo bloqueado; aquí no hacemos nada extra.
+                break;
         }
 
         // Súbdito invocado server-authoritative (p. ej. Golem): persigue y ataca.
@@ -191,15 +244,77 @@ public class SpellNetworkController : NetworkBehaviour
             }
         }
 
-        float damageMultiplier = accuracy < 30f
-            ? 0f
-            : TypingStats.GetDamageBonusMultiplier(accuracy);
-
-        float finalDamage = spell.damage * damageMultiplier;
-
-        Debug.Log($"[SERVER] Spells='{spell.spellName}', Accuracy={accuracy}, Multiplier={damageMultiplier}, Damage={finalDamage}");
+        Debug.Log($"[SERVER] Spells='{spell.spellName}', Accuracy={accuracy}, Multiplier={damageMul}, Damage={finalDamage}");
 
         PlaySpellVFXClientRpc(spellId, origin, direction, casterClientId, finalDamage, targetNetworkObjectId, hasTarget);
+    }
+
+    // ---------------- Helpers de resolución server-authoritative ----------------
+
+    /// <summary>Daño + estado a todos los jugadores vivos (excepto el caster) dentro de 'radius' del centro.</summary>
+    private void ApplyAreaEffect(Spell spell, Vector3 center, float radius, ulong casterClientId, float damage)
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return;
+        float r2 = radius * radius;
+
+        foreach (var kvp in nm.ConnectedClients)
+        {
+            if (kvp.Key == casterClientId) continue; // no se daña a sí mismo
+            var po = kvp.Value != null ? kvp.Value.PlayerObject : null;
+            if (po == null) continue;
+            var stats = po.GetComponent<PlayerStatsNet>();
+            if (stats == null || !stats.isAlive.Value) continue;
+
+            if ((po.transform.position - center).sqrMagnitude > r2) continue;
+
+            if (damage > 0f) stats.TakeDamage(damage, casterClientId);
+            ApplyStatusTo(stats, spell, casterClientId);
+        }
+    }
+
+    /// <summary>Daño + estado a jugadores cuyo centro esté a menos de ~1.5m de la línea origin->dir (hasta 'reach').</summary>
+    private void ApplyBeamEffect(Spell spell, Vector3 origin, Vector3 direction, float reach, ulong casterClientId, float damage)
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return;
+        Vector3 dir = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.forward;
+        const float beamHalfWidth = 1.5f;
+
+        foreach (var kvp in nm.ConnectedClients)
+        {
+            if (kvp.Key == casterClientId) continue;
+            var po = kvp.Value != null ? kvp.Value.PlayerObject : null;
+            if (po == null) continue;
+            var stats = po.GetComponent<PlayerStatsNet>();
+            if (stats == null || !stats.isAlive.Value) continue;
+
+            Vector3 toTarget = po.transform.position - origin;
+            float along = Vector3.Dot(toTarget, dir);
+            if (along < 0f || along > reach) continue;             // fuera del largo del rayo
+            float perp = (toTarget - dir * along).magnitude;
+            if (perp > beamHalfWidth) continue;                    // demasiado lejos de la línea
+
+            if (damage > 0f) stats.TakeDamage(damage, casterClientId);
+            ApplyStatusTo(stats, spell, casterClientId);
+        }
+    }
+
+    /// <summary>Aplica el efecto de estado del Spell (si tiene) a un objetivo.</summary>
+    private void ApplyStatusTo(PlayerStatsNet target, Spell spell, ulong sourceId)
+    {
+        if (target == null) return;
+        if (spell.debuff == StatusEffects.None || spell.statusDuration <= 0f) return;
+        target.ApplyStatusServer(spell.debuff, spell.statusMagnitude, spell.statusDuration, sourceId);
+    }
+
+    /// <summary>Posición del caster en el servidor (para auras centradas en él). Cae a 'fallback' si no la encuentra.</summary>
+    private Vector3 ResolveCasterPositionServer(ulong casterClientId, Vector3 fallback)
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm != null && nm.ConnectedClients.TryGetValue(casterClientId, out var c) && c.PlayerObject != null)
+            return c.PlayerObject.transform.position;
+        return fallback;
     }
 
     [ClientRpc]
