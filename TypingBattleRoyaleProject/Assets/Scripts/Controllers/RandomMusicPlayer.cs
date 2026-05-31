@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class RandomMusicPlayer : NetworkBehaviour
@@ -23,6 +22,10 @@ public class RandomMusicPlayer : NetworkBehaviour
     public float delayBetweenTracks = 0.5f;
     public bool avoidRepeat = true;
     public bool playOnStart = true;
+
+    [Header("Fade")]
+    public float fadeInDuration = 1.5f;
+    public float fadeOutDuration = 1.5f;
 
     [Header("Referencias")]
     public AudioSource audioSource;
@@ -75,18 +78,13 @@ public class RandomMusicPlayer : NetworkBehaviour
         if (playRoutine != null)
             StopCoroutine(playRoutine);
 
-        audioSource.Stop();
         lastPlayedIndex = -1;
         BuildShuffledList();
 
         if (!NetworkManager.Singleton.IsListening)
-        {
-            playRoutine = StartCoroutine(PlayNextRoutineLocal());
-        }
+            playRoutine = StartCoroutine(FadeOutThenPlay(PlayNextRoutineLocal));
         else if (IsServer)
-        {
-            StartCoroutine(DelayedStart());
-        }
+            StartCoroutine(FadeOutThenPlayNext());
     }
 
     private void Start()
@@ -122,8 +120,6 @@ public class RandomMusicPlayer : NetworkBehaviour
         if (playRoutine != null)
             StopCoroutine(playRoutine);
 
-        audioSource.Stop();
-
         currentTrackIndex.OnValueChanged += OnTrackChanged;
 
         if (IsServer)
@@ -157,6 +153,49 @@ public class RandomMusicPlayer : NetworkBehaviour
         }
     }
 
+    private IEnumerator FadeOut()
+    {
+        float startVolume = audioSource.volume;
+        float elapsed = 0f;
+
+        while (elapsed < fadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / fadeOutDuration);
+            yield return null;
+        }
+
+        audioSource.volume = 0f;
+        audioSource.Stop();
+    }
+
+    private IEnumerator FadeIn(float targetVolume)
+    {
+        audioSource.volume = 0f;
+        float elapsed = 0f;
+
+        while (elapsed < fadeInDuration)
+        {
+            elapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, targetVolume, elapsed / fadeInDuration);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
+    private IEnumerator FadeOutThenPlay(System.Func<IEnumerator> nextRoutine)
+    {
+        yield return StartCoroutine(FadeOut());
+        playRoutine = StartCoroutine(nextRoutine());
+    }
+
+    private IEnumerator FadeOutThenPlayNext()
+    {
+        yield return StartCoroutine(FadeOut());
+        PlayNext();
+    }
+
     private IEnumerator PlayNextRoutineLocal()
     {
         if (currentTracks == null || currentTracks.Length == 0) yield break;
@@ -173,12 +212,18 @@ public class RandomMusicPlayer : NetworkBehaviour
         ApplyEntryToSource(entry);
         audioSource.Play();
 
+        yield return StartCoroutine(FadeIn(entry.volume));
+
         Debug.Log("[Local] Reproduciendo: " + entry.id);
 
         if (!entry.loop)
         {
             float clipLength = entry.clip.length / audioSource.pitch;
-            yield return new WaitForSeconds(clipLength);
+            float waitTime = clipLength - fadeOutDuration;
+            if (waitTime > 0f)
+                yield return new WaitForSeconds(waitTime);
+
+            yield return StartCoroutine(FadeOut());
             playRoutine = StartCoroutine(PlayNextRoutineLocal());
         }
     }
@@ -226,12 +271,18 @@ public class RandomMusicPlayer : NetworkBehaviour
         ApplyEntryToSource(entry);
         audioSource.Play();
 
+        yield return StartCoroutine(FadeIn(entry.volume));
+
         Debug.Log("[Server] Reproduciendo: " + entry.id);
 
         if (!entry.loop)
         {
             float clipLength = entry.clip.length / audioSource.pitch;
-            yield return new WaitForSeconds(clipLength);
+            float waitTime = clipLength - fadeOutDuration;
+            if (waitTime > 0f)
+                yield return new WaitForSeconds(waitTime);
+
+            yield return StartCoroutine(FadeOut());
             PlayNext();
         }
     }
@@ -262,7 +313,10 @@ public class RandomMusicPlayer : NetworkBehaviour
         float startOffset = Mathf.Clamp(elapsed, 0f, entry.clip.length);
 
         audioSource.time = startOffset;
+        audioSource.volume = 0f;
         audioSource.Play();
+
+        StartCoroutine(FadeIn(entry.volume));
 
         Debug.Log("[Client] Sincronizado: " + entry.id + " | offset: " + startOffset + "s");
     }
