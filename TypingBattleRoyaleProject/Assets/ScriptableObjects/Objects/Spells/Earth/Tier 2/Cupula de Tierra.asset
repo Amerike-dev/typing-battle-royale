@@ -22,10 +22,11 @@ MonoBehaviour:
   damage: 0
   cooldown: 0
   debuff: 0
+  spawnsChasingMinion: 0
   range: 0
   speed: 0
   uses: 0
-  duration: 0
+  duration: 15
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}

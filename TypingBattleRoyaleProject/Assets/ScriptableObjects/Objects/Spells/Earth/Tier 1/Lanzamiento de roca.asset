@@ -24,7 +24,7 @@ MonoBehaviour:
   cooldown: 0
   debuff: 0
   range: 7
-  speed: 50
+  speed: 25
   uses: 0
   duration: 0
   vfxCast: {fileID: 0}
@@ -33,8 +33,8 @@ MonoBehaviour:
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
-  startSize: 0.5
-  emissionRate: 50
+  startSize: 0.9
+  emissionRate: 8
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}
   spellSound: {fileID: 8300000, guid: 6527768b21b98ca488cd67dea6768903, type: 3}
@@ -47,4 +47,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
-  maxParticles: 0
+  coneAngle: 0
+  maxParticles: 20
+  startBurst: 14

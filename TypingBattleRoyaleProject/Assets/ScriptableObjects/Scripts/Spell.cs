@@ -21,6 +21,10 @@ public class Spell : ScriptableObject
     [Tooltip("Tiempo en segundos que debe esperar el jugador antes de poder volver a lanzar este hechizo.")]
     public float cooldown;
     public StatusEffects debuff;
+    [Tooltip("Reducción de daño recibido mientras el buff está activo (0..1). 0.4 = recibe 40% menos daño. Usa 'duration' para cuánto dura. Pensado para escudos como Cubierta rocosa.")]
+    [Range(0f, 1f)] public float damageReductionPercent = 0f;
+    [Tooltip("Solo para arquetipo Summon: si está activo, invoca un súbdito (NetworkObject) que persigue y ataca al enemigo (p. ej. el Golem). Si está apagado, el Summon es estático/visual y, si tiene damage>0, aplica daño directo al objetivo al invocarse (p. ej. Montaña).")]
+    public bool spawnsChasingMinion = false;
     public float range;
     public float speed;
     public int uses;
@@ -59,6 +63,10 @@ public class Spell : ScriptableObject
     public bool overrideShape = false;
     [Tooltip("Forma del emisor cuando 'overrideShape' está activo.")]
     public ParticleSystemShapeType shapeType = ParticleSystemShapeType.Sphere;
+    [Tooltip("Ángulo del cono de emisión en grados (shape.angle). Solo aplica con formas tipo Cone. 0 = no tocar (conserva el ángulo del arquetipo). Más ángulo = más dispersión.")]
+    [Range(0f, 90f)] public float coneAngle = 0f;
     [Tooltip("Tope de partículas vivas (main.maxParticles). 0 = no sobreescribir el default del arquetipo.")]
     public int maxParticles = 0;
+    [Tooltip("Ráfaga de partículas emitidas de golpe al nacer el efecto (emission burst en t=0). 0 = sin ráfaga. Útil para una 'dispersión de salida' (p. ej. polvo/escombros al lanzar) mientras el flujo continuo (emissionRate) lleva el proyectil principal hacia adelante.")]
+    public int startBurst = 0;
 }

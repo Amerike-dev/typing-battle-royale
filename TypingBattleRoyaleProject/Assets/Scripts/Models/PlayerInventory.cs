@@ -57,6 +57,26 @@ public class PlayerInventory
         }
     }
     
+    /// <summary>
+    /// DEBUG: carga TODOS los hechizos del SpellCatalog al inventario y fuerza la progresión a T3,
+    /// para poder probar/afinar VFX sin recorrer monolitos. Solo para desarrollo.
+    /// </summary>
+    public void UnlockAllForDebug()
+    {
+        var catalog = SpellCatalog.Instance;
+        if (catalog != null && catalog.spells != null)
+        {
+            foreach (var s in catalog.spells)
+                if (s != null && !_spells.Contains(s)) _spells.Add(s);
+        }
+
+        // Forzamos los casteos por tier para que UnlockedTier llegue a T3 y el SpellBook muestre todo.
+        _castsByTier[SpellTiers.T1] = CastsToUnlockNextTier;
+        _castsByTier[SpellTiers.T2] = CastsToUnlockNextTier;
+
+        if (_owner != null) _owner.UpdateDebugList(_spells);
+    }
+
     public bool HasSpell(string spellName)
     {
         return _spells.Any(s => s.spellName == spellName);

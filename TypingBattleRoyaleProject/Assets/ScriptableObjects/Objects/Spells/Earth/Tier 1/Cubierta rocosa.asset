@@ -22,10 +22,11 @@ MonoBehaviour:
   damage: 0
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0.4
   range: 0
   speed: 0
   uses: 0
-  duration: 0
+  duration: 30
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
