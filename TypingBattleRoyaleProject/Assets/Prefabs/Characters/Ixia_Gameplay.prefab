@@ -1035,6 +1035,13 @@ MonoBehaviour:
   - {fileID: 2100000, guid: b235dec987ca9b6469a9149977c7c249, type: 2}
   - {fileID: 2100000, guid: b4f812d2d014a9c44a010bad6aad4ac1, type: 2}
   - {fileID: 2100000, guid: 72dae62f0c4b62143af28d3c03a52911, type: 2}
+  - {fileID: 2100000, guid: dc2a85547ad341d448001b26b517e4f0, type: 2}
+  - {fileID: 2100000, guid: 609ec490df306da4e9acdd119fbbb947, type: 2}
+  - {fileID: 2100000, guid: 20795be0139758f4087bf4a23b9283cf, type: 2}
+  - {fileID: 2100000, guid: e1810a82613fa4a4ca6261eea23eeb28, type: 2}
+  - {fileID: 2100000, guid: 158f99caa2767654b815056fe6dc0e73, type: 2}
+  - {fileID: 2100000, guid: 1b98050e6a6ec8c4898642354b576b11, type: 2}
+  - {fileID: 2100000, guid: 779d3f5d0909e5842a8957952cdd06d2, type: 2}
   colorIndex:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
