@@ -16,13 +16,15 @@ MonoBehaviour:
   runeString: danza furiosa de la mama bien enojada
   elementType: 4
   tier: 2
-  archetype: 8
+  archetype: 2
   description: "invoca un hurac\xE1n enorme que hace da\xF1o en los bordes pero no
     en el centro"
   spellTypes: 0600000002000000
   damage: 10
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 60
   speed: 0
   uses: 0
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

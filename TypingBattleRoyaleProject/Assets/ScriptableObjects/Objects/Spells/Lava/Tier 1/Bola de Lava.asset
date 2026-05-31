@@ -19,9 +19,11 @@ MonoBehaviour:
   archetype: 0
   description: "Arroja una bola de lava lenta que hace da\xF1o medio"
   spellTypes: 00000000
-  damage: 30
+  damage: 20
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 20
   speed: 10
   uses: 0
@@ -29,12 +31,12 @@ MonoBehaviour:
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 214.29
   loop: 1
-  startSpeed: 1
-  startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  startSpeed: 4
+  startSize: 1
+  emissionRate: 20
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: c94ac2358a0c0ca42be6c4cd5f658dc0, type: 2}
   spellSound: {fileID: 8300000, guid: 051d2c2c8829b124585c275ea13dd199, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

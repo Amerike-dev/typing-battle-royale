@@ -16,13 +16,15 @@ MonoBehaviour:
   runeString: frio quemante de la ex despechada
   elementType: 9
   tier: 1
-  archetype: 4
+  archetype: 8
   description: "Realiza un ataque en un area a muy corta distancia que hace da\xF1o
     alto"
   spellTypes: 06000000
-  damage: 100
+  damage: 40
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 5
   speed: 0
   uses: 0
@@ -30,12 +32,12 @@ MonoBehaviour:
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 5
   loop: 1
-  startSpeed: 1
-  startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  startSpeed: 50
+  startSize: 1
+  emissionRate: 20
+  shapeRadius: 5
   materialVFX: {fileID: 2100000, guid: 3338f1f88c13d854b8745951c1c1db20, type: 2}
   spellSound: {fileID: 8300000, guid: ca616d2987288424cb707fb8e61c4cba, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

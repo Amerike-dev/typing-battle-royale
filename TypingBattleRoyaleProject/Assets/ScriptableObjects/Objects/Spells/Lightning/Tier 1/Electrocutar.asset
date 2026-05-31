@@ -19,9 +19,11 @@ MonoBehaviour:
   archetype: 0
   description: "Hace da\xF1o alto a muy corta distancia"
   spellTypes: 06000000
-  damage: 80
+  damage: 15
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 5
   speed: 0
   uses: 0
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

@@ -18,10 +18,12 @@ MonoBehaviour:
   tier: 0
   archetype: 3
   description: buff
-  spellTypes: 03000000
-  damage: 5
+  spellTypes: 
+  damage: 0
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 10
   speed: 2.5
   uses: 0
@@ -32,7 +34,7 @@ MonoBehaviour:
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
-  startSize: 0.5
+  startSize: 2
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0
