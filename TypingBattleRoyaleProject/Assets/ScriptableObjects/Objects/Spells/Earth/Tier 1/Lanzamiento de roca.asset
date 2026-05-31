@@ -23,19 +23,21 @@ MonoBehaviour:
   damage: 15
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 7
   speed: 25
   uses: 0
-  duration: 0
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 10
   loop: 1
-  startSpeed: 1
+  startSpeed: 20
   startSize: 0.9
-  emissionRate: 8
-  shapeRadius: 2
+  emissionRate: 5
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}
   spellSound: {fileID: 8300000, guid: 6527768b21b98ca488cd67dea6768903, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}

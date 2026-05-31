@@ -21,22 +21,24 @@ MonoBehaviour:
     que hace da\xF1o medio por segundo a los jugadores que lo esten pisando, menos
     al caster"
   spellTypes: 
-  damage: 25
+  damage: 35
   cooldown: 0
   debuff: 0
-  range: 15
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  range: 5
   speed: 0
   uses: 0
   duration: 10
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 3
   loop: 1
-  startSpeed: 1
-  startSize: 0.5
+  startSpeed: 0.01
+  startSize: 0.1
   emissionRate: 50
-  shapeRadius: 2
+  shapeRadius: 0.005
   materialVFX: {fileID: 2100000, guid: c94ac2358a0c0ca42be6c4cd5f658dc0, type: 2}
   spellSound: {fileID: 8300000, guid: 46e6e31315ada5c44b8a6b2e5e775dbd, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -48,4 +50,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

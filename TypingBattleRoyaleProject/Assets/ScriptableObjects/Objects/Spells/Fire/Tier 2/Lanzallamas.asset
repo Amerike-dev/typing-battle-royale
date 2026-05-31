@@ -19,9 +19,11 @@ MonoBehaviour:
   archetype: 8
   description: 
   spellTypes: 
-  damage: 20
+  damage: 30
   cooldown: 10
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 4
   speed: 1
   uses: 0
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

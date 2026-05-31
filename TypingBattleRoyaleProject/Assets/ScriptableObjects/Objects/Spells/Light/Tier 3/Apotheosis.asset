@@ -20,13 +20,18 @@ MonoBehaviour:
   description: "Invoca una luz que irradia da\xF1o en un rango grande mientras los
     enemigos no se salgan de su rango o se escondan detr\xE1s de un obstaculo"
   spellTypes: 0000000005000000
-  damage: 10
+  damage: 80
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 100
   speed: 0
   uses: 0
   duration: 60
+  vfxCast: {fileID: 0}
+  vfxProjectile: {fileID: 0}
+  vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
@@ -34,3 +39,16 @@ MonoBehaviour:
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 91dad70e1bf0bc44c9197b7a70dd62d8, type: 2}
+  spellSound: {fileID: 0}
+  emitterOffset: {x: 0, y: 0, z: 0}
+  gravityModifier: 0
+  simulationSpeed: 1
+  startColorTint: {r: 1, g: 1, b: 1, a: 1}
+  startRotationDegrees: 0
+  sizeVariance: 0
+  speedVariance: 0
+  overrideShape: 0
+  shapeType: 0
+  coneAngle: 0
+  maxParticles: 0
+  startBurst: 0

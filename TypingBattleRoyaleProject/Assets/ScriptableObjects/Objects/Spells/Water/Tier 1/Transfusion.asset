@@ -12,16 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Transfusion
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Transfusion
+  spellName: "Curaci\xF3n de agua"
   runeString: trago bendito
   elementType: 2
   tier: 0
-  archetype: 4
+  archetype: 3
   description: Robale poca vida al oponente
-  spellTypes: 0300000004000000
+  spellTypes: 03000000
   damage: 10
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 0
   speed: 0
   uses: 0
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

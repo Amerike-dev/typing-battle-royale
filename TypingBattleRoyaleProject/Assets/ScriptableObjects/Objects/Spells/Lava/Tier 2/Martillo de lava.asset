@@ -20,9 +20,11 @@ MonoBehaviour:
   description: "Equipa un Martillo de 2 usos, hace da\xF1o medio en un area grande
     a corta distancia "
   spellTypes: 0700000006000000
-  damage: 50
+  damage: 25
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 4
   speed: 0
   uses: 0
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

@@ -19,22 +19,24 @@ MonoBehaviour:
   archetype: 6
   description: Crea un anillo de fuego en un area alrededor de ti
   spellTypes: 0200000006000000
-  damage: 5
+  damage: 8
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 20
   speed: 0
   uses: 0
-  duration: 15
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
-  loop: 1
-  startSpeed: 1
-  startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  particleLifeDuration: 0.1
+  loop: 0
+  startSpeed: 0.005
+  startSize: 0.05
+  emissionRate: 30
+  shapeRadius: 0.1
   materialVFX: {fileID: 2100000, guid: 731d5a63dc83c294a98e4aa267a3e804, type: 2}
   spellSound: {fileID: 8300000, guid: e4131dd70b3f6184a8690185dc5cbc9c, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -46,4 +48,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

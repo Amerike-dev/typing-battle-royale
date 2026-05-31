@@ -20,9 +20,11 @@ MonoBehaviour:
   description: "Invoca un ave fenix que viaja hacia delante y hace da\xF1o alto a
     todos los enemigos en el area"
   spellTypes: 0000000006000000
-  damage: 100
+  damage: 95
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 50
   speed: 10
   uses: 0
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

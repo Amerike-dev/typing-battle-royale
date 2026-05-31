@@ -20,9 +20,11 @@ MonoBehaviour:
   description: "Invoca una ola que viaja en linea recta a travez del suelo para hacer
     da\xF1o bajo y realentizar."
   spellTypes: 
-  damage: 15
+  damage: 12
   cooldown: 0
   debuff: 1
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 20
   speed: 5
   uses: 0
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

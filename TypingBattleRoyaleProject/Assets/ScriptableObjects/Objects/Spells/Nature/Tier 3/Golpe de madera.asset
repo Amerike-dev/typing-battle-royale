@@ -20,22 +20,24 @@ MonoBehaviour:
   description: "Invoca un pilar de madera del suelo que viaja horizontalmente y hace
     da\xF1o alto a un enemigo"
   spellTypes: 0200000006000000
-  damage: 100
+  damage: 70
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 100
   speed: 50
   uses: 0
-  duration: 120
+  duration: 5
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 11.1
   loop: 1
   startSpeed: 1
   startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  emissionRate: 10
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: a496024c7e8affc4eb3305881dbf10a3, type: 2}
   spellSound: {fileID: 8300000, guid: 1bad3abb19ba1804e9b7822ff10150c7, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0
