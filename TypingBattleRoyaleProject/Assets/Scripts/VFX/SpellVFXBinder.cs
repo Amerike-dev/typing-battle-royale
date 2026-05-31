@@ -49,11 +49,15 @@ public class SpellVFXBinder : MonoBehaviour
 
         var emission = _ps.emission;
         emission.rateOverTime = spell.emissionRate * emissionMul;
+        // Ráfaga inicial (dispersión de salida): partículas emitidas de golpe en t=0.
+        if (spell.startBurst > 0)
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, (short)spell.startBurst) });
 
         var shape = _ps.shape;
         shape.radius = spell.shapeRadius;
         shape.position = spell.emitterOffset; // punto de origen (0,0,0 = sin desplazar)
         if (spell.overrideShape) shape.shapeType = spell.shapeType;
+        if (spell.coneAngle > 0f) shape.angle = spell.coneAngle; // dispersión del cono (solo formas Cone)
 
         if (_renderer != null && spell.materialVFX != null)
             _renderer.material = spell.materialVFX;
