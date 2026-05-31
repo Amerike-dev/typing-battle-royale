@@ -53,6 +53,7 @@ public class CharacterSelectController : MonoBehaviour
 
         if (idc != null)
         {
+            idc.SaveSelectionsClientRpc();
             idc.ShowInstructionsClientRpc(duration);
         }
         else if (InstructionsPanelController.Instance != null)

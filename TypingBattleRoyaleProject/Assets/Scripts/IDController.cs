@@ -69,6 +69,8 @@ public class IDController : NetworkBehaviour
             if (string.IsNullOrWhiteSpace(savedName) || savedName.Length < 3) savedName = PlayerIDGenerator.GenerateID();
             
             playerName.Value = new FixedString64Bytes(savedName);
+
+            ApplySavedSelectionIfExists();
         }
         
         skinIndex.OnValueChanged += (oldV, newV) => {
@@ -115,6 +117,20 @@ public class IDController : NetworkBehaviour
         
         Update3DModel();
         Invoke(nameof(UpdateLabel), 0.2f);
+    }
+
+    private void ApplySavedSelectionIfExists()
+    {
+        if (!savedSelections.TryGetValue(OwnerClientId, out PlayerSelection selection))
+        {
+            Debug.LogWarning($"[IDController] No hay selección guardada para OwnerClientId {OwnerClientId}. Se queda Skin {skinIndex.Value} | Color {colorIndex.Value}");
+            return;
+        }
+
+        skinIndex.Value = selection.skinIndex;
+        colorIndex.Value = selection.colorIndex;
+
+        Debug.Log($"[IDController] Aplicando selección guardada para OwnerClientId {OwnerClientId}: Skin {skinIndex.Value} | Color {colorIndex.Value}");
     }
     
     public void ChangeSelection(int skinDir, int colorDir)
@@ -275,6 +291,20 @@ public class IDController : NetworkBehaviour
         if (SelectController.Instance != null)
         {
             SelectController.Instance.SyncPlayer(OwnerClientId);
+        }
+    }
+
+    [ClientRpc]
+    public void SaveSelectionsClientRpc()
+    {
+        if (SelectController.Instance != null)
+        {
+            SelectController.Instance.SaveAllSelections();
+            Debug.Log("[IDController] SaveSelectionsClientRpc ejecutado en este cliente.");
+        }
+        else
+        {
+            Debug.LogWarning("[IDController] No existe SelectController.Instance al intentar guardar selecciones.");
         }
     }
 }
