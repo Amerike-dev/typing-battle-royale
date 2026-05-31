@@ -3844,7 +3844,7 @@ MonoBehaviour:
   audioSource: {fileID: 1222293630}
   caracterSelect: {fileID: 11400000, guid: 0671867965978964f95f44e681891a22, type: 2}
   playerDeath: {fileID: 11400000, guid: 4f1ff55001111ce48afe5e5d3000cc7b, type: 2}
-  winner: {fileID: 11400000, guid: 989a235dc740fd14fbea9dc0e7480087, type: 2}
+  winner: {fileID: 11400000, guid: e587073be3f83bc408d3f94facccc8d9, type: 2}
   monolithDisappear: {fileID: 11400000, guid: 993ade3c2587ea74d9db8114d5e421d7, type: 2}
   gameStart: {fileID: 11400000, guid: 989a235dc740fd14fbea9dc0e7480087, type: 2}
 --- !u!4 &1222293629
@@ -4335,6 +4335,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 16f132ceabf4b044fb714295f3f18da3, type: 2}
     - {fileID: 11400000, guid: e0cf00df0ad4f25478cc2cea3e5204fc, type: 2}
     - {fileID: 11400000, guid: c19dea935c93dda4eb2c313200ef726f, type: 2}
+  - sceneName: PodiumScene
+    tracks:
+    - {fileID: 11400000, guid: e47f4376301fcac4a98a30022520eec7, type: 2}
   delayBetweenTracks: 0.5
   avoidRepeat: 1
   playOnStart: 1
