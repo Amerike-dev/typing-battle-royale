@@ -19,9 +19,10 @@ MonoBehaviour:
   archetype: 2
   description: Genera un golem de tierra que se mueve lento y ataca a tus oponentes
   spellTypes: 02000000
-  damage: 20
+  damage: 10
   cooldown: 0
   debuff: 0
+  spawnsChasingMinion: 1
   range: 0
   speed: 0
   uses: 0

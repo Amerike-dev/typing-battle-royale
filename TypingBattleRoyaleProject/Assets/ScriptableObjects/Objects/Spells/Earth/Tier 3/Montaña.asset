@@ -19,9 +19,10 @@ MonoBehaviour:
   archetype: 2
   description: "Crea una monta\xF1a en los pies de quien castea el hechizo."
   spellTypes: 02000000
-  damage: 0
+  damage: 35
   cooldown: 0
   debuff: 0
+  spawnsChasingMinion: 0
   range: 0
   speed: 0
   uses: 0

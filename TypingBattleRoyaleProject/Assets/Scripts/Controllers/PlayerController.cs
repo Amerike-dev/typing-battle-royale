@@ -228,6 +228,16 @@ public class PlayerController : NetworkBehaviour
 
         HandleEmotes();
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // DEBUG: F1 carga todo el inventario de hechizos (todos los elementos y tiers) para afinar VFX
+        // sin tener que ir a buscar cada elemento en los monolitos.
+        if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame && inventory != null)
+        {
+            inventory.UnlockAllForDebug();
+            Debug.Log($"[Debug] Inventario completo: {inventory.GetUnlockedSpells().Count} hechizos, tier {inventory.UnlockedTier}. Abre el SpellBook (Tab) para verlos.");
+        }
+#endif
+
         if (onExplorationState) MoveCharacter();
 
         /* para pruebas de desconexion

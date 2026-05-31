@@ -12,6 +12,14 @@ public class SpellNetworkController : NetworkBehaviour
     public GameObject summonVfxPrefab;
     public GameObject buffDebuffVfxPrefab;
 
+    [Header("Súbditos invocados (NetworkObject, server-authoritative)")]
+    [Tooltip("Prefab del súbdito que persigue y ataca (p. ej. el Golem). DEBE tener NetworkObject + " +
+             "SummonMinion + NetworkTransform y estar registrado en el NetworkManager. Se spawnea solo " +
+             "para hechizos Summon con daño > 0.")]
+    public GameObject summonMinionPrefab;
+    [Tooltip("Distancia hacia adelante a la que aparece el súbdito invocado.")]
+    public float summonForwardOffset = 2f;
+
     [Header("Origen del cast")]
     public Transform castOrigin;
 
@@ -139,10 +147,54 @@ public class SpellNetworkController : NetworkBehaviour
 
         RegisterCastServer(casterClientId, spellId);
 
+        // Buffs server-authoritative (p. ej. escudo de Cubierta rocosa): aplican al caster.
+        if (spell.damageReductionPercent > 0f &&
+            NetworkManager.Singleton.ConnectedClients.TryGetValue(casterClientId, out var casterClientForBuff) &&
+            casterClientForBuff.PlayerObject != null &&
+            casterClientForBuff.PlayerObject.TryGetComponent<PlayerStatsNet>(out var casterStatsForBuff))
+        {
+            float dur = spell.duration > 0f ? spell.duration : 30f;
+            casterStatsForBuff.ApplyDamageReductionServer(spell.damageReductionPercent, dur);
+            Debug.Log($"[SpellNetworkController] Escudo aplicado a {casterClientId}: -{spell.damageReductionPercent * 100f}% daño por {dur}s.");
+        }
+
+        // Daño directo de invocaciones estáticas (p. ej. Montaña): Summon, no-súbdito, con daño y objetivo.
+        if (spell.archetype == SpellTypes.Summon && !spell.spawnsChasingMinion && spell.damage > 0f && hasTarget &&
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out var directTargetObj))
+        {
+            var targetStats = directTargetObj.GetComponent<PlayerStatsNet>();
+            if (targetStats == null) targetStats = directTargetObj.GetComponentInParent<PlayerStatsNet>();
+            if (targetStats != null && targetStats.isAlive.Value)
+            {
+                targetStats.TakeDamage(spell.damage, casterClientId);
+                Debug.Log($"[SpellNetworkController] Daño directo de '{spell.spellName}' = {spell.damage} a {targetNetworkObjectId}.");
+            }
+        }
+
+        // Súbdito invocado server-authoritative (p. ej. Golem): persigue y ataca.
+        if (spell.archetype == SpellTypes.Summon && spell.spawnsChasingMinion && summonMinionPrefab != null)
+        {
+            Vector3 dir = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.forward;
+            Vector3 spawnPos = origin + dir * summonForwardOffset;
+            var minionGo = Instantiate(summonMinionPrefab, spawnPos, Quaternion.LookRotation(dir, Vector3.up));
+            var netObj = minionGo.GetComponent<NetworkObject>();
+            if (netObj != null)
+            {
+                netObj.Spawn(true);
+                var minion = minionGo.GetComponent<SummonMinion>();
+                if (minion != null) minion.ServerInit(spell, casterClientId);
+            }
+            else
+            {
+                Debug.LogError("[SpellNetworkController] summonMinionPrefab no tiene NetworkObject. No se puede spawnear.");
+                Destroy(minionGo);
+            }
+        }
+
         float damageMultiplier = accuracy < 30f
             ? 0f
             : TypingStats.GetDamageBonusMultiplier(accuracy);
-        
+
         float finalDamage = spell.damage * damageMultiplier;
 
         Debug.Log($"[SERVER] Spells='{spell.spellName}', Accuracy={accuracy}, Multiplier={damageMultiplier}, Damage={finalDamage}");
@@ -175,7 +227,9 @@ public class SpellNetworkController : NetworkBehaviour
                 SpawnBeam(spell, origin, direction, casterTransform);
                 break;
             case SpellTypes.Summon:
-                SpawnSummon(spell, origin, direction);
+                // El súbdito que persigue (Golem) ya es un NetworkObject visible en todos los clientes;
+                // no reproducimos el VFX genérico de summon para no duplicar el visual.
+                if (!spell.spawnsChasingMinion) SpawnSummon(spell, origin, direction);
                 break;
             case SpellTypes.Buff:
             case SpellTypes.Debuff:
