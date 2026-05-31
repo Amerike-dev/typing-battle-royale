@@ -20,9 +20,11 @@ MonoBehaviour:
   description: "lanza un proyectil, despues de un tiempo, en el punto de impacto
     cae un rayo gigantesco que hace da\xF1o alto"
   spellTypes: 0000000006000000
-  damage: 150
+  damage: 90
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 30
   speed: 50
   uses: 0
@@ -32,10 +34,10 @@ MonoBehaviour:
   vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
-  startSpeed: 1
-  startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  startSpeed: 0.01
+  startSize: 0.05
+  emissionRate: 30
+  shapeRadius: 0.0001
   materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}
   spellSound: {fileID: 8300000, guid: a9eca1cfd9b52594fb0e8573a710dc66, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +49,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

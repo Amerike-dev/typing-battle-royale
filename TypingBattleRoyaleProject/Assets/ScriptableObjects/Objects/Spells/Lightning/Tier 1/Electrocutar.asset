@@ -27,11 +27,11 @@ MonoBehaviour:
   range: 5
   speed: 0
   uses: 0
-  duration: 0
+  duration: -3.06
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: -2.16
   loop: 1
   startSpeed: 1
   startSize: 0.5

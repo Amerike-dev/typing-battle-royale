@@ -21,13 +21,18 @@ MonoBehaviour:
     a los enemigos y si alguno toca el centro muere instantaneamente perdiendo todas
     sus vidas.
   spellTypes: 00000000
-  damage: 0
+  damage: 95
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
   range: 10
   speed: 10
   uses: 0
   duration: 0
+  vfxCast: {fileID: 0}
+  vfxProjectile: {fileID: 0}
+  vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
@@ -35,3 +40,16 @@ MonoBehaviour:
   emissionRate: 50
   shapeRadius: 2
   materialVFX: {fileID: 2100000, guid: 3ad0c12f3cfa5234b957d29d7825b8a1, type: 2}
+  spellSound: {fileID: 0}
+  emitterOffset: {x: 0, y: 0, z: 0}
+  gravityModifier: 0
+  simulationSpeed: 1
+  startColorTint: {r: 1, g: 1, b: 1, a: 1}
+  startRotationDegrees: 0
+  sizeVariance: 0
+  speedVariance: 0
+  overrideShape: 0
+  shapeType: 0
+  coneAngle: 0
+  maxParticles: 0
+  startBurst: 0
