@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4478428405245052503}
   - component: {fileID: 6920961045587199758}
   m_Layer: 0
-  m_Name: 3DFirefly
+  m_Name: 3DFirefly 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cc8579e594aa0da449bea5c15fbae3f1, type: 2}
+  - {fileID: 2100000, guid: b1c0ae982fb5a3a478c4f760f912b21e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
