@@ -45,6 +45,11 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private ulong lastDamageFromClientId;
 
+    // Multiplicador de velocidad de movimiento (1 = normal, 0 = inmóvil). Lo escribe el servidor
+    // (efectos Slow/Freeze/Root) y lo lee el owner en PlayerController para frenar su movimiento.
+    public NetworkVariable<float> moveSpeedMultiplier =
+        new(1f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     private Renderer[] _renderers;
     private CharacterController _characterController;
     private PlayerController _playerController;
@@ -156,6 +161,61 @@ public class PlayerStatsNet : NetworkBehaviour
         if (!IsServer) return;
         _damageReductionFactor = Mathf.Clamp01(factor);
         _damageReductionUntil = Time.time + Mathf.Max(0f, duration);
+    }
+
+    /// <summary>Cura HP en el servidor, sin pasar de maxHP. No revive (debe estar vivo).</summary>
+    public void HealServer(float amount)
+    {
+        if (!IsServer || !isAlive.Value || amount <= 0f) return;
+        currentHP.Value = Mathf.Min(maxHP, currentHP.Value + amount);
+        Debug.Log($"[STATS] Heal(+{amount}) on {ID} -> {currentHP.Value}");
+    }
+
+    // --- Efectos de estado (debuff) temporales. Server-authoritative. ---
+    private Coroutine _statusRoutine;
+
+    /// <summary>Aplica un efecto de estado en el servidor (Slow/Freeze/Root/Poison) por una duración.</summary>
+    public void ApplyStatusServer(StatusEffects effect, float magnitude, float duration, ulong sourceId)
+    {
+        if (!IsServer || !isAlive.Value || effect == StatusEffects.None || duration <= 0f) return;
+
+        if (_statusRoutine != null) StopCoroutine(_statusRoutine);
+        _statusRoutine = StartCoroutine(StatusRoutine(effect, magnitude, duration, sourceId));
+    }
+
+    private IEnumerator StatusRoutine(StatusEffects effect, float magnitude, float duration, ulong sourceId)
+    {
+        // Slow reduce la velocidad; Freeze y Root la anulan por completo.
+        switch (effect)
+        {
+            case StatusEffects.Slow:
+                moveSpeedMultiplier.Value = Mathf.Clamp01(1f - magnitude);
+                break;
+            case StatusEffects.Freeze:
+            case StatusEffects.Root:
+                moveSpeedMultiplier.Value = 0f;
+                break;
+        }
+
+        // Poison: daño por segundo (magnitude) durante la duración.
+        if (effect == StatusEffects.Poison && magnitude > 0f)
+        {
+            float elapsed = 0f;
+            while (elapsed < duration && isAlive.Value)
+            {
+                yield return new WaitForSeconds(1f);
+                elapsed += 1f;
+                TakeDamage(magnitude, sourceId);
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(duration);
+        }
+
+        // Fin del efecto: restaura el movimiento.
+        moveSpeedMultiplier.Value = 1f;
+        _statusRoutine = null;
     }
 
     public void TakeDamage(float damage, ulong attackerId = ulong.MaxValue)

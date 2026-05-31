@@ -22,6 +22,7 @@ MonoBehaviour:
   damage: 0
   cooldown: 0
   debuff: 0
+  healAmount: 50
   range: 0
   speed: 0
   uses: 0

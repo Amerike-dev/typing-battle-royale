@@ -62,9 +62,13 @@ public class ProjectileVFX : MonoBehaviour
 
         if (otherStats != null && otherStats.OwnerClientId == _ownerId) return; // respaldo por dueño
 
-        if (_isServerCopy && _damage > 0f && otherStats != null)
+        if (_isServerCopy && otherStats != null)
         {
-            otherStats.TakeDamage(_damage, _ownerId);
+            if (_damage > 0f) otherStats.TakeDamage(_damage, _ownerId);
+
+            // Efecto de estado al impactar (Slow/Freeze/Root/Poison), si el hechizo lo define.
+            if (_spell.debuff != StatusEffects.None && _spell.statusDuration > 0f)
+                otherStats.ApplyStatusServer(_spell.debuff, _spell.statusMagnitude, _spell.statusDuration, _ownerId);
         }
 
         SpawnHitVFX();
