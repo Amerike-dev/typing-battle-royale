@@ -122,8 +122,22 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleAliveChanged(bool oldValue, bool newValue)
     {
-        if (oldValue && !newValue && IsOwner && _animatorView != null)
-            _animatorView.TriggerDeath();
+        // Si acaba de morir
+        if (oldValue && !newValue)
+        {
+            // Solo el dueño dispara el trigger del animator
+            if (IsOwner && _animatorView != null)
+                _animatorView.TriggerDeath();
+            
+            // TODOS apagan los renderers y colliders del jugador muerto
+            SetTemporaryDeathStats(true);
+        }
+        // Si acaba de revivir
+        else if (!oldValue && newValue)
+        {
+            // TODOS vuelven a encender los renderers del jugador
+            SetTemporaryDeathStats(false);
+        }
     }
 
     private void HandleLivesChanged(int oldValue, int newValue)
@@ -280,7 +294,7 @@ public class PlayerStatsNet : NetworkBehaviour
             currentHP.Value = 0;
             isAlive.Value = false;
 
-            BeginDeathSequenceOwnerClientRpc(killerId, currentLifes.Value);
+            BeginDeathSequenceOwnerRpc(killerId, currentLifes.Value);
         }
         else
         {
@@ -289,7 +303,7 @@ public class PlayerStatsNet : NetworkBehaviour
             isAlive.Value = false;
             isSpectating.Value = true;
 
-            EnterSpectatorModeClientRpc();
+            EnterSpectatorModeOwnerRpc();
         }
         AudioChango.Instance?.PlayPlayerDeath();
     }
@@ -307,10 +321,9 @@ public class PlayerStatsNet : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    private void EnterSpectatorModeClientRpc(ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    private void EnterSpectatorModeOwnerRpc()
     {
-
         PlayerController controller = GetComponent<PlayerController>();
 
         if (controller != null)
@@ -321,16 +334,12 @@ public class PlayerStatsNet : NetworkBehaviour
         {
             Debug.LogWarning("[PlayerController] No se encontro PlayerController local para entrar en modo espectador.");
         }
-
     }
 
-    [ClientRpc]
-    private void BeginDeathSequenceOwnerClientRpc(ulong killerId, int remainingLives, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    private void BeginDeathSequenceOwnerRpc(ulong killerId, int remainingLives)
     {
-        if (!IsOwner) return;
-
         if (_deathSequenceCoroutine != null) StopCoroutine(_deathSequenceCoroutine);
-
         _deathSequenceCoroutine = StartCoroutine(DeathSequenceRoutine(killerId, remainingLives));
     }
 
