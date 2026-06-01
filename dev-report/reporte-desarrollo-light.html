@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Battle Royale — Reporte de Desarrollo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#ffffff; --app:#f4f5f7; --panel:#ffffff; --panel2:#fafbfc;
+    --border:#dfe1e6; --border-strong:#c1c7d0;
+    --text:#172b4d; --muted:#6b778c; --subtle:#97a0af;
+    --blue:#0052cc; --blue-light:#4c9aff; --blue-bg:#deebff;
+    --purple:#5243aa; --green:#36b37e; --teal:#00b8d9; --orange:#ff8b00;
+    --red:#de350b; --yellow:#ffab00;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--app);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    line-height:1.5;padding:28px 20px 64px;font-size:14px}
+  .wrap{max-width:1240px;margin:0 auto}
+
+  /* Top bar estilo Jira */
+  .jira-bar{background:var(--blue);color:#fff;border-radius:6px 6px 0 0;
+    padding:8px 20px;font-size:12px;font-weight:600;letter-spacing:.3px;
+    display:flex;align-items:center;gap:8px}
+  .jira-bar .dot{width:8px;height:8px;border-radius:2px;background:#fff;opacity:.85}
+  .jira-bar .crumb{opacity:.8;font-weight:500}
+
+  header.top{background:var(--panel);border:1px solid var(--border);border-top:none;
+    border-radius:0 0 6px 6px;padding:24px 24px;margin-bottom:24px;
+    box-shadow:0 1px 1px rgba(9,30,66,.08)}
+  header.top h1{font-size:24px;font-weight:600;letter-spacing:-.3px;color:var(--text)}
+  header.top .sub{color:var(--muted);margin-top:6px;font-size:14px}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-bg);
+    border:1px solid #b3d4ff;color:var(--blue);font-size:12px;font-weight:600;
+    padding:4px 12px;border-radius:3px;margin-top:14px}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px 18px;
+    box-shadow:0 1px 1px rgba(9,30,66,.08)}
+  .kpi .label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:600}
+  .kpi .value{font-size:30px;font-weight:600;margin-top:8px;color:var(--text)}
+  .kpi .value small{font-size:14px;font-weight:500;color:var(--muted)}
+  .kpi .delta{font-size:12px;margin-top:6px;color:var(--green);font-weight:500}
+  .kpi .accent-bar{height:3px;border-radius:2px;margin-bottom:14px;width:36px;background:var(--blue)}
+  .kpi.k2 .accent-bar{background:var(--purple)} .kpi.k3 .accent-bar{background:var(--teal)}
+  .kpi.k4 .accent-bar{background:var(--green)} .kpi.k5 .accent-bar{background:var(--orange)}
+  .kpi.k6 .accent-bar{background:var(--blue-light)}
+
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:18px 20px;
+    box-shadow:0 1px 1px rgba(9,30,66,.08)}
+  .card h2{font-size:14px;font-weight:600;margin-bottom:3px;color:var(--text)}
+  .card .hint{color:var(--muted);font-size:12px;margin-bottom:16px}
+  .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}
+  .col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-7{grid-column:span 7}
+  @media(max-width:900px){.col-8,.col-6,.col-4,.col-5,.col-7{grid-column:span 12}}
+  .chart-box{position:relative;height:300px}
+  .chart-box.tall{height:340px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border)}
+  thead th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;
+    letter-spacing:.5px;background:var(--panel2);border-bottom:2px solid var(--border-strong)}
+  tbody tr:hover{background:var(--panel2)}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .bar-cell{position:relative}
+  .bar-cell .fill{position:absolute;left:0;top:50%;transform:translateY(-50%);height:18px;
+    background:var(--blue-bg);border-radius:3px;z-index:0}
+  .bar-cell span{position:relative;z-index:1;font-weight:600}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;
+    background:var(--blue-bg);color:var(--blue)}
+
+  .section-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+    margin:32px 0 14px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section-title::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  .note{background:#fffae6;border:1px solid #ffe380;color:#5e4b00;font-size:12px;
+    padding:12px 16px;border-radius:4px;margin-top:18px;display:flex;gap:8px}
+  footer{color:var(--subtle);font-size:12px;margin-top:36px;text-align:center;
+    border-top:1px solid var(--border);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="jira-bar">
+    <span class="dot"></span> TBR-PROJECT
+    <span class="crumb">/ Tableros / Reporte de desarrollo</span>
+  </div>
+  <header class="top">
+    <h1>Typing Battle Royale — Reporte de Desarrollo</h1>
+    <div class="sub">Análisis de actividad del repositorio Git · Proyecto Amerike 2026</div>
+    <span class="badge">📅 23 feb 2026 → 31 may 2026 · 97 días naturales · 60 días activos</span>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi k1"><div class="accent-bar"></div><div class="label">Commits totales</div><div class="value">864</div><div class="delta">487 de trabajo · 377 merges</div></div>
+    <div class="kpi k2"><div class="accent-bar"></div><div class="label">Horas estimadas</div><div class="value">~328 <small>h</small></div><div class="delta">≈ 41 jornadas de 8 h</div></div>
+    <div class="kpi k3"><div class="accent-bar"></div><div class="label">Contribuidores</div><div class="value">8 <small>activos</small></div><div class="delta">equipo principal</div></div>
+    <div class="kpi k4"><div class="accent-bar"></div><div class="label">Código fuente</div><div class="value">25.4k <small>líneas C#</small></div><div class="delta">177 archivos .cs</div></div>
+    <div class="kpi k5"><div class="accent-bar"></div><div class="label">Ritmo medio</div><div class="value">14.4 <small>/día activo</small></div><div class="delta">pico: 65 (13 may)</div></div>
+    <div class="kpi k6"><div class="accent-bar"></div><div class="label">Velocidad código</div><div class="value">+25.7k <small>líneas</small></div><div class="delta">netas en 4 meses</div></div>
+  </div>
+
+  <!-- Velocidad de desarrollo -->
+  <div class="section-title">Velocidad de desarrollo</div>
+  <div class="grid">
+    <div class="card col-8">
+      <h2>Actividad de commits por día</h2>
+      <div class="hint">Cada barra = commits en esa fecha. La línea muestra el acumulado del proyecto (burn-up).</div>
+      <div class="chart-box tall"><canvas id="dailyChart"></canvas></div>
+    </div>
+    <div class="card col-4">
+      <h2>Commits por mes</h2>
+      <div class="hint">Aceleración clara hacia el cierre.</div>
+      <div class="chart-box tall"><canvas id="monthChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card col-7">
+      <h2>Líneas de código C# añadidas vs. eliminadas</h2>
+      <div class="hint">Solo archivos <code>.cs</code> (excluye assets/binarios). Refleja el trabajo de programación real.</div>
+      <div class="chart-box"><canvas id="codeChart"></canvas></div>
+    </div>
+    <div class="card col-5">
+      <h2>Commits por semana</h2>
+      <div class="hint">Sprints informales: picos en W19, W20 y W22.</div>
+      <div class="chart-box"><canvas id="weekChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Equipo -->
+  <div class="section-title">Equipo y esfuerzo</div>
+  <div class="grid">
+    <div class="card col-5">
+      <h2>Horas estimadas por persona</h2>
+      <div class="hint">Heurística de sesiones: commits a &lt;2 h se agrupan; cada sesión nueva suma 30 min de arranque.</div>
+      <div class="chart-box"><canvas id="hoursChart"></canvas></div>
+    </div>
+    <div class="card col-7">
+      <h2>Reparto de commits por contribuidor</h2>
+      <div class="hint">Identidades consolidadas (mismos autores con varios correos de la escuela).</div>
+      <table>
+        <thead><tr><th>Contribuidor</th><th class="num">Commits</th><th class="num">% del total</th><th class="num">Horas est.</th></tr></thead>
+        <tbody id="authorTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Patrones de trabajo -->
+  <div class="section-title">Patrones de trabajo</div>
+  <div class="grid">
+    <div class="card col-6">
+      <h2>¿A qué hora se programa?</h2>
+      <div class="hint">Distribución horaria de los commits (hora local). Equipo claramente vespertino/nocturno.</div>
+      <div class="chart-box"><canvas id="hourChart"></canvas></div>
+    </div>
+    <div class="card col-6">
+      <h2>¿Qué días se trabaja?</h2>
+      <div class="hint">Miércoles y lunes concentran la mayor actividad.</div>
+      <div class="chart-box"><canvas id="weekdayChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <span>⚠️</span>
+    <div><b>Sobre las "horas estimadas":</b> Git no registra tiempo real. La cifra (~328 h) se infiere agrupando commits cercanos en sesiones de trabajo (gaps &lt; 2 h) más 30 min por sesión de arranque — método estándar de <code>git-hours</code>. Es una estimación de orden de magnitud para el reporte, no un registro fichado. El esfuerzo de diseño, pruebas y reuniones sin commit no aparece, por lo que la cifra real es probablemente mayor.</div>
+  </div>
+
+  <footer>
+    Generado a partir del historial Git · 864 commits entre el 23-feb-2026 y el 31-may-2026 · Typing Battle Royale (Amerike)
+  </footer>
+</div>
+
+<script>
+const C = {blue:'#0052cc',blueLight:'#4c9aff',purple:'#5243aa',green:'#36b37e',
+  orange:'#ff8b00',red:'#de350b',teal:'#00b8d9',yellow:'#ffab00',
+  muted:'#6b778c',grid:'rgba(9,30,66,.08)',blueBg:'rgba(76,154,255,.18)'};
+Chart.defaults.color = C.muted;
+Chart.defaults.font.family = "-apple-system,Segoe UI,Roboto,sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.borderColor = C.grid;
+
+// ---- DATOS (extraídos del repo) ----
+const daily = [
+ ['02-23',4],['02-24',12],['02-25',20],['03-02',21],['03-04',29],['03-06',1],['03-09',19],['03-11',17],
+ ['03-12',2],['03-13',6],['03-14',1],['03-16',3],['03-17',5],['03-18',24],['03-20',2],['03-23',27],['03-24',6],
+ ['03-25',28],['03-28',1],['03-29',4],['04-02',1],['04-03',1],['04-05',1],['04-06',15],['04-08',20],['04-09',1],
+ ['04-13',17],['04-15',30],['04-20',13],['04-22',22],['04-23',1],['04-27',18],['04-29',8],['04-30',1],['05-04',26],
+ ['05-06',31],['05-07',9],['05-08',11],['05-09',9],['05-11',31],['05-12',13],['05-13',65],['05-14',12],['05-15',4],
+ ['05-16',12],['05-17',8],['05-18',14],['05-19',13],['05-20',11],['05-21',3],['05-22',10],['05-23',7],['05-24',3],
+ ['05-25',25],['05-26',8],['05-27',26],['05-28',48],['05-29',58],['05-30',17],['05-31',13]
+];
+let cum=0; const cumData = daily.map(d=>cum+=d[1]);
+
+const months = {labels:['Feb','Mar','Abr','May'], commits:[36,196,149,487]};
+const codeByMonth = {labels:['Feb','Mar','Abr','May'], added:[464,2030,3294,19933], removed:[32,608,939,3430]};
+const weeks = {
+  labels:['W09','W10','W11','W12','W13','W14','W15','W16','W17','W18','W19','W20','W21','W22'],
+  commits:[36,51,45,34,66,3,36,47,36,27,86,145,61,195]
+};
+const authors = [
+  {name:'Jorge Salas', commits:141, hours:59.6},
+  {name:'FlanVessel', commits:122, hours:51.6},
+  {name:'Angel Bernardino', commits:110, hours:48.3},
+  {name:'Cesar (Ches)', commits:133, hours:40.7},
+  {name:'Jorge B (Temps)', commits:109, hours:38.9},
+  {name:'Sonoc', commits:91, hours:35.2},
+  {name:'Banyo', commits:112, hours:31.3},
+  {name:'Ophion', commits:46, hours:20.4}
+];
+const totalCommitsAuthors = authors.reduce((a,b)=>a+b.commits,0);
+const hours = {h:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+  v:[30,10,13,4,4,6,5,6,4,11,19,17,35,26,22,25,18,168,238,52,33,32,44,46]};
+const weekday = {labels:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'], v:[233,57,331,78,93,47,29]};
+
+// paleta de barras categóricas (Atlassian)
+const cat = [C.blue,C.teal,C.purple,C.green,C.orange,C.blueLight,C.yellow];
+
+const baseOpts = (extra={})=>({responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid},beginAtZero:true}},...extra});
+
+// Daily + cumulative
+new Chart(document.getElementById('dailyChart'),{
+  data:{labels:daily.map(d=>d[0]),
+    datasets:[
+      {type:'bar',label:'Commits/día',data:daily.map(d=>d[1]),backgroundColor:C.blue,borderRadius:2,yAxisID:'y',order:2},
+      {type:'line',label:'Acumulado',data:cumData,borderColor:C.purple,backgroundColor:'rgba(82,67,170,.08)',fill:true,tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y1',order:1}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{boxWidth:12,usePointStyle:true,pointStyle:'rectRounded'}}},
+    scales:{x:{grid:{color:C.grid},ticks:{maxTicksLimit:14}},
+      y:{grid:{color:C.grid},title:{display:true,text:'commits/día'},beginAtZero:true},
+      y1:{position:'right',grid:{display:false},title:{display:true,text:'acumulado'},beginAtZero:true}}}
+});
+
+new Chart(document.getElementById('monthChart'),{type:'bar',
+  data:{labels:months.labels,datasets:[{data:months.commits,backgroundColor:[C.muted,C.teal,C.orange,C.green],borderRadius:3}]},
+  options:baseOpts()});
+
+new Chart(document.getElementById('codeChart'),{type:'bar',
+  data:{labels:codeByMonth.labels,datasets:[
+    {label:'Añadidas',data:codeByMonth.added,backgroundColor:C.green,borderRadius:2},
+    {label:'Eliminadas',data:codeByMonth.removed.map(x=>-x),backgroundColor:C.red,borderRadius:2}]},
+  options:baseOpts({plugins:{legend:{display:true,labels:{boxWidth:12,usePointStyle:true,pointStyle:'rectRounded'}}},
+    scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid},ticks:{callback:v=>Math.abs(v)}}}})});
+
+new Chart(document.getElementById('weekChart'),{type:'line',
+  data:{labels:weeks.labels,datasets:[{data:weeks.commits,borderColor:C.blue,backgroundColor:'rgba(76,154,255,.14)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:C.blue,borderWidth:2}]},
+  options:baseOpts()});
+
+new Chart(document.getElementById('hoursChart'),{type:'bar',indexAxis:'y',
+  data:{labels:authors.map(a=>a.name),datasets:[{data:authors.map(a=>a.hours),backgroundColor:C.purple,borderRadius:2}]},
+  options:baseOpts({scales:{x:{grid:{color:C.grid},title:{display:true,text:'horas estimadas'}},y:{grid:{display:false}}}})});
+
+new Chart(document.getElementById('hourChart'),{type:'bar',
+  data:{labels:hours.h.map(h=>h+'h'),datasets:[{data:hours.v,backgroundColor:hours.v.map(v=>v>100?C.orange:C.blue),borderRadius:2}]},
+  options:baseOpts({scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12}},y:{grid:{color:C.grid}}}})});
+
+new Chart(document.getElementById('weekdayChart'),{type:'bar',
+  data:{labels:weekday.labels,datasets:[{data:weekday.v,backgroundColor:weekday.v.map(v=>v>200?C.green:C.blue),borderRadius:2}]},
+  options:baseOpts()});
+
+// tabla autores
+const tb = document.getElementById('authorTable');
+const maxC = Math.max(...authors.map(a=>a.commits));
+authors.sort((a,b)=>b.commits-a.commits).forEach(a=>{
+  const pct = (a.commits/totalCommitsAuthors*100).toFixed(1);
+  const w = (a.commits/maxC*100).toFixed(0);
+  tb.insertAdjacentHTML('beforeend',
+    `<tr><td>${a.name}</td>
+     <td class="num bar-cell"><span>${a.commits}</span><div class="fill" style="width:${w}%"></div></td>
+     <td class="num"><span class="pill">${pct}%</span></td><td class="num">${a.hours.toFixed(1)} h</td></tr>`);
+});
+</script>
+</body>
+</html>

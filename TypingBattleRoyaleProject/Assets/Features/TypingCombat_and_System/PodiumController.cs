@@ -1,11 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PodiumController : MonoBehaviour
 {
+    [Header("Escenas")]
+    [SerializeField] private string lobbySceneName = "LobbyScene";
+    [SerializeField] private string gameplaySceneName = "GameplayScene";
+
+    [Header("Botones (solo host)")]
+    [Tooltip("Contenedor de los botones de fin de partida (Jugar de nuevo / Ir al menú). Solo se " +
+             "muestran y son interactuables en el HOST; los clientes ven el podio sin botones.")]
+    [SerializeField] private GameObject hostButtonsRoot;
+
+    // Evita que el callback de desconexión cargue la escena dos veces (host que apaga + su propio evento).
+    private bool _returningToLobby;
+    private bool _disconnectCallbackRegistered;
+
     [Header("Slots")]
     [SerializeField] private PodiumSlot firstPlaceSlot;
     [SerializeField] private PodiumSlot secondPlaceSlot;
@@ -29,7 +43,46 @@ public class PodiumController : MonoBehaviour
     private void Start()
     {
         HideInitialState();
+
+        // Los clientes (no host) escuchan la desconexión: si el host cierra el servidor al volver al
+        // lobby, ellos vuelven solos al lobby también, para poder jugar otra partida sin reiniciar.
+        RegisterClientDisconnectListener();
+
         StartCoroutine(RevealPodiumRoutine());
+    }
+
+    private void RegisterClientDisconnectListener()
+    {
+        NetworkManager nm = NetworkManager.Singleton;
+        if (nm == null) return;
+        if (nm.IsServer) return;               // el host no se auto-escucha; controla el cierre a mano
+        if (_disconnectCallbackRegistered) return;
+
+        nm.OnClientDisconnectCallback += OnLocalClientDisconnected;
+        _disconnectCallbackRegistered = true;
+    }
+
+    private void OnLocalClientDisconnected(ulong clientId)
+    {
+        NetworkManager nm = NetworkManager.Singleton;
+        if (nm == null) return;
+        if (clientId != nm.LocalClientId) return;   // solo reaccionamos a NUESTRA desconexión
+
+        UnregisterClientDisconnectListener();
+        ReturnToLobby();
+    }
+
+    private void UnregisterClientDisconnectListener()
+    {
+        if (!_disconnectCallbackRegistered) return;
+        if (NetworkManager.Singleton != null)
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnLocalClientDisconnected;
+        _disconnectCallbackRegistered = false;
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterClientDisconnectListener();
     }
 
     private void HideInitialState()
@@ -279,8 +332,24 @@ public class PodiumController : MonoBehaviour
 
     private void ShowButtons()
     {
+        // Los botones de fin de partida son SOLO para el host: él decide volver a jugar o ir al menú.
+        // Los clientes ven el podio sin botones y siguen al host (vuelven al lobby cuando él cierra).
+        bool isHost = NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer;
+
+        if (hostButtonsRoot != null)
+            hostButtonsRoot.SetActive(isHost);
+
         if (buttonsCanvasGroup == null)
             return;
+
+        if (!isHost)
+        {
+            // Cliente: nos aseguramos de que no haya botones interactuables.
+            buttonsCanvasGroup.alpha = 0f;
+            buttonsCanvasGroup.interactable = false;
+            buttonsCanvasGroup.blocksRaycasts = false;
+            return;
+        }
 
         buttonsCanvasGroup
             .DOFade(1f, 0.5f)
@@ -290,15 +359,70 @@ public class PodiumController : MonoBehaviour
         buttonsCanvasGroup.blocksRaycasts = true;
     }
 
+    /// <summary>Botón "Jugar de nuevo" (solo host): recarga la partida en red para todos.</summary>
     public void PlayAgain()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("GameplayScene");
+
+        NetworkManager nm = NetworkManager.Singleton;
+        if (nm != null && nm.IsServer)
+        {
+            // El servidor sigue vivo: usamos el SceneManager de red para llevar a TODOS a Gameplay.
+            nm.SceneManager.LoadScene(gameplaySceneName, LoadSceneMode.Single);
+        }
+        else
+        {
+            SceneManager.LoadScene(gameplaySceneName);
+        }
     }
 
+    /// <summary>
+    /// Botón "Ir al menú principal" (solo host): cierra el servidor y vuelve al lobby. Al hacer
+    /// Shutdown, los clientes reciben su OnClientDisconnect y vuelven al lobby por su cuenta, de modo
+    /// que se puede empezar otra partida sin reiniciar la aplicación.
+    /// </summary>
     public void MainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("LobbyScene");
+
+        if (_returningToLobby) return;
+        _returningToLobby = true;
+
+        StartCoroutine(ShutdownAndReturnToLobby());
+    }
+
+    /// <summary>
+    /// Cierra el servidor/host y espera a que NGO termine el apagado (Shutdown es asíncrono) ANTES de
+    /// recargar el lobby. Si cargáramos en el mismo frame, la LobbyScene podría inicializarse mientras
+    /// el NetworkManager aún está apagándose y volver a quedar en un estado inconsistente.
+    /// </summary>
+    private IEnumerator ShutdownAndReturnToLobby()
+    {
+        NetworkManager nm = NetworkManager.Singleton;
+
+        if (nm != null && (nm.IsListening || nm.IsHost || nm.IsServer || nm.IsClient))
+        {
+            // Cierra host/servidor/cliente. Libera el puerto y limpia el estado de red para que la
+            // LobbyScene recargada pueda volver a hostear sin chocar con la sesión anterior.
+            nm.Shutdown();
+
+            // Espera (con tope de seguridad) a que el apagado realmente termine.
+            float timeout = Time.realtimeSinceStartup + 5f;
+            while (nm != null && (nm.ShutdownInProgress || nm.IsListening) &&
+                   Time.realtimeSinceStartup < timeout)
+            {
+                yield return null;
+            }
+        }
+
+        ReturnToLobby();
+    }
+
+    private void ReturnToLobby()
+    {
+        if (!_returningToLobby) _returningToLobby = true;
+        Time.timeScale = 1f;
+        UnregisterClientDisconnectListener();
+        SceneManager.LoadScene(lobbySceneName);
     }
 }
