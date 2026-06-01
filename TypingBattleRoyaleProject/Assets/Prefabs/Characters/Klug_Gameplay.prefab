@@ -748,6 +748,11 @@ MonoBehaviour:
   avgWpm: 0
   avgAccuracy: 0
   fastestCastSeconds: 0
+  moveSpeedMultiplier:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
   playerAudio: {fileID: -581644330652298736}
 --- !u!114 &7090260673945462616
 MonoBehaviour:
@@ -768,6 +773,8 @@ MonoBehaviour:
   beamVfxPrefab: {fileID: 0}
   summonVfxPrefab: {fileID: 0}
   buffDebuffVfxPrefab: {fileID: 0}
+  summonMinionPrefab: {fileID: 1673572914526177258, guid: 1b2b83edcdfd54e46a8d509962b43ef4, type: 3}
+  summonForwardOffset: 2
   castOrigin: {fileID: 9153895359563626454}
   spawnForwardOffset: 1.5
 --- !u!114 &8853026105708302007

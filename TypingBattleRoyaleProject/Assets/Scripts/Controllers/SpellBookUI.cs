@@ -175,7 +175,7 @@ public class SpellBookUI : MonoBehaviour
             if (spellIndex < spellCount)
             {
                 Spell spell = spells[spellIndex];
-                texts[i].text = spell.runeString + " " + spell.tier.ToString();
+                texts[i].text = spell.spellName + " " + spell.tier.ToString();
             }
             else
             {

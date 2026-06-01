@@ -16,7 +16,7 @@ MonoBehaviour:
   runeString: celeritas
   elementType: 4
   tier: 0
-  archetype: 3
+  archetype: 5
   description: buff
   spellTypes: 
   damage: 0
@@ -24,11 +24,15 @@ MonoBehaviour:
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 5
+  forwardImpulse: 0
   upImpulse: 7
+  statusMagnitude: 0
+  statusDuration: 0
   range: 10
   speed: 2.5
   uses: 0
-  duration: 0
+  duration: 1
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}

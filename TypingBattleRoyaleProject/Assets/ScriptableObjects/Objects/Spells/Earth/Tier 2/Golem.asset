@@ -12,21 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Golem
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Golem
+  spellName: Intercambio de vida
   runeString: albanil de barro recio
   elementType: 3
   tier: 1
-  archetype: 2
+  archetype: 5
   description: Genera un golem de tierra que se mueve lento y ataca a tus oponentes
   spellTypes: 02000000
-  damage: 10
+  damage: 15
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
   spawnsChasingMinion: 1
+  healAmount: 15
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 0
   speed: 0
   uses: 0
-  duration: 10
+  duration: 1
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
@@ -47,4 +53,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0
