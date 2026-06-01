@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Lanzallamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Lanzallamas
-  runeString: barbacoa instantanea del comal vecinal
+  runeString: barbacoa instantanea en carnita asada improvisada
   elementType: 1
   tier: 1
   archetype: 8
   description: 
   spellTypes: 
   damage: 30
-  cooldown: 10
+  cooldown: 3.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 4
   speed: 1
   uses: 0

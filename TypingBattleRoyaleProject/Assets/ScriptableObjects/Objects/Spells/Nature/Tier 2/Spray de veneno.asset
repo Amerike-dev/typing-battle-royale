@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Spray de veneno
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Spray de veneno
-  runeString: pesticida espesa de la madrina mala
+  runeString: aliento mananero de la relacion toxica
   elementType: 5
   tier: 1
   archetype: 0
   description: Envenena en un cono enfrente de ti
   spellTypes: 0600000004000000
   damage: 45
-  cooldown: 0
+  cooldown: 5.4
   debuff: 4
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 30
   speed: 0
   uses: 0

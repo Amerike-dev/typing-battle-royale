@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Carambano
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Carambano
-  runeString: paleta helada
+  runeString: pico helada descendente
   elementType: 9
   tier: 0
   archetype: 0
@@ -21,7 +21,7 @@ MonoBehaviour:
     da\xF1o y aplicando realintizaci\xF3n."
   spellTypes: 04000000
   damage: 10
-  cooldown: 0
+  cooldown: 1.2
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0

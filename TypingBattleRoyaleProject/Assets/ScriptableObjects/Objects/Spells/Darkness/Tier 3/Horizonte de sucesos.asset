@@ -22,7 +22,7 @@ MonoBehaviour:
     sus vidas.
   spellTypes: 00000000
   damage: 95
-  cooldown: 0
+  cooldown: 11.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

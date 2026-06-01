@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Golpe de madera
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Golpe de madera
-  runeString: tabazo ancestral del mezquite milenario sediento
+  runeString: tablazo ancestral del mezquite milenario naturalsediento
   elementType: 5
   tier: 2
   archetype: 8
@@ -21,10 +21,15 @@ MonoBehaviour:
     da\xF1o alto a un enemigo"
   spellTypes: 0200000006000000
   damage: 70
-  cooldown: 0
+  cooldown: 8.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 100
   speed: 50
   uses: 0

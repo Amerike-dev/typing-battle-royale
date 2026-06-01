@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Torrente de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Torrente de viento
-  runeString: kame hame haaa
+  runeString: kame hame haaa ventoso poderoso
   elementType: 4
   tier: 1
   archetype: 8
   description: Te permite volar por 15 segundos.
   spellTypes: 0300000001000000
   damage: 50
-  cooldown: 0
+  cooldown: 6
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0

@@ -21,7 +21,7 @@ MonoBehaviour:
     una instancia de da\xF1o a todos los enemigos y realentizarlos"
   spellTypes: 0600000004000000
   damage: 100
-  cooldown: 0
+  cooldown: 12
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0

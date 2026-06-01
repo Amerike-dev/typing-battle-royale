@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Para rayos
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Para rayos
-  runeString: tridente de zeus en su version mexicana
+  runeString: manos de zeus en su version mexicana
   elementType: 6
   tier: 2
   archetype: 8
@@ -21,7 +21,7 @@ MonoBehaviour:
     cae un rayo gigantesco que hace da\xF1o alto"
   spellTypes: 0000000006000000
   damage: 85
-  cooldown: 0
+  cooldown: 10.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

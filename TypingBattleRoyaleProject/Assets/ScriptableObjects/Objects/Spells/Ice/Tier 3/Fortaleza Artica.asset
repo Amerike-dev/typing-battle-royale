@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fortaleza Artica
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Fortaleza Artica
-  runeString: iglu blindado del polo perdido jefazo
+  runeString: iglu blindado de polos gemelos opuestos
   elementType: 9
   tier: 2
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     aumentada y los enemigos dentro toman da\xF1o peri\xF3dico"
   spellTypes: 0200000001000000
   damage: 5
-  cooldown: 0
+  cooldown: 10.8
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

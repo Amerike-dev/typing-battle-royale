@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -47,6 +48,33 @@ public class SpellBookUI : MonoBehaviour
     [SerializeField] private float instructionsIconTextGap = 12f;
     private InstructionIcons _iconSet;
     private GameObject _instructionsRoot;
+
+    [Header("Selección (animación de escala)")]
+    [Tooltip("Escala del slot seleccionado. Los no seleccionados quedan en 1.")]
+    [SerializeField] private float _selectedScale = 1.12f;
+    [Tooltip("Duración de la animación de escala al cambiar de selección.")]
+    [SerializeField] private float _scaleAnimTime = 0.18f;
+    private int _animatedIndex = -1;
+    private int _animatedPage = -1;
+
+    [Header("Mensaje de tier bloqueada")]
+    [Tooltip("Texto donde se muestra el aviso. Si se deja vacío, se crea uno automáticamente bajo el panel.")]
+    [SerializeField] private TMP_Text _lockedMessageText;
+    [SerializeField] private string _lockedMessage = "Tier bloqueada, lanza mas hechizos de una tier menor para desbloquear";
+    [SerializeField] private Color _lockedMessageColor = new Color(1f, 0.45f, 0.45f);
+    [Tooltip("Segundos que el aviso permanece visible antes de desvanecerse.")]
+    [SerializeField] private float _lockedMessageHold = 1.6f;
+    private CanvasGroup _lockedMsgGroup;
+    private Coroutine _lockedMsgRoutine;
+
+    [Header("Cooldown (texto a la izquierda de cada botón)")]
+    [Tooltip("Devuelve los segundos de cooldown restantes de un hechizo (0 = listo). Lo asigna BattleState.")]
+    public Func<Spell, float> CooldownRemaining;
+    [SerializeField] private float _cooldownFontSize = 22f;
+    [SerializeField] private Color _cooldownColor = Color.white;
+    [Tooltip("Separación del texto respecto al borde izquierdo del botón (px).")]
+    [SerializeField] private float _cooldownLeftGap = 8f;
+    private TMP_Text[] _cooldownLabels;
 
     void Awake()
     {
@@ -138,11 +166,14 @@ public class SpellBookUI : MonoBehaviour
 
         EnsureInstructions();
         if (_instructionsRoot != null) _instructionsRoot.SetActive(true);
+        EnsureCooldownLabels();
 
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
         currentPage = 0;
         selectedIndex = 0;
+        ResetSelectionScale();
+        HideLockedMessage();
         Refresh(spells ?? new List<Spell>(), 0);
     }
 
@@ -151,6 +182,7 @@ public class SpellBookUI : MonoBehaviour
         if (!gameObject.activeInHierarchy) return;
 
         if (_instructionsRoot != null) _instructionsRoot.SetActive(false);
+        HideLockedMessage();
 
         UIMove(_hidePos);
         UIAnimator.FadeOut(_canvasGroup, _time);
@@ -207,6 +239,7 @@ public class SpellBookUI : MonoBehaviour
         }
 
         UpdateSelectionVisual();
+        UpdateCooldownLabels();
     }
 
     private void HandlePageNavigation()
@@ -270,7 +303,15 @@ public class SpellBookUI : MonoBehaviour
         Spell chosen = currentSpells[spellIndex];
         if (chosen == null) return;
 
-        if ((int)chosen.tier > (int)playerTier) return;
+        if ((int)chosen.tier > (int)playerTier)
+        {
+            ShowLockedMessage();
+            return;
+        }
+
+        // En cooldown: bloqueado. El contador a la izquierda del botón indica cuánto falta.
+        if (CooldownRemaining != null && CooldownRemaining(chosen) > 0f)
+            return;
 
         OnSpellConfirmed?.Invoke(chosen);
     }
@@ -297,6 +338,12 @@ public class SpellBookUI : MonoBehaviour
                 continue;
             }
 
+            if (CooldownRemaining != null && CooldownRemaining(spell) > 0f)
+            {
+                images[i].color = new Color(0.32f, 0.32f, 0.32f, 1f); // recargando (cooldown)
+                continue;
+            }
+
             // Fondo del panel = color del elemento del hechizo. El seleccionado va a color pleno;
             // los no seleccionados, atenuados, para que el resaltado siga siendo claro.
             Color e = TypingOverlay.ElementColor(spell.elementType);
@@ -304,6 +351,202 @@ public class SpellBookUI : MonoBehaviour
                 ? e
                 : new Color(e.r * 0.5f, e.g * 0.5f, e.b * 0.5f, 1f);
         }
+
+        // Solo animamos cuando realmente cambió la selección o la página (no cada frame).
+        if (selectedIndex != _animatedIndex || currentPage != _animatedPage)
+        {
+            _animatedIndex = selectedIndex;
+            _animatedPage = currentPage;
+            RefreshSelectionScale();
+        }
+    }
+
+    /// <summary>
+    /// Anima la escala de los slots: el seleccionado crece (con un pequeño rebote) y el resto
+    /// vuelve a 1. Esto deja claro de un vistazo en qué hechizo estás parado.
+    /// </summary>
+    private void RefreshSelectionScale()
+    {
+        if (slots == null) return;
+
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] == null) continue;
+
+            int spellIndex = currentPage * spellsPerPage + i;
+            bool selectable = spellIndex < spellCount;
+            float target = (selectable && i == selectedIndex) ? _selectedScale : 1f;
+
+            Transform t = slots[i].transform;
+            t.DOKill();
+            t.DOScale(target, _scaleAnimTime)
+             .SetEase(target > 1f ? Ease.OutBack : Ease.OutQuad)
+             .SetUpdate(true);
+        }
+    }
+
+    /// <summary>Deja todos los slots en escala 1 al instante (al abrir el libro).</summary>
+    private void ResetSelectionScale()
+    {
+        _animatedIndex = -1;
+        _animatedPage = -1;
+        if (slots == null) return;
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] == null) continue;
+            slots[i].transform.DOKill();
+            slots[i].transform.localScale = Vector3.one;
+        }
+    }
+
+    // ---------------- Cooldown por hechizo (contador a la izquierda) ----------------
+
+    /// <summary>Crea (una sola vez) un texto de cooldown como hijo de cada slot, pegado a su izquierda.</summary>
+    private void EnsureCooldownLabels()
+    {
+        if (slots == null) return;
+        if (_cooldownLabels == null || _cooldownLabels.Length != slots.Length)
+            _cooldownLabels = new TMP_Text[slots.Length];
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] == null || _cooldownLabels[i] != null) continue;
+
+            GameObject go = new GameObject("CooldownLabel", typeof(RectTransform));
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.SetParent(slots[i].transform, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f); // borde izquierdo del botón
+            rt.pivot = new Vector2(1f, 0.5f);                    // el texto queda a la izquierda del botón
+            rt.sizeDelta = new Vector2(90f, 44f);
+            rt.anchoredPosition = new Vector2(-_cooldownLeftGap, 0f);
+
+            var tmp = go.AddComponent<TextMeshProUGUI>();
+            if (Gonserrat != null) tmp.font = Gonserrat;
+            tmp.fontStyle = FontStyles.Normal; // regular
+            tmp.fontSize = _cooldownFontSize;
+            tmp.color = _cooldownColor;
+            tmp.alignment = TextAlignmentOptions.MidlineRight;
+            tmp.raycastTarget = false;
+            tmp.text = "";
+            _cooldownLabels[i] = tmp;
+        }
+    }
+
+    /// <summary>Actualiza cada frame el contador: segundos restantes mientras recarga; vacío si está listo.</summary>
+    private void UpdateCooldownLabels()
+    {
+        if (_cooldownLabels == null) return;
+
+        int spellCount = currentSpells != null ? currentSpells.Count : 0;
+
+        for (int i = 0; i < _cooldownLabels.Length; i++)
+        {
+            if (_cooldownLabels[i] == null) continue;
+
+            int spellIndex = currentPage * spellsPerPage + i;
+            float remaining = 0f;
+            if (CooldownRemaining != null && spellIndex < spellCount && currentSpells[spellIndex] != null)
+                remaining = CooldownRemaining(currentSpells[spellIndex]);
+
+            _cooldownLabels[i].text = remaining > 0.05f ? $"{Mathf.CeilToInt(remaining)}s" : "";
+        }
+    }
+
+    // ---------------- Aviso de tier bloqueada ----------------
+
+    /// <summary>Crea (una sola vez) el texto del aviso si no se asignó uno en el Inspector.</summary>
+    private void EnsureLockedMessage()
+    {
+        if (_lockedMessageText != null)
+        {
+            if (_lockedMsgGroup == null)
+                _lockedMsgGroup = _lockedMessageText.GetComponent<CanvasGroup>()
+                    ?? _lockedMessageText.gameObject.AddComponent<CanvasGroup>();
+            return;
+        }
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Transform parent = canvas != null ? canvas.transform : transform;
+
+        GameObject go = new GameObject("SpellBookLockedMessage", typeof(RectTransform));
+        RectTransform rt = go.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(0f, -190f); // debajo del centro del panel
+        rt.sizeDelta = new Vector2(900f, 70f);
+
+        var tmp = go.AddComponent<TextMeshProUGUI>();
+        if (Gonserrat != null) tmp.font = Gonserrat;
+        tmp.fontSize = 26f;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.textWrappingMode = TextWrappingModes.Normal;
+        tmp.raycastTarget = false;
+        tmp.color = _lockedMessageColor;
+        _lockedMessageText = tmp;
+
+        _lockedMsgGroup = go.AddComponent<CanvasGroup>();
+        _lockedMsgGroup.alpha = 0f;
+    }
+
+    /// <summary>Muestra el aviso de tier bloqueada con fade-in + sacudida, mantiene y desvanece.</summary>
+    private void ShowLockedMessage()
+    {
+        EnsureLockedMessage();
+        if (_lockedMessageText == null) return;
+
+        _lockedMessageText.text = _lockedMessage;
+        _lockedMessageText.color = _lockedMessageColor;
+        _lockedMessageText.gameObject.SetActive(true);
+
+        if (_lockedMsgRoutine != null) StopCoroutine(_lockedMsgRoutine);
+        _lockedMsgRoutine = StartCoroutine(LockedMessageRoutine());
+    }
+
+    private void HideLockedMessage()
+    {
+        if (_lockedMsgRoutine != null)
+        {
+            StopCoroutine(_lockedMsgRoutine);
+            _lockedMsgRoutine = null;
+        }
+        if (_lockedMsgGroup != null) _lockedMsgGroup.alpha = 0f;
+        if (_lockedMessageText != null) _lockedMessageText.rectTransform.localRotation = Quaternion.identity;
+    }
+
+    private IEnumerator LockedMessageRoutine()
+    {
+        CanvasGroup cg = _lockedMsgGroup;
+        RectTransform rt = _lockedMessageText.rectTransform;
+
+        // Entrada: fade-in con una sacudida que se amortigua (como el feedback de fallo del monolito).
+        float intro = 0.25f, t = 0f;
+        while (t < intro)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(t / intro);
+            cg.alpha = k;
+            float angle = Mathf.Sin(k * Mathf.PI * 6f) * 6f * (1f - k);
+            rt.localRotation = Quaternion.Euler(0f, 0f, angle);
+            yield return null;
+        }
+        cg.alpha = 1f;
+        rt.localRotation = Quaternion.identity;
+
+        yield return new WaitForSecondsRealtime(_lockedMessageHold);
+
+        // Salida: fade-out.
+        float outro = 0.35f;
+        t = 0f;
+        while (t < outro)
+        {
+            t += Time.unscaledDeltaTime;
+            cg.alpha = 1f - Mathf.Clamp01(t / outro);
+            yield return null;
+        }
+        cg.alpha = 0f;
+        _lockedMsgRoutine = null;
     }
 
     public void UIMove(Vector2 target)

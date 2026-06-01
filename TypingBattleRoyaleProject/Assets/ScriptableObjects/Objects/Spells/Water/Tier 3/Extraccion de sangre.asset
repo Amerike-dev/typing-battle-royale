@@ -20,7 +20,7 @@ MonoBehaviour:
   description: "Si el objetivo tiene m\xE1s de una vida restante, robale una"
   spellTypes: 0300000004000000
   damage: 75
-  cooldown: 0
+  cooldown: 9
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

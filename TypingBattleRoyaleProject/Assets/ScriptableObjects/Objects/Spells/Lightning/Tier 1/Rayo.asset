@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Rayo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Rayo
-  runeString: chispazo de enchufe
+  runeString: chispaz y centellas
   elementType: 6
   tier: 0
   archetype: 8
   description: "Haz da\xF1o bajo e infalible instantanemente a un enemigo."
   spellTypes: 04000000
-  damage: 20
-  cooldown: 0
+  damage: 10
+  cooldown: 1.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 20
   speed: 0
   uses: 0

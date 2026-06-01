@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Piel de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Torrente de lava
-  runeString: chorro de comal
+  runeString: comal desparramado
   elementType: 10
   tier: 0
   archetype: 8
@@ -21,7 +21,7 @@ MonoBehaviour:
     los enemigos en un rango cercano"
   spellTypes: 0300000005000000
   damage: 12
-  cooldown: 0
+  cooldown: 1.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

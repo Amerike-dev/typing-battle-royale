@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class PlayerInventory
 {
@@ -11,6 +12,28 @@ public class PlayerInventory
 
     // Casteos exitosos acumulados por tier (progresión de desbloqueo).
     private readonly Dictionary<SpellTiers, int> _castsByTier = new Dictionary<SpellTiers, int>();
+
+    // Cooldown por hechizo: momento (Time.time) en que cada hechizo vuelve a estar disponible.
+    private readonly Dictionary<Spell, float> _cooldownUntil = new Dictionary<Spell, float>();
+
+    /// <summary>Arranca el cooldown de un hechizo tras castearlo (usa Spell.cooldown en segundos).</summary>
+    public void StartCooldown(Spell spell)
+    {
+        if (spell == null) return;
+        _cooldownUntil[spell] = Time.time + Mathf.Max(0f, spell.cooldown);
+    }
+
+    /// <summary>Segundos que faltan para que el hechizo vuelva a estar disponible (0 = listo).</summary>
+    public float GetRemainingCooldown(Spell spell)
+    {
+        if (spell == null) return 0f;
+        if (_cooldownUntil.TryGetValue(spell, out float until))
+            return Mathf.Max(0f, until - Time.time);
+        return 0f;
+    }
+
+    /// <summary>True si el hechizo todavía está recargando.</summary>
+    public bool IsOnCooldown(Spell spell) => GetRemainingCooldown(spell) > 0f;
 
     public PlayerInventory(PlayerController owner)
     {

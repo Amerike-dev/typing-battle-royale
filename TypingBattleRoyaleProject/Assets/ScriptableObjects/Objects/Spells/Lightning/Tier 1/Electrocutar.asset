@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Electrocutar
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Electrocutar
-  runeString: toques del cable
+  runeString: cableaddo improvizado
   elementType: 6
   tier: 0
   archetype: 0
   description: "Hace da\xF1o alto a muy corta distancia"
   spellTypes: 06000000
   damage: 15
-  cooldown: 0
+  cooldown: 1.8
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 5
   speed: 0
   uses: 0

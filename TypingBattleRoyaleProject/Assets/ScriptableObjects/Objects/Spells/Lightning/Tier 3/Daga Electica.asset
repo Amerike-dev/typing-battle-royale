@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Daga Electica
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Terreno Electrico
-  runeString: campo del cortocircuito que sacude bocho
+  runeString: pedrito electrocutado en un campo estatico tormentoso
   elementType: 6
   tier: 2
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     media y si colisionas con un enemigo le haras da\xF1o alto"
   spellTypes: 0700000001000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

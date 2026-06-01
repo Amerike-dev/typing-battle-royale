@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Arco de Hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Curacion helada
-  runeString: flecha congelada del oxxo nocturno
+  runeString: flecha congelada por el corazon de tu ex
   elementType: 9
   tier: 1
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     alta velocidad que al impactar congela a un enemigo
   spellTypes: 0000000004000000
   damage: 0
-  cooldown: 0
+  cooldown: 4.8
   debuff: 2
   damageReductionPercent: 0
   spawnsChasingMinion: 0

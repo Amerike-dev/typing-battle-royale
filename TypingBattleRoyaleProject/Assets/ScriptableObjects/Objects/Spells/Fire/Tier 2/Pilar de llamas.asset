@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pilar de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Curaci\xF3n ignea"
-  runeString: columna eterna del comalero divino
+  runeString: Salitraje de la quemadera intencional ambigua
   elementType: 1
   tier: 1
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     da\xF1o alto"
   spellTypes: 
   damage: 0
-  cooldown: 0
+  cooldown: 6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
