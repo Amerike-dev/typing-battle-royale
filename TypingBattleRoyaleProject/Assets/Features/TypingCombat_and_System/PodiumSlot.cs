@@ -32,10 +32,10 @@ public class PodiumSlot : MonoBehaviour
             nameText.text = result.playerName;
 
         if (killsText != null)
-            killsText.text = $"Kills: {result.kills}";
+            killsText.text = $"Muertes: {result.kills}";
 
         if (damageText != null)
-            damageText.text = $"Damage: {result.damageDealt:0}";
+            damageText.text = $"Daño: {result.damageDealt:0}";
 
         if (wpmText != null)
             wpmText.text = $"WPM: {result.wpm:0.0}";
