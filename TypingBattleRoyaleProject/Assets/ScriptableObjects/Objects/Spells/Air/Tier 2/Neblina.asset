@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Neblina
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Neblina
-  runeString: nebula obruitur
+  runeString: nebula obruitur memelas borrusus
   elementType: 4
   tier: 1
   archetype: 5
@@ -21,8 +21,15 @@ MonoBehaviour:
     una neblina en un area, el caster puede ver a lon enemigos dento de ella"
   spellTypes: 0000000002000000
   damage: 35
-  cooldown: 0
+  cooldown: 4.2
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 20
   speed: 10
   uses: 0
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

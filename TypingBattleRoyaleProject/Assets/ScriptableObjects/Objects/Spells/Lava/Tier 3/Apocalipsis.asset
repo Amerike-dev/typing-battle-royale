@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Apocalipsis
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Apocalipsis
-  runeString: fin del mundo cuajado en chinampas calientes
+  runeString: fin del mundo en chinampas calientes de merida bomba
   elementType: 10
   tier: 2
   archetype: 6
@@ -21,10 +21,15 @@ MonoBehaviour:
     invocan "suelo de lava" donde impactan"
   spellTypes: 0000000002000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 0
   speed: 0
   uses: 0

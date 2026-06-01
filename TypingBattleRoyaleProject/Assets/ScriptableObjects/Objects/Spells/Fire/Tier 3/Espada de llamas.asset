@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Espada de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Robo de vida
-  runeString: rateada encendida de pancho villa enojado
+  runeString: cinturon en llamas del buen pancho villa enojado
   elementType: 1
   tier: 2
   archetype: 8
@@ -22,7 +22,7 @@ MonoBehaviour:
     y hace da\xF1o bajo"
   spellTypes: 
   damage: 70
-  cooldown: 0
+  cooldown: 8.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

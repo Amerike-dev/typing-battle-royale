@@ -21,7 +21,7 @@ MonoBehaviour:
     da\xF1o bajo y realentizar."
   spellTypes: 
   damage: 12
-  cooldown: 0
+  cooldown: 1.4
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0

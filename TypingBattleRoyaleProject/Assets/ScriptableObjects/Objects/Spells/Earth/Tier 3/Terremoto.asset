@@ -20,7 +20,7 @@ MonoBehaviour:
   description: 
   spellTypes: 
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Latigo de hiervas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Latigazo de hiervas
-  runeString: fuetazo yerbabuena
+  runeString: nuevo fuetazo yerbabuena
   elementType: 5
   tier: 0
   archetype: 0
   description: "Equipa un latigo de 3 usos que hace bajo da\xF1o en un rango peque\xF1o."
   spellTypes: 0700000006000000
   damage: 10
-  cooldown: 0
+  cooldown: 1.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

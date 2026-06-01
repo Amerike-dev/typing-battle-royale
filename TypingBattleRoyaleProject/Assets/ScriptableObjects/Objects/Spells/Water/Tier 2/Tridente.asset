@@ -21,7 +21,7 @@ MonoBehaviour:
     impactar hace da\xF1o alto y atrae al enemigo hacia ti"
   spellTypes: 0000000007000000
   damage: 60
-  cooldown: 0
+  cooldown: 7.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

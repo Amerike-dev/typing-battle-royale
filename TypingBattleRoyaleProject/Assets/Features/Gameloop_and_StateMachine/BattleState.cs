@@ -70,7 +70,11 @@ public class BattleState : IGameState
             // Reflejamos la progresión: el tier desbloqueado depende de cuántos hechizos del tier
             // anterior haya casteado el jugador (3 T1 -> T2, 3 T2 -> T3).
             if (_playerController.inventory != null)
+            {
                 _spellBookUI.playerTier = _playerController.inventory.UnlockedTier;
+                // El SpellBook consulta el cooldown restante por hechizo para bloquear y mostrar el contador.
+                _spellBookUI.CooldownRemaining = _playerController.inventory.GetRemainingCooldown;
+            }
 
             _spellBookUI.OnSpellConfirmed -= HandleSpellConfirmed;
             _spellBookUI.OnSelectionCancelled -= HandleSelectionCancelled;
@@ -186,6 +190,8 @@ public class BattleState : IGameState
         if (castSpell == null) return;
         if (_playerController == null || _playerController.inventory == null) return;
         _playerController.inventory.RegisterSpellCast(castSpell.tier);
+        // Arranca el cooldown de este hechizo: el SpellBook lo bloqueará hasta que recargue.
+        _playerController.inventory.StartCooldown(castSpell);
     }
 
     private void HandleSelectionCancelled()

@@ -21,7 +21,7 @@ MonoBehaviour:
     y lo lanza al aire"
   spellTypes: 020000000600000001000000
   damage: 35
-  cooldown: 0
+  cooldown: 4.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

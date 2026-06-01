@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Escalera de hielo
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Ventisca
-  runeString: raspado que sube
+  runeString: resfriado comunal sin escape
   elementType: 9
   tier: 0
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     movimiento sobre la estructura"
   spellTypes: 0200000001000000
   damage: 12
-  cooldown: 0
+  cooldown: 1.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

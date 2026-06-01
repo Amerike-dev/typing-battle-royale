@@ -21,7 +21,7 @@ MonoBehaviour:
     enemigos no se salgan de su rango o se escondan detr\xE1s de un obstaculo"
   spellTypes: 0000000005000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

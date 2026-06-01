@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Huracan
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Huracan
-  runeString: danza furiosa de la mama bien enojada
+  runeString: danza furiosa de nahual rapero en concierto internacional
   elementType: 4
   tier: 2
   archetype: 6
@@ -21,7 +21,7 @@ MonoBehaviour:
     en el centro"
   spellTypes: 0600000002000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

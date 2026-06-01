@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sabueso de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Curaci\xF3n de Lava"
-  runeString: hospital chamuscado del doctor infernal poderoso
+  runeString: quema mastion cura racera me curo me curo
   elementType: 10
   tier: 2
   archetype: 5
@@ -21,7 +21,7 @@ MonoBehaviour:
     colisionar con el hace da\xF1o en invoca \"suelo de lava\" en el punto de impacto"
   spellTypes: 02000000
   damage: 5
-  cooldown: 0
+  cooldown: 12
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

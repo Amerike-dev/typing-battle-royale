@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fenix
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Fenix
-  runeString: ave inmortal renacida en tequila bravo de jalisco
+  runeString: ave inmortal renacida en tequila bravo de jalisco ajuaa
   elementType: 1
   tier: 2
   archetype: 0
@@ -21,10 +21,15 @@ MonoBehaviour:
     todos los enemigos en el area"
   spellTypes: 0000000006000000
   damage: 95
-  cooldown: 0
+  cooldown: 11.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 50
   speed: 10
   uses: 0

@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Cupula de Tierra
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Pinchos de tierra
-  runeString: domo del aguacatero gigante
+  runeString: multiples huesos minerales filosos
   elementType: 3
   tier: 1
   archetype: 6
   description: 
   spellTypes: 
   damage: 35
-  cooldown: 0
+  cooldown: 4.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

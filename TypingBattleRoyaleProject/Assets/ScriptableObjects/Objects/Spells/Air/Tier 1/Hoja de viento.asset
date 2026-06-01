@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Hoja de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Hoja de viento
-  runeString: ventus
+  runeString: ventus huracanadus
   elementType: 4
   tier: 0
   archetype: 5
   description: Arroja una bola de viento
   spellTypes: 00000000
   damage: 10
-  cooldown: 0
+  cooldown: 1.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 1
   speed: 50
   uses: 0

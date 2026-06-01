@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Velocidad Extrema
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: "Curaci\xF3n violenta"
-  runeString: salida bala del semaforo en rojo
+  runeString: electroshock curativo quimeroso amarillo
   elementType: 6
   tier: 1
   archetype: 5
   description: Aumenta tu velocidad de movimiento considerablemente
   spellTypes: 0100000003000000
   damage: 20
-  cooldown: 0
+  cooldown: 2.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

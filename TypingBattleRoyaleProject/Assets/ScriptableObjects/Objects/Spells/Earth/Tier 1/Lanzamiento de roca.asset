@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Lanzamiento de roca
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Lanzamiento de rocas
-  runeString: tira piedra
+  runeString: pum tira piedra
   elementType: 3
   tier: 0
   archetype: 0
@@ -21,10 +21,15 @@ MonoBehaviour:
     de ti."
   spellTypes: 06000000
   damage: 15
-  cooldown: 0
+  cooldown: 1.8
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 7
   speed: 25
   uses: 0

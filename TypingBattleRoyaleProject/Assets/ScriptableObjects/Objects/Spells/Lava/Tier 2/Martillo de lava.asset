@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Martillo de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Martillazo de lava
-  runeString: marro derretido del herrero compa
+  runeString: marro derretido del compa herrero herrera hernandez
   elementType: 10
   tier: 1
   archetype: 0
@@ -21,7 +21,7 @@ MonoBehaviour:
     a corta distancia "
   spellTypes: 0700000006000000
   damage: 25
-  cooldown: 0
+  cooldown: 3
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0

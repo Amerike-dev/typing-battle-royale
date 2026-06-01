@@ -20,7 +20,7 @@ MonoBehaviour:
   description: "Invoca 10 veces \"ola\" con da\xF1o aumentado"
   spellTypes: 0000000004000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0
