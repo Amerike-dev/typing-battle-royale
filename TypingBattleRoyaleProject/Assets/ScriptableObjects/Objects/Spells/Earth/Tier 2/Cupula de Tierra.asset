@@ -12,30 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Cupula de Tierra
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Cupula de Tierra
-  runeString: domo del aguacatero gigante
+  spellName: Pinchos de tierra
+  runeString: multiples huesos minerales filosos
   elementType: 3
   tier: 1
-  archetype: 2
+  archetype: 6
   description: 
   spellTypes: 
-  damage: 0
-  cooldown: 0
+  damage: 35
+  cooldown: 4.2
   debuff: 0
+  damageReductionPercent: 0
   spawnsChasingMinion: 0
-  range: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
+  range: 2
   speed: 0
   uses: 0
-  duration: 15
+  duration: 1
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 1
   loop: 1
   startSpeed: 1
   startSize: 0.5
   emissionRate: 50
-  shapeRadius: 2
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: 7a18aa9917ca6b34fbb9704383c4a33f, type: 2}
   spellSound: {fileID: 8300000, guid: 244b329fb085ec841999426720810188, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +53,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

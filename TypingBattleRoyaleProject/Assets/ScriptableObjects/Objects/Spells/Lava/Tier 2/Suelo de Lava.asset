@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Suelo de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Suelo de Lava
-  runeString: piso del infierno casero feroz
+  runeString: el piso es lava infernal caliente feroz
   elementType: 10
   tier: 1
   archetype: 6
@@ -22,14 +22,19 @@ MonoBehaviour:
     al caster"
   spellTypes: 
   damage: 35
-  cooldown: 0
+  cooldown: 4.2
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 5
   speed: 0
   uses: 0
-  duration: 10
+  duration: 7
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}

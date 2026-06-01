@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "Quemadura \xE1rtica"
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Quemadura Artica
-  runeString: frio quemante de la ex despechada
+  runeString: frio arrazador bajo cero pruebas y cero dudas
   elementType: 9
   tier: 1
   archetype: 8
@@ -21,10 +21,15 @@ MonoBehaviour:
     alto"
   spellTypes: 06000000
   damage: 40
-  cooldown: 0
+  cooldown: 4.8
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 5
   speed: 0
   uses: 0

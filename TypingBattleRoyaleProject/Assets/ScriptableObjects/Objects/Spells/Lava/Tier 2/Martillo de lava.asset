@@ -12,23 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Martillo de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Martillo de lava
-  runeString: marro derretido del herrero compa
+  spellName: Martillazo de lava
+  runeString: marro derretido del compa herrero herrera hernandez
   elementType: 10
   tier: 1
-  archetype: 7
+  archetype: 0
   description: "Equipa un Martillo de 2 usos, hace da\xF1o medio en un area grande
     a corta distancia "
   spellTypes: 0700000006000000
   damage: 25
-  cooldown: 0
+  cooldown: 3
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 4
   speed: 0
   uses: 0
-  duration: 0
+  duration: 1
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}

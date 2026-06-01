@@ -12,17 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Daga Electica
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Daga electrica
-  runeString: punal del cortocircuito que sacude bocho
+  spellName: Terreno Electrico
+  runeString: pedrito electrocutado en un campo estatico tormentoso
   elementType: 6
   tier: 2
-  archetype: 7
+  archetype: 5
   description: "Equipa una daga de 3 usos que al usarla haras un dash de distancia
     media y si colisionas con un enemigo le haras da\xF1o alto"
   spellTypes: 0700000001000000
   damage: 80
-  cooldown: 0
+  cooldown: 9.6
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 40
   speed: 50
   uses: 3
@@ -34,8 +41,8 @@ MonoBehaviour:
   loop: 1
   startSpeed: 1
   startSize: 0.5
-  emissionRate: 50
-  shapeRadius: 2
+  emissionRate: 200
+  shapeRadius: 10
   materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}
   spellSound: {fileID: 8300000, guid: 120e68e07e21e3a4baa2160ff47c48cc, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

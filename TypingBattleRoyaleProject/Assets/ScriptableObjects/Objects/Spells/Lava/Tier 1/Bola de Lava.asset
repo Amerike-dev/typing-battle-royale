@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: Bola de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Bola de Lava
-  runeString: albondiga ardiente
+  runeString: albondiga caliente
   elementType: 10
   tier: 0
   archetype: 0
   description: "Arroja una bola de lava lenta que hace da\xF1o medio"
   spellTypes: 00000000
   damage: 20
-  cooldown: 0
+  cooldown: 2.4
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 20
   speed: 10
   uses: 0

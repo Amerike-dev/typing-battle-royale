@@ -10,31 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
-  m_Name: Vuelo
+  m_Name: Torrente de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Vuelo
-  runeString: alas de iguana voladora
+  spellName: Torrente de viento
+  runeString: kame hame haaa ventoso poderoso
   elementType: 4
   tier: 1
-  archetype: 4
+  archetype: 8
   description: Te permite volar por 15 segundos.
   spellTypes: 0300000001000000
-  damage: 0
-  cooldown: 0
+  damage: 50
+  cooldown: 6
   debuff: 1
-  range: 0
-  speed: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
+  range: 20
+  speed: 1
   uses: 0
-  duration: 15
+  duration: 3
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 0.1
   loop: 1
   startSpeed: 1
-  startSize: 0.5
+  startSize: 0.2
   emissionRate: 50
-  shapeRadius: 2
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: 9ef819ae241c259408f00fd6e0faad08, type: 2}
   spellSound: {fileID: 8300000, guid: 106c07044a0cef546b66450eaf5f153b, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -46,4 +53,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

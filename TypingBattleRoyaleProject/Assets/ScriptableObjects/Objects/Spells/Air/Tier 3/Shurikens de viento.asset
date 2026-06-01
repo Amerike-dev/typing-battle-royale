@@ -13,24 +13,31 @@ MonoBehaviour:
   m_Name: Shurikens de viento
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Shurikens de viento
-  runeString: estrellas filosas de la chamba ninja maldita
+  runeString: estrellas filosas de la aldea ninja oculta del Daeren
   elementType: 4
   tier: 2
-  archetype: 7
+  archetype: 0
   description: "Equipa 5 shurikens de viento que hacen 50 de da\xF1o cada una, en
     un impacto directo en invocan \"neblina\" en el punto de impacto"
-  spellTypes: 070000000000000002000000
-  damage: 50
-  cooldown: 0
+  spellTypes: 
+  damage: 75
+  cooldown: 9
   debuff: 0
-  range: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
+  range: 16.94
   speed: 25
-  uses: 5
-  duration: 0
+  uses: 0
+  duration: 2.65
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 4.35
   loop: 1
   startSpeed: 1
   startSize: 0.5
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

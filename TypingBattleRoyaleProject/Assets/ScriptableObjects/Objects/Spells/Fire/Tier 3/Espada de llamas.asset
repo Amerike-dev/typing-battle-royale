@@ -12,22 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Espada de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Espada de llamas
-  runeString: machete encendido de pancho villa enojado
+  spellName: Robo de vida
+  runeString: cinturon en llamas del buen pancho villa enojado
   elementType: 1
   tier: 2
-  archetype: 7
+  archetype: 8
   description: "Equipa una espada de fuego de 5 usos que al usarla hace un ataque
     de poco rango que hace da\xF1o medio e invoca un proyectil que viaja hacia delante
     y hace da\xF1o bajo"
   spellTypes: 
-  damage: 50
-  cooldown: 0
+  damage: 70
+  cooldown: 8.4
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 50
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 5
   speed: 0
-  uses: 5
-  duration: 0
+  uses: 0
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
@@ -48,4 +55,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rayo en cadena
   m_EditorClassIdentifier: Assembly-CSharp::Spell
   spellName: Rayo en cadena
-  runeString: ondazo electrico colectivo del cableado
+  runeString: golpe electrico colectivo de la instalacion mal hecha
   elementType: 6
   tier: 1
   archetype: 6
@@ -21,10 +21,15 @@ MonoBehaviour:
     entre los enemigos m\xE1s cercanos"
   spellTypes: 04000000
   damage: 50
-  cooldown: 0
+  cooldown: 6
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 20
   speed: 0
   uses: 0

@@ -20,7 +20,7 @@ MonoBehaviour:
   description: Crea un anillo de fuego en un area alrededor de ti
   spellTypes: 0200000006000000
   damage: 8
-  cooldown: 0
+  cooldown: 1
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
