@@ -16,17 +16,24 @@ MonoBehaviour:
   runeString: iglu blindado del polo perdido jefazo
   elementType: 9
   tier: 2
-  archetype: 2
+  archetype: 5
   description: "Invoca Un castillo de hielo en el cual tienes velocidad de movimiento
     aumentada y los enemigos dentro toman da\xF1o peri\xF3dico"
   spellTypes: 0200000001000000
   damage: 5
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 90
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 0
   speed: 0
   uses: 0
-  duration: 60
+  duration: 5
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

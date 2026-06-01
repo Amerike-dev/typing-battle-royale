@@ -12,21 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Sabueso de Lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Sabueso de Lava
-  runeString: perro chamuscado del taquero infernal poderoso
+  spellName: "Curaci\xF3n de Lava"
+  runeString: hospital chamuscado del doctor infernal poderoso
   elementType: 10
   tier: 2
-  archetype: 2
+  archetype: 5
   description: "Invoca un sabueso que corre hacia el enemigo m\xE1s cercano y al
     colisionar con el hace da\xF1o en invoca \"suelo de lava\" en el punto de impacto"
   spellTypes: 02000000
-  damage: 50
+  damage: 5
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 100
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 0
   speed: 0
   uses: 0
-  duration: 5
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0
