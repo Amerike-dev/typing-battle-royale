@@ -112,12 +112,17 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleHPChanged(float oldValue, float newValue)
     {
-        if (newValue < oldValue) OnDamageTaken?.Invoke();
+        // Solo el dueño dispara el daño en su UI (para no flashear la pantalla de los demás)
+        if (IsOwner && newValue < oldValue) 
+        {
+            OnDamageTaken?.Invoke();
+        }
 
         // Solo el owner dispara el trigger; el OwnerNetworkAnimator lo replica a los demás.
-        // Si la vida llega a 0 dejamos que la animación de muerte tome el control.
         if (IsOwner && newValue < oldValue && newValue > 0f && _animatorView != null)
+        {
             _animatorView.TriggerTakeDamage();
+        }
     }
 
     private void HandleAliveChanged(bool oldValue, bool newValue)
@@ -142,27 +147,36 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        if (newValue < oldValue)
+        // 1. El Servidor actualiza los estados globales para que todos lo vean
+        if (IsServer && newValue <= 0)
         {
-            OnLifeLost?.Invoke();
-            OnLifeLostWithKiller?.Invoke(lastDamageFromClientId);
+            isAlive.Value = false;
+            isSpectating.Value = true;
         }
 
-        if (newValue <= 0)
+        // 2. SOLO el dueño dispara eventos para su propia UI y GameManager
+        if (IsOwner)
         {
-            if (IsServer)
+            if (newValue < oldValue)
             {
-                isAlive.Value = false;
-                isSpectating.Value = true;
+                OnLifeLost?.Invoke();
+                OnLifeLostWithKiller?.Invoke(lastDamageFromClientId);
             }
 
-            OnAllLifeLost?.Invoke();
+            if (newValue <= 0)
+            {
+                OnAllLifeLost?.Invoke();
+            }
         }
     }
 
     private void HandleKillCountChanged(int oldValue, int newValue)
     {
-        if (newValue > oldValue) OnEnemyKilled?.Invoke();
+        // Solo el dueño actualiza su UI de muertes
+        if (IsOwner && newValue > oldValue) 
+        {
+            OnEnemyKilled?.Invoke();
+        }
     }
 
     // --- Reducción de daño temporal (escudos tipo Cubierta rocosa). Server-authoritative. ---
