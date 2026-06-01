@@ -231,15 +231,18 @@ public class PlayerController : NetworkBehaviour
 
         HandleEmotes();
 
+        // DEBUG (DESCONECTADO): el atajo F1 cargaba todo el inventario de hechizos para afinar VFX.
+        // Se dejó aislado a propósito; la lógica sigue en PlayerInventory.UnlockAllForDebug() por si
+        // se necesita reactivar. Para volver a habilitarlo, descomentar este bloque.
+        /*
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        // DEBUG: F1 carga todo el inventario de hechizos (todos los elementos y tiers) para afinar VFX
-        // sin tener que ir a buscar cada elemento en los monolitos.
         if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame && inventory != null)
         {
             inventory.UnlockAllForDebug();
             Debug.Log($"[Debug] Inventario completo: {inventory.GetUnlockedSpells().Count} hechizos, tier {inventory.UnlockedTier}. Abre el SpellBook (Tab) para verlos.");
         }
 #endif
+        */
 
         if (onExplorationState) MoveCharacter();
 
