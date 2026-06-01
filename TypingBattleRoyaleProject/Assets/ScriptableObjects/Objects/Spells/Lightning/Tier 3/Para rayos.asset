@@ -16,28 +16,33 @@ MonoBehaviour:
   runeString: tridente de zeus en su version mexicana
   elementType: 6
   tier: 2
-  archetype: 6
+  archetype: 8
   description: "lanza un proyectil, despues de un tiempo, en el punto de impacto
     cae un rayo gigantesco que hace da\xF1o alto"
   spellTypes: 0000000006000000
-  damage: 90
+  damage: 85
   cooldown: 0
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
-  range: 30
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 14.34
+  range: 3
   speed: 50
   uses: 0
-  duration: 5
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 10
   loop: 1
-  startSpeed: 0.01
-  startSize: 0.05
-  emissionRate: 30
-  shapeRadius: 0.0001
+  startSpeed: 4.68
+  startSize: 0.69
+  emissionRate: 60
+  shapeRadius: 3.57
   materialVFX: {fileID: 2100000, guid: 99a34ece472486144b6042295a4cb1f7, type: 2}
   spellSound: {fileID: 8300000, guid: a9eca1cfd9b52594fb0e8573a710dc66, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}

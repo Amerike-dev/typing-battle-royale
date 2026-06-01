@@ -16,15 +16,20 @@ MonoBehaviour:
   runeString: manguerazo del jardinero peleonero
   elementType: 2
   tier: 1
-  archetype: 2
+  archetype: 5
   description: "Invoca un geiser en los pies de un enemigo haciendole da\xF1o medio
     y lo lanza al aire"
   spellTypes: 020000000600000001000000
-  damage: 50
+  damage: 35
   cooldown: 0
   debuff: 0
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 10
   speed: 0
   uses: 0

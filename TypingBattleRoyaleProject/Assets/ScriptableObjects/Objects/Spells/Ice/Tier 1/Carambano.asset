@@ -16,21 +16,28 @@ MonoBehaviour:
   runeString: paleta helada
   elementType: 9
   tier: 0
-  archetype: 2
+  archetype: 0
   description: "Invoca un pico de hielo en los pies del oponente seleccionado, haciendo
     da\xF1o y aplicando realintizaci\xF3n."
   spellTypes: 04000000
   damage: 10
   cooldown: 0
   debuff: 1
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 20
   speed: 10
   uses: 0
-  duration: 0
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
-  particleLifeDuration: 0
+  particleLifeDuration: 2
   loop: 1
   startSpeed: 1
   startSize: 0.5
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

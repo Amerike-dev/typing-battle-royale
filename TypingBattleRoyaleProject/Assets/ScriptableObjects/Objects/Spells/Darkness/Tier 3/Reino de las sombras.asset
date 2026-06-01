@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Reino de las sombras
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Reino de las sombras
+  spellName: Rayo de las sombras
   runeString: tinieblas del armario abandonado del abuelo
   elementType: 7
   tier: 2
@@ -25,6 +25,11 @@ MonoBehaviour:
   debuff: 1
   damageReductionPercent: 0
   spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 80
   speed: 20
   uses: 0

@@ -12,30 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Tridente
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Tridente
+  spellName: Torrente de agua
   runeString: trinche del rey neptuno cabron
   elementType: 2
   tier: 1
-  archetype: 7
+  archetype: 8
   description: "Equipa un tridente de 1 uso, lo puedes lanzar como proyectil, al
     impactar hace da\xF1o alto y atrae al enemigo hacia ti"
   spellTypes: 0000000007000000
-  damage: 80
+  damage: 60
   cooldown: 0
   debuff: 0
-  range: 0
-  speed: 25
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
+  range: 4
+  speed: 0
   uses: 0
-  duration: 0
+  duration: 3
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
   particleLifeDuration: 0
   loop: 1
   startSpeed: 1
-  startSize: 0.5
+  startSize: 1
   emissionRate: 50
-  shapeRadius: 2
+  shapeRadius: 1
   materialVFX: {fileID: 2100000, guid: 3ec9ef8efa3b4d94c9a676a98c6d5a51, type: 2}
   spellSound: {fileID: 8300000, guid: 8981bb2bec4ff654d9de7129a3db04d9, type: 3}
   emitterOffset: {x: 0, y: 0, z: 0}
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Pilar de llamas
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Pilar de llamas
+  spellName: Wisp
   runeString: columna eterna del comalero divino
   elementType: 1
   tier: 1
@@ -23,6 +23,13 @@ MonoBehaviour:
   damage: 100
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 0
   speed: 15
   uses: 0
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0

@@ -12,21 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dad9b6740e5f0c4fa9e4e5ad3e66cce, type: 3}
   m_Name: Piel de lava
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: Piel de lava
-  runeString: playera comal
+  spellName: Torrente de lava
+  runeString: chorro de comal
   elementType: 10
   tier: 0
-  archetype: 3
+  archetype: 8
   description: "Obten +20 de vida y mientras tengas esta vida extra haz da\xF1o a
     los enemigos en un rango cercano"
   spellTypes: 0300000005000000
-  damage: 5
+  damage: 12
   cooldown: 0
   debuff: 0
+  damageReductionPercent: 0
+  spawnsChasingMinion: 0
+  healAmount: 0
+  forwardImpulse: 0
+  upImpulse: 0
+  statusMagnitude: 0
+  statusDuration: 0
   range: 7
   speed: 0
   uses: 0
-  duration: 0
+  duration: 2
   vfxCast: {fileID: 0}
   vfxProjectile: {fileID: 0}
   vfxHit: {fileID: 0}
@@ -47,4 +54,6 @@ MonoBehaviour:
   speedVariance: 0
   overrideShape: 0
   shapeType: 0
+  coneAngle: 0
   maxParticles: 0
+  startBurst: 0
