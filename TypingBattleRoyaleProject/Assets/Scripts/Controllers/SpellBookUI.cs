@@ -28,9 +28,10 @@ public class SpellBookUI : MonoBehaviour
     [Header("UIanimation")]
     [SerializeField] RectTransform _panelUI;
     [SerializeField] CanvasGroup _canvasGroup;
-    [SerializeField] Vector2 _hidePos=new Vector2(50,0);
-    [SerializeField] Vector2 _showPos=new Vector2(0,0);
+    [SerializeField] Vector2 _hidePos;
+    [SerializeField] Vector2 _showPos;
     [SerializeField] float _time = 0.2f;
+    [SerializeField] GameObject _changeObjetive;
     private Coroutine _moveRoutine;
     private Coroutine _hideRoutine;
     Coroutine _spellBookCoroutine;
@@ -54,6 +55,7 @@ public class SpellBookUI : MonoBehaviour
         {
             EnsurePlaceholderSlots();
         }
+        _changeObjetive.SetActive(false);
     }
 
     private void EnsurePlaceholderSlots()
@@ -141,6 +143,7 @@ public class SpellBookUI : MonoBehaviour
 
         UIMove(_showPos);
         UIAnimator.FadeIn(_canvasGroup, _time);
+        _changeObjetive.SetActive(true);
         currentPage = 0;
         selectedIndex = 0;
         Refresh(spells ?? new List<Spell>(), 0);
