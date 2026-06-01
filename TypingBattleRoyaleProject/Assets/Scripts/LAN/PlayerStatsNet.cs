@@ -147,14 +147,17 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        // 1. El Servidor actualiza los estados globales para que todos lo vean
+        // 1. El Servidor actualiza los estados globales
         if (IsServer && newValue <= 0)
         {
             isAlive.Value = false;
             isSpectating.Value = true;
+            
+            // EL ÁRBITRO REVISA SI YA SE ACABÓ EL JUEGO
+            CheckWinConditionServer();
         }
 
-        // 2. SOLO el dueño dispara eventos para su propia UI y GameManager
+        // 2. SOLO el dueño dispara eventos para su propia UI y cámara espectadora
         if (IsOwner)
         {
             if (newValue < oldValue)
@@ -661,5 +664,44 @@ public class PlayerStatsNet : NetworkBehaviour
         Debug.Log("[PlayerStatsNet] Cliente Reposicionado por caida {targetPosition}");
     }
 
+    private void CheckWinConditionServer()
+    {
+        if (!IsServer) return;
 
+        int aliveCount = 0;
+        
+        // Contamos cuántos jugadores siguen con vida en la red
+        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.PlayerObject != null && client.PlayerObject.TryGetComponent<PlayerStatsNet>(out var stats))
+            {
+                if (stats.currentLifes.Value > 0) 
+                {
+                    aliveCount++;
+                }
+            }
+        }
+
+        Debug.Log($"[CheckWinCondition] Jugadores vivos restantes: {aliveCount}");
+
+        // Si queda 1 jugador (o 0 en caso de empate técnico/caída simultánea)
+        if (aliveCount <= 1)
+        {
+            // ¡FIN DE LA PARTIDA!
+            TriggerPodiumSceneClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void TriggerPodiumSceneClientRpc()
+    {
+        Debug.Log("[Match End] ¡Solo queda un jugador vivo! Mandando al podio...");
+        
+        // Aquí llamas a tu mánager para cambiar el estado a GameOver
+        var gm = GameplayManager.Instance;
+        if (gm != null && gm.stateMachine != null && gm.gameOverState != null)
+        {
+            gm.stateMachine.ChangeState(gm.gameOverState);
+        }
+    }
 }
