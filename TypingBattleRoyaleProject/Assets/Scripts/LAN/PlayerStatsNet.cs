@@ -112,43 +112,74 @@ public class PlayerStatsNet : NetworkBehaviour
 
     private void HandleHPChanged(float oldValue, float newValue)
     {
-        if (newValue < oldValue) OnDamageTaken?.Invoke();
+        // Solo el dueño dispara el daño en su UI (para no flashear la pantalla de los demás)
+        if (IsOwner && newValue < oldValue) 
+        {
+            OnDamageTaken?.Invoke();
+        }
 
         // Solo el owner dispara el trigger; el OwnerNetworkAnimator lo replica a los demás.
-        // Si la vida llega a 0 dejamos que la animación de muerte tome el control.
         if (IsOwner && newValue < oldValue && newValue > 0f && _animatorView != null)
+        {
             _animatorView.TriggerTakeDamage();
+        }
     }
 
     private void HandleAliveChanged(bool oldValue, bool newValue)
     {
-        if (oldValue && !newValue && IsOwner && _animatorView != null)
-            _animatorView.TriggerDeath();
+        // Si acaba de morir
+        if (oldValue && !newValue)
+        {
+            // Solo el dueño dispara el trigger del animator
+            if (IsOwner && _animatorView != null)
+                _animatorView.TriggerDeath();
+            
+            // TODOS apagan los renderers y colliders del jugador muerto
+            SetTemporaryDeathStats(true);
+        }
+        // Si acaba de revivir
+        else if (!oldValue && newValue)
+        {
+            // TODOS vuelven a encender los renderers del jugador
+            SetTemporaryDeathStats(false);
+        }
     }
 
     private void HandleLivesChanged(int oldValue, int newValue)
     {
-        if (newValue < oldValue)
+        // 1. El Servidor actualiza los estados globales
+        if (IsServer && newValue <= 0)
         {
-            OnLifeLost?.Invoke();
-            OnLifeLostWithKiller?.Invoke(lastDamageFromClientId);
+            isAlive.Value = false;
+            isSpectating.Value = true;
+            
+            // EL ÁRBITRO REVISA SI YA SE ACABÓ EL JUEGO
+            CheckWinConditionServer();
         }
 
-        if (newValue <= 0)
+        // 2. SOLO el dueño dispara eventos para su propia UI y cámara espectadora
+        if (IsOwner)
         {
-            if (IsServer)
+            if (newValue < oldValue)
             {
-                isAlive.Value = false;
-                isSpectating.Value = true;
+                OnLifeLost?.Invoke();
+                OnLifeLostWithKiller?.Invoke(lastDamageFromClientId);
             }
 
-            OnAllLifeLost?.Invoke();
+            if (newValue <= 0)
+            {
+                OnAllLifeLost?.Invoke();
+            }
         }
     }
 
     private void HandleKillCountChanged(int oldValue, int newValue)
     {
-        if (newValue > oldValue) OnEnemyKilled?.Invoke();
+        // Solo el dueño actualiza su UI de muertes
+        if (IsOwner && newValue > oldValue) 
+        {
+            OnEnemyKilled?.Invoke();
+        }
     }
 
     // --- Reducción de daño temporal (escudos tipo Cubierta rocosa). Server-authoritative. ---
@@ -280,7 +311,7 @@ public class PlayerStatsNet : NetworkBehaviour
             currentHP.Value = 0;
             isAlive.Value = false;
 
-            BeginDeathSequenceOwnerClientRpc(killerId, currentLifes.Value);
+            BeginDeathSequenceOwnerRpc(killerId, currentLifes.Value);
         }
         else
         {
@@ -289,7 +320,7 @@ public class PlayerStatsNet : NetworkBehaviour
             isAlive.Value = false;
             isSpectating.Value = true;
 
-            EnterSpectatorModeClientRpc();
+            EnterSpectatorModeOwnerRpc();
         }
         AudioChango.Instance?.PlayPlayerDeath();
     }
@@ -307,10 +338,9 @@ public class PlayerStatsNet : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    private void EnterSpectatorModeClientRpc(ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    private void EnterSpectatorModeOwnerRpc()
     {
-
         PlayerController controller = GetComponent<PlayerController>();
 
         if (controller != null)
@@ -321,16 +351,12 @@ public class PlayerStatsNet : NetworkBehaviour
         {
             Debug.LogWarning("[PlayerController] No se encontro PlayerController local para entrar en modo espectador.");
         }
-
     }
 
-    [ClientRpc]
-    private void BeginDeathSequenceOwnerClientRpc(ulong killerId, int remainingLives, ClientRpcParams clientRpcParams = default)
+    [Rpc(SendTo.Owner)]
+    private void BeginDeathSequenceOwnerRpc(ulong killerId, int remainingLives)
     {
-        if (!IsOwner) return;
-
         if (_deathSequenceCoroutine != null) StopCoroutine(_deathSequenceCoroutine);
-
         _deathSequenceCoroutine = StartCoroutine(DeathSequenceRoutine(killerId, remainingLives));
     }
 
@@ -638,5 +664,44 @@ public class PlayerStatsNet : NetworkBehaviour
         Debug.Log("[PlayerStatsNet] Cliente Reposicionado por caida {targetPosition}");
     }
 
+    private void CheckWinConditionServer()
+    {
+        if (!IsServer) return;
 
+        int aliveCount = 0;
+        
+        // Contamos cuántos jugadores siguen con vida en la red
+        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.PlayerObject != null && client.PlayerObject.TryGetComponent<PlayerStatsNet>(out var stats))
+            {
+                if (stats.currentLifes.Value > 0) 
+                {
+                    aliveCount++;
+                }
+            }
+        }
+
+        Debug.Log($"[CheckWinCondition] Jugadores vivos restantes: {aliveCount}");
+
+        // Si queda 1 jugador (o 0 en caso de empate técnico/caída simultánea)
+        if (aliveCount <= 1)
+        {
+            // ¡FIN DE LA PARTIDA!
+            TriggerPodiumSceneClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void TriggerPodiumSceneClientRpc()
+    {
+        Debug.Log("[Match End] ¡Solo queda un jugador vivo! Mandando al podio...");
+        
+        // Aquí llamas a tu mánager para cambiar el estado a GameOver
+        var gm = GameplayManager.Instance;
+        if (gm != null && gm.stateMachine != null && gm.gameOverState != null)
+        {
+            gm.stateMachine.ChangeState(gm.gameOverState);
+        }
+    }
 }
